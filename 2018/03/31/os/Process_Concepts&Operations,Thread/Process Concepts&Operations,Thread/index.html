@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Lyncien">
+
+
+
+<meta name="description" content="进程与线程进程的概念 我们知道，人们通过操作系统来更方便地操作硬件，提高使用计算机的效率。早期的计算机只允许一次执行一个程序，这样的程序完全控制了系统，能访问所有的资源。但随着操作系统的功能愈加复杂，计算机的应用更加广泛，人们往往需要同时进行多个作业，因此就有了进程的概念，不同的进程同时运行，互相独立，进行不同的工作。   进程（Process），可以认为是执行中的程序。值得注意的是，程序本身不是">
+<meta name="keywords" content="OS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统阅读报告：进程与线程">
+<meta property="og:url" content="https://lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/index.html">
+<meta property="og:site_name" content="Lyncien&#39;s homepage">
+<meta property="og:description" content="进程与线程进程的概念 我们知道，人们通过操作系统来更方便地操作硬件，提高使用计算机的效率。早期的计算机只允许一次执行一个程序，这样的程序完全控制了系统，能访问所有的资源。但随着操作系统的功能愈加复杂，计算机的应用更加广泛，人们往往需要同时进行多个作业，因此就有了进程的概念，不同的进程同时运行，互相独立，进行不同的工作。   进程（Process），可以认为是执行中的程序。值得注意的是，程序本身不是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-1.png">
+<meta property="og:image" content="https://lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-2.png">
+<meta property="og:image" content="https://lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-3.jpg">
+<meta property="og:updated_time" content="2019-02-19T11:17:45.589Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统阅读报告：进程与线程">
+<meta name="twitter:description" content="进程与线程进程的概念 我们知道，人们通过操作系统来更方便地操作硬件，提高使用计算机的效率。早期的计算机只允许一次执行一个程序，这样的程序完全控制了系统，能访问所有的资源。但随着操作系统的功能愈加复杂，计算机的应用更加广泛，人们往往需要同时进行多个作业，因此就有了进程的概念，不同的进程同时运行，互相独立，进行不同的工作。   进程（Process），可以认为是执行中的程序。值得注意的是，程序本身不是">
+<meta name="twitter:image" content="https://lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-1.png">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Lyncien&#39;s homepage" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>操作系统阅读报告：进程与线程 | Lyncien&#39;s homepage</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head></html>
+<script src="/js/head-pic.js" ></script> <!-- head-pic-flash by Lyncien -->
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic" id="head-pic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Lyncien</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/Lyncien" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Lyncien</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic" id="head-pic-mobile">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Lyncien</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" target="_blank" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/Lyncien" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-os/Process_Concepts&amp;Operations,Thread/Process Concepts&amp;Operations,Thread" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/" class="article-date">
+      <time datetime="2018-03-30T16:00:00.000Z" itemprop="datePublished">2018-03-31</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      操作系统阅读报告：进程与线程
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h1><h2 id="进程的概念"><a href="#进程的概念" class="headerlink" title="进程的概念"></a>进程的概念</h2><ul>
+<li>我们知道，人们通过操作系统来更方便地操作硬件，提高使用计算机的效率。早期的计算机只允许一次执行一个程序，这样的程序完全控制了系统，能访问所有的资源。但随着操作系统的功能愈加复杂，计算机的应用更加广泛，人们往往需要同时进行多个作业，因此就有了进程的概念，不同的进程同时运行，互相独立，进行不同的工作。</li>
+</ul>
+<ul>
+<li>进程（Process），可以认为是执行中的程序。值得注意的是，程序本身不是进程。程序是被动实体，是存储在磁盘上的包含一系列指令的文件，而进程是活动实体，当一个程序被载入内存后并进行了相关资源分配后，才可以说进程开始运行了。</li>
+</ul>
+<h2 id="进程的信息"><a href="#进程的信息" class="headerlink" title="进程的信息"></a>进程的信息</h2><ul>
+<li>一个进程开始运行后，用户内存中将有一段空间被分配给这个进程，具体结构见右图1。其中，文本段（Text）存放程序代码，数据段（Data）存放全局变量，栈（Stack）存放函数参数、局部变量等，堆（Heap）用于动态分配空间。栈和堆朝着相反的方向增长，这是为了提高内存空间利用率。</li>
+</ul>
+<p><img src="//lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-1.png" alt=""> </p>
+<ul>
+<li>同时，操作系统会为每个进程在内核空间中设置一个进程控制块（Process Control Block，PCB），其结构如图2。进程状态由当前进行的活动定义，包括new（正在被创建）、Running（正在执行指令）、Waiting（等待某事件发生，如I/O完成）、Ready（等待处理器分配）、Terminated（终止），它们之间的相互转化见图3。进程编号是操作系统为每个进程分配的唯一的身份标识。进程计数器表示将要执行的下一个指令的地址。寄存器则存放进程执行时的中间信息。</li>
+<li>PCB的一个重要作用就是多道程序设计中操作系统在切换执行的进程时，可以将当前进程状态保存在PCB中，并从PCB读取新的进程的信息。</li>
+</ul>
+<p><img src="//lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-2.png" alt=""><br><img src="//lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-3.jpg" alt=""></p>
+<h2 id="进程的操作"><a href="#进程的操作" class="headerlink" title="进程的操作"></a>进程的操作</h2><ul>
+<li><p>进程的操作主要包括获取进程ID、创建进程、终止进程和进程间的通信，这些操作都可以通过系统调用来实现，下面介绍前三者的实现。</p>
+<p>  <strong>1. 获取进程的ID。</strong></p>
+<ul>
+<li><p>进程独一无二的身份标识（PID）可以通过getpid()直接获取。</p>
+<p><strong>2. 创建进程。</strong></p>
+</li>
+<li><p>一个进程可以通过系统调用来创建新的进程，则它本身称为父进程，新进程称为子进程。子进程还能再创建它的子进程，因此于是便形成了进程树。通常操作系统以一个初始进程（如init）为根形成进程树。</p>
+</li>
+<li><p>进程创建的一些细节实现可能并不唯一。如进程创建时需要一定的资源（如内存，I/O），它可能从操作系统那里直接获取，也可能从父进程获取。另一方面，子进程创建时，父进程可能与其并发执行，也可能等待子进程执行完后才继续执行。下面以UNIX系统为例，说明进程创建的基本过程。</p>
+</li>
+<li><p>在UNIX中，通过系统调用fork()来创建子进程，它将是父进程的一份完全拷贝，包括用户内存空间和PCB中的信息，同时进程PCB被加入到任务链表中。接下来，子进程的PID将被修改为一个与父进程不同的值，进程时间被置为0，同时它与父进程将相互记录为父子关系。由于PCB程序计数器也被完全复制，则子进程将与父进程继续执行相同的代码。另外，一个明显的差别是父进程的fork()将返回子进程的PID，而子进程的fork()将返回0，在代码中可以据此区分它们。</p>
+</li>
+<li><p>对于子进程，在创建完成后，可以不执行其他代码，与父进程保持相同。然而更有意义的做法是通过系统调用exec()来载入指定路径下的程序，这样进程将执行一个全新的程序，除了保留PID、程序运行时间和父子关系，包括内存和寄存器中的信息几乎都被丢弃，代码段被重置为载入程序的代码。</p>
+</li>
+<li><p>对于父进程，在调用fork()后，如果没有什么事情可做，可以调用wait()来将自身挂起，等待子进程执行直到结束。</p>
+<p><strong>3. 终止进程。</strong></p>
+</li>
+<li><p>当进程完成执行后，通过调用exit()请求系统删除自身，所有的内存信息都将被释放。然而，进程将保留一个空的PCB在系统进程链表中，成为“僵尸”进程，同时向父进程发送一个SIGCHLD信号。这样做的一个原因是，子进程结束时，父进程可能由于有其他任务而还没有调用wait()或及时响应。直到wait()调用后，僵尸子进程才真正从任务链表中被删除。</p>
+</li>
+<li><p>另外，进程也可能通过系统调用来终止其他进程，通常只能对子进程实施这种操作。当一个进程被终止时，在一些系统中，子进程也被一并结束，另一些系统中，子进程将以init为父进程。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="线程的概念和优点"><a href="#线程的概念和优点" class="headerlink" title="线程的概念和优点"></a>线程的概念和优点</h2><ul>
+<li><p>进程帮助人们将不同的工作分离开来，各自运行。更具体地看，一项工作往往需要同时处理多个任务（如服务器同时响应多个客户，浏览器同时获取数据和渲染页面），但我们并不因此创建多个进程，而是在一个进程下创建多个线程（Thread）来实现。这样做的主要原因或者说线程相对于进程的优点有以下几点：进程的创建和切换很耗费时间和资源，而线程之间可以共享进程的代码、数据和文件，大大减小了创建和切换的开销，同时更易于相互之间的通信。另一方面，线程能充分利用处理器的多个核心，真正实现并行，当一个线程出现阻塞时，其他线程并不因此受到影响。</p>
+</li>
+<li><p>当然，线程也存在一些问题，如怎样分配任务，使每个线程的工作相对平衡？如何保证数据的同步和一致性？</p>
+</li>
+</ul>
+<h2 id="多线程模型"><a href="#多线程模型" class="headerlink" title="多线程模型"></a>多线程模型</h2><ul>
+<li><p>线程可以分为用户线程和内核线程（由系统直接管理），它们之间有三种关系</p>
+<ol>
+<li><p>多对一模型：既多个用户线程对应一个内核线程，这种做法效率较高，但如果有一个线程执行了阻塞系统调用，那么整个进程都会被阻塞。</p>
+</li>
+<li><p>一对一模型：既一个用户线程对应一个内核线程，这种做法允许多个线程并行运行在多处理器上，缺点是大多数系统的内核线程数量是有限的。</p>
+</li>
+<li><p>多对多模型：这种做法多路复用了内核线程，允许任意多的用户线程，当一个线程执行了阻塞调用时，内核可以调度另一个线程来执行。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="多线程相关问题"><a href="#多线程相关问题" class="headerlink" title="多线程相关问题"></a>多线程相关问题</h2><ul>
+<li><p>线程库（Thread library）是为开发人员提供的创建和管理线程的API，目前主要有三种线程库：POSIX Pthread、Win32和Java。</p>
+</li>
+<li><p>多线程中fork()调用有两种，一种复制所有线程，一种只复制调用了fork()的线程，而exec()与进程中的相同。</p>
+</li>
+<li><p>线程池（Thread pool）是一种在进程开始时创建一定数量的线程放入池中的机制，当有任务请求时，它唤醒一个线程来处理，完成任务后，线程返回池中再等待工作。线程池解决了服务器中接受大量请求时各自频繁地创建和删除线程带来的巨大耗费。</p>
+</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1]  Abraham Silberschatz. 操作系统概念. 高等教育出版社, 2010.1.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
+        <p><span>发布时间:</span>2018-03-31, 00:00:00</p>
+        <p><span>最后更新:</span>2019-02-19, 19:17:45</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/" title="操作系统阅读报告：进程与线程">https://lyncien.github.io/2018/03/31/os/Process_Concepts&amp;Operations,Thread/Process Concepts&amp;Operations,Thread/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/03/31/os/Process_Concepts&amp;Operations,Thread/Process Concepts&amp;Operations,Thread/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/04/19/cod/lab4_FiniteStateMachine/">
+                    计算机组成原理上机实验4 有限状态机
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/03/18/os/System_Call/System Call/">
+                    操作系统阅读报告：系统调用
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#进程与线程"><span class="toc-text">进程与线程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#进程的概念"><span class="toc-text">进程的概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程的信息"><span class="toc-text">进程的信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程的操作"><span class="toc-text">进程的操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程的概念和优点"><span class="toc-text">线程的概念和优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多线程模型"><span class="toc-text">多线程模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多线程相关问题"><span class="toc-text">多线程相关问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"操作系统阅读报告：进程与线程　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/04/19/cod/lab4_FiniteStateMachine/" title="上一篇: 计算机组成原理上机实验4 有限状态机">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/03/18/os/System_Call/System Call/" title="下一篇: 操作系统阅读报告：系统调用">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/article/tea_and_health/">茶与健康</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/05/mcps/lab_res/">汇编上机资源</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/mcps/lab4/">汇编上机题4</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/26/mcps/lab3/">汇编上机题3</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/25/alg/lab3/">算法基础上机实验三 最长公共子序列问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/19/mcps/lab2/">汇编上机题2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/18/alg/lab2/">算法基础上机实验二 红黑树维护算法及其区间树应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/mcps/lab1/">汇编上机题1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/12/article/USTC_Hackergame2018_8/">USTCHackergame2018之"我是谁"</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/13/article/verilog_signed_and_unsigned/">Verilog中的有符号数与无符号数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/10/cod/lab6_Multi-CycleCPU/">计算机组成原理上机实验6 多周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/04/cod/lab5_SingleCycleCPU/">计算机组成原理上机实验5 单周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/">操作系统阅读报告：进程通信与同步、进程调度</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/18/os/System_Call/System Call/">操作系统阅读报告：系统调用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/11/os/OS_Summary/OS Summary/">操作系统阅读报告：操作系统概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/09/ds/lab4_ShortestPaths/">数据结构上机题4 最短路径</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/ds/lab1_Polynome/">数据结构上机题1 一元稀疏多项式计算</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/article/A_Expression_Evaluation/">A Expression Evaluation</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B："完美阴阳矩阵"</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/11/clp/lab9a/">程序设计II上机实验9A：算24</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2019 Lyncien
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

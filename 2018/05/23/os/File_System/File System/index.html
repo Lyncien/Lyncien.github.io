@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Lyncien">
+
+
+
+<meta name="description" content="大容量存储器与文件系统大容量存储器简介 我们知道，程序执行时主要将信息存储在内存中，但由于内存太小，且具有易失性，并不适合长久保存数据。因此，计算机需要一些大容量外部存储器来备份信息，比如磁盘、磁带、光盘和固态硬盘等等，其中磁盘和固态硬盘是目前主要的外部存储器。速度、可靠性和价格是衡量大容量存储器性能的三个重要指标。  磁盘（1）磁盘的结构  磁盘（Magnetic Disk）由许多扁圆盘片堆叠而">
+<meta name="keywords" content="OS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统阅读报告：大容量存储器与文件系统">
+<meta property="og:url" content="https://lyncien.github.io/2018/05/23/os/File_System/File System/index.html">
+<meta property="og:site_name" content="Lyncien&#39;s homepage">
+<meta property="og:description" content="大容量存储器与文件系统大容量存储器简介 我们知道，程序执行时主要将信息存储在内存中，但由于内存太小，且具有易失性，并不适合长久保存数据。因此，计算机需要一些大容量外部存储器来备份信息，比如磁盘、磁带、光盘和固态硬盘等等，其中磁盘和固态硬盘是目前主要的外部存储器。速度、可靠性和价格是衡量大容量存储器性能的三个重要指标。  磁盘（1）磁盘的结构  磁盘（Magnetic Disk）由许多扁圆盘片堆叠而">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-1.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-3.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-4.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-5.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-6.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-7.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-9.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-10.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-11.png">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-14.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-16.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-19.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-23.png">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-24.png">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-20.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-22.jpg">
+<meta property="og:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-25.jpg">
+<meta property="og:updated_time" content="2019-02-19T11:17:00.660Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统阅读报告：大容量存储器与文件系统">
+<meta name="twitter:description" content="大容量存储器与文件系统大容量存储器简介 我们知道，程序执行时主要将信息存储在内存中，但由于内存太小，且具有易失性，并不适合长久保存数据。因此，计算机需要一些大容量外部存储器来备份信息，比如磁盘、磁带、光盘和固态硬盘等等，其中磁盘和固态硬盘是目前主要的外部存储器。速度、可靠性和价格是衡量大容量存储器性能的三个重要指标。  磁盘（1）磁盘的结构  磁盘（Magnetic Disk）由许多扁圆盘片堆叠而">
+<meta name="twitter:image" content="https://lyncien.github.io/2018/05/23/os/File_System/File%20System/20180526055814104-1.jpg">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Lyncien&#39;s homepage" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>操作系统阅读报告：大容量存储器与文件系统 | Lyncien&#39;s homepage</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head></html>
+<script src="/js/head-pic.js" ></script> <!-- head-pic-flash by Lyncien -->
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic" id="head-pic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Lyncien</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/Lyncien" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Lyncien</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic" id="head-pic-mobile">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Lyncien</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" target="_blank" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/Lyncien" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-os/File_System/File System" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/05/23/os/File_System/File System/" class="article-date">
+      <time datetime="2018-05-22T16:00:00.000Z" itemprop="datePublished">2018-05-23</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      操作系统阅读报告：大容量存储器与文件系统
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="大容量存储器与文件系统"><a href="#大容量存储器与文件系统" class="headerlink" title="大容量存储器与文件系统"></a>大容量存储器与文件系统</h1><h2 id="大容量存储器简介"><a href="#大容量存储器简介" class="headerlink" title="大容量存储器简介"></a>大容量存储器简介</h2><ul>
+<li>我们知道，程序执行时主要将信息存储在内存中，但由于内存太小，且具有易失性，并不适合长久保存数据。因此，计算机需要一些大容量外部存储器来备份信息，比如磁盘、磁带、光盘和固态硬盘等等，其中磁盘和固态硬盘是目前主要的外部存储器。速度、可靠性和价格是衡量大容量存储器性能的三个重要指标。</li>
+</ul>
+<h2 id="磁盘"><a href="#磁盘" class="headerlink" title="磁盘"></a>磁盘</h2><p><strong>（1）磁盘的结构</strong></p>
+<ul>
+<li><p><strong>磁盘（Magnetic Disk）</strong>由许多扁圆盘片堆叠而成，每个盘片两面涂有磁性材料，旁边是机械臂杆及其磁臂，磁臂上的磁头在盘片上移动并进行磁记录来实现信息的读取和写入。磁盘片的表面被逻辑地划分为多个<strong>磁道（Track）</strong>，磁道再被划分为<strong>扇区（Secto）</strong>，位于同一磁臂位置的磁道集合组成<strong>柱面（Cylinder）</strong>。</p>
+<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-1.jpg" alt="">图1</p>
+</li>
+<li><p>磁盘使用时会被驱动器高速旋转，磁头飞行于盘片的空气层上，定位到数据所在位置所需的时间由两部分组成：<strong>寻道时间</strong>（移动磁臂到所在的柱面）和<strong>旋转等待时间</strong>（等待某扇区旋转至磁头下）。定位时间越小，数据传输速率越高。磁盘旋转的角速度可以是匀速的或者变速的，由于扇区按角度划分，则前者的传输速率是内侧磁道高而外侧低，后者的传输速率是不变的，现在的磁盘主要采用前一方案。</p>
+</li>
+</ul>
+<p><strong>（2）磁盘的管理</strong></p>
+<ul>
+<li>良好的管理可以更高效地使用磁盘。磁盘在低级格式化后被划分为许多扇区（带有特殊数据结构的逻辑块），一般并不直接使用（当成巨大的顺序数组），而是进一步分为一个或多个柱面组成的分区，然后进行逻辑格式化，创建某种<strong>文件系统（File System）</strong>对磁盘进行管理。其中一个重要的方面是对坏块的管理，当某些逻辑块损坏时，一种方法是跳过坏块，顺序后移后续块，另一种方法是每条磁道预留一些块作为备用。</li>
+</ul>
+<p><strong>（3）磁盘的调度</strong></p>
+<ul>
+<li>由于磁盘具有特殊结构，在转速一定时，需要对磁盘的访问队列进行<strong>调度</strong>才能避免过长的寻道时间。<ul>
+<li><strong>FCFS</strong>（先来先服务）调度是一种公平的调度算法，但一般性能不高。</li>
+<li><strong>SSTF</strong>（最短寻道时间优先）调度优先处理靠近当前磁头位置的请求，性能有了很大提高，但可能导致一些请求长时间得不到满足。</li>
+<li><strong>SCAN</strong>（扫描）调度将磁臂从一端移到另一端，顺序处理所到之处的请求，到达一端后反向扫描，如此循环，这种算法的问题在于，当一个请求在磁头从请求位置移动走后才被加入队列，则必须等待磁头到达一端并反向移动回来后才能处理。</li>
+<li><strong>C-SCAN</strong>调度是前者的一种改进，磁头到达一端后并不反向扫描，而是直接返回起始端重新开始扫描，这就解决了前一个问题，但实际上，如果在到达一端之前剩余的位置都没有请求，则磁头可以立刻返回，这就是<strong>C-LOOK</strong>调度，磁头只移动到一个方向上最远的请求。</li>
+</ul>
+</li>
+</ul>
+<p><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-3.jpg" alt=""><br>FCFS<br><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-4.jpg" alt=""><br>SSTF<br><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-5.jpg" alt=""><br>SCAN<br><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-6.jpg" alt=""><br>C-SCAN<br><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-7.jpg" alt=""><br>C-LOOK</p>
+<p>图2</p>
+<h2 id="固态硬盘"><a href="#固态硬盘" class="headerlink" title="固态硬盘"></a>固态硬盘</h2><ul>
+<li><strong>固态硬盘（SSD，Solid-State Drives）</strong>主要由控制器和 <strong>闪存（Flash）</strong> 芯片组成，它具有速度快、质量轻、能耗小等优点，近来被广泛使用，但容量小，价格昂贵。闪存芯片被划分为不同的层次（Package&gt;Die/Chip&gt;Plane&gt;Block&gt;Page），最基本的存储单元是晶体管，每个单元可以存储一个bit（<strong>SLC</strong>），也可以存储多个bit（<strong>MLC</strong>）。固态硬盘的读写以Page（4KB）为单位，当一个Page的信息需要被删除时，它只是被标记为无效，而且不支持对一个Page进行修改，只有在适当的时候以Block为单位进行擦除，而一个Block可以擦除的次数是 <strong>有限</strong> 的，因此固态硬盘需要地址映射机制和垃圾回收机制，以此延长使用寿命。</li>
+</ul>
+<h2 id="RAID"><a href="#RAID" class="headerlink" title="RAID"></a>RAID</h2><ul>
+<li><p>单个磁盘读写性能并不高，而且一旦损坏，将导致数据丢失。随着单位存储价格的降低，人们通过增加大量磁盘形成<strong>磁盘冗余阵列（RAID）</strong>，以此提高<strong>性能</strong>和<strong>可靠性</strong>。一方面，通过<strong>冗余</strong>提高可靠性，最简单也最昂贵的方法是<strong>镜像</strong>，即复制每个磁盘。另一方面，通过<strong>分散和并行</strong>改善性能，最简单的方式是<strong>位级分散</strong>，即一个字节的8个位分散到8个磁盘上，则并行读取时可以提高为8倍传输速率，也可以用<strong>块级分散</strong>的方式，一个文件的块分散在多个磁盘上。</p>
+</li>
+<li><p>RAID具有不同的<strong>级别</strong>，体现对价格和效果的不同<strong>权衡</strong>，以下以4个盘为例介绍各级别。</p>
+<ul>
+<li><p>RAID0：使用块级分散，但没有任何冗余，因此没有提高可靠性。</p>
+</li>
+<li><p>RAID1：即磁盘镜像，大大提高了可靠性，但花费巨大。</p>
+</li>
+<li><p>RAID01：即RAID0+1，先将数据分散到两块磁盘，再整体做镜像，这种方案同时提高了性能和可靠性，然而只要任意一块磁盘损坏，都只剩下一份镜像可用。</p>
+</li>
+<li><p>RAID10：即RAID1+0，先做镜像，再整体将数据分散到两块磁盘，这种方案比RAID01更优，当一个磁盘损坏时，RAID10的两份分散皆可用，而RAID01只有一份可用。这两种方案都存在开销过大的问题。</p>
+</li>
+<li><p>RAID2：以<strong>汉明码（Hamming Code）</strong>的方式将数据进行编码后按位级分散到各个磁盘上，汉明码方式是在原有数据中插入若干校验码，并且支持一位数据的纠错，如果某个磁盘损坏，可以通过其他磁盘重新计算以恢复数据。4位数据的存储需要额外增加3位校验码，这比RAID1节省了一个磁盘，但读写时需要对数据即时地进行校验，因此效率较低。</p>
+</li>
+<li><p>RAID3：以<strong>奇偶校验（Parity Check）</strong>的方式在多位数据后增加一位校验位，表示前面数据位中1的个数是奇数或偶数。这种方案使用位级分散，只需要一个额外的校验磁盘，但是当读写较频繁时，校验盘将会负载过大，成为系统性能的瓶颈。</p>
+</li>
+<li><p>RAID4：和RAID3类似，但使用块级分散。</p>
+</li>
+<li><p>RAID5：是对RAID4的改进，将奇偶校验信息分散存储到各个磁盘上而不是单个校验磁盘，这就避免了校验盘负载过大的情况，是目前应用较广泛的方案。</p>
+</li>
+<li><p>RAID6：在RAID5基础上增加了一位校验码（不再是奇偶校验），这样就可以容忍两个磁盘出错。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="文件系统概述"><a href="#文件系统概述" class="headerlink" title="文件系统概述"></a>文件系统概述</h2><ul>
+<li><p>如前文所述，磁盘只是纯粹的存储介质，一般磁盘格式化并不直接顺序存储数据，而是建立特定的<strong>文件系统（File System）</strong>来更好地管理磁盘。文件系统本身并不是磁盘也不是操作系统，而是存储在磁盘上，一个磁盘通常可以支持不同的文件系统。</p>
+</li>
+<li><p>文件系统通常具有<strong>文件</strong>和<strong>目录</strong>两种抽象的对象。</p>
+<ul>
+<li><p><strong>文件（File）</strong>是创建者定义的相关信息的集合，操作系统将其映射到存储器中，对用户而言，文件是最小的逻辑分配单元。文件的内容可以是文本、数字或二进制数据，其组织形式可以是自由的，也可以具有严格的格式，这通常由创建者定义。</p>
+</li>
+<li><p>为了能识别和引用不同的文件，文件通常具有各种<strong>属性（Attributes）</strong>。文件名是一个字符串，它独立于进程、用户甚至操作系统，这个字符串是否区分大小写取决于具体的操作系统。标识符是在文件系统中识别文件的唯一标签，通常为数字。类型则指明了这是特定类型的文件系统的文件。位置是文件在存储设备上的位置指针。大小记录了文件的当前大小或者最大允许容量。时间日期包括文件创建或者上次修改的相关时间信息。保护和权限则指明了不同用户能否对文件进行相关操作（读、写、执行等）。通常文件都具有以上这些属性，还有一些其他属性，但个别文件系统可能并不支持某些属性。值得注意的是，文件内容并不包括属性，所有的文件属性信息都存储在目录结构中。</p>
+<p><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-9.jpg" alt=""><br>图3</p>
+</li>
+<li><p><strong>目录（Directory）</strong>是用来管理和组织文件的结构，其本质也是一个文件，如右图。一个目录文件包含许多目录项，每一个<strong>目录项（Entry）</strong> 保存一个文件的属性信息（名称、位置等），表示这个文件属于这个目录。一个目录下的允许再包含目录文件，这就形成了以根目录”/”为根的多层次的树状结构，其叶结点为文件。一个文件的名称前面加上各级父目录名称，用”/”分隔，这就形成了文件的路径名称。文件路径通常用于定位一个文件在文件系统中的层次和位置，因为它在整个文件系统中是独一无二的。如果以根目录为起点，称为<strong>绝对路径</strong>，如果以某个目录为起点，则称为<strong>相对路径</strong>。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="文件系统的布局与操作"><a href="#文件系统的布局与操作" class="headerlink" title="文件系统的布局与操作"></a>文件系统的布局与操作</h2><ul>
+<li><p>各种文件系统的本质区别在于采用不同的存储<strong>布局结构（Layout）</strong>，以及对文件的<strong>操作（Operations）</strong>的不同实现方式。</p>
+</li>
+<li><p>用户或进程通过操作系统的调用接口对文件进行操作，而操作系统为了能支持不同的文件系统，通常先实现一个<strong>虚拟文件系统（VFS）</strong>，在这个层面上隐藏了实现的细节，定义了抽象的操作集合，在它之下才是各个文件系统具体操作的实现。</p>
+<ul>
+<li><p><strong>（1）</strong>操作系统对文件进行的<strong>操作</strong>主要有：</p>
+<ul>
+<li><strong>①创建：</strong>在磁盘中申请一块空间，然后在文件所在的目录增加一个目录项，记录新文件的相关属性。值得注意的是，创建一个文件并不同时打开文件。</li>
+<li><strong>②打开：</strong>对文件进行操作时，需要通过路径逐级搜索和定位文件，为了避免频繁地进行这个过程，在首次使用文件时，需要显式（或隐式）地调用open()来“打开”文件，这将在内存中创建一个FILE类型结构体来存储文件的位置信息和其他属性，操作系统则维护一个包括所有打开文件的FILE结构体的列表，称为<strong>打开文件表（Open-files table）</strong>。进程需要对文件进行操作时，提供<strong>文件标识符（File Descriptor）</strong>即打开文件表的索引，而不再是路径。由于多个进程可以同时打开一个文件，为了避免相互影响，每个进程还需要单独维护一个进程的打开文件表，用于存储与进程相关的信息，比如对文件读写的偏移指针。</li>
+<li><strong>③读：</strong>首先进程向操作系统提供文件标识符，操作系统在打开文件表中查找到对应的FILE结构，从中获取文件位置和属性，在磁盘中定位和读取相应的数据后存储在内核空间中，最后写入进程指定的用户内存空间中。</li>
+<li><strong>④写：</strong>与读相反，先从用户内存空间读取数据到内核空间，然后操作系统将根据不同的策略适时地将数据写回磁盘。若采用<strong>写直达法（Write-through mode）</strong>，内核中的数据立刻被写入磁盘；若采用<strong>写回法（Write-back mode）</strong>，只有当内核空间中的数据需要进行更新时，这些数据才被写入磁盘。</li>
+<li><strong>⑤文件内重定位：</strong>直接修改文件偏移指针为指定值。</li>
+<li><strong>⑥关闭：</strong>当一个文件不再被使用时，关闭这个文件，打开文件表将移除对应的项。</li>
+<li><strong>⑦删除：</strong>将文件在磁盘中的空间释放，并删除目录文件中的对应项。</li>
+<li><strong>⑧截短：</strong>删除文件的内容但保留其属性，文件长度变为0。</li>
+<li>以上①③④⑤⑦⑧构成了对文件操作的最小集合，由它们可以组合出其他的文件操作。</li>
+</ul>
+</li>
+<li><p><strong>（2）文件系统的布局实例</strong></p>
+<ul>
+<li><p>对于连续的磁盘空间，不同的文件系统对其进行不同的<strong>划分和组织</strong>，这就形成了不同的布局。文件系统的实现至少应该满足以下几条要求：</p>
+<p>  ①被写入的数据能够被重新检索出并读取。</p>
+<p>  ②对文件的操作应该是高效的。</p>
+<p>  ③当删除一个文件时，文件系统能清除对应的空间。</p>
+<p>  更详细的要求就是对上面各种文件操作的具体实现以及空间的具体分配和对空闲空间的管理，下面介绍几种布局的实现并逐步进行改进。</p>
+<p><strong>①连续分配方式</strong></p>
+</li>
+<li><p>这是最直接最朴素的想法，在磁盘连续空间的头部存放根目录，目录中记录各个文件的起始位置和结束位置，文件紧跟着存放在目录的后续空间中（如图4）。这种策略使得删除操作十分简单，只需要在目录文件中删除对应项就可以了。但是，在经过长时间使用后，磁盘的空闲空间将<strong>碎片化</strong>地分散在各个位置，文件系统无法迅速统计空闲空间大小。最大的问题是，如果需要存储一个大文件，有可能无法找到一个足够大的空闲片段来存放，即使存在并且使用了最优策略分配后，在需要增加文件内容时将面临两端皆有其他文件而无法<strong>扩展</strong>的窘境。一种解决方法是移动现有的文件使空闲空间连续，但是这将开销巨大。</p>
+<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-10.jpg" alt=""> 图4</p>
+<p><strong>②链式分配方式</strong></p>
+</li>
+<li><p>既然大文件可能没有足够大的空闲片段来存放，一个自然的想法是将磁盘划分为<strong>相等大小的块/簇（Cluster）</strong>，文件按块进行存储（如图5）。这些块可以不在连续的空间里，只需要在目录文件中记录每个文件占用的块的序号即可。但是，由于目录文件是目录项的数组，每一项的长度是固定的，因而对于分散的块序号的记录是比较困难的。</p>
+<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-11.png" alt=""> 图5</p>
+</li>
+<li><p>一种改进的方法是，目录项只记录文件起始块的序号，而在每个块中留出部分空间存放指向下一个块的指针（如图6），这种情况下，目录项中还需要记录文件的大小，因为文件的最后一块可能并没有填满。另外，还需要在磁盘最前端留出一块空间指向空闲空间的链表。这种策略带来的问题是随机访问性差，访问一个文件需要从头部开始。还有一个问题是关于块大小的选择，如果块太小，则块的指针占用了太多空间，如果块太大，则每个文件最后一个块的浪费将是巨大的。</p>
+<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-14.jpg" alt="">图6</p>
+<p><strong>③链式分配方式的改进——FAT</strong></p>
+</li>
+<li><p>为了改善随机读写性能，可以将下一个块的位置信息以数组形式统一存放在磁盘头部（如图7），称为<strong>文件分配表（FAT，File Allocation Table）</strong>。数组中每一项存放着当前下标对应的块的下一个块的序号（地址），根据地址长度的不同，可以分为不同版本<strong>（FAT12/16/32）</strong>。这种策略下寻找文件的方式为先从根目录中读取文件的第一个块的地址，然后到FAT中依次获得下一个块的地址并读取每个块。写入文件时，则先从空闲空间信息获取下一个空闲块的位置，然后写入数据并更新FAT和空闲块信息。删除文件时，相关的FAT置为0，更新空闲空间信息并删除目录中相关项。</p>
+<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-16.jpg" alt=""> 图7</p>
+</li>
+<li><p>以FAT32为例，磁盘空间分配如图8 所示，头部是引导扇区（存储扇区大小等信息）、文件系统的相关信息（包括空闲空间信息）和预留的空间，其后是两个文件分配表，接下来就是根目录和存储的文件。</p>
+<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-19.jpg" alt=""> 图8</p>
+<p><strong>④索引分配方式</strong></p>
+</li>
+<li><p>如果对FAT进行分割，每个文件对应的FAT单独存放在一个<strong>索引节点（Index Node）</strong>中，而目录项中指向每个文件对应的索引节点，这就是索引分配方式（如图9）。由于每个文件的FAT大小不同，则索引节点将是变长的，这对于管理十分不便。事实上的做法是，维护一个索引数组，每个索引节点长度固定，索引节点内部有12个指针指向<strong>直接块（Direct Block）</strong>，即数据块，还有一个指针指向<strong>一级间接块（Indirect Block）</strong>，间接块中的每一项才指向数据块，另外还各有一个指针指向二级间接块和三级间接块。假设一个块的大小为<img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-23.png" alt="">byte，块地址32位（4byte），则这种方式下单个文件最大可存储<img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-24.png" alt="">。</p>
+<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-20.jpg" alt=""> 图9</p>
+</li>
+<li><p>UNIX和Linux使用类似的索引方式的文件系统，称为<strong>Ext2/Ext3/Ext4</strong>。以Ext2为例，磁盘被划分为许多组（如图11）。每个组的头部都是一个<strong>超级块（Superblock）</strong>，其中包括全部索引节点数、全部空闲块数等信息。其后是<strong>组描述符表（GDT，Group Descriptor Table）</strong>，包括之后各部分的起始位置信息。然后是<strong>块位图（Block Bitmap）</strong>和<strong>索引位图（Inode Bitmap）</strong>，它们的每一位表示一个块/索引是否已经被使用（1表示已使用），最后就是索引节点数组和数据块了。</p>
+<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-22.jpg" alt=""> 图10</p>
+<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-25.jpg" alt="">图11 </p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1]  Abraham Silberschatz. 操作系统概念. 高等教育出版社, 2010.1.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
+        <p><span>发布时间:</span>2018-05-23, 00:00:00</p>
+        <p><span>最后更新:</span>2019-02-19, 19:17:00</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/05/23/os/File_System/File System/" title="操作系统阅读报告：大容量存储器与文件系统">https://lyncien.github.io/2018/05/23/os/File_System/File System/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/05/23/os/File_System/File System/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/06/13/article/verilog_signed_and_unsigned/">
+                    Verilog中的有符号数与无符号数
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/05/10/cod/lab6_Multi-CycleCPU/">
+                    计算机组成原理上机实验6 多周期CPU
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#大容量存储器与文件系统"><span class="toc-text">大容量存储器与文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#大容量存储器简介"><span class="toc-text">大容量存储器简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#磁盘"><span class="toc-text">磁盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#固态硬盘"><span class="toc-text">固态硬盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAID"><span class="toc-text">RAID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件系统概述"><span class="toc-text">文件系统概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件系统的布局与操作"><span class="toc-text">文件系统的布局与操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"操作系统阅读报告：大容量存储器与文件系统　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/06/13/article/verilog_signed_and_unsigned/" title="上一篇: Verilog中的有符号数与无符号数">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/05/10/cod/lab6_Multi-CycleCPU/" title="下一篇: 计算机组成原理上机实验6 多周期CPU">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/article/tea_and_health/">茶与健康</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/05/mcps/lab_res/">汇编上机资源</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/mcps/lab4/">汇编上机题4</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/26/mcps/lab3/">汇编上机题3</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/25/alg/lab3/">算法基础上机实验三 最长公共子序列问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/19/mcps/lab2/">汇编上机题2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/18/alg/lab2/">算法基础上机实验二 红黑树维护算法及其区间树应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/mcps/lab1/">汇编上机题1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/12/article/USTC_Hackergame2018_8/">USTCHackergame2018之"我是谁"</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/13/article/verilog_signed_and_unsigned/">Verilog中的有符号数与无符号数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/10/cod/lab6_Multi-CycleCPU/">计算机组成原理上机实验6 多周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/04/cod/lab5_SingleCycleCPU/">计算机组成原理上机实验5 单周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/">操作系统阅读报告：进程通信与同步、进程调度</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/18/os/System_Call/System Call/">操作系统阅读报告：系统调用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/11/os/OS_Summary/OS Summary/">操作系统阅读报告：操作系统概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/09/ds/lab4_ShortestPaths/">数据结构上机题4 最短路径</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/ds/lab1_Polynome/">数据结构上机题1 一元稀疏多项式计算</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/article/A_Expression_Evaluation/">A Expression Evaluation</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B："完美阴阳矩阵"</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/11/clp/lab9a/">程序设计II上机实验9A：算24</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2019 Lyncien
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

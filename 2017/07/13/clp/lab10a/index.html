@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Lyncien">
+
+
+
+<meta name="description" content="杀蚂蚁Time limit: 3000 msMemory limit: 256 MBStandard I/OContent最近，佳佳迷上了一款好玩的小游戏：antbuster。 游戏规则非常简单：在一张地图上，左上角是蚂蚁窝，右下角是蛋糕，蚂蚁会源源不断地从窝里爬出来，试图把蛋糕搬回蚂蚁窝。而你的任务，就是用原始资金以及杀蚂蚁获得的奖金造防御塔，杀掉这些试图跟你抢蛋糕的蚂蚁~ 下附一张游戏截图：">
+<meta name="keywords" content="C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序设计II上机实验10A：杀蚂蚁">
+<meta property="og:url" content="https://lyncien.github.io/2017/07/13/clp/lab10a/index.html">
+<meta property="og:site_name" content="Lyncien&#39;s homepage">
+<meta property="og:description" content="杀蚂蚁Time limit: 3000 msMemory limit: 256 MBStandard I/OContent最近，佳佳迷上了一款好玩的小游戏：antbuster。 游戏规则非常简单：在一张地图上，左上角是蚂蚁窝，右下角是蛋糕，蚂蚁会源源不断地从窝里爬出来，试图把蛋糕搬回蚂蚁窝。而你的任务，就是用原始资金以及杀蚂蚁获得的奖金造防御塔，杀掉这些试图跟你抢蛋糕的蚂蚁~ 下附一张游戏截图：">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lyncien.github.io/2017/07/13/clp/lab10a/contest_17_B.jpg">
+<meta property="og:updated_time" content="2019-02-19T11:14:14.003Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="程序设计II上机实验10A：杀蚂蚁">
+<meta name="twitter:description" content="杀蚂蚁Time limit: 3000 msMemory limit: 256 MBStandard I/OContent最近，佳佳迷上了一款好玩的小游戏：antbuster。 游戏规则非常简单：在一张地图上，左上角是蚂蚁窝，右下角是蛋糕，蚂蚁会源源不断地从窝里爬出来，试图把蛋糕搬回蚂蚁窝。而你的任务，就是用原始资金以及杀蚂蚁获得的奖金造防御塔，杀掉这些试图跟你抢蛋糕的蚂蚁~ 下附一张游戏截图：">
+<meta name="twitter:image" content="https://lyncien.github.io/2017/07/13/clp/lab10a/contest_17_B.jpg">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Lyncien&#39;s homepage" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>程序设计II上机实验10A：杀蚂蚁 | Lyncien&#39;s homepage</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head></html>
+<script src="/js/head-pic.js" ></script> <!-- head-pic-flash by Lyncien -->
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic" id="head-pic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Lyncien</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/Lyncien" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Lyncien</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic" id="head-pic-mobile">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Lyncien</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" target="_blank" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/Lyncien" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-clp/lab10a" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/07/13/clp/lab10a/" class="article-date">
+      <time datetime="2017-07-12T16:00:00.000Z" itemprop="datePublished">2017-07-13</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      程序设计II上机实验10A：杀蚂蚁
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="杀蚂蚁"><a href="#杀蚂蚁" class="headerlink" title="杀蚂蚁"></a>杀蚂蚁</h2><h4 id="Time-limit-3000-ms"><a href="#Time-limit-3000-ms" class="headerlink" title="Time limit: 3000 ms"></a>Time limit: 3000 ms</h4><h4 id="Memory-limit-256-MB"><a href="#Memory-limit-256-MB" class="headerlink" title="Memory limit: 256 MB"></a>Memory limit: 256 MB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>最近，佳佳迷上了一款好玩的小游戏：antbuster。</p>
+<p>游戏规则非常简单：在一张地图上，左上角是蚂蚁窝，右下角是蛋糕，蚂蚁会源源不断地从窝里爬出来，试图把蛋糕搬回蚂蚁窝。而你的任务，就是用原始资金以及杀蚂蚁获得的奖金造防御塔，杀掉这些试图跟你抢蛋糕的蚂蚁~</p>
+<p>下附一张游戏截图：</p>
+<p><img src="//lyncien.github.io/2017/07/13/clp/lab10a/contest_17_B.jpg" alt=""></p>
+<ul>
+<li><p>为了拿到尽可能高的分数，佳佳设计了很多种造塔的方案，但在尝试了其中的一小部分后，佳佳发现，这个游戏实在是太费时间了。为了节省时间，佳佳决定写个程序，对于每一种方案，模拟游戏进程，根据效果来判断方案的优劣。</p>
+</li>
+<li><p>根据自己在游戏中积累的一些经验，以及上网搜到的一些参数，佳佳猜了蚂蚁爬行的算法，并且假设游戏中的蚂蚁也是按这个规则选择路线：</p>
+<ol>
+<li>每一秒钟开始的时候，蚂蚁都在平面中的某个整点上。如果蚂蚁没有扛着蛋糕，它会在该点留下2单位的信息素，否则它会留下5单位的信息素。然后蚂蚁会在正北、正南、正东、正西四个方向中选择一个爬过去。</li>
+<li>选择方向的规则是：首先，爬完一个单位长度后到达的那个点上，不能有其他蚂蚁或是防御塔，并且那个点不能是蚂蚁上一秒所在的点（除非上一个时刻蚂蚁就被卡住，且这个时刻它仍无法动），当然，蚂蚁也不会爬出地图的边界（我们定义这些点为不可达点）。如果此时有多个选择，蚂蚁会选择信息素最多的那个点爬过去。</li>
+<li>如果此时仍有多种选择，蚂蚁先面向正东，如果正东不是可选择的某个方向，它会顺时针转90°，再次判断，如果还不是，再转90°…直到找到可以去的方向。</li>
+<li>如果将每只蚂蚁在洞口出现的时间作为它的活动时间的第1秒，那么每当这只蚂蚁的活动时间秒数为5的倍数的时候，它先按规则1~3确定一个方向，面对该方向后逆时针转90°，若它沿当前方向会走到一个不可达点，它会不停地每次逆时针转90°，直到它面对着一个可达的点，这样定下的方向才是蚂蚁最终要爬去的方向。</li>
+<li>如果蚂蚁的四周都是不可达点，那么蚂蚁在这一秒内会选择停留在当前点。下一秒判断移动方向时，它上一秒所在点为其当前停留的点。</li>
+<li>你可以认为蚂蚁在选定方向后，瞬间移动到它的目标点，这一秒钟剩下的时间里，它就停留在目标点。</li>
+<li>蚂蚁按出生的顺序移动，出生得比较早的蚂蚁先移动。</li>
+</ol>
+</li>
+<li><p>然后，是一些有关地图的信息：</p>
+<ol>
+<li>每一秒，地图所有点上的信息素会损失1单位，如果那个点上有信息素的话。</li>
+<li>地图上某些地方是炮台。炮台的坐标在输入中给出。</li>
+<li>地图的长、宽在输入中给出，对于n * m的地图，它的左上角坐标为（0，0），右下角坐标为（n，m）。蚂蚁洞的位置为（0，0），蛋糕的位置为（n，m）。</li>
+<li>你可以把蚂蚁看做一个直径为1单位的圆，圆心位于蚂蚁所在的整点。</li>
+<li>游戏开始时，地图上没有蚂蚁，每个点上的信息素含量均为0。</li>
+</ol>
+</li>
+<li><p>一些有关炮塔的信息：</p>
+<ol>
+<li>炮塔被放置在地图上的整点处。</li>
+<li>为了简单一些，我们认为这些炮塔都是激光塔。激光塔的射速是1秒/次，它的攻击伤害为d/次，攻击范围为r。你可以认为每秒蚂蚁移动完毕后，塔才开始攻击。并且，只有当代表蚂蚁的圆的圆心与塔的直线距离不超过r时，塔才算打得到那只蚂蚁。</li>
+<li>如果一只蚂蚁扛着蛋糕，那么它会成为target，也就是说，任何打得到它的塔的炮口都会对准它。如果蛋糕好好地呆在原位，那么每个塔都会挑离它最近的蚂蚁进行攻击，如果有多只蚂蚁，它会选出生较早的一只。</li>
+<li>激光塔有个比较奇怪的特性：它在选定了打击目标后，只要目标在其射程内，塔到目标蚂蚁圆心的连线上的所有蚂蚁（这里“被打到”的判定变成了表示激光的线段与表示蚂蚁的圆有公共点）都会被打到并损d格血，但激光不会穿透它的打击目标打到后面的蚂蚁。</li>
+<li>尽管在真实游戏中，塔是可以升级的，但在这里我们认为塔的布局和等级就此定了下来，不再变动。</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><p>再介绍一下蚂蚁窝：</p>
+<ol>
+<li>如果地图上的蚂蚁不足6只，并且洞口没有蚂蚁，那么窝中每秒会爬出一只蚂蚁，直到地图上的蚂蚁数为6只。</li>
+<li>刚出生的蚂蚁站在洞口。</li>
+<li>每只蚂蚁有一个级别，级别决定了蚂蚁的血量，级别为k的蚂蚁的血量为int(4*1.1^k)（int(x)表示对x取下整）。每被塔打一次，蚂蚁的血减少d。注意，血量为0的蚂蚁仍能精力充沛地四处乱爬，只有一只蚂蚁的血被打成负数时，它才算挂了。</li>
+<li>蚂蚁的级别是这样算的：前6只出生的蚂蚁是1级，第7~12只是2级，依此类推。</li>
+</ol>
+</li>
+<li><p>最后给出关于蛋糕的介绍：</p>
+<ol>
+<li>简单起见，你可以认为此时只剩最后一块蛋糕了。如果有蚂蚁走到蛋糕的位置，并且此时蛋糕没有被扛走，那么这只蚂蚁就扛上了蛋糕。蚂蚁被打死后蛋糕归位。</li>
+<li>如果一只扛着蛋糕的蚂蚁走到蚂蚁窝的位置，我们就认为蚂蚁成功抢到了蛋糕，游戏结束。</li>
+<li>蚂蚁扛上蛋糕时，血量会增加int（该蚂蚁出生时血量 / 2），但不会超过上限。</li>
+</ol>
+</li>
+<li><p>整理一下1秒钟内发生的事件：</p>
+<ul>
+<li>1秒的最初，如果地图上蚂蚁数不足6，一只蚂蚁就会在洞口出生。</li>
+<li>接着，蚂蚁们在自己所在点留下一些信息素后，考虑移动。先出生的蚂蚁先移动。</li>
+<li>移动完毕后，如果有蚂蚁在蛋糕的位置上并且蛋糕没被拿走，它把蛋糕扛上，血量增加，并在这时被所有塔设成target。</li>
+<li>然后所有塔同时开始攻击。如果攻击结束后那只扛着蛋糕的蚂蚁挂了，蛋糕瞬间归位。</li>
+<li>攻击结束后，如果发现扛蛋糕的蚂蚁没死并在窝的位置，就认为蚂蚁抢到了蛋糕。游戏也在此时结束。</li>
+<li>最后，地图上所有点的信息素损失1单位。所有蚂蚁的年龄加1。</li>
+<li>漫长的1秒到此结束。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Input-Description"><a href="#Input-Description" class="headerlink" title="Input Description"></a>Input Description</h2><p>输入的第一行是2个用空格隔开的整数，n、m，分别表示了地图的长和宽。</p>
+<p>第二行是3个用空格隔开的整数，s、d、r，依次表示炮塔的个数、单次攻击伤害以及攻击范围。</p>
+<p>接下来s行，每行是2个用空格隔开的整数x、y，描述了一个炮塔的位置。当然，蚂蚁窝的洞口以及蛋糕所在的位置上一定没有炮塔。</p>
+<p>最后一行是一个正整数t，表示我们模拟游戏的前t秒钟。</p>
+<h2 id="Output-Description"><a href="#Output-Description" class="headerlink" title="Output Description"></a>Output Description</h2><p>如果在第t秒或之前蚂蚁抢到了蛋糕，输出一行“Game over after x seconds”，其中x为游戏结束的时间，否则输出“The game is going on”。</p>
+<p>如果游戏在t秒或之前结束，输出游戏结束时所有蚂蚁的信息，否则输出t秒后所有蚂蚁的信息。格式如下：</p>
+<p>第一行是1个整数s，表示此时活着的蚂蚁的总数。</p>
+<p>接下来s行，每行5个整数，依次表示一只蚂蚁的年龄（单位为秒）、等级、当前血量，以及在地图上的位置（a，b）。输出按蚂蚁的年龄递减排序。</p>
+<h2 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h2><h3 id="INPUT"><a href="#INPUT" class="headerlink" title="INPUT"></a>INPUT</h3><pre><code>3 5
+1 1 2
+2 2
+5
+</code></pre><h3 id="OUTPUT"><a href="#OUTPUT" class="headerlink" title="OUTPUT"></a>OUTPUT</h3><pre><code>The game is going on
+5
+5 1 3 1 4
+4 1 3 0 4
+3 1 3 0 3
+2 1 3 0 2
+1 1 4 0 1
+</code></pre><h2 id="Hint"><a href="#Hint" class="headerlink" title="Hint"></a>Hint</h2><h3 id="样例说明："><a href="#样例说明：" class="headerlink" title="样例说明："></a>样例说明：</h3><blockquote>
+<p>3*5的地图，有1个单次伤害为1、攻击范围为2的激光炮塔，它的位置为（2，2），模拟游戏的前5秒。5秒内有5只蚂蚁出生，都是向东爬行，其中第1~4只在路过（0，2）点时被激光塔伤了1格血。在第5秒的时候，最早出生的蚂蚁按移动规则1~3本来该向东移动，但由于规则4的作用，它在发现向北和向西移动都会到达不可达点后，最终选择了向南移动。</p>
+</blockquote>
+<h3 id="数据说明："><a href="#数据说明：" class="headerlink" title="数据说明："></a>数据说明：</h3><blockquote>
+<p>100%的数据满足1 ≤ n,m ≤ 8，s ≤ 20，t ≤ 200,000</p>
+</blockquote>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+#define CANNON 1
+#define ANT 2
+//#define DEBUG 0
+struct antdata{
+    int age;
+    int id;//蚂蚁的id，从1开始不重复，往上递增，为0表示不存在 
+    int rank;//等级 
+    int health;//血量 
+    int x,y;
+    int lastx,lasty;
+    int cake;//0或1，是否有蛋糕 
+}ant[6]={}; 
+struct cannondata{
+    int x,y;
+};
+int time=0;
+int cake=-1;//记录蛋糕在哪只蚂蚁身上0-5 
+int antid=0;//记录蚂蚁出生的顺序 
+int antnum=0;//记录当前场上的蚂蚁数量 
+int **map,**info;//记录地图上的蚂蚁/炮台，信息素 
+int n,m;
+int cnum,churt,cdistance;//炮台cannon数,炮台伤害，炮台攻击范围
+struct cannondata *cannon;
+int direction[4][2]={{0,1},{1,0},{0,-1},{-1,0}};//右下左上(东南西北，顺时针) 
+int directionavailable[4]={};//记录可前进的方向 
+void initialize(){
+    int i,j;
+    for(i=0;i&lt;=n;i++) for(j=0;j&lt;=m;j++) {info[i][j]=0; map[i][j]=0;}
+}
+void MakeAnt(){//不满6只则生成蚂蚁 
+    int i;
+    if(antnum&lt;6 &amp;&amp; map[0][0]==0){
+        //for(i=0;i&lt;6;i++) 
+            i=antnum;
+            //if(ant[i].id==0){
+                antid++;
+                ant[i].id=antid;
+                ant[i].x=0;
+                ant[i].y=0;
+                ant[i].lastx=0;
+                ant[i].lasty=0;
+                ant[i].age=0;
+                ant[i].rank=(antid-1)/6+1;
+                ant[i].health=floor(4*pow(1.1,ant[i].rank));
+                ant[i].cake=0;
+            //}
+            antnum++;
+            map[0][0]=ANT+ant[i].id;
+    }
+}
+void DeleteAnt(int i){//i为0-5
+    int j;
+    for(j=i+1;j&lt;antnum;j++){//后面的前移 
+        ant[j-1]=ant[j];
+    }
+    antnum--; 
+    for(j=antnum;j&lt;6;j++){//置零表示不存在 
+        ant[j].id=0;
+
+    }    
+}
+void GiveInfo(){//增加信息素 
+    int i;
+    for(i=0;i&lt;6;i++) 
+        if(ant[i].id!=0)
+            if(ant[i].cake)
+                info[ant[i].x][ant[i].y]+=5;
+            else 
+                info[ant[i].x][ant[i].y]+=2;
+}
+void LostInfo(){//失去信息素 
+    int i,j;
+    for(i=0;i&lt;=n;i++) for(j=0;j&lt;=m;j++) if(info[i][j]) info[i][j]--;
+}
+void PutAnt(int i,int x,int y){//放置蚂蚁并在地图上标记 
+    ant[i].lastx=ant[i].x;
+    ant[i].lasty=ant[i].y;
+    map[ant[i].x][ant[i].y]=0;
+#ifdef DEBUG 
+    printf(&quot;AntID:%d from (%d,%d) to (%d,%d), it&#39;s time/Rank/Health is %d/%d/%d\n&quot;,ant[i].id,ant[i].x,ant[i].y,x,y,ant[i].age+1,ant[i].rank,ant[i].health);
+#endif
+    ant[i].x=x;
+    ant[i].y=y;
+    map[x][y]=ANT+ant[i].id;    
+}
+int SelectDirection(int i){//返回一个方向的序号，不能移动返回-1 
+    int j,tx,ty,anum=0,a,amaxnum=0;
+    memset(directionavailable,0,sizeof(directionavailable));
+    for(j=0;j&lt;4;j++){
+        tx=ant[i].x+direction[j][0];
+        ty=ant[i].y+direction[j][1];
+        if(tx==ant[i].lastx &amp;&amp; ty==ant[i].lasty) continue;
+        if(tx&lt;0 || ty&lt;0 || tx&gt;n || ty&gt;m) continue;
+        if(map[tx][ty]) continue;
+        directionavailable[j]=1;//置为可达 
+        a=j;
+        anum++;//可达的数量加1 
+    }
+    if(anum==0) return -1; 
+    if(anum==1) return a; 
+    //此时有多个可达点 
+    int max=-1;
+    for(j=0;j&lt;4;j++){
+        if(directionavailable[j]){
+            tx=ant[i].x+direction[j][0];
+            ty=ant[i].y+direction[j][1];
+            directionavailable[j]=info[tx][ty]+1;//将可达标志改为该方向前进一格的信息素+1,+1为了将信息素为0的与不可达点区分 
+            if(directionavailable[j]&gt;max) max=directionavailable[j];//更新最大值 
+        }
+    }
+    for(j=0;j&lt;4;j++){//该循环将信息素不是最大值的置零 （后来发现题意不是如此，不是最大值的仍是可达点,不该置零，这里做特殊标记-1） 
+        if(directionavailable[j]){//是可达点
+            if(directionavailable[j]&lt;max){//但不是信息素最大的 
+                directionavailable[j]=-1;
+                //anum--;
+            }
+            else{//是最大值 
+                a=j;// 记下最大值的下标,如果有多个，a将是最后一个最大值 
+                amaxnum++;//最大值方向的数量 
+            }
+        }
+    }
+    if(amaxnum!=1){//有多个最大值     
+        a=0;//东
+        while(directionavailable[a]&lt;=0){//该方向不是最大值的方向(-1)，或不可达(0) 
+             a++;//顺时针转90度 
+        }
+    }
+    //在多个可达点时才考虑年龄为5的倍数的情况，因为只有1个方向可达时，逆时针多次后最终仍是该方向 
+    if((ant[i].age+1)%5==0){
+        do{
+             a--;//逆时针转90度 
+             if(a&lt;0) a+=4;
+        }while(directionavailable[a]==0);//该方向不可达 
+    }
+    return a;
+} 
+void Move(){
+    int i,tx,ty,d;
+    for(i=0;i&lt;antnum;i++){
+        //if(ant[i].id==0) break;//后面都是空的 
+        d=SelectDirection(i); 
+        if(d==-1) PutAnt(i,ant[i].x,ant[i].y);
+        else {
+            tx=ant[i].x+direction[d][0];
+            ty=ant[i].y+direction[d][1];
+            PutAnt(i,tx,ty);
+        }
+        if(ant[i].x==n &amp;&amp; ant[i].y==m &amp;&amp; cake==-1){//到达蛋糕位置 
+            ant[i].cake=1; 
+            cake=i;
+            ant[i].health+=floor(floor(4*pow(1.1,ant[i].rank))/2);
+            if(ant[i].health&gt;(int)floor(4*pow(1.1,ant[i].rank)))
+                ant[i].health=(int)floor(4*pow(1.1,ant[i].rank));
+        }
+    } 
+}
+int GetDistance2(int x1,int y1,int x2,int y2){//为了避免浮点数运算，这里计算距离的平方 
+    return (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
+}
+int VectorProduct2(int x1,int y1,int x2,int y2){//两向量矢积的平方 
+    return (x1*y2-x2*y1)*(x1*y2-x2*y1);
+}
+int Mult(int x1,int y1,int x2,int y2){//两向量数量积 
+    return x1*x2+y1*y2;
+}
+int IsInAttackArea(int x1,int y1,int x2,int y2,int x3,int y3){
+    //判断以3点为圆心，半径为0.5的圆和1,2点连成的线段有无公共点（后来才注意蚂蚁的直径是1，不是半径...） 
+    int tmp,tmp2;
+    tmp2=(x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
+    tmp=Mult(x3-x1,y3-y1,x2-x1,y2-y1);
+    if(tmp&lt;0 || tmp&gt;tmp2){//printf(&quot;----------s1---------\n&quot;); 
+        return 0;
+    }
+    tmp=VectorProduct2(x3-x1,y3-y1,x2-x1,y2-y1);
+    if(4*tmp&gt;tmp2) {//printf(&quot;----------s2---------\n&quot;); 
+        return 0;
+    }
+    return 1;
+}
+void Attack(){//所有炮塔是一起攻击的，攻击结束后才判断蚂蚁生死 
+    int i,j;
+    for(j=0;j&lt;cnum;j++){
+        int imin=-1,target=-1;
+        int d2min=9999999,d2;
+        if(cake!=-1 &amp;&amp; GetDistance2(ant[cake].x,ant[cake].y,cannon[j].x,cannon[j].y)&lt;=cdistance*cdistance){
+            target=cake;
+        }
+        else{
+            for(i=0;i&lt;antnum;i++){
+                //if(ant[i].id==0) break;//后面都是空的 
+                d2=GetDistance2(ant[i].x,ant[i].y,cannon[j].x,cannon[j].y);
+                if(d2&lt;d2min) {d2min=d2;imin=i;}
+            }
+            target=imin;
+            if(GetDistance2(ant[target].x,ant[target].y,cannon[j].x,cannon[j].y)&gt;cdistance*cdistance) continue;//最近的都打不到 
+
+        }
+        ant[target].health-=churt;
+#ifdef DEBUG
+        printf(&quot;Targer:%d,TargetAntId:%d\n&quot;,target,ant[target].id);
+#endif
+        for(i=0;i&lt;antnum;i++){
+            if(i==target) continue;
+            if(IsInAttackArea(ant[target].x,ant[target].y,cannon[j].x,cannon[j].y,ant[i].x,ant[i].y)){
+                ant[i].health-=churt;
+#ifdef DEBUG
+                printf(&quot;!!!!!!!!!!!!!!!!!ExtraTargetAntId:%d!!!!!!!!!!!!!!!!!!!\n&quot;,ant[i].id);
+                //system(&quot;pause&quot;);
+#endif
+            } 
+        } 
+    }
+}
+void Judge1(){
+    int i;
+    for(i=0;i&lt;antnum;i++){
+        if(ant[i].health&lt;0){
+#ifdef DEBUG
+            printf(&quot;AntID:%d died.\n&quot;,ant[i].id);
+#endif
+            map[ant[i].x][ant[i].y]=0;
+            if(ant[i].cake) cake=-1;//蛋糕归位
+            else if(cake!=-1) if(cake&gt;i) cake--; 
+            DeleteAnt(i);
+            i--;
+        }
+    }
+}
+int Judge2(){
+    if(cake!=-1) if(ant[cake].x==0 &amp;&amp; ant[cake].y==0) return 1;
+    return 0;
+}
+void AgeAdd(){
+    int i;
+    for(i=0;i&lt;antnum;i++) ant[i].age++;
+}
+//-------------调试-----------
+
+int GetHealthById(int id){
+    int i;
+    for(i=0;i&lt;antnum;i++) if(ant[i].id==id) return ant[i].health;
+    return -1;
+} 
+void PFSTATE(){
+    int i,j;
+
+    for(i=0;i&lt;=n;i++){
+        for(j=0;j&lt;=m;j++){
+            printf(&quot;[%3d]&quot;,info[i][j]);
+            if(map[i][j]==CANNON) printf(&quot; CANNON &quot;);
+            else if(map[i][j]&gt;ANT) printf(&quot;%4d(%2d)&quot;,map[i][j]-ANT,GetHealthById(map[i][j]-ANT));
+            else printf(&quot;|------|&quot;);
+        }
+        printf(&quot;\n&quot;);
+    }
+    printf(&quot;Cake:%d,CakeAntId:%d,ant[cake].cake:%d\n&quot;,cake,ant[cake].id,ant[cake].cake);
+    printf(&quot;=====================time: %d=====================\n&quot;,time);
+} 
+
+//---------------------------
+int Clock(){//返回1表示结束 
+    time++; 
+    MakeAnt(); 
+    GiveInfo(); 
+    Move(); 
+    Attack();
+    Judge1(); 
+    if(Judge2()) return 1;
+    AgeAdd();
+    LostInfo();
+#ifdef DEBUG
+    PFSTATE();
+#endif
+    return 0;
+}
+int main(){
+    int i,tx,ty,runtime,isend=0;
+    scanf(&quot;%d%d&quot;,&amp;n,&amp;m);
+    map=(int **)malloc(sizeof(int *)*(n+1));
+    info=(int **)malloc(sizeof(int *)*(n+1));
+    for(i=0;i&lt;=n;i++){
+        map[i]=(int *)malloc(sizeof(int)*(m+1));
+        info[i]=(int *)malloc(sizeof(int *)*(m+1));
+    }
+    initialize();
+    scanf(&quot;%d%d%d&quot;,&amp;cnum,&amp;churt,&amp;cdistance);
+    cannon=(struct cannondata *)malloc(cnum*sizeof(struct cannondata));
+    for(i=0;i&lt;cnum;i++){
+        scanf(&quot;%d%d&quot;,&amp;tx,&amp;ty);
+        map[tx][ty]=CANNON;
+        cannon[i].x=tx;
+        cannon[i].y=ty;
+    }
+    scanf(&quot;%d&quot;,&amp;runtime);
+    for(i=0;i&lt;runtime;i++){
+        if(Clock()){
+            printf(&quot;Game over after %d seconds\n&quot;,time);
+            isend=1;
+            break;
+        }
+    }
+    if(!isend) printf(&quot;The game is going on\n&quot;);
+    printf(&quot;%d\n&quot;,antnum);
+    for(i=0;i&lt;antnum;i++){
+        printf(&quot;%d %d %d %d %d\n&quot;,ant[i].age,ant[i].rank,ant[i].health,ant[i].x,ant[i].y);
+    }
+    return 0;     
+}
+</code></pre>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
+        <p><span>发布时间:</span>2017-07-13, 00:00:00</p>
+        <p><span>最后更新:</span>2019-02-19, 19:14:14</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/07/13/clp/lab10a/" title="程序设计II上机实验10A：杀蚂蚁">https://lyncien.github.io/2017/07/13/clp/lab10a/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2017/07/13/clp/lab10a/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/07/14/clp/lab10b/">
+                    程序设计II上机实验10B：&#34;完美阴阳矩阵&#34;
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/07/12/clp/lab9b/">
+                    程序设计II上机实验9B：八数码问题
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#杀蚂蚁"><span class="toc-text">杀蚂蚁</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Time-limit-3000-ms"><span class="toc-text">Time limit: 3000 ms</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Memory-limit-256-MB"><span class="toc-text">Memory limit: 256 MB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Standard-I-O"><span class="toc-text">Standard I/O</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#Content"><span class="toc-text">Content</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Input-Description"><span class="toc-text">Input Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Output-Description"><span class="toc-text">Output Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sample"><span class="toc-text">Sample</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#INPUT"><span class="toc-text">INPUT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OUTPUT"><span class="toc-text">OUTPUT</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hint"><span class="toc-text">Hint</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#样例说明："><span class="toc-text">样例说明：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据说明："><span class="toc-text">数据说明：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Code"><span class="toc-text">Code</span></a></li>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"程序设计II上机实验10A：杀蚂蚁　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/07/14/clp/lab10b/" title="上一篇: 程序设计II上机实验10B：&#34;完美阴阳矩阵&#34;">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/07/12/clp/lab9b/" title="下一篇: 程序设计II上机实验9B：八数码问题">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/article/tea_and_health/">茶与健康</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/05/mcps/lab_res/">汇编上机资源</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/mcps/lab4/">汇编上机题4</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/26/mcps/lab3/">汇编上机题3</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/25/alg/lab3/">算法基础上机实验三 最长公共子序列问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/19/mcps/lab2/">汇编上机题2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/18/alg/lab2/">算法基础上机实验二 红黑树维护算法及其区间树应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/mcps/lab1/">汇编上机题1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/12/article/USTC_Hackergame2018_8/">USTCHackergame2018之"我是谁"</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/13/article/verilog_signed_and_unsigned/">Verilog中的有符号数与无符号数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/10/cod/lab6_Multi-CycleCPU/">计算机组成原理上机实验6 多周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/04/cod/lab5_SingleCycleCPU/">计算机组成原理上机实验5 单周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/">操作系统阅读报告：进程通信与同步、进程调度</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/18/os/System_Call/System Call/">操作系统阅读报告：系统调用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/11/os/OS_Summary/OS Summary/">操作系统阅读报告：操作系统概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/09/ds/lab4_ShortestPaths/">数据结构上机题4 最短路径</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/ds/lab1_Polynome/">数据结构上机题1 一元稀疏多项式计算</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/article/A_Expression_Evaluation/">A Expression Evaluation</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B："完美阴阳矩阵"</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/11/clp/lab9a/">程序设计II上机实验9A：算24</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2019 Lyncien
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

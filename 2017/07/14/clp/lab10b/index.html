@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Lyncien">
+
+
+
+<meta name="description" content="“完美阴阳矩阵”Time limit: 1000 msMemory limit: 256 MBStandard I/OContent$定义元素全为0或1的矩阵为“阴阳矩阵”，即一个n行m列的矩阵A为“阴阳矩阵”当且仅当：$ $\forall i\forall j(A_{ij}\in {0,1})(1≤i≤n,1≤j≤m)$ $对于一个n行m列的矩阵A和一个n’行m’列(1≤n’≤n,1≤m’≤m)">
+<meta name="keywords" content="C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序设计II上机实验10B：&quot;完美阴阳矩阵&quot;">
+<meta property="og:url" content="https://lyncien.github.io/2017/07/14/clp/lab10b/index.html">
+<meta property="og:site_name" content="Lyncien&#39;s homepage">
+<meta property="og:description" content="“完美阴阳矩阵”Time limit: 1000 msMemory limit: 256 MBStandard I/OContent$定义元素全为0或1的矩阵为“阴阳矩阵”，即一个n行m列的矩阵A为“阴阳矩阵”当且仅当：$ $\forall i\forall j(A_{ij}\in {0,1})(1≤i≤n,1≤j≤m)$ $对于一个n行m列的矩阵A和一个n’行m’列(1≤n’≤n,1≤m’≤m)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-19T11:14:25.464Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="程序设计II上机实验10B：&quot;完美阴阳矩阵&quot;">
+<meta name="twitter:description" content="“完美阴阳矩阵”Time limit: 1000 msMemory limit: 256 MBStandard I/OContent$定义元素全为0或1的矩阵为“阴阳矩阵”，即一个n行m列的矩阵A为“阴阳矩阵”当且仅当：$ $\forall i\forall j(A_{ij}\in {0,1})(1≤i≤n,1≤j≤m)$ $对于一个n行m列的矩阵A和一个n’行m’列(1≤n’≤n,1≤m’≤m)">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Lyncien&#39;s homepage" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>程序设计II上机实验10B：&#34;完美阴阳矩阵&#34; | Lyncien&#39;s homepage</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head></html>
+<script src="/js/head-pic.js" ></script> <!-- head-pic-flash by Lyncien -->
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic" id="head-pic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Lyncien</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/Lyncien" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Lyncien</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic" id="head-pic-mobile">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Lyncien</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" target="_blank" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/Lyncien" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-clp/lab10b" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/07/14/clp/lab10b/" class="article-date">
+      <time datetime="2017-07-13T16:00:00.000Z" itemprop="datePublished">2017-07-14</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      程序设计II上机实验10B：&#34;完美阴阳矩阵&#34;
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="“完美阴阳矩阵”"><a href="#“完美阴阳矩阵”" class="headerlink" title="“完美阴阳矩阵”"></a>“完美阴阳矩阵”</h1><h4 id="Time-limit-1000-ms"><a href="#Time-limit-1000-ms" class="headerlink" title="Time limit: 1000 ms"></a>Time limit: 1000 ms</h4><h4 id="Memory-limit-256-MB"><a href="#Memory-limit-256-MB" class="headerlink" title="Memory limit: 256 MB"></a>Memory limit: 256 MB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>$定义元素全为0或1的矩阵为“阴阳矩阵”，即一个n行m列的矩阵A为“阴阳矩阵”当且仅当：$</p>
+<p>$\forall i\forall j(A_{ij}\in {0,1})(1≤i≤n,1≤j≤m)$</p>
+<p>$对于一个n行m列的矩阵A和一个n’行m’列(1≤n’≤n,1≤m’≤m)的矩阵A’，称A’为A的子矩阵当且仅当：$</p>
+<p>$\exists i_0\exists j_0\forall i\forall j(A_{i_0+i,j_0+j}=A’_{ij}(1≤i≤n’,1≤j≤m’,0≤i_0≤n−n’,0≤j_0≤m−m’))$</p>
+<p>$自然地，“阴阳矩阵”的子矩阵也是“阴阳矩阵”。$</p>
+<p>$对一个n行m列的“阴阳矩阵”矩阵A，称它为“完美阴阳矩阵”当且仅当以下两个条件都成立：$</p>
+<p>$1.\forall i\forall j(A_{i,j}≠A_{i,j+1})(1≤i≤n,1≤j≤m−1)$</p>
+<p>$2.\forall i\forall j(A_{i,j}≠A_{i+1,j})(1≤i≤n−1,1≤j≤m)$</p>
+<p>$显然，一个n行m列的矩阵的元素个数为n×m.现给定一个n行m列的“阴阳矩阵”A，$</p>
+<p>$1.求“阴阳矩阵”A的子方阵（行与列数目相同的子矩阵）中元素最多的“完美阴阳方阵”，输出该子方阵的元素数目。$</p>
+<p>$2.求“阴阳矩阵”A的子矩阵中元素最多的“完美阴阳矩阵”，输出该子矩阵的元素数目。$</p>
+<h2 id="Input-Description"><a href="#Input-Description" class="headerlink" title="Input Description"></a>Input Description</h2><p>输入的第一行是两个空格隔开的整数n和m，分别表示矩阵的长和宽。接下来的n行，每行m个数，空格隔开，表示一个n×m的阴阳矩阵。</p>
+<h2 id="Output-Description"><a href="#Output-Description" class="headerlink" title="Output Description"></a>Output Description</h2><p>两行，每行一个数，表示所求答案。</p>
+<h2 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h2><h3 id="INPUT"><a href="#INPUT" class="headerlink" title="INPUT"></a>INPUT</h3><pre><code>3 3
+1 0 1
+0 1 0
+1 0 0
+</code></pre><h3 id="OUTPUT"><a href="#OUTPUT" class="headerlink" title="OUTPUT"></a>OUTPUT</h3><pre><code>4
+6
+</code></pre><h2 id="Hint"><a href="#Hint" class="headerlink" title="Hint"></a>Hint</h2><blockquote>
+<p>对于20%20%的数据，n,m≤80n,m≤80</p>
+<p>对于40%40%的数据，n,m≤400n,m≤400</p>
+<p>对于100%100%的数据，n,m≤2000n,m≤2000（各种暴力方法都会超时哦）</p>
+</blockquote>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code class="C">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+typedef struct intervaldata{
+    int begin;
+    int end;
+    struct intervaldata *next;
+}Interval;//区间
+Interval** allhead;
+int m,n;
+int MaxSquareLen,MaxRectArea;//最大方阵的边长，最大矩阵的面积()
+int max(int a,int b){
+    return a&gt;b?a:b;
+}
+int min(int a,int b){
+    return a&lt;b?a:b;
+}
+Interval* MakeNode(int begin,int end){
+    Interval* p=(Interval*)malloc(sizeof(Interval));
+    p-&gt;begin=begin;
+    p-&gt;end=end;
+    p-&gt;next=NULL;
+    return p;
+}
+void UpdateMaxRectArea(int weith,int depth){//更新矩阵最大值,注意到阴阳矩阵应该比普通矩阵长宽各+1
+    MaxRectArea=max(MaxRectArea,(weith+1)*(depth+1));
+    MaxSquareLen=max(MaxSquareLen,min(weith,depth)+1);
+}
+int Search(int row,int left,int right,int depth){//row是当前行
+    //depth表示当前矩形纵深高度(占的行数，不包括当前行)
+    //left,right是上一行传递下来的区间范围
+    if(row&gt;=m-1){//超出地图了，地图最后一行是m-2（全地图化为普通矩阵后共m-1行）;
+        UpdateMaxRectArea(right-left+1,depth);
+        return 1;
+    }
+    Interval* p=allhead[row]-&gt;next;
+    int tmpleft,tmpright;
+    while(p!=NULL){
+        if(p-&gt;end&lt;left){
+                p=p-&gt;next;
+                continue;
+        } 
+        if(p-&gt;begin&gt;right) break;
+        tmpleft=max(left,p-&gt;begin);
+        tmpright=min(right,p-&gt;end);
+        Search(row+1,tmpleft,tmpright,depth+1);
+        p=p-&gt;next;
+    }
+    //结算
+    UpdateMaxRectArea(right-left+1,depth);
+    return 1;
+}
+int main(){
+    int i,j;
+    scanf(&quot;%d%d&quot;,&amp;m,&amp;n);
+    int **map=(int **)malloc(sizeof(int *)*m);
+    for(i=0;i&lt;m;i++){
+        map[i]=(int *)malloc(sizeof(int)*n);
+        for(j=0;j&lt;n;j++){
+            scanf(&quot;%d&quot;,&amp;map[i][j]);
+        }
+    }
+    allhead=(Interval**)malloc(sizeof(Interval*)*(m-1));//每一行的头结点指针
+    for(i=0;i&lt;m-1;i++){//化为普通0/1矩阵，同时求出每行的值为1区间存在链表里,问题化为求解最大1矩阵面积
+        int start=-1;
+        allhead[i]=MakeNode(0,0);//头结点不用
+        Interval* now=allhead[i];
+        for(j=0;j&lt;n-1;j++){
+            if(map[i][j+1]==!map[i][j] &amp;&amp; map[i+1][j]==!map[i][j] &amp;&amp; map[i+1][j+1]==map[i][j]){
+                map[i][j]=1;
+                if(start==-1) start=j;
+            }
+            else{
+                map[i][j]=0;
+                if(start!=-1){
+                    Interval* p=MakeNode(start,j-1);
+                    now-&gt;next=p;
+                    now=p;
+                    start=-1;
+                }
+            }
+        }
+        if(start!=-1){
+            Interval* p=MakeNode(start,j-1);
+            now-&gt;next=p;
+        }
+    }
+    for(i=0;i&lt;m-1;i++){//遍历每一行的区间
+        Interval* p=allhead[i]-&gt;next;
+        while(p!=NULL){
+            Search(i+1,p-&gt;begin,p-&gt;end,1);
+            p=p-&gt;next;
+        }
+    }
+    printf(&quot;%d\n%d&quot;,MaxSquareLen*MaxSquareLen,MaxRectArea);
+    for(i=0;i&lt;m;i++){
+        free(map[i]);
+    }
+    free(map);
+    for(i=0;i&lt;m-1;i++){
+        Interval* p=allhead[i];
+        while(p!=NULL){
+            allhead[i]=p-&gt;next;
+            free(p);
+            p=allhead[i];
+        }
+    }
+    return 0;
+}
+</code></pre>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B：&#34;完美阴阳矩阵&#34;</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
+        <p><span>发布时间:</span>2017-07-14, 00:00:00</p>
+        <p><span>最后更新:</span>2019-02-19, 19:14:25</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/07/14/clp/lab10b/" title="程序设计II上机实验10B：&#34;完美阴阳矩阵&#34;">https://lyncien.github.io/2017/07/14/clp/lab10b/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2017/07/14/clp/lab10b/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/08/01/article/A_Expression_Evaluation/">
+                    A Expression Evaluation
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/07/13/clp/lab10a/">
+                    程序设计II上机实验10A：杀蚂蚁
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#“完美阴阳矩阵”"><span class="toc-text">“完美阴阳矩阵”</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Time-limit-1000-ms"><span class="toc-text">Time limit: 1000 ms</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Memory-limit-256-MB"><span class="toc-text">Memory limit: 256 MB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Standard-I-O"><span class="toc-text">Standard I/O</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#Content"><span class="toc-text">Content</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Input-Description"><span class="toc-text">Input Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Output-Description"><span class="toc-text">Output Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sample"><span class="toc-text">Sample</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#INPUT"><span class="toc-text">INPUT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OUTPUT"><span class="toc-text">OUTPUT</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hint"><span class="toc-text">Hint</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Code"><span class="toc-text">Code</span></a></li>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"程序设计II上机实验10B："完美阴阳矩阵"　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/08/01/article/A_Expression_Evaluation/" title="上一篇: A Expression Evaluation">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/07/13/clp/lab10a/" title="下一篇: 程序设计II上机实验10A：杀蚂蚁">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/article/tea_and_health/">茶与健康</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/05/mcps/lab_res/">汇编上机资源</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/mcps/lab4/">汇编上机题4</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/26/mcps/lab3/">汇编上机题3</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/25/alg/lab3/">算法基础上机实验三 最长公共子序列问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/19/mcps/lab2/">汇编上机题2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/18/alg/lab2/">算法基础上机实验二 红黑树维护算法及其区间树应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/mcps/lab1/">汇编上机题1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/12/article/USTC_Hackergame2018_8/">USTCHackergame2018之"我是谁"</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/13/article/verilog_signed_and_unsigned/">Verilog中的有符号数与无符号数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/10/cod/lab6_Multi-CycleCPU/">计算机组成原理上机实验6 多周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/04/cod/lab5_SingleCycleCPU/">计算机组成原理上机实验5 单周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/">操作系统阅读报告：进程通信与同步、进程调度</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/18/os/System_Call/System Call/">操作系统阅读报告：系统调用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/11/os/OS_Summary/OS Summary/">操作系统阅读报告：操作系统概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/09/ds/lab4_ShortestPaths/">数据结构上机题4 最短路径</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/ds/lab1_Polynome/">数据结构上机题1 一元稀疏多项式计算</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/article/A_Expression_Evaluation/">A Expression Evaluation</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B："完美阴阳矩阵"</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/11/clp/lab9a/">程序设计II上机实验9A：算24</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2019 Lyncien
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
