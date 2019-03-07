@@ -884,14 +884,14 @@ a {
   -moz-background-size: 103%;
   background-size: 103%;
 }
-#header .header-nav .social .GitHub {
-  background: url("/img/GitHub.png") center no-repeat #000;
+#header .header-nav .social .Github {
+  background: url("/img/Github.png") center no-repeat #000;
   -webkit-background-size: 75%;
   -moz-background-size: 75%;
   background-size: 75%;
 }
-#header .header-nav .social .LeetCode {
-  background: url("/img/LeetCode.png") center no-repeat #fff;
+#header .header-nav .social .Leetcode {
+  background: url("/img/Leetcode.png") center no-repeat #fff;
   -webkit-background-size: 88%;
   -moz-background-size: 88%;
   background-size: 88%;
