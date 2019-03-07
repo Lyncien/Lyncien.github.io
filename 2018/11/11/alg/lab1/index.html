@@ -19,20 +19,20 @@
 <meta name="keywords" content="Algorithm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="算法基础上机实验一 求平面上n个顶点的最近点对问题">
-<meta property="og:url" content="https://lyncien.github.io/2018/11/11/alg/lab1/index.html">
+<meta property="og:url" content="https://l-x.me/2018/11/11/alg/lab1/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="题目求平面上n个顶点的最近点对问题 算法设计分治法 1．先考虑一维的情形，即线段上最近点对。用x轴上某个点m将S划分为2个子集S1和S2，使得S1={x∈S|x≤m}；S2={x∈S|x&amp;gt;m}，S1∪S2=S ，S1∩S2=Φ，则线段上最近点对为以下三者中的距离最小者： （1）左半边S1的最近点对 （2）右半边S2的最近点对 （3）跨越分点m的最近点对  左半边S1的最近点对和右半边S2的最">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/11/alg/lab1/clip_image002.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/11/alg/lab1/clip_image004.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/11/alg/lab1/clip_image006.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/11/alg/lab1/clip_image008.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/11/alg/lab1/clip_image010.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/11/alg/lab1/clip_image002.png">
+<meta property="og:image" content="https://l-x.me/2018/11/11/alg/lab1/clip_image004.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/11/alg/lab1/clip_image006.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/11/alg/lab1/clip_image008.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/11/alg/lab1/clip_image010.jpg">
 <meta property="og:updated_time" content="2019-02-20T15:11:15.680Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="算法基础上机实验一 求平面上n个顶点的最近点对问题">
 <meta name="twitter:description" content="题目求平面上n个顶点的最近点对问题 算法设计分治法 1．先考虑一维的情形，即线段上最近点对。用x轴上某个点m将S划分为2个子集S1和S2，使得S1={x∈S|x≤m}；S2={x∈S|x&amp;gt;m}，S1∪S2=S ，S1∩S2=Φ，则线段上最近点对为以下三者中的距离最小者： （1）左半边S1的最近点对 （2）右半边S2的最近点对 （3）跨越分点m的最近点对  左半边S1的最近点对和右半边S2的最">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/11/11/alg/lab1/clip_image002.png">
+<meta name="twitter:image" content="https://l-x.me/2018/11/11/alg/lab1/clip_image002.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -304,7 +304,7 @@
 <p>（1）左半边S1的最近点对</p>
 <p>（2）右半边S2的最近点对</p>
 <p>（3）跨越分点m的最近点对</p>
-<p><img src="//lyncien.github.io/2018/11/11/alg/lab1/clip_image002.png" alt="img"></p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image002.png" alt="img"></p>
 <p>左半边S1的最近点对和右半边S2的最近点对的求解可以递归地调用该过程。而跨越分点m的最近点对，我们可以将S1中的一点与S2中的每一点计算距离，但这将花费O(n^2)。</p>
 <p>事实上，通过求解左右两个子问题，我们已经得到一个当前最近点对的距离δ，在S1中，任何一个宽度为δ的区间内只分布着一个点，否则，存在两点距离小于δ，同理，S2中也是。因此，我们只需要考虑[m-δ,m+δ]区间内的点对距离，在[m-δ,m]如果有点，只能有一个点，这个点就是S1中距离m最近的点。区间[m,m+δ]同理。如果这两个点都存在，则计算距离，并与δ比较，因此，只需要O(n)时间完成问题的合并。</p>
 <p>m点的选取问题：任意选取分割点m，有可能造成划分出的子集S1和S2的不平衡，最坏情况下有递归式：</p>
@@ -317,15 +317,15 @@
 <h5 id="2-考虑二维的情况，即本次实验求解的问题。"><a href="#2-考虑二维的情况，即本次实验求解的问题。" class="headerlink" title="2. 考虑二维的情况，即本次实验求解的问题。"></a>2. 考虑二维的情况，即本次实验求解的问题。</h5><p>类似一维情况，将平面分为两个半平面，使两边各分布约一半的点，为了确定分割线x = m，先对所有点按x坐标进行排序，取m为下标中位数附近两个点的x的坐标的平均值。</p>
 <p>递归地在S1和S2上解最接近点对问题，我们分别得到S1和S2中的最近点对的距离δ1和δ2。现设δ = min(δ1, δ2)。</p>
 <p>现在考虑两个点分别在S1和S2中的情况。类似一维的情况，我们只需要考虑条带区域[m-δ,m]和[m,m+δ]中点对的距离，记这两个区域为P1和P2。</p>
-<p><img src="//lyncien.github.io/2018/11/11/alg/lab1/clip_image004.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image004.jpg" alt="img"></p>
 <p>在一维的时候，距分割点距离为δ的2个区间P1[m-δ,m]和P2 [m,m+δ]中最多各有S中一个点，因而这两个点成为唯一的未检查过的最接近点对候选者。但在二维情况下，P1 [m-δ,m]中可能存在多个点，并且他们的距离大于δ，P2 [m,m+δ]同理。因此，最坏情况下，S1中的点可能都在P1 [m-δ,m]中，S2中的点可能都在P2 [m,m+δ]中，这样就需要花费O(n^2)来合并问题（检查跨越P1、P2的所有点对）。</p>
 <p>事实上，我们不必检查如此多的点对，考虑P1中任意一点p,它若与P2中的点q构成最接近点对的候选者，则必有d(p,q)&lt; δ。显然，这样的点只会分布在一个δ×2δ的矩形R中，如下图。</p>
-<p><img src="//lyncien.github.io/2018/11/11/alg/lab1/clip_image006.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image006.jpg" alt="img"></p>
 <p> 由δ的意义可知P2中任何2个S中的点的距离都不小于δ。我们可以将矩形R的长为2δ的边3等分，将它的长为δ的边2等分，形成6个（δ/2）×（2δ/3）的矩形。</p>
-<p><img src="//lyncien.github.io/2018/11/11/alg/lab1/clip_image008.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image008.jpg" alt="img"></p>
 <p>若矩形R中有多于6个S中的点，则由抽屉原理易知至少有一个（δ/2）×（2δ/3）的小矩形中有2个以上S中的点。设a,b是这样2个点，它们位于同一小矩形中，则d(a,b)≤sqrt((δ/2)^2+(2δ/3)^2) &lt;δ ，这与δ的意义相矛盾。</p>
 <p>由此可以推出矩形R中最多只有6个S中的点，极端情形如下图。</p>
-<p><img src="//lyncien.github.io/2018/11/11/alg/lab1/clip_image010.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image010.jpg" alt="img"></p>
 <p>因此，在分治法的合并步骤中，我们最多只需要检查6×n/2=3n对候选者，而不是O(n^2)对候选者。但这不意味着我们可以在O(n)时间内完成分治法的合并步骤。因为我们并不确切地知道要检查哪6个点。</p>
 <p>为了解决这个问题，我们需要将P1和P2中的点分别按其y坐标排序，则对P1中每一点最多只要检查P2中排好序的相继6个点。排序花费的时间为O(nlogn)。这样得到递归式</p>
 <p>T(n) = 2T(n/2) + O(nlogn)</p>
@@ -474,8 +474,8 @@ int main(){
         <p><span>发布时间:</span>2018-11-11, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-20, 23:11:15</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/11/11/alg/lab1/" title="算法基础上机实验一 求平面上n个顶点的最近点对问题">https://lyncien.github.io/2018/11/11/alg/lab1/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/11/11/alg/lab1/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/11/11/alg/lab1/" title="算法基础上机实验一 求平面上n个顶点的最近点对问题">https://l-x.me/2018/11/11/alg/lab1/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/11/11/alg/lab1/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

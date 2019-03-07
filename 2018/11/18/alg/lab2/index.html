@@ -19,27 +19,27 @@
 <meta name="keywords" content="Algorithm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="算法基础上机实验二 红黑树维护算法及其区间树应用">
-<meta property="og:url" content="https://lyncien.github.io/2018/11/18/alg/lab2/index.html">
+<meta property="og:url" content="https://l-x.me/2018/11/18/alg/lab2/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="题目红黑树维护算法及其区间树应用 算法设计（一）红黑树红黑树是一棵二叉搜索树，是众多平衡二叉树中的一种，它可以保证在最坏情况下基本操作的时间复杂度为O(lgn) 红黑树的每个结点包含5个属性：color、key、left、right、parent，分别表示颜色、关键字、左孩子、右孩子、父亲。  红黑树有以下性质： ① 每个节点必须为红色或黑色；  ② 根为黑色；  ③ 树中的nil叶子为黑；  ④">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image002.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image004.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image006.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image008.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image010.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image012.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image014.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image016.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image018.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image020.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image022.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image023.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image002.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image004.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image006.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image008.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image010.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image012.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image014.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image016.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image018.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image020.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image022.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image023.jpg">
 <meta property="og:updated_time" content="2019-02-20T15:11:38.912Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="算法基础上机实验二 红黑树维护算法及其区间树应用">
 <meta name="twitter:description" content="题目红黑树维护算法及其区间树应用 算法设计（一）红黑树红黑树是一棵二叉搜索树，是众多平衡二叉树中的一种，它可以保证在最坏情况下基本操作的时间复杂度为O(lgn) 红黑树的每个结点包含5个属性：color、key、left、right、parent，分别表示颜色、关键字、左孩子、右孩子、父亲。  红黑树有以下性质： ① 每个节点必须为红色或黑色；  ② 根为黑色；  ③ 树中的nil叶子为黑；  ④">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/11/18/alg/lab2/clip_image002.jpg">
+<meta name="twitter:image" content="https://l-x.me/2018/11/18/alg/lab2/clip_image002.jpg">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -308,7 +308,7 @@
         <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>红黑树维护算法及其区间树应用</p>
 <h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><h4 id="（一）红黑树"><a href="#（一）红黑树" class="headerlink" title="（一）红黑树"></a>（一）红黑树</h4><p>红黑树是一棵二叉搜索树，是众多平衡二叉树中的一种，它可以保证在最坏情况下基本操作的时间复杂度为O(lgn)</p>
 <p>红黑树的每个结点包含5个属性：color、key、left、right、parent，分别表示颜色、关键字、左孩子、右孩子、父亲。</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image002.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image002.jpg" alt="img"></p>
 <p>红黑树有以下性质：</p>
 <p>① 每个节点必须为红色或黑色； </p>
 <p>② 根为黑色； </p>
@@ -317,13 +317,13 @@
 <p>⑤ 每节点到其后代叶子的所有路径含有同样多的黑节点； </p>
 <p>红黑树的基本操作：</p>
 <h5 id="（1）左旋-右旋"><a href="#（1）左旋-右旋" class="headerlink" title="（1）左旋/右旋"></a>（1）左旋/右旋</h5><p>这是一种能保持二叉搜索树性质的局部操作。</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image004.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image004.jpg" alt="img"></p>
 <p>以左旋为例，操作顺序如下：</p>
 <p>① y←right[x] //记录指向y节点的指针</p>
 <p>② right[x]←left[y], p[left[y]]←x //β连到x右</p>
 <p>③ parent[y]←parent[x], parent[x]的左或右指针指向y //y连到p[x]</p>
 <p>④ left[y]←x, parent[x]←y// x连到y左</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image006.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image006.jpg" alt="img"></p>
 <p>​                      该操作的时间复杂度T(n)=O(1)</p>
 <h5 id="（2）插入"><a href="#（2）插入" class="headerlink" title="（2）插入"></a>（2）插入</h5><p>这个操作是在二叉搜索树的插入操作上略作修改，分为三步：</p>
 <p>①将z节点按BST树规则插入红黑树中，z是叶子节点；</p>
@@ -342,14 +342,14 @@
 <ul>
 <li>Case1: z的叔叔y是红色，这时通过调整叔叔、父亲和祖父的颜色，将违反性质的结点上移，调整最多至根。若红色传播到根，将根涂黑，则树的黑高增1</li>
 </ul>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image008.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image008.jpg" alt="img"></p>
 <ul>
 <li><p>Case 2：当z的叔叔y是黑色，且z是双亲p[z]的右孩子，这种情况通过左旋变换为Case3.</p>
 </li>
 <li><p>Case 3：当z的叔叔y是黑色，且z是双亲p[z]的左孩子</p>
 </li>
 </ul>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image010.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image010.jpg" alt="img"></p>
 <p>调整算法的时间：O(logn)</p>
 <p>整个插入算法的时间：O(logn)</p>
 <h5 id="（3）删除"><a href="#（3）删除" class="headerlink" title="（3）删除"></a>（3）删除</h5><p>这个操作将树上的一个结点z删除，然后进行z的孩子的调整，使之满足二叉搜索树的性质，最后，然后红黑树性质被破坏，则需要进行颜色的调整。</p>
@@ -362,14 +362,14 @@
 </ul>
 <p>case 1是case 2的特例，处理模式是一样</p>
 <p>处理方式：删除z，连接x。这里x是z的中序后继；</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image012.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image012.jpg" alt="img"></p>
 <ul>
 <li>Case 3：z的两个孩子均非空；</li>
 </ul>
 <p>处理方式：</p>
 <p>(1)找z的中序后继即找z的右子树中最左下节点y；</p>
 <p>(2)删除y，将y的内容copy到z，再将y的右子连到p[y]左下。</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image014.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image014.jpg" alt="img"></p>
 <p>最后分析颜色的调整：</p>
 <p>删红点不影响，删黑点需要调整。</p>
 <p>对于结点x，或是y的唯一孩子，或是哨兵nil[T]。</p>
@@ -385,28 +385,28 @@
 <li>Case 1：x的兄弟w是红色（w是红，则 p[x]必黑）</li>
 </ul>
 <p>处理方式如图，目标是将情况变成Case2,3,4处理</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image016.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image016.jpg" alt="img"></p>
 <ul>
 <li>Case 2：x的黑兄弟w的两个孩子均为黑</li>
 </ul>
 <p>处理方式如图，目标是将 x上移到B，通过A和D的黑色上移</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image018.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image018.jpg" alt="img"></p>
 <ul>
 <li>Case 3：x的黑兄弟w的右子为黑且左子为红</li>
 </ul>
 <p>处理方式如图，目标是将case3转为case4</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image020.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image020.jpg" alt="img"></p>
 <ul>
 <li>Case 4：x的黑兄弟w的右子为红(左子为黑或红)</li>
 </ul>
 <p>x的黑色上移给B，B的原色下移给D，D将黑色下移给C和E，通过旋转解决矛盾点C</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image022.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image022.jpg" alt="img"></p>
 <h4 id="（二）区间树"><a href="#（二）区间树" class="headerlink" title="（二）区间树"></a>（二）区间树</h4><p>区间树是对红黑树的扩张，其每个结点存储一个区间，包括low和high两个值，其中low作为红黑树的key。</p>
 <p>为了实现重叠区间的查找，还需要为每个结点添加一个max域，其值为以该结点为根的子树的所有区间的最大端点。</p>
 <p>（1）max值的计算：该节点的区间右端点、左子树max值、右子树max值三者中的最大值。</p>
 <p>max值的维护：需要在旋转、插入和删除时进行调整。</p>
 <p>①左旋后，y的max更新为x原来的max，x的max重新按上面的方法计算，时间复杂度为O(1)。</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image023.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image023.jpg" alt="img"></p>
 <p>②插入z时，z的max值设为自己区间的右端点，然后对于从根到插入位置的每个结点，如果其max值小于z的max值，则更新为z的max值。时间复杂度为O(logn)。</p>
 <p>③删除z时，如果z只有一个孩子或者没有孩子，则直接从z的父亲开始向上到根结点，依次重新计算max值。如z有左右孩子，在找到z的中序遍历后继y后，从y的父亲开始向上至根结点，依次计算max值。时间复杂度为O(logn)。</p>
 <p>（2）重叠区间的查找：x从根结点开始，如果x为nil或待查找的区间与其重叠，则返回x。否则，x更新，如果x左孩子不为nil且max值大于待查找区间的左端点，则x更新为x的左孩子，反之更新为x的右孩子。</p>
@@ -818,8 +818,8 @@ int main(){
         <p><span>发布时间:</span>2018-11-18, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-20, 23:11:38</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/11/18/alg/lab2/" title="算法基础上机实验二 红黑树维护算法及其区间树应用">https://lyncien.github.io/2018/11/18/alg/lab2/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/11/18/alg/lab2/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/11/18/alg/lab2/" title="算法基础上机实验二 红黑树维护算法及其区间树应用">https://l-x.me/2018/11/18/alg/lab2/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/11/18/alg/lab2/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

@@ -19,18 +19,18 @@
 <meta name="keywords" content="Algorithm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="算法基础上机实验三 最长公共子序列问题">
-<meta property="og:url" content="https://lyncien.github.io/2018/11/25/alg/lab3/index.html">
+<meta property="og:url" content="https://l-x.me/2018/11/25/alg/lab3/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="题目最长公共子序列问题和调研报告 算法设计1. 最长公共子序列问题（Longest common subsequence problem）的定义 ​       子序列：给定序列X=(x1,x2,…,xm)，序列Z=( z1,z2,…,zk)是X的一个子序列，必须满足：若X的索引中存在一个严格增的序列i1,i2,…,ik，使得对所有的j=1~k，均有xij=zj ​       公共子序列（CS）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/25/alg/lab3/clip_image002.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/25/alg/lab3/clip_image004.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/11/25/alg/lab3/clip_image006.png">
+<meta property="og:image" content="https://l-x.me/2018/11/25/alg/lab3/clip_image002.jpg">
+<meta property="og:image" content="https://l-x.me/2018/11/25/alg/lab3/clip_image004.png">
+<meta property="og:image" content="https://l-x.me/2018/11/25/alg/lab3/clip_image006.png">
 <meta property="og:updated_time" content="2019-02-20T15:15:24.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="算法基础上机实验三 最长公共子序列问题">
 <meta name="twitter:description" content="题目最长公共子序列问题和调研报告 算法设计1. 最长公共子序列问题（Longest common subsequence problem）的定义 ​       子序列：给定序列X=(x1,x2,…,xm)，序列Z=( z1,z2,…,zk)是X的一个子序列，必须满足：若X的索引中存在一个严格增的序列i1,i2,…,ik，使得对所有的j=1~k，均有xij=zj ​       公共子序列（CS）">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/11/25/alg/lab3/clip_image002.jpg">
+<meta name="twitter:image" content="https://l-x.me/2018/11/25/alg/lab3/clip_image002.jpg">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -320,13 +320,13 @@
 <p>找Xm-1和Y的LCS 和 找X和Yn-1的LCS；</p>
 <p>取两者中的最大的；</p>
 <p>​       定义c[i,j]=Xi和Yj的LCS长度，i=0~m, j=0~n，则有如下公式</p>
-<p><img src="//lyncien.github.io/2018/11/25/alg/lab3/clip_image002.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/25/alg/lab3/clip_image002.jpg" alt="img"></p>
 <p>（3）计算最优解和构造LCS</p>
 <p>根据上面的公式，我们可以使用自底向上的动态规划方法。若X和Y的长度分别为m和n，则时间复杂度为O（mn）。</p>
 <p>使用如下变量</p>
 <p>c[0..m, 0..n] //二维数组，存放最优解值，计算时行优先</p>
 <p>b[1..m, 1..n] //二维数组，解矩阵，存放构造最优解信息</p>
-<p><img src="//lyncien.github.io/2018/11/25/alg/lab3/clip_image004.png" alt="img"></p>
+<p><img src="//l-x.me/2018/11/25/alg/lab3/clip_image004.png" alt="img"></p>
 <p>当构造解时，从b[m,n]出发，上溯至i=0或j=0止</p>
 <p>上溯过程中，当b[i,j]包含“↖”时打印出xi(yj)</p>
 <p>（4）进一步改进</p>
@@ -334,7 +334,7 @@
 <p>两种思路：</p>
 <p>① c[i-1,j]、c[i,j-1]和c[i-1,j-1]只涉及当前行和上一行，因此表c只需保留两行，反复利用这两行，原先第i行的数据可以覆盖在第i-2行上。同时选取min（m,n）为行的长度。</p>
 <p>②表c只保留一行，选取min（m,n）为行的长度，假设为n，则表c[1…n]。原来计算c[i,j]，现在计算c[j]。另外增设一个变量tmp，每次计算c[j]后，把原先c[j]值保存在tmp中。 </p>
-<p><img src="//lyncien.github.io/2018/11/25/alg/lab3/clip_image006.png" alt="img"></p>
+<p><img src="//l-x.me/2018/11/25/alg/lab3/clip_image006.png" alt="img"></p>
 <h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code class="c++">#include &lt;stdio.h&gt;
 #include &lt;string.h&gt;
 #define MAXLEN 100
@@ -400,8 +400,8 @@ int main(){
         <p><span>发布时间:</span>2018-11-25, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-20, 23:15:24</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/11/25/alg/lab3/" title="算法基础上机实验三 最长公共子序列问题">https://lyncien.github.io/2018/11/25/alg/lab3/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/11/25/alg/lab3/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/11/25/alg/lab3/" title="算法基础上机实验三 最长公共子序列问题">https://l-x.me/2018/11/25/alg/lab3/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/11/25/alg/lab3/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

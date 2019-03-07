@@ -20,7 +20,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Lyncien&#39;s homepage">
-<meta property="og:url" content="https://lyncien.github.io/page/2/index.html">
+<meta property="og:url" content="https://l-x.me/page/2/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
@@ -286,7 +286,7 @@
         <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>红黑树维护算法及其区间树应用</p>
 <h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><h4 id="（一）红黑树"><a href="#（一）红黑树" class="headerlink" title="（一）红黑树"></a>（一）红黑树</h4><p>红黑树是一棵二叉搜索树，是众多平衡二叉树中的一种，它可以保证在最坏情况下基本操作的时间复杂度为O(lgn)</p>
 <p>红黑树的每个结点包含5个属性：color、key、left、right、parent，分别表示颜色、关键字、左孩子、右孩子、父亲。</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image002.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image002.jpg" alt="img"></p>
 <p>红黑树有以下性质：</p>
 <p>① 每个节点必须为红色或黑色； </p>
 <p>② 根为黑色； </p>
@@ -295,13 +295,13 @@
 <p>⑤ 每节点到其后代叶子的所有路径含有同样多的黑节点； </p>
 <p>红黑树的基本操作：</p>
 <h5 id="（1）左旋-右旋"><a href="#（1）左旋-右旋" class="headerlink" title="（1）左旋/右旋"></a>（1）左旋/右旋</h5><p>这是一种能保持二叉搜索树性质的局部操作。</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image004.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image004.jpg" alt="img"></p>
 <p>以左旋为例，操作顺序如下：</p>
 <p>① y←right[x] //记录指向y节点的指针</p>
 <p>② right[x]←left[y], p[left[y]]←x //β连到x右</p>
 <p>③ parent[y]←parent[x], parent[x]的左或右指针指向y //y连到p[x]</p>
 <p>④ left[y]←x, parent[x]←y// x连到y左</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image006.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image006.jpg" alt="img"></p>
 <p>​                      该操作的时间复杂度T(n)=O(1)</p>
 <h5 id="（2）插入"><a href="#（2）插入" class="headerlink" title="（2）插入"></a>（2）插入</h5><p>这个操作是在二叉搜索树的插入操作上略作修改，分为三步：</p>
 <p>①将z节点按BST树规则插入红黑树中，z是叶子节点；</p>
@@ -320,14 +320,14 @@
 <ul>
 <li>Case1: z的叔叔y是红色，这时通过调整叔叔、父亲和祖父的颜色，将违反性质的结点上移，调整最多至根。若红色传播到根，将根涂黑，则树的黑高增1</li>
 </ul>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image008.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image008.jpg" alt="img"></p>
 <ul>
 <li><p>Case 2：当z的叔叔y是黑色，且z是双亲p[z]的右孩子，这种情况通过左旋变换为Case3.</p>
 </li>
 <li><p>Case 3：当z的叔叔y是黑色，且z是双亲p[z]的左孩子</p>
 </li>
 </ul>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image010.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image010.jpg" alt="img"></p>
 <p>调整算法的时间：O(logn)</p>
 <p>整个插入算法的时间：O(logn)</p>
 <h5 id="（3）删除"><a href="#（3）删除" class="headerlink" title="（3）删除"></a>（3）删除</h5><p>这个操作将树上的一个结点z删除，然后进行z的孩子的调整，使之满足二叉搜索树的性质，最后，然后红黑树性质被破坏，则需要进行颜色的调整。</p>
@@ -340,14 +340,14 @@
 </ul>
 <p>case 1是case 2的特例，处理模式是一样</p>
 <p>处理方式：删除z，连接x。这里x是z的中序后继；</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image012.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image012.jpg" alt="img"></p>
 <ul>
 <li>Case 3：z的两个孩子均非空；</li>
 </ul>
 <p>处理方式：</p>
 <p>(1)找z的中序后继即找z的右子树中最左下节点y；</p>
 <p>(2)删除y，将y的内容copy到z，再将y的右子连到p[y]左下。</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image014.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image014.jpg" alt="img"></p>
 <p>最后分析颜色的调整：</p>
 <p>删红点不影响，删黑点需要调整。</p>
 <p>对于结点x，或是y的唯一孩子，或是哨兵nil[T]。</p>
@@ -363,28 +363,28 @@
 <li>Case 1：x的兄弟w是红色（w是红，则 p[x]必黑）</li>
 </ul>
 <p>处理方式如图，目标是将情况变成Case2,3,4处理</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image016.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image016.jpg" alt="img"></p>
 <ul>
 <li>Case 2：x的黑兄弟w的两个孩子均为黑</li>
 </ul>
 <p>处理方式如图，目标是将 x上移到B，通过A和D的黑色上移</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image018.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image018.jpg" alt="img"></p>
 <ul>
 <li>Case 3：x的黑兄弟w的右子为黑且左子为红</li>
 </ul>
 <p>处理方式如图，目标是将case3转为case4</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image020.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image020.jpg" alt="img"></p>
 <ul>
 <li>Case 4：x的黑兄弟w的右子为红(左子为黑或红)</li>
 </ul>
 <p>x的黑色上移给B，B的原色下移给D，D将黑色下移给C和E，通过旋转解决矛盾点C</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image022.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image022.jpg" alt="img"></p>
 <h4 id="（二）区间树"><a href="#（二）区间树" class="headerlink" title="（二）区间树"></a>（二）区间树</h4><p>区间树是对红黑树的扩张，其每个结点存储一个区间，包括low和high两个值，其中low作为红黑树的key。</p>
 <p>为了实现重叠区间的查找，还需要为每个结点添加一个max域，其值为以该结点为根的子树的所有区间的最大端点。</p>
 <p>（1）max值的计算：该节点的区间右端点、左子树max值、右子树max值三者中的最大值。</p>
 <p>max值的维护：需要在旋转、插入和删除时进行调整。</p>
 <p>①左旋后，y的max更新为x原来的max，x的max重新按上面的方法计算，时间复杂度为O(1)。</p>
-<p><img src="//lyncien.github.io/2018/11/18/alg/lab2/clip_image023.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/18/alg/lab2/clip_image023.jpg" alt="img"></p>
 <p>②插入z时，z的max值设为自己区间的右端点，然后对于从根到插入位置的每个结点，如果其max值小于z的max值，则更新为z的max值。时间复杂度为O(logn)。</p>
 <p>③删除z时，如果z只有一个孩子或者没有孩子，则直接从z的父亲开始向上到根结点，依次重新计算max值。如z有左右孩子，在找到z的中序遍历后继y后，从y的父亲开始向上至根结点，依次计算max值。时间复杂度为O(logn)。</p>
 <p>（2）重叠区间的查找：x从根结点开始，如果x为nil或待查找的区间与其重叠，则返回x。否则，x更新，如果x左孩子不为nil且max值大于待查找区间的左端点，则x更新为x的左孩子，反之更新为x的右孩子。</p>
@@ -979,7 +979,7 @@ END
 <p>（1）左半边S1的最近点对</p>
 <p>（2）右半边S2的最近点对</p>
 <p>（3）跨越分点m的最近点对</p>
-<p><img src="//lyncien.github.io/2018/11/11/alg/lab1/clip_image002.png" alt="img"></p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image002.png" alt="img"></p>
 <p>左半边S1的最近点对和右半边S2的最近点对的求解可以递归地调用该过程。而跨越分点m的最近点对，我们可以将S1中的一点与S2中的每一点计算距离，但这将花费O(n^2)。</p>
 <p>事实上，通过求解左右两个子问题，我们已经得到一个当前最近点对的距离δ，在S1中，任何一个宽度为δ的区间内只分布着一个点，否则，存在两点距离小于δ，同理，S2中也是。因此，我们只需要考虑[m-δ,m+δ]区间内的点对距离，在[m-δ,m]如果有点，只能有一个点，这个点就是S1中距离m最近的点。区间[m,m+δ]同理。如果这两个点都存在，则计算距离，并与δ比较，因此，只需要O(n)时间完成问题的合并。</p>
 <p>m点的选取问题：任意选取分割点m，有可能造成划分出的子集S1和S2的不平衡，最坏情况下有递归式：</p>
@@ -992,15 +992,15 @@ END
 <h5 id="2-考虑二维的情况，即本次实验求解的问题。"><a href="#2-考虑二维的情况，即本次实验求解的问题。" class="headerlink" title="2. 考虑二维的情况，即本次实验求解的问题。"></a>2. 考虑二维的情况，即本次实验求解的问题。</h5><p>类似一维情况，将平面分为两个半平面，使两边各分布约一半的点，为了确定分割线x = m，先对所有点按x坐标进行排序，取m为下标中位数附近两个点的x的坐标的平均值。</p>
 <p>递归地在S1和S2上解最接近点对问题，我们分别得到S1和S2中的最近点对的距离δ1和δ2。现设δ = min(δ1, δ2)。</p>
 <p>现在考虑两个点分别在S1和S2中的情况。类似一维的情况，我们只需要考虑条带区域[m-δ,m]和[m,m+δ]中点对的距离，记这两个区域为P1和P2。</p>
-<p><img src="//lyncien.github.io/2018/11/11/alg/lab1/clip_image004.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image004.jpg" alt="img"></p>
 <p>在一维的时候，距分割点距离为δ的2个区间P1[m-δ,m]和P2 [m,m+δ]中最多各有S中一个点，因而这两个点成为唯一的未检查过的最接近点对候选者。但在二维情况下，P1 [m-δ,m]中可能存在多个点，并且他们的距离大于δ，P2 [m,m+δ]同理。因此，最坏情况下，S1中的点可能都在P1 [m-δ,m]中，S2中的点可能都在P2 [m,m+δ]中，这样就需要花费O(n^2)来合并问题（检查跨越P1、P2的所有点对）。</p>
 <p>事实上，我们不必检查如此多的点对，考虑P1中任意一点p,它若与P2中的点q构成最接近点对的候选者，则必有d(p,q)&lt; δ。显然，这样的点只会分布在一个δ×2δ的矩形R中，如下图。</p>
-<p><img src="//lyncien.github.io/2018/11/11/alg/lab1/clip_image006.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image006.jpg" alt="img"></p>
 <p> 由δ的意义可知P2中任何2个S中的点的距离都不小于δ。我们可以将矩形R的长为2δ的边3等分，将它的长为δ的边2等分，形成6个（δ/2）×（2δ/3）的矩形。</p>
-<p><img src="//lyncien.github.io/2018/11/11/alg/lab1/clip_image008.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image008.jpg" alt="img"></p>
 <p>若矩形R中有多于6个S中的点，则由抽屉原理易知至少有一个（δ/2）×（2δ/3）的小矩形中有2个以上S中的点。设a,b是这样2个点，它们位于同一小矩形中，则d(a,b)≤sqrt((δ/2)^2+(2δ/3)^2) &lt;δ ，这与δ的意义相矛盾。</p>
 <p>由此可以推出矩形R中最多只有6个S中的点，极端情形如下图。</p>
-<p><img src="//lyncien.github.io/2018/11/11/alg/lab1/clip_image010.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image010.jpg" alt="img"></p>
 <p>因此，在分治法的合并步骤中，我们最多只需要检查6×n/2=3n对候选者，而不是O(n^2)对候选者。但这不意味着我们可以在O(n)时间内完成分治法的合并步骤。因为我们并不确切地知道要检查哪6个点。</p>
 <p>为了解决这个问题，我们需要将P1和P2中的点分别按其y坐标排序，则对P1中每一点最多只要检查P2中排好序的相继6个点。排序花费的时间为O(nlogn)。这样得到递归式</p>
 <p>T(n) = 2T(n/2) + O(nlogn)</p>
@@ -1688,7 +1688,7 @@ r-w1th-10x
 bl3-matr1x
 </code></pre><p>则有<code>flag{h1ll-c1ph3r-w1th-10x10-r3v3rs1bl3-matr1x}</code></p>
 <p>答案正确！</p>
-<p><img src="//lyncien.github.io/2018/10/15/article/USTC_Hackergame2018_18/BaiduShurufa_2018-10-15_20-19-38.png" alt="BaiduShurufa_2018-10-15_20-19-38"></p>
+<p><img src="//l-x.me/2018/10/15/article/USTC_Hackergame2018_18/BaiduShurufa_2018-10-15_20-19-38.png" alt="BaiduShurufa_2018-10-15_20-19-38"></p>
 
       
     </div>
@@ -1749,7 +1749,7 @@ bl3-matr1x
       
           
         <h1 id="USTCHackergame2018之”我是谁”"><a href="#USTCHackergame2018之”我是谁”" class="headerlink" title="USTCHackergame2018之”我是谁”"></a>USTCHackergame2018之”我是谁”</h1><p> 第一次参加这种夺旗赛，以前没接触过，马上上网查查资料，也只能做简单的题，花了两天，战果如下。</p>
-<p><img src="//lyncien.github.io/2018/10/12/article/USTC_Hackergame2018_8/BaiduShurufa_2018-10-12_15-59-22.png" alt=""></p>
+<p><img src="//l-x.me/2018/10/12/article/USTC_Hackergame2018_8/BaiduShurufa_2018-10-12_15-59-22.png" alt=""></p>
 <p>做出来的都是不需要很多知识的体力题，也是通过人数最多的那些。</p>
 <p>“我是谁”这题好多人做出来，我是两天后才做出来。。</p>
 <h4 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h4><hr>
@@ -1924,7 +1924,7 @@ b)    实现中断功能
 c)    实现流水
 d)    实现下载
 </code></pre><h2 id="实验平台"><a href="#实验平台" class="headerlink" title="实验平台"></a>实验平台</h2><h4 id="EDA工具为ISE14-7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6-XC6SLX16-CS324。"><a href="#EDA工具为ISE14-7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6-XC6SLX16-CS324。" class="headerlink" title="EDA工具为ISE14.7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6 XC6SLX16-CS324。"></a>EDA工具为ISE14.7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6 XC6SLX16-CS324。</h4><h2 id="使用部件"><a href="#使用部件" class="headerlink" title="使用部件"></a>使用部件</h2><h4 id="开发板上的开关，7段数码管和按钮。"><a href="#开发板上的开关，7段数码管和按钮。" class="headerlink" title="开发板上的开关，7段数码管和按钮。"></a>开发板上的开关，7段数码管和按钮。</h4><h2 id="最终实现功能"><a href="#最终实现功能" class="headerlink" title="最终实现功能"></a>最终实现功能</h2><h4 id="1、实现五段流水线"><a href="#1、实现五段流水线" class="headerlink" title="1、实现五段流水线"></a>1、实现五段流水线</h4><h4 id="2、实现完全转发和冒险检测"><a href="#2、实现完全转发和冒险检测" class="headerlink" title="2、实现完全转发和冒险检测"></a>2、实现完全转发和冒险检测</h4><h4 id="3、实现36条指令"><a href="#3、实现36条指令" class="headerlink" title="3、实现36条指令"></a>3、实现36条指令</h4><h4 id="4、实现下载并在数码管上动态显示内存"><a href="#4、实现下载并在数码管上动态显示内存" class="headerlink" title="4、实现下载并在数码管上动态显示内存"></a>4、实现下载并在数码管上动态显示内存</h4><h2 id="详细设计过程"><a href="#详细设计过程" class="headerlink" title="详细设计过程"></a>详细设计过程</h2><h3 id="1、-MIPS指令格式"><a href="#1、-MIPS指令格式" class="headerlink" title="1、    MIPS指令格式"></a>1、    MIPS指令格式</h3><p>MIPS-IV指令集标准下的指令长度为32位，分为R型、I型和J型指令</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic1.png" alt=""><br>R-Tpye<br><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic2.png" alt=""><br>I-Tpye<br><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic3.png" alt=""><br>J-Tpye</p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic1.png" alt=""><br>R-Tpye<br><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic2.png" alt=""><br>I-Tpye<br><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic3.png" alt=""><br>J-Tpye</p>
 <p>它们的共同部分是26-31位的Op码，用来区分不同的指令，其中</p>
 <p>（1）R-Type的指令Op=000000，再根据0-5位的Funct部分区分不同指令</p>
 <p>（2）I-Type的指令0-15位为立即数，位扩展后用于直接计算或者访存和跳转偏移地址。Op=000001的I-Type指令，根据Rt的不同来区分。</p>
@@ -2258,8 +2258,8 @@ d)    实现下载
 </tr>
 </tbody>
 </table>
-<h3 id="2、-整体设计"><a href="#2、-整体设计" class="headerlink" title="2、    整体设计"></a>2、    整体设计</h3><h4 id="1-分为五个流水段IF、ID、EX、MEM、WB。"><a href="#1-分为五个流水段IF、ID、EX、MEM、WB。" class="headerlink" title="(1)    分为五个流水段IF、ID、EX、MEM、WB。"></a>(1)    分为五个流水段IF、ID、EX、MEM、WB。</h4><h4 id="2-clk上升沿为每段的开始，每段长度为一个clk。"><a href="#2-clk上升沿为每段的开始，每段长度为一个clk。" class="headerlink" title="(2)    clk上升沿为每段的开始，每段长度为一个clk。"></a>(2)    clk上升沿为每段的开始，每段长度为一个clk。</h4><h4 id="3-每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。"><a href="#3-每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。" class="headerlink" title="(3)    每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。"></a>(3)    每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。</h4><h4 id="4-甘特图如下"><a href="#4-甘特图如下" class="headerlink" title="(4)    甘特图如下"></a>(4)    甘特图如下</h4><p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic4.png" alt=""></p>
-<h4 id="5-详细数据通路图如下"><a href="#5-详细数据通路图如下" class="headerlink" title="(5)详细数据通路图如下"></a>(5)详细数据通路图如下</h4><p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic5.jpg" alt=""></p>
+<h3 id="2、-整体设计"><a href="#2、-整体设计" class="headerlink" title="2、    整体设计"></a>2、    整体设计</h3><h4 id="1-分为五个流水段IF、ID、EX、MEM、WB。"><a href="#1-分为五个流水段IF、ID、EX、MEM、WB。" class="headerlink" title="(1)    分为五个流水段IF、ID、EX、MEM、WB。"></a>(1)    分为五个流水段IF、ID、EX、MEM、WB。</h4><h4 id="2-clk上升沿为每段的开始，每段长度为一个clk。"><a href="#2-clk上升沿为每段的开始，每段长度为一个clk。" class="headerlink" title="(2)    clk上升沿为每段的开始，每段长度为一个clk。"></a>(2)    clk上升沿为每段的开始，每段长度为一个clk。</h4><h4 id="3-每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。"><a href="#3-每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。" class="headerlink" title="(3)    每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。"></a>(3)    每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。</h4><h4 id="4-甘特图如下"><a href="#4-甘特图如下" class="headerlink" title="(4)    甘特图如下"></a>(4)    甘特图如下</h4><p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic4.png" alt=""></p>
+<h4 id="5-详细数据通路图如下"><a href="#5-详细数据通路图如下" class="headerlink" title="(5)详细数据通路图如下"></a>(5)详细数据通路图如下</h4><p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic5.jpg" alt=""></p>
 <h3 id="3、-各模块设计，主要有以下几个模块"><a href="#3、-各模块设计，主要有以下几个模块" class="headerlink" title="3、    各模块设计，主要有以下几个模块"></a>3、    各模块设计，主要有以下几个模块</h3><h4 id="a-alu模块——算术逻辑单元"><a href="#a-alu模块——算术逻辑单元" class="headerlink" title="a)    alu模块——算术逻辑单元"></a>a)    alu模块——算术逻辑单元</h4><table>
 <thead>
 <tr>
@@ -3092,8 +3092,8 @@ d)    实现下载
 </tbody>
 </table>
 <p>这个模块实现从DMem输出到ALU输入以及ALU输出到ALU输入的转发。</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic6.png" alt=""></p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic7.png" alt=""></p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic6.png" alt=""></p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic7.png" alt=""></p>
 <h4 id="n-hazard模块——冒险检测模块，实现插入气泡"><a href="#n-hazard模块——冒险检测模块，实现插入气泡" class="headerlink" title="n) hazard模块——冒险检测模块，实现插入气泡"></a>n) hazard模块——冒险检测模块，实现插入气泡</h4><table>
 <thead>
 <tr>
@@ -3155,7 +3155,7 @@ d)    实现下载
 </tbody>
 </table>
 <p> lw之后R-Type需要使用访存结果，这在时间上是倒流的，不可能，只能插入一个气泡，清空IDEX寄存器，不更新IFID寄存器，不更新PC。</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic8.png" alt=""></p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic8.png" alt=""></p>
 <h4 id="o-control模块——产生控制信号"><a href="#o-control模块——产生控制信号" class="headerlink" title="o) control模块——产生控制信号"></a>o) control模块——产生控制信号</h4><table>
 <thead>
 <tr>
@@ -3407,11 +3407,11 @@ d)    实现下载
 <li>比如：RegRdout1_EX表示寄存器文件读端口1读出的数据传递到EX段的信号。</li>
 </ul>
 <h3 id="5、-DMem和IMem的初始化"><a href="#5、-DMem和IMem的初始化" class="headerlink" title="5、    DMem和IMem的初始化"></a>5、    DMem和IMem的初始化</h3><p>IP核选择Block Memory，设置为Single Port RAM，</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic9.png" alt=""> </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic9.png" alt=""> </p>
 <p>宽度为32，深度为256</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic10.png" alt="">  </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic10.png" alt="">  </p>
 <p>选中Load Init File设置，选择初始化coe文件的路径，</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic11.png" alt="">  </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic11.png" alt="">  </p>
 <p>其中IMem_init_test.coe文件内容为</p>
 <pre><code>    memory_initialization_radix = 16;
     memory_initialization_vector =
@@ -3631,17 +3631,17 @@ out:j out
 </code></pre>
 <p>完整汇编代码如上，36条指令均测试到了，每条语句的执行结果在该语句后面给出了注释，每测试几条指令就将结果写入内存，方便查看，并且3种相关有包括在上面的代码中。<br>​     </p>
 <h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><h3 id="（1）仿真结果"><a href="#（1）仿真结果" class="headerlink" title="（1）仿真结果"></a>（1）仿真结果</h3><p>汇编代码在Mars编译运行得到Data段为</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic12.png" alt=""> </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic12.png" alt=""> </p>
 <p>而ISE仿真结果显示DMem为</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic13.png" alt="">  </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic13.png" alt="">  </p>
 <p>汇编代码在Mars编译运行得到结束时寄存器数据和仿真结果的regfile数据     </p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic14.png" alt="">     </p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic15.png" alt="">             </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic14.png" alt="">     </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic15.png" alt="">             </p>
 <p>可见测试程序在编写的MIPS CPU上运行结果与Mars运行结果一致，并且符合上面注释的的预期结果。</p>
 <h3 id="（2）下载结果"><a href="#（2）下载结果" class="headerlink" title="（2）下载结果"></a>（2）下载结果</h3><p>按下按钮中键复位，拨动开关选择地址，数码管显示对应地址内存。</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic16.png" alt="">     </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic16.png" alt="">     </p>
 <p>由于数据为32位，4个数码管只能显示16位，为此还实现了动态显示，数字会向左移动循环显示。</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic17.png" alt=""> </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic17.png" alt=""> </p>
 <h2 id="附录"><a href="#附录" class="headerlink" title="附录:"></a>附录:</h2><h3 id="一、-编写过程中遇到问题和一些发现"><a href="#一、-编写过程中遇到问题和一些发现" class="headerlink" title="一、    编写过程中遇到问题和一些发现"></a>一、    编写过程中遇到问题和一些发现</h3><h4 id="1、如果位拼接作为左值，单个变量也要花括号，如"><a href="#1、如果位拼接作为左值，单个变量也要花括号，如" class="headerlink" title="1、如果位拼接作为左值，单个变量也要花括号，如"></a>1、如果位拼接作为左值，单个变量也要花括号，如</h4><pre><code>{{RegDst},{ALUSrc},{MemtoReg},{RegWrite},{MemWrite},{Branch},{ALUOp[1:0]},{Jump}}=9&#39;b100100100;
 </code></pre><h4 id="2、”-”会严格匹配每一位，比如module内5位数字比较（一个常量，一个input），但外部传入的是3位的，高位自动拓展好像是x，就导致“-”不成立，这是一个不好发现的问题。"><a href="#2、”-”会严格匹配每一位，比如module内5位数字比较（一个常量，一个input），但外部传入的是3位的，高位自动拓展好像是x，就导致“-”不成立，这是一个不好发现的问题。" class="headerlink" title="2、”==”会严格匹配每一位，比如module内5位数字比较（一个常量，一个input），但外部传入的是3位的，高位自动拓展好像是x，就导致“==”不成立，这是一个不好发现的问题。"></a>2、”==”会严格匹配每一位，比如module内5位数字比较（一个常量，一个input），但外部传入的是3位的，高位自动拓展好像是x，就导致“==”不成立，这是一个不好发现的问题。</h4><h4 id="3、仿真遇到高阻态，多半是这个信号不存在，经常是拼写错了，有时候ise检查不出来。"><a href="#3、仿真遇到高阻态，多半是这个信号不存在，经常是拼写错了，有时候ise检查不出来。" class="headerlink" title="3、仿真遇到高阻态，多半是这个信号不存在，经常是拼写错了，有时候ise检查不出来。"></a>3、仿真遇到高阻态，多半是这个信号不存在，经常是拼写错了，有时候ise检查不出来。</h4><h4 id="4、在top里的wire信号，如果通过control模块（或其他模块）进行控制，那么这个信号不能直接在top里赋初值，要到仿真模块里赋值，不然control里改变这个信号的值时，会变成不确定。"><a href="#4、在top里的wire信号，如果通过control模块（或其他模块）进行控制，那么这个信号不能直接在top里赋初值，要到仿真模块里赋值，不然control里改变这个信号的值时，会变成不确定。" class="headerlink" title="4、在top里的wire信号，如果通过control模块（或其他模块）进行控制，那么这个信号不能直接在top里赋初值，要到仿真模块里赋值，不然control里改变这个信号的值时，会变成不确定。"></a>4、在top里的wire信号，如果通过control模块（或其他模块）进行控制，那么这个信号不能直接在top里赋初值，要到仿真模块里赋值，不然control里改变这个信号的值时，会变成不确定。</h4><h4 id="5、在clk边缘用-lt-对某信号进行赋值时，如果同时刻需要对该信号进行判断（如状态机，根据状态以完成对应操作），则判断时信号的值是本次改变前的。（非阻塞赋值的特性体现）"><a href="#5、在clk边缘用-lt-对某信号进行赋值时，如果同时刻需要对该信号进行判断（如状态机，根据状态以完成对应操作），则判断时信号的值是本次改变前的。（非阻塞赋值的特性体现）" class="headerlink" title="5、在clk边缘用&lt;=对某信号进行赋值时，如果同时刻需要对该信号进行判断（如状态机，根据状态以完成对应操作），则判断时信号的值是本次改变前的。（非阻塞赋值的特性体现）"></a>5、在clk边缘用&lt;=对某信号进行赋值时，如果同时刻需要对该信号进行判断（如状态机，根据状态以完成对应操作），则判断时信号的值是本次改变前的。（非阻塞赋值的特性体现）</h4><h4 id="6、-srl是逻辑右移，高位直接补零，而sra是算术右移，高位补符号，在Verilog中，既可以自行实现，也可以这样实现"><a href="#6、-srl是逻辑右移，高位直接补零，而sra是算术右移，高位补符号，在Verilog中，既可以自行实现，也可以这样实现" class="headerlink" title="6、 srl是逻辑右移，高位直接补零，而sra是算术右移，高位补符号，在Verilog中，既可以自行实现，也可以这样实现"></a>6、 srl是逻辑右移，高位直接补零，而sra是算术右移，高位补符号，在Verilog中，既可以自行实现，也可以这样实现</h4><pre><code>`$signed(alu_a) &gt;&gt;&gt; alu_b`
 </code></pre><h4 id="应该注意，-gt-gt-gt-是算术右移，但对于无符号数，高位仍然补0，所以需要用-signed-转为有符号数"><a href="#应该注意，-gt-gt-gt-是算术右移，但对于无符号数，高位仍然补0，所以需要用-signed-转为有符号数" class="headerlink" title="应该注意， &gt;&gt;&gt; 是算术右移，但对于无符号数，高位仍然补0，所以需要用$signed()转为有符号数"></a>应该注意， &gt;&gt;&gt; 是算术右移，但对于无符号数，高位仍然补0，所以需要用<code>$signed()</code>转为有符号数</h4><pre><code>`$signed(alu_a) &gt;&gt; alu_b `
@@ -4498,7 +4498,7 @@ endmodule
 </ul>
 <h2 id="初步理解"><a href="#初步理解" class="headerlink" title="初步理解"></a>初步理解</h2><ul>
 <li><p>查看一本编写cpu的参考书，里面是这样写的</p>
-<p>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic1.png" alt=""><br>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic2.png" alt=""><br>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic3.png" alt=""><br>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic4.png" alt=""><br>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic5.png" alt=""></p>
+<p>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic1.png" alt=""><br>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic2.png" alt=""><br>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic3.png" alt=""><br>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic4.png" alt=""><br>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic5.png" alt=""></p>
 </li>
 <li><p>这有符号和无符号有什么区别！！！</p>
 </li>
@@ -4509,7 +4509,7 @@ endmodule
 </li>
 <li>那么为什么它的有符号计算和无符号计算都还是同样用无符号数int_0,int_1处理，而溢出的判断是专门增加一个signed型的变量s_out，用$signed()把out转成有符号存在s_out，然后判断？</li>
 <li><p>花了一点时间遍访了博客后，发现了这张图</p>
-<p>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/ss.png" alt=""></p>
+<p>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/ss.png" alt=""></p>
 <p>  这不就是在模2^n意义下的加法吗？<br>  等等，我再去看一下a,b，a=4’b1111,b=4’1110,直接相加，舍弃最高进位（mod 2^4），这不就是out=4’b1101吗？可是刚刚明明是解释为负数啊。。<br>  思考了许久，啊，突然意识到，这个“+”确实是无符号的加，也就是电路中最基本的加法器的功能，这也是为什么负数要表示成补码的原因了（符号直接参与运算），看来之前没有真正理解补码的优越性。</p>
 </li>
 <li><p>这样一来，只要有符号时负数按补码存储，那么有符号和无符号的计算就是一样的</p>
@@ -4558,7 +4558,7 @@ endmodule
 <li><p>二是转为有符号，直接用“&lt;”比较</p>
 <p> <code>alu_out = ($signed(alu_a) &lt; $signed(alu_b)) ? 32&#39;b1 : 32&#39;b0;</code></p>
 </li>
-<li><p>测试一下，两种方法结果一样<br><img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/sltpic1.png" alt=""> </p>
+<li><p>测试一下，两种方法结果一样<br><img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/sltpic1.png" alt=""> </p>
 </li>
 </ul>
 </li>
@@ -4628,7 +4628,7 @@ endmodule
 <h2 id="磁盘"><a href="#磁盘" class="headerlink" title="磁盘"></a>磁盘</h2><p><strong>（1）磁盘的结构</strong></p>
 <ul>
 <li><p><strong>磁盘（Magnetic Disk）</strong>由许多扁圆盘片堆叠而成，每个盘片两面涂有磁性材料，旁边是机械臂杆及其磁臂，磁臂上的磁头在盘片上移动并进行磁记录来实现信息的读取和写入。磁盘片的表面被逻辑地划分为多个<strong>磁道（Track）</strong>，磁道再被划分为<strong>扇区（Secto）</strong>，位于同一磁臂位置的磁道集合组成<strong>柱面（Cylinder）</strong>。</p>
-<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-1.jpg" alt="">图1</p>
+<p>  <img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-1.jpg" alt="">图1</p>
 </li>
 <li><p>磁盘使用时会被驱动器高速旋转，磁头飞行于盘片的空气层上，定位到数据所在位置所需的时间由两部分组成：<strong>寻道时间</strong>（移动磁臂到所在的柱面）和<strong>旋转等待时间</strong>（等待某扇区旋转至磁头下）。定位时间越小，数据传输速率越高。磁盘旋转的角速度可以是匀速的或者变速的，由于扇区按角度划分，则前者的传输速率是内侧磁道高而外侧低，后者的传输速率是不变的，现在的磁盘主要采用前一方案。</p>
 </li>
@@ -4647,7 +4647,7 @@ endmodule
 </ul>
 </li>
 </ul>
-<p><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-3.jpg" alt=""><br>FCFS<br><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-4.jpg" alt=""><br>SSTF<br><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-5.jpg" alt=""><br>SCAN<br><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-6.jpg" alt=""><br>C-SCAN<br><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-7.jpg" alt=""><br>C-LOOK</p>
+<p><img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-3.jpg" alt=""><br>FCFS<br><img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-4.jpg" alt=""><br>SSTF<br><img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-5.jpg" alt=""><br>SCAN<br><img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-6.jpg" alt=""><br>C-SCAN<br><img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-7.jpg" alt=""><br>C-LOOK</p>
 <p>图2</p>
 <h2 id="固态硬盘"><a href="#固态硬盘" class="headerlink" title="固态硬盘"></a>固态硬盘</h2><ul>
 <li><strong>固态硬盘（SSD，Solid-State Drives）</strong>主要由控制器和 <strong>闪存（Flash）</strong> 芯片组成，它具有速度快、质量轻、能耗小等优点，近来被广泛使用，但容量小，价格昂贵。闪存芯片被划分为不同的层次（Package&gt;Die/Chip&gt;Plane&gt;Block&gt;Page），最基本的存储单元是晶体管，每个单元可以存储一个bit（<strong>SLC</strong>），也可以存储多个bit（<strong>MLC</strong>）。固态硬盘的读写以Page（4KB）为单位，当一个Page的信息需要被删除时，它只是被标记为无效，而且不支持对一个Page进行修改，只有在适当的时候以Block为单位进行擦除，而一个Block可以擦除的次数是 <strong>有限</strong> 的，因此固态硬盘需要地址映射机制和垃圾回收机制，以此延长使用寿命。</li>
@@ -4686,7 +4686,7 @@ endmodule
 <li><p><strong>文件（File）</strong>是创建者定义的相关信息的集合，操作系统将其映射到存储器中，对用户而言，文件是最小的逻辑分配单元。文件的内容可以是文本、数字或二进制数据，其组织形式可以是自由的，也可以具有严格的格式，这通常由创建者定义。</p>
 </li>
 <li><p>为了能识别和引用不同的文件，文件通常具有各种<strong>属性（Attributes）</strong>。文件名是一个字符串，它独立于进程、用户甚至操作系统，这个字符串是否区分大小写取决于具体的操作系统。标识符是在文件系统中识别文件的唯一标签，通常为数字。类型则指明了这是特定类型的文件系统的文件。位置是文件在存储设备上的位置指针。大小记录了文件的当前大小或者最大允许容量。时间日期包括文件创建或者上次修改的相关时间信息。保护和权限则指明了不同用户能否对文件进行相关操作（读、写、执行等）。通常文件都具有以上这些属性，还有一些其他属性，但个别文件系统可能并不支持某些属性。值得注意的是，文件内容并不包括属性，所有的文件属性信息都存储在目录结构中。</p>
-<p><img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-9.jpg" alt=""><br>图3</p>
+<p><img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-9.jpg" alt=""><br>图3</p>
 </li>
 <li><p><strong>目录（Directory）</strong>是用来管理和组织文件的结构，其本质也是一个文件，如右图。一个目录文件包含许多目录项，每一个<strong>目录项（Entry）</strong> 保存一个文件的属性信息（名称、位置等），表示这个文件属于这个目录。一个目录下的允许再包含目录文件，这就形成了以根目录”/”为根的多层次的树状结构，其叶结点为文件。一个文件的名称前面加上各级父目录名称，用”/”分隔，这就形成了文件的路径名称。文件路径通常用于定位一个文件在文件系统中的层次和位置，因为它在整个文件系统中是独一无二的。如果以根目录为起点，称为<strong>绝对路径</strong>，如果以某个目录为起点，则称为<strong>相对路径</strong>。</p>
 </li>
@@ -4721,29 +4721,29 @@ endmodule
 <p><strong>①连续分配方式</strong></p>
 </li>
 <li><p>这是最直接最朴素的想法，在磁盘连续空间的头部存放根目录，目录中记录各个文件的起始位置和结束位置，文件紧跟着存放在目录的后续空间中（如图4）。这种策略使得删除操作十分简单，只需要在目录文件中删除对应项就可以了。但是，在经过长时间使用后，磁盘的空闲空间将<strong>碎片化</strong>地分散在各个位置，文件系统无法迅速统计空闲空间大小。最大的问题是，如果需要存储一个大文件，有可能无法找到一个足够大的空闲片段来存放，即使存在并且使用了最优策略分配后，在需要增加文件内容时将面临两端皆有其他文件而无法<strong>扩展</strong>的窘境。一种解决方法是移动现有的文件使空闲空间连续，但是这将开销巨大。</p>
-<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-10.jpg" alt=""> 图4</p>
+<p>  <img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-10.jpg" alt=""> 图4</p>
 <p><strong>②链式分配方式</strong></p>
 </li>
 <li><p>既然大文件可能没有足够大的空闲片段来存放，一个自然的想法是将磁盘划分为<strong>相等大小的块/簇（Cluster）</strong>，文件按块进行存储（如图5）。这些块可以不在连续的空间里，只需要在目录文件中记录每个文件占用的块的序号即可。但是，由于目录文件是目录项的数组，每一项的长度是固定的，因而对于分散的块序号的记录是比较困难的。</p>
-<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-11.png" alt=""> 图5</p>
+<p>  <img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-11.png" alt=""> 图5</p>
 </li>
 <li><p>一种改进的方法是，目录项只记录文件起始块的序号，而在每个块中留出部分空间存放指向下一个块的指针（如图6），这种情况下，目录项中还需要记录文件的大小，因为文件的最后一块可能并没有填满。另外，还需要在磁盘最前端留出一块空间指向空闲空间的链表。这种策略带来的问题是随机访问性差，访问一个文件需要从头部开始。还有一个问题是关于块大小的选择，如果块太小，则块的指针占用了太多空间，如果块太大，则每个文件最后一个块的浪费将是巨大的。</p>
-<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-14.jpg" alt="">图6</p>
+<p>  <img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-14.jpg" alt="">图6</p>
 <p><strong>③链式分配方式的改进——FAT</strong></p>
 </li>
 <li><p>为了改善随机读写性能，可以将下一个块的位置信息以数组形式统一存放在磁盘头部（如图7），称为<strong>文件分配表（FAT，File Allocation Table）</strong>。数组中每一项存放着当前下标对应的块的下一个块的序号（地址），根据地址长度的不同，可以分为不同版本<strong>（FAT12/16/32）</strong>。这种策略下寻找文件的方式为先从根目录中读取文件的第一个块的地址，然后到FAT中依次获得下一个块的地址并读取每个块。写入文件时，则先从空闲空间信息获取下一个空闲块的位置，然后写入数据并更新FAT和空闲块信息。删除文件时，相关的FAT置为0，更新空闲空间信息并删除目录中相关项。</p>
-<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-16.jpg" alt=""> 图7</p>
+<p>  <img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-16.jpg" alt=""> 图7</p>
 </li>
 <li><p>以FAT32为例，磁盘空间分配如图8 所示，头部是引导扇区（存储扇区大小等信息）、文件系统的相关信息（包括空闲空间信息）和预留的空间，其后是两个文件分配表，接下来就是根目录和存储的文件。</p>
-<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-19.jpg" alt=""> 图8</p>
+<p>  <img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-19.jpg" alt=""> 图8</p>
 <p><strong>④索引分配方式</strong></p>
 </li>
-<li><p>如果对FAT进行分割，每个文件对应的FAT单独存放在一个<strong>索引节点（Index Node）</strong>中，而目录项中指向每个文件对应的索引节点，这就是索引分配方式（如图9）。由于每个文件的FAT大小不同，则索引节点将是变长的，这对于管理十分不便。事实上的做法是，维护一个索引数组，每个索引节点长度固定，索引节点内部有12个指针指向<strong>直接块（Direct Block）</strong>，即数据块，还有一个指针指向<strong>一级间接块（Indirect Block）</strong>，间接块中的每一项才指向数据块，另外还各有一个指针指向二级间接块和三级间接块。假设一个块的大小为<img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-23.png" alt="">byte，块地址32位（4byte），则这种方式下单个文件最大可存储<img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-24.png" alt="">。</p>
-<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-20.jpg" alt=""> 图9</p>
+<li><p>如果对FAT进行分割，每个文件对应的FAT单独存放在一个<strong>索引节点（Index Node）</strong>中，而目录项中指向每个文件对应的索引节点，这就是索引分配方式（如图9）。由于每个文件的FAT大小不同，则索引节点将是变长的，这对于管理十分不便。事实上的做法是，维护一个索引数组，每个索引节点长度固定，索引节点内部有12个指针指向<strong>直接块（Direct Block）</strong>，即数据块，还有一个指针指向<strong>一级间接块（Indirect Block）</strong>，间接块中的每一项才指向数据块，另外还各有一个指针指向二级间接块和三级间接块。假设一个块的大小为<img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-23.png" alt="">byte，块地址32位（4byte），则这种方式下单个文件最大可存储<img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-24.png" alt="">。</p>
+<p>  <img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-20.jpg" alt=""> 图9</p>
 </li>
 <li><p>UNIX和Linux使用类似的索引方式的文件系统，称为<strong>Ext2/Ext3/Ext4</strong>。以Ext2为例，磁盘被划分为许多组（如图11）。每个组的头部都是一个<strong>超级块（Superblock）</strong>，其中包括全部索引节点数、全部空闲块数等信息。其后是<strong>组描述符表（GDT，Group Descriptor Table）</strong>，包括之后各部分的起始位置信息。然后是<strong>块位图（Block Bitmap）</strong>和<strong>索引位图（Inode Bitmap）</strong>，它们的每一位表示一个块/索引是否已经被使用（1表示已使用），最后就是索引节点数组和数据块了。</p>
-<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-22.jpg" alt=""> 图10</p>
-<p>  <img src="//lyncien.github.io/2018/05/23/os/File_System/File System/20180526055814104-25.jpg" alt="">图11 </p>
+<p>  <img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-22.jpg" alt=""> 图10</p>
+<p>  <img src="//l-x.me/2018/05/23/os/File_System/File System/20180526055814104-25.jpg" alt="">图11 </p>
 </li>
 </ul>
 </li>
@@ -4847,7 +4847,7 @@ endmodule
 <p> ②根据Funct具体设置不同的ALUControl<br> ​<br> 状态机如下：</p>
 </li>
 </ol>
-<p><img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic1.png" alt=""> </p>
+<p><img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic1.png" alt=""> </p>
 <ol start="8">
 <li><p>top模块实例化其他所有模块，连接各个信号。</p>
 </li>
@@ -4863,11 +4863,11 @@ endmodule
 <ol start="10">
 <li><p>ram模块的初始化</p>
 <p>IP核选择Block Memory，设置为Single Port RAM，</p>
-<p><img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic2.png" alt=""> </p>
+<p><img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic2.png" alt=""> </p>
 <p>宽度为32，深度为256</p>
-<p><img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic3.png" alt=""> </p>
+<p><img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic3.png" alt=""> </p>
 <p>选中Load Init File设置，选择初始化coe文件的路径，</p>
-<p><img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic4.png" alt=""> </p>
+<p><img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic4.png" alt=""> </p>
 <p>其中coe文件内容为（Text段为0-63，Data段为64-255）</p>
 <pre><code>MEMORY_INITIALIZATION_RADIX=16;
 MEMORY_INITIALIZATION_VECTOR=
@@ -4961,7 +4961,7 @@ ad0a0008
 …
 </code></pre></li>
 <li><p>完整的数据通路</p>
-<p><img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic5.png" alt=""> </p>
+<p><img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic5.png" alt=""> </p>
 </li>
 <li><p>分析结果</p>
 <pre><code>.data
@@ -5007,9 +5007,9 @@ out:
 <h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><ul>
 <li><p>仿真结果：</p>
 <p>  仿真得Mem和reg数据为</p>
-<p>  <img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic6.png" alt=""> </p>
+<p>  <img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic6.png" alt=""> </p>
 <p>  Mem              </p>
-<p>  <img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic7.png" alt=""> </p>
+<p>  <img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic7.png" alt=""> </p>
 <p>  Regfile</p>
 <p>  可见运行结果符合分析。</p>
 </li>

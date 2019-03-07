@@ -19,22 +19,22 @@
 <meta name="keywords" content="Verilog,COD">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机组成原理上机实验6 多周期CPU">
-<meta property="og:url" content="https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/index.html">
+<meta property="og:url" content="https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="实验目的 实现一个多周期MIPS指令集的CPU，支持包括lw、sw、R-type、addi、beq、bgtz、j等指令。 运行一个计算斐波那契数列的程序，初始为3，3。  实验平台 ISE 14.7  实验过程（分析） 模块化设计，主要有以下几个模块  a) alu模块——算术逻辑单元  b) regfile模块——寄存器文件  c)    mux模块和mux4模块——2路和4路选择器  d)">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic1.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic2.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic3.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic4.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic5.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic6.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic7.png">
+<meta property="og:image" content="https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic1.png">
+<meta property="og:image" content="https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic2.png">
+<meta property="og:image" content="https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic3.png">
+<meta property="og:image" content="https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic4.png">
+<meta property="og:image" content="https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic5.png">
+<meta property="og:image" content="https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic6.png">
+<meta property="og:image" content="https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic7.png">
 <meta property="og:updated_time" content="2019-02-19T11:09:37.154Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计算机组成原理上机实验6 多周期CPU">
 <meta name="twitter:description" content="实验目的 实现一个多周期MIPS指令集的CPU，支持包括lw、sw、R-type、addi、beq、bgtz、j等指令。 运行一个计算斐波那契数列的程序，初始为3，3。  实验平台 ISE 14.7  实验过程（分析） 模块化设计，主要有以下几个模块  a) alu模块——算术逻辑单元  b) regfile模块——寄存器文件  c)    mux模块和mux4模块——2路和4路选择器  d)">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic1.png">
+<meta name="twitter:image" content="https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic1.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -337,7 +337,7 @@
 <p> ②根据Funct具体设置不同的ALUControl<br> ​<br> 状态机如下：</p>
 </li>
 </ol>
-<p><img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic1.png" alt=""> </p>
+<p><img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic1.png" alt=""> </p>
 <ol start="8">
 <li><p>top模块实例化其他所有模块，连接各个信号。</p>
 </li>
@@ -353,11 +353,11 @@
 <ol start="10">
 <li><p>ram模块的初始化</p>
 <p>IP核选择Block Memory，设置为Single Port RAM，</p>
-<p><img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic2.png" alt=""> </p>
+<p><img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic2.png" alt=""> </p>
 <p>宽度为32，深度为256</p>
-<p><img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic3.png" alt=""> </p>
+<p><img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic3.png" alt=""> </p>
 <p>选中Load Init File设置，选择初始化coe文件的路径，</p>
-<p><img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic4.png" alt=""> </p>
+<p><img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic4.png" alt=""> </p>
 <p>其中coe文件内容为（Text段为0-63，Data段为64-255）</p>
 <pre><code>MEMORY_INITIALIZATION_RADIX=16;
 MEMORY_INITIALIZATION_VECTOR=
@@ -451,7 +451,7 @@ ad0a0008
 …
 </code></pre></li>
 <li><p>完整的数据通路</p>
-<p><img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic5.png" alt=""> </p>
+<p><img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic5.png" alt=""> </p>
 </li>
 <li><p>分析结果</p>
 <pre><code>.data
@@ -497,9 +497,9 @@ out:
 <h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><ul>
 <li><p>仿真结果：</p>
 <p>  仿真得Mem和reg数据为</p>
-<p>  <img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic6.png" alt=""> </p>
+<p>  <img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic6.png" alt=""> </p>
 <p>  Mem              </p>
-<p>  <img src="//lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/pic7.png" alt=""> </p>
+<p>  <img src="//l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/pic7.png" alt=""> </p>
 <p>  Regfile</p>
 <p>  可见运行结果符合分析。</p>
 </li>
@@ -1075,8 +1075,8 @@ endmodule
         <p><span>发布时间:</span>2018-05-10, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-19, 19:09:37</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/05/10/cod/lab6_Multi-CycleCPU/" title="计算机组成原理上机实验6 多周期CPU">https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/05/10/cod/lab6_Multi-CycleCPU/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/05/10/cod/lab6_Multi-CycleCPU/" title="计算机组成原理上机实验6 多周期CPU">https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/05/10/cod/lab6_Multi-CycleCPU/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

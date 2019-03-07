@@ -19,23 +19,23 @@
 <meta name="keywords" content="DS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构上机题3 哈夫曼压缩">
-<meta property="og:url" content="https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/index.html">
+<meta property="og:url" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="哈夫曼压缩题目实验三: 此次实验限定语言C/C++，允许使用stl。 ddl：下下周六（11月19日）。 实验要求：实现任意二进制文件压缩解压。将哈夫曼树或者词频率表保存到文件，压缩后解压所需信息全部从你自己压缩得到的文件中拿到。检查:对于一般txt文档实现效果明显的压缩结果并正确解压7分，大文件（几十兆以上）非文本文件正确压缩解压。（9分）报告1分。本周六实验一和二未检查完的来检查，下周六实验三">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/1.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/2.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/3.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/4.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/5.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/6.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/7.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/8.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/1.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/2.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/3.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/4.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/5.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/6.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/7.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/8.png">
 <meta property="og:updated_time" content="2019-02-19T11:11:54.323Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据结构上机题3 哈夫曼压缩">
 <meta name="twitter:description" content="哈夫曼压缩题目实验三: 此次实验限定语言C/C++，允许使用stl。 ddl：下下周六（11月19日）。 实验要求：实现任意二进制文件压缩解压。将哈夫曼树或者词频率表保存到文件，压缩后解压所需信息全部从你自己压缩得到的文件中拿到。检查:对于一般txt文档实现效果明显的压缩结果并正确解压7分，大文件（几十兆以上）非文本文件正确压缩解压。（9分）报告1分。本周六实验一和二未检查完的来检查，下周六实验三">
-<meta name="twitter:image" content="https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/1.png">
+<meta name="twitter:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/1.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -478,7 +478,7 @@ int Decompress(char *fpath);
 //预处理及解压 
 </code></pre><p>8．    具体的函数实现见附录，均有详细注释，此处不再赘述。</p>
 <h2 id="四、-调试分析"><a href="#四、-调试分析" class="headerlink" title="四、    调试分析"></a>四、    调试分析</h2><p>1．    本程序的难点在于哈夫曼树的创建、存储、读取、匹配。<br>2．    本程序选择存储词频表而不是哈夫曼树，在解压时读取词频表重新创建哈夫曼树，文件结构如下图。</p>
-<p><img src="//lyncien.github.io/2017/11/11/ds/lab3_Haffman/1.png" alt="">   </p>
+<p><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/1.png" alt="">   </p>
 <p>FileTypeMark位于文件头，标记了“#HAFFMANCOMPRESSFILE#”，以供解压时识别为压缩文件。之后的一段数据FrequencyList 存放了字符频率表，表头记录出现了字符类型总数，之后为各个字符及其频度。最后的部分存放了经过哈夫曼编码后的原文件数据，头部记录了原文件的长度。</p>
 <p>3．    在文件的读取和存储上，设置一个读写缓存，每次读入一定的字节数，然后进行处理，而不是每次读入一个字节，这样效率太低，写出时同理。</p>
 <p>4．    解压时重建哈夫曼树后，不要再次导出哈夫曼编码，每次读取一位二进制数据，直接搜索哈夫曼树，是0则跳转左孩子，是1则跳转右孩子。</p>
@@ -487,14 +487,14 @@ int Decompress(char *fpath);
 <p>7．    关于fread，若不考虑返回值，fread(buf,size,count,fp)，size和count的值可互换，只要size*count是需要读取的字节数即可。但是如果想知道实际读取了多少字节，比如一次读入1024字节，应该写为fread(buf,1,1024,fp)，当剩余数据不足1024时，会返回实际读取的count数，在这里就是字节数。若写为fread(buf,1024,1,fp)，当剩余数据超过1024时，返回1024，当剩余数据不足1024时，将返回0(虽然buf中会存有实际读取的数据)。</p>
 <p>8．    还是fread的问题，传统情况下为了避免最后一个字节使用了两次，采用while(fread(buf,1,1,fp) &amp;&amp; !feof(fp)) 因为fread读完最后一个字节后，feof仍然不变，再次fread才触发feof。这里一次读取一个字节，fread(buf,1,1,fp)的返回值只会是0和1，即使读取最后一个字节也为1，再次读取才0，因此while中用&amp;&amp;没有问题，两个条件只会同为0或同为1。如果一次读取多个字节（比如1024），在文件总长度为1024的倍数时，和上述情况没有区别，若非1024倍数，最后一次读取fread将返回实际读取数量(&lt;1024)，但是此时已经触发feof（因为最后一次读取是没有满足fread的请求的，这里的逻辑很微妙）,故while中&amp;&amp;应该改用||。</p>
 <p>9．    在界面更新问题上，编写了一个更新显示进度函数，直接在压缩/解压函数中调用。</p>
-<h2 id="五、-用户手册"><a href="#五、-用户手册" class="headerlink" title="五、    用户手册"></a>五、    用户手册</h2><p><img src="//lyncien.github.io/2017/11/11/ds/lab3_Haffman/2.png" alt=""></p>
-<p><img src="//lyncien.github.io/2017/11/11/ds/lab3_Haffman/3.png" alt=""></p>
+<h2 id="五、-用户手册"><a href="#五、-用户手册" class="headerlink" title="五、    用户手册"></a>五、    用户手册</h2><p><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/2.png" alt=""></p>
+<p><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/3.png" alt=""></p>
 <h2 id="六、-测试结果"><a href="#六、-测试结果" class="headerlink" title="六、    测试结果"></a>六、    测试结果</h2><ol>
 <li>一个文本文件“四大名著.txt”（原大小 6,321,865字节，压缩后4,827,905字节，压缩率75%），一个可执行文件（压缩率77%），实现明显的压缩。</li>
 <li>和一份pdf文档实现正确解压缩，但压缩效果不明显（压缩率99%），解压缩前后md5值不变。</li>
 <li>解压缩时间在可接受的范围内，约16MB/s.</li>
 </ol>
-<p><img src="//lyncien.github.io/2017/11/11/ds/lab3_Haffman/4.png" alt=""><br><img src="//lyncien.github.io/2017/11/11/ds/lab3_Haffman/5.png" alt=""><br><img src="//lyncien.github.io/2017/11/11/ds/lab3_Haffman/6.png" alt=""><br><img src="//lyncien.github.io/2017/11/11/ds/lab3_Haffman/7.png" alt=""><br><img src="//lyncien.github.io/2017/11/11/ds/lab3_Haffman/8.png" alt="">   </p>
+<p><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/4.png" alt=""><br><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/5.png" alt=""><br><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/6.png" alt=""><br><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/7.png" alt=""><br><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/8.png" alt="">   </p>
 <h2 id="七、-附录"><a href="#七、-附录" class="headerlink" title="七、    附录"></a>七、    附录</h2><p>源程序文件清单：</p>
 <p>（1）    FrequencyList.h</p>
 <p>（2）    HaffmanTree.h</p>
@@ -1074,8 +1074,8 @@ int main(int argc,char *argv[]){
         <p><span>发布时间:</span>2017-11-11, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-19, 19:11:54</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/11/11/ds/lab3_Haffman/" title="数据结构上机题3 哈夫曼压缩">https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2017/11/11/ds/lab3_Haffman/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/11/11/ds/lab3_Haffman/" title="数据结构上机题3 哈夫曼压缩">https://l-x.me/2017/11/11/ds/lab3_Haffman/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2017/11/11/ds/lab3_Haffman/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

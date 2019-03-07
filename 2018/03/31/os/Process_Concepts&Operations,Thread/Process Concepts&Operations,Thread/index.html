@@ -19,18 +19,18 @@
 <meta name="keywords" content="OS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统阅读报告：进程与线程">
-<meta property="og:url" content="https://lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/index.html">
+<meta property="og:url" content="https://l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="进程与线程进程的概念 我们知道，人们通过操作系统来更方便地操作硬件，提高使用计算机的效率。早期的计算机只允许一次执行一个程序，这样的程序完全控制了系统，能访问所有的资源。但随着操作系统的功能愈加复杂，计算机的应用更加广泛，人们往往需要同时进行多个作业，因此就有了进程的概念，不同的进程同时运行，互相独立，进行不同的工作。   进程（Process），可以认为是执行中的程序。值得注意的是，程序本身不是">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-1.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-2.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-3.jpg">
+<meta property="og:image" content="https://l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-1.png">
+<meta property="og:image" content="https://l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-2.png">
+<meta property="og:image" content="https://l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-3.jpg">
 <meta property="og:updated_time" content="2019-02-19T11:17:45.589Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统阅读报告：进程与线程">
 <meta name="twitter:description" content="进程与线程进程的概念 我们知道，人们通过操作系统来更方便地操作硬件，提高使用计算机的效率。早期的计算机只允许一次执行一个程序，这样的程序完全控制了系统，能访问所有的资源。但随着操作系统的功能愈加复杂，计算机的应用更加广泛，人们往往需要同时进行多个作业，因此就有了进程的概念，不同的进程同时运行，互相独立，进行不同的工作。   进程（Process），可以认为是执行中的程序。值得注意的是，程序本身不是">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-1.png">
+<meta name="twitter:image" content="https://l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process%20Concepts&Operations,Thread/20180526050442907-1.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -305,12 +305,12 @@
 <h2 id="进程的信息"><a href="#进程的信息" class="headerlink" title="进程的信息"></a>进程的信息</h2><ul>
 <li>一个进程开始运行后，用户内存中将有一段空间被分配给这个进程，具体结构见右图1。其中，文本段（Text）存放程序代码，数据段（Data）存放全局变量，栈（Stack）存放函数参数、局部变量等，堆（Heap）用于动态分配空间。栈和堆朝着相反的方向增长，这是为了提高内存空间利用率。</li>
 </ul>
-<p><img src="//lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-1.png" alt=""> </p>
+<p><img src="//l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-1.png" alt=""> </p>
 <ul>
 <li>同时，操作系统会为每个进程在内核空间中设置一个进程控制块（Process Control Block，PCB），其结构如图2。进程状态由当前进行的活动定义，包括new（正在被创建）、Running（正在执行指令）、Waiting（等待某事件发生，如I/O完成）、Ready（等待处理器分配）、Terminated（终止），它们之间的相互转化见图3。进程编号是操作系统为每个进程分配的唯一的身份标识。进程计数器表示将要执行的下一个指令的地址。寄存器则存放进程执行时的中间信息。</li>
 <li>PCB的一个重要作用就是多道程序设计中操作系统在切换执行的进程时，可以将当前进程状态保存在PCB中，并从PCB读取新的进程的信息。</li>
 </ul>
-<p><img src="//lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-2.png" alt=""><br><img src="//lyncien.github.io/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-3.jpg" alt=""></p>
+<p><img src="//l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-2.png" alt=""><br><img src="//l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-3.jpg" alt=""></p>
 <h2 id="进程的操作"><a href="#进程的操作" class="headerlink" title="进程的操作"></a>进程的操作</h2><ul>
 <li><p>进程的操作主要包括获取进程ID、创建进程、终止进程和进程间的通信，这些操作都可以通过系统调用来实现，下面介绍前三者的实现。</p>
 <p>  <strong>1. 获取进程的ID。</strong></p>
@@ -376,8 +376,8 @@
         <p><span>发布时间:</span>2018-03-31, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-19, 19:17:45</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/" title="操作系统阅读报告：进程与线程">https://lyncien.github.io/2018/03/31/os/Process_Concepts&amp;Operations,Thread/Process Concepts&amp;Operations,Thread/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/03/31/os/Process_Concepts&amp;Operations,Thread/Process Concepts&amp;Operations,Thread/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/" title="操作系统阅读报告：进程与线程">https://l-x.me/2018/03/31/os/Process_Concepts&amp;Operations,Thread/Process Concepts&amp;Operations,Thread/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/03/31/os/Process_Concepts&amp;Operations,Thread/Process Concepts&amp;Operations,Thread/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

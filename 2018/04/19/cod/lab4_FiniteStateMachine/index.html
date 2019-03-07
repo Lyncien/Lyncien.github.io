@@ -19,19 +19,19 @@
 <meta name="keywords" content="Verilog,COD">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机组成原理上机实验4 有限状态机">
-<meta property="og:url" content="https://lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/index.html">
+<meta property="og:url" content="https://l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="实验目的 综合利用三次实验的结果，完成以下功能：  通过例化，向ram中0地址到13地址存入14个数，比如10-23；向ram中100地址到106地址存入7个数，比如0~6，分别代表运算符（与ALU的操作符对应），最后向ram 107地址写入-1  运算控制： - 从ram 0地址开始的地方取两个数，分别放在reg0和reg1，然后从ram 100地址开始的地方取一个运算符，放到reg2，计算之后">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/pic1.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/pic2.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/pic3.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/pic4.png">
+<meta property="og:image" content="https://l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/pic1.png">
+<meta property="og:image" content="https://l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/pic2.png">
+<meta property="og:image" content="https://l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/pic3.png">
+<meta property="og:image" content="https://l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/pic4.png">
 <meta property="og:updated_time" content="2019-02-19T11:10:16.346Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计算机组成原理上机实验4 有限状态机">
 <meta name="twitter:description" content="实验目的 综合利用三次实验的结果，完成以下功能：  通过例化，向ram中0地址到13地址存入14个数，比如10-23；向ram中100地址到106地址存入7个数，比如0~6，分别代表运算符（与ALU的操作符对应），最后向ram 107地址写入-1  运算控制： - 从ram 0地址开始的地方取两个数，分别放在reg0和reg1，然后从ram 100地址开始的地方取一个运算符，放到reg2，计算之后">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/pic1.png">
+<meta name="twitter:image" content="https://l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/pic1.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -322,7 +322,7 @@
 </li>
 <li><p>regfile模块用组合逻辑读，时序逻辑写。</p>
 </li>
-<li><p>control模块思路（4周期）由于reg在这里没有实质作用（仅是复制了一份存储），故不考虑相关控制<br> <img src="//lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/pic1.png" alt=""><br> 其中ram_ra为ram读地址，ram_rd为ram读数据，ram_we为ram写使能，tda、tdb为临时寄存上一周期的结果。</p>
+<li><p>control模块思路（4周期）由于reg在这里没有实质作用（仅是复制了一份存储），故不考虑相关控制<br> <img src="//l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/pic1.png" alt=""><br> 其中ram_ra为ram读地址，ram_rd为ram读数据，ram_we为ram写使能，tda、tdb为临时寄存上一周期的结果。</p>
 </li>
 <li><p>分析结果</p>
 <p> | Op | Data1 | Data2 | Result |<br> | — | :—: | :—: | :—: |<br> | 0(nop) | 11 | 10 | 0 |<br> | 1(add) | 13 | 12 | 25 |<br> | 2(sub) | 15 | 14 | 1 |<br> | 3(and) | 17(32’b0…10001) | 16(32’b0…10000) | 16(32’b0…10000) |<br> | 4(or) | 19(32’b0…10011) | 18(32’b0…10010) | 19(32’b0…10011) |<br> | 5(xor) | 21(32’b0…10101) | 20(32’b0…10100) | 1(32’b0…00001) |<br> | 6(nor) | 23(32’b0…10111) | 22(32’b0…10110) | -24(32’b1…101000) |</p>
@@ -367,11 +367,11 @@
 
   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </code></pre><p>  仿真得ram和reg数据为</p>
-<p>  <img src="//lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/pic2.png" alt=""></p>
+<p>  <img src="//l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/pic2.png" alt=""></p>
 <p>  ……</p>
-<p>  <img src="//lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/pic3.png" alt=""></p>
+<p>  <img src="//l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/pic3.png" alt=""></p>
 <p>  ……</p>
-<p>  <img src="//lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/pic4.png" alt=""></p>
+<p>  <img src="//l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/pic4.png" alt=""></p>
 <p>  可见计算结果符合分析。</p>
 </li>
 </ul>
@@ -565,8 +565,8 @@ endmodule
         <p><span>发布时间:</span>2018-04-19, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-19, 19:10:16</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/04/19/cod/lab4_FiniteStateMachine/" title="计算机组成原理上机实验4 有限状态机">https://lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/04/19/cod/lab4_FiniteStateMachine/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/04/19/cod/lab4_FiniteStateMachine/" title="计算机组成原理上机实验4 有限状态机">https://l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

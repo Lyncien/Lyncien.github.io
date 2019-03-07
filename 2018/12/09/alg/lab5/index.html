@@ -19,21 +19,21 @@
 <meta name="keywords" content="Algorithm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="算法基础上机实验五 图搜索BFS算法及存储优化">
-<meta property="og:url" content="https://lyncien.github.io/2018/12/09/alg/lab5/index.html">
+<meta property="og:url" content="https://l-x.me/2018/12/09/alg/lab5/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="题目图搜索BFS算法及存储优化  实验要求：1.模拟数据集 自己随机生成有向图，边数的规模为10，100，1000，10000，100000； 进行BFS搜索，记录程序完成时间和所需内存空间大小。 2.真实数据集 https://pan.baidu.com/s/1pvfphiywjSXohO-bSnL1HA 数据集说明：均为twitter真实数据集，数据集规模如下： twitter_small:">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/12/09/alg/lab5/clip_image002.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/12/09/alg/lab5/clip_image004.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/12/09/alg/lab5/clip_image006.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/12/09/alg/lab5/clip_image008.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/12/09/alg/lab5/clip_image010.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/12/09/alg/lab5/clip_image012.png">
+<meta property="og:image" content="https://l-x.me/2018/12/09/alg/lab5/clip_image002.jpg">
+<meta property="og:image" content="https://l-x.me/2018/12/09/alg/lab5/clip_image004.jpg">
+<meta property="og:image" content="https://l-x.me/2018/12/09/alg/lab5/clip_image006.jpg">
+<meta property="og:image" content="https://l-x.me/2018/12/09/alg/lab5/clip_image008.png">
+<meta property="og:image" content="https://l-x.me/2018/12/09/alg/lab5/clip_image010.png">
+<meta property="og:image" content="https://l-x.me/2018/12/09/alg/lab5/clip_image012.png">
 <meta property="og:updated_time" content="2019-02-20T15:24:31.067Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="算法基础上机实验五 图搜索BFS算法及存储优化">
 <meta name="twitter:description" content="题目图搜索BFS算法及存储优化  实验要求：1.模拟数据集 自己随机生成有向图，边数的规模为10，100，1000，10000，100000； 进行BFS搜索，记录程序完成时间和所需内存空间大小。 2.真实数据集 https://pan.baidu.com/s/1pvfphiywjSXohO-bSnL1HA 数据集说明：均为twitter真实数据集，数据集规模如下： twitter_small:">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/12/09/alg/lab5/clip_image002.jpg">
+<meta name="twitter:image" content="https://l-x.me/2018/12/09/alg/lab5/clip_image002.jpg">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -341,20 +341,20 @@
 <h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><h5 id="使用bfs-random-cpp测试10-txt-100-txt-1000-txt-10000-txt-100000-txt"><a href="#使用bfs-random-cpp测试10-txt-100-txt-1000-txt-10000-txt-100000-txt" class="headerlink" title="使用bfs_random.cpp测试10.txt 100.txt 1000.txt 10000.txt 100000.txt"></a>使用bfs_random.cpp测试10.txt 100.txt 1000.txt 10000.txt 100000.txt</h5><p>以上5个文件由GenGraph.py生成。</p>
 <p>100000.txt结果如下</p>
 <p>读取时间0.019秒，bfs时间几乎为0，内存为5.8MB(不准确，这是包括运行窗口等其他资源使用的内存)</p>
-<p><img src="//lyncien.github.io/2018/12/09/alg/lab5/clip_image002.jpg" alt="img"></p>
-<p><img src="//lyncien.github.io/2018/12/09/alg/lab5/clip_image004.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/12/09/alg/lab5/clip_image002.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/12/09/alg/lab5/clip_image004.jpg" alt="img"></p>
 <h5 id="使用bfs-cpp测试twitter-small-txt"><a href="#使用bfs-cpp测试twitter-small-txt" class="headerlink" title="使用bfs.cpp测试twitter_small.txt"></a>使用bfs.cpp测试twitter_small.txt</h5><p>​     文件有重复边，序号连续，81306个结点（序号最大有9位数），1768149条边（但文件有2000000多行）</p>
 <p>​    结果如下</p>
 <p>4.5秒完成（其中读取4.4秒，bfs小于0.1秒）</p>
 <p>内存约36MB</p>
-<p><img src="//lyncien.github.io/2018/12/09/alg/lab5/clip_image006.jpg" alt="img"></p>
-<p><img src="//lyncien.github.io/2018/12/09/alg/lab5/clip_image008.png" alt="img"></p>
+<p><img src="//l-x.me/2018/12/09/alg/lab5/clip_image006.jpg" alt="img"></p>
+<p><img src="//l-x.me/2018/12/09/alg/lab5/clip_image008.png" alt="img"></p>
 <h5 id="使用bfs-large-2-cpp测试twitter-large-txt"><a href="#使用bfs-large-2-cpp测试twitter-large-txt" class="headerlink" title="使用bfs_large_2.cpp测试twitter_large.txt"></a>使用bfs_large_2.cpp测试twitter_large.txt</h5><p>文件无重复边，序号连续，11316811个结点（最大序号就是11316811），85331845条边</p>
 <p>结果如下</p>
 <p>42秒完成（其中读取29秒，bfs13秒）</p>
 <p>内存约1466MB</p>
-<p><img src="//lyncien.github.io/2018/12/09/alg/lab5/clip_image010.png" alt="img"></p>
-<p><img src="//lyncien.github.io/2018/12/09/alg/lab5/clip_image012.png" alt="img"></p>
+<p><img src="//l-x.me/2018/12/09/alg/lab5/clip_image010.png" alt="img"></p>
+<p><img src="//l-x.me/2018/12/09/alg/lab5/clip_image012.png" alt="img"></p>
 <h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><h5 id="small"><a href="#small" class="headerlink" title="small"></a>small</h5><pre><code class="c++">#include &lt;cstdio&gt;
 #include &lt;ctime&gt;
 #include &lt;cstdlib&gt;
@@ -666,8 +666,8 @@ for n in [10,100,1000,10000,100000]:
         <p><span>发布时间:</span>2018-12-09, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-20, 23:24:31</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/12/09/alg/lab5/" title="算法基础上机实验五 图搜索BFS算法及存储优化">https://lyncien.github.io/2018/12/09/alg/lab5/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/12/09/alg/lab5/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/12/09/alg/lab5/" title="算法基础上机实验五 图搜索BFS算法及存储优化">https://l-x.me/2018/12/09/alg/lab5/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/12/09/alg/lab5/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

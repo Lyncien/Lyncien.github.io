@@ -19,16 +19,16 @@
 <meta name="keywords" content="OS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="操作系统阅读报告：进程通信与同步、进程调度">
-<meta property="og:url" content="https://lyncien.github.io/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/index.html">
+<meta property="og:url" content="https://l-x.me/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="进程通信与同步、进程调度进程间通信 进程在执行过程中，如果不被其他进程影响或影响其他进程，则称该进程是独立的，否则称为协作的。进程协作可能是出于以下几个目的：信息共享、提高计算速度、模块化设计…进程间要实现协作就需要一套通信机制（IPC），目前主要有两种模式：共享内存和消息传递。  消息传递模型。通过在进程间交换消息来实现通信，它易于实现，不需要避免冲突，但是需要内核介入，时间消耗大，且只能传递少">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process%20Communication&Synchronization&Scheduling/20180526054518142-1.png">
+<meta property="og:image" content="https://l-x.me/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process%20Communication&Synchronization&Scheduling/20180526054518142-1.png">
 <meta property="og:updated_time" content="2019-02-19T11:17:25.482Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统阅读报告：进程通信与同步、进程调度">
 <meta name="twitter:description" content="进程通信与同步、进程调度进程间通信 进程在执行过程中，如果不被其他进程影响或影响其他进程，则称该进程是独立的，否则称为协作的。进程协作可能是出于以下几个目的：信息共享、提高计算速度、模块化设计…进程间要实现协作就需要一套通信机制（IPC），目前主要有两种模式：共享内存和消息传递。  消息传递模型。通过在进程间交换消息来实现通信，它易于实现，不需要避免冲突，但是需要内核介入，时间消耗大，且只能传递少">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process%20Communication&Synchronization&Scheduling/20180526054518142-1.png">
+<meta name="twitter:image" content="https://l-x.me/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process%20Communication&Synchronization&Scheduling/20180526054518142-1.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -337,7 +337,7 @@
 <li><p>进程调度的<strong>算法</strong>主要包括先到先服务（FCFS）、最短作业优先（SJF）、轮转法（RR）、优先级调度和多级队列调度。</p>
 <ul>
 <li><strong>先到先服务</strong>顾名思义，由一个FIFO队列实现，并且是非抢占的，进程执行直到等待或结束，如果一个长进程先到达，这将导致平均等待时间过长。</li>
-<li><strong>最短作业调度</strong>每次选择一个CPU区间最短的进程执行，并且可以分为抢占式和非抢占式的，这种调度方法最大的困难在于不知道下一个CPU区间的长度，一种解决方法是通过公式<img src="//lyncien.github.io/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/20180526054518142-1.png" alt="">来预测。</li>
+<li><strong>最短作业调度</strong>每次选择一个CPU区间最短的进程执行，并且可以分为抢占式和非抢占式的，这种调度方法最大的困难在于不知道下一个CPU区间的长度，一种解决方法是通过公式<img src="//l-x.me/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/20180526054518142-1.png" alt="">来预测。</li>
 <li><strong>轮转法</strong>是定义了一个较小的时间单元（时间片），就绪队列作为循环队列，被调度执行的进程在达到一个时间片的时间后被重新加入队尾，显然，这是抢占的（除非进程长度小于时间片）。时间片的大小很大程度上决定了RR调度的性能，过长将变成FCFS，过短将导致进程切换开销过大，根据经验，80%的CPU区间应该小于时间片。</li>
 <li><strong>优先级调度</strong>为每个进程设置了优先级，优先级高（数值不一定是高）的进程先执行，同样也可以分为抢占和非抢占的，这种调度的主要问题是无穷阻塞（饥饿），即低优先级的进程可能很久都不能得到执行。</li>
 <li><strong>多级队列调度</strong>则是优先级调度的一种拓展，进程被划分为多个队列，每个队列有不同的优先级，队列内部则可以根据不同属性采取以上几种不同的调度方法。进一步地，如果允许进程在不同队列之间转移，这就形成了多级反馈队列调度。</li>
@@ -359,8 +359,8 @@
         <p><span>发布时间:</span>2018-04-25, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-19, 19:17:25</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/" title="操作系统阅读报告：进程通信与同步、进程调度">https://lyncien.github.io/2018/04/25/os/Process_Communication&amp;Synchronization&amp;Scheduling/Process Communication&amp;Synchronization&amp;Scheduling/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/04/25/os/Process_Communication&amp;Synchronization&amp;Scheduling/Process Communication&amp;Synchronization&amp;Scheduling/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/" title="操作系统阅读报告：进程通信与同步、进程调度">https://l-x.me/2018/04/25/os/Process_Communication&amp;Synchronization&amp;Scheduling/Process Communication&amp;Synchronization&amp;Scheduling/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/04/25/os/Process_Communication&amp;Synchronization&amp;Scheduling/Process Communication&amp;Synchronization&amp;Scheduling/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

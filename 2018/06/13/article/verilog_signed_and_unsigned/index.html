@@ -19,22 +19,22 @@
 <meta name="keywords" content="Verilog">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Verilog中的有符号数与无符号数">
-<meta property="og:url" content="https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/index.html">
+<meta property="og:url" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="Verilog中的有符号数与无符号数缘起 在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号   `assign SignExtented = {{16{IMM16[15]">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic1.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic2.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic3.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic4.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic5.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/ss.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/sltpic1.png">
+<meta property="og:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic1.png">
+<meta property="og:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic2.png">
+<meta property="og:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic3.png">
+<meta property="og:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic4.png">
+<meta property="og:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic5.png">
+<meta property="og:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/ss.png">
+<meta property="og:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/sltpic1.png">
 <meta property="og:updated_time" content="2019-02-19T12:15:38.799Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Verilog中的有符号数与无符号数">
 <meta name="twitter:description" content="Verilog中的有符号数与无符号数缘起 在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号   `assign SignExtented = {{16{IMM16[15]">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic1.png">
+<meta name="twitter:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic1.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -324,7 +324,7 @@
 </ul>
 <h2 id="初步理解"><a href="#初步理解" class="headerlink" title="初步理解"></a>初步理解</h2><ul>
 <li><p>查看一本编写cpu的参考书，里面是这样写的</p>
-<p>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic1.png" alt=""><br>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic2.png" alt=""><br>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic3.png" alt=""><br>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic4.png" alt=""><br>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/alupic5.png" alt=""></p>
+<p>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic1.png" alt=""><br>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic2.png" alt=""><br>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic3.png" alt=""><br>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic4.png" alt=""><br>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic5.png" alt=""></p>
 </li>
 <li><p>这有符号和无符号有什么区别！！！</p>
 </li>
@@ -335,7 +335,7 @@
 </li>
 <li>那么为什么它的有符号计算和无符号计算都还是同样用无符号数int_0,int_1处理，而溢出的判断是专门增加一个signed型的变量s_out，用$signed()把out转成有符号存在s_out，然后判断？</li>
 <li><p>花了一点时间遍访了博客后，发现了这张图</p>
-<p>  <img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/ss.png" alt=""></p>
+<p>  <img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/ss.png" alt=""></p>
 <p>  这不就是在模2^n意义下的加法吗？<br>  等等，我再去看一下a,b，a=4’b1111,b=4’1110,直接相加，舍弃最高进位（mod 2^4），这不就是out=4’b1101吗？可是刚刚明明是解释为负数啊。。<br>  思考了许久，啊，突然意识到，这个“+”确实是无符号的加，也就是电路中最基本的加法器的功能，这也是为什么负数要表示成补码的原因了（符号直接参与运算），看来之前没有真正理解补码的优越性。</p>
 </li>
 <li><p>这样一来，只要有符号时负数按补码存储，那么有符号和无符号的计算就是一样的</p>
@@ -384,7 +384,7 @@
 <li><p>二是转为有符号，直接用“&lt;”比较</p>
 <p> <code>alu_out = ($signed(alu_a) &lt; $signed(alu_b)) ? 32&#39;b1 : 32&#39;b0;</code></p>
 </li>
-<li><p>测试一下，两种方法结果一样<br><img src="//lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/sltpic1.png" alt=""> </p>
+<li><p>测试一下，两种方法结果一样<br><img src="//l-x.me/2018/06/13/article/verilog_signed_and_unsigned/sltpic1.png" alt=""> </p>
 </li>
 </ul>
 </li>
@@ -402,8 +402,8 @@
         <p><span>发布时间:</span>2018-06-13, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-19, 20:15:38</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/06/13/article/verilog_signed_and_unsigned/" title="Verilog中的有符号数与无符号数">https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/06/13/article/verilog_signed_and_unsigned/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/06/13/article/verilog_signed_and_unsigned/" title="Verilog中的有符号数与无符号数">https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

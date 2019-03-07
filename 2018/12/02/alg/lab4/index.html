@@ -19,16 +19,16 @@
 <meta name="keywords" content="Algorithm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="算法基础上机实验四 最佳调度问题">
-<meta property="og:url" content="https://lyncien.github.io/2018/12/02/alg/lab4/index.html">
+<meta property="og:url" content="https://l-x.me/2018/12/02/alg/lab4/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="题目最佳调度问题 问题描述设有n个任务由k个可并行工作的机器来完成，完成任务i需要时间为ti。试设计一个算法找出完成这n个任务的最佳调度，使完成全部任务的时间最早。（要求给出调度方案） 完成全部任务的时间为运行时间最长的机器上运行的总时间，所有机器都是相同的。一个任务只能在一个机器上完成，且在完成之前不会被其他任务抢占。 算法设计回溯法回溯法是一个既带有系统性又带有跳跃性的搜索算法。  系统性：它">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/12/02/alg/lab4/clip_image002.png">
+<meta property="og:image" content="https://l-x.me/2018/12/02/alg/lab4/clip_image002.png">
 <meta property="og:updated_time" content="2019-02-20T15:15:44.314Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="算法基础上机实验四 最佳调度问题">
 <meta name="twitter:description" content="题目最佳调度问题 问题描述设有n个任务由k个可并行工作的机器来完成，完成任务i需要时间为ti。试设计一个算法找出完成这n个任务的最佳调度，使完成全部任务的时间最早。（要求给出调度方案） 完成全部任务的时间为运行时间最长的机器上运行的总时间，所有机器都是相同的。一个任务只能在一个机器上完成，且在完成之前不会被其他任务抢占。 算法设计回溯法回溯法是一个既带有系统性又带有跳跃性的搜索算法。  系统性：它">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/12/02/alg/lab4/clip_image002.png">
+<meta name="twitter:image" content="https://l-x.me/2018/12/02/alg/lab4/clip_image002.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -312,7 +312,7 @@
 <li><p>用限界函数剪去不能得到最优解的子树。</p>
 </li>
 </ul>
-<p>最佳调度问题可以用回溯法解决，并且是属于子集树回溯法。对于每个任务i，都可能分配到k台机器的任意一台上，解空间为<img src="//lyncien.github.io/2018/12/02/alg/lab4/clip_image002.png" alt="img">，现在要求的是使得最长机器时间最短的解。</p>
+<p>最佳调度问题可以用回溯法解决，并且是属于子集树回溯法。对于每个任务i，都可能分配到k台机器的任意一台上，解空间为<img src="//l-x.me/2018/12/02/alg/lab4/clip_image002.png" alt="img">，现在要求的是使得最长机器时间最短的解。</p>
 <p>回溯算法伪代码如下：</p>
 <pre><code>BackTrack(int task,int spendtime){
     if (task == n){ //分配完毕
@@ -468,8 +468,8 @@ int main(){
         <p><span>发布时间:</span>2018-12-02, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-20, 23:15:44</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/12/02/alg/lab4/" title="算法基础上机实验四 最佳调度问题">https://lyncien.github.io/2018/12/02/alg/lab4/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/12/02/alg/lab4/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/12/02/alg/lab4/" title="算法基础上机实验四 最佳调度问题">https://l-x.me/2018/12/02/alg/lab4/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/12/02/alg/lab4/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

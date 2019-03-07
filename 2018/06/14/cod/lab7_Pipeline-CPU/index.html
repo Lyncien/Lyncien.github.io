@@ -19,32 +19,32 @@
 <meta name="keywords" content="Verilog,COD">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机组成原理上机实验7 流水线CPU">
-<meta property="og:url" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/index.html">
+<meta property="og:url" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="实验目的设计一个MIPS指令集的CPU，1、    基本要求：a)    多周期 b)    包含16条指令     i.    add addi addu sub subu      ii.    and andi or nor xor     iii. bgtz bne j jr     iv.    lw sw 2、    扩展要求a)    在16条的基础上，增加其他指令 b)    实现">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic1.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic2.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic3.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic4.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic5.jpg">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic6.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic7.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic8.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic9.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic10.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic11.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic12.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic13.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic14.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic15.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic16.png">
-<meta property="og:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic17.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic1.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic2.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic3.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic4.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic5.jpg">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic6.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic7.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic8.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic9.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic10.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic11.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic12.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic13.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic14.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic15.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic16.png">
+<meta property="og:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic17.png">
 <meta property="og:updated_time" content="2019-02-19T11:09:01.863Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计算机组成原理上机实验7 流水线CPU">
 <meta name="twitter:description" content="实验目的设计一个MIPS指令集的CPU，1、    基本要求：a)    多周期 b)    包含16条指令     i.    add addi addu sub subu      ii.    and andi or nor xor     iii. bgtz bne j jr     iv.    lw sw 2、    扩展要求a)    在16条的基础上，增加其他指令 b)    实现">
-<meta name="twitter:image" content="https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic1.png">
+<meta name="twitter:image" content="https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic1.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -321,7 +321,7 @@ b)    实现中断功能
 c)    实现流水
 d)    实现下载
 </code></pre><h2 id="实验平台"><a href="#实验平台" class="headerlink" title="实验平台"></a>实验平台</h2><h4 id="EDA工具为ISE14-7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6-XC6SLX16-CS324。"><a href="#EDA工具为ISE14-7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6-XC6SLX16-CS324。" class="headerlink" title="EDA工具为ISE14.7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6 XC6SLX16-CS324。"></a>EDA工具为ISE14.7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6 XC6SLX16-CS324。</h4><h2 id="使用部件"><a href="#使用部件" class="headerlink" title="使用部件"></a>使用部件</h2><h4 id="开发板上的开关，7段数码管和按钮。"><a href="#开发板上的开关，7段数码管和按钮。" class="headerlink" title="开发板上的开关，7段数码管和按钮。"></a>开发板上的开关，7段数码管和按钮。</h4><h2 id="最终实现功能"><a href="#最终实现功能" class="headerlink" title="最终实现功能"></a>最终实现功能</h2><h4 id="1、实现五段流水线"><a href="#1、实现五段流水线" class="headerlink" title="1、实现五段流水线"></a>1、实现五段流水线</h4><h4 id="2、实现完全转发和冒险检测"><a href="#2、实现完全转发和冒险检测" class="headerlink" title="2、实现完全转发和冒险检测"></a>2、实现完全转发和冒险检测</h4><h4 id="3、实现36条指令"><a href="#3、实现36条指令" class="headerlink" title="3、实现36条指令"></a>3、实现36条指令</h4><h4 id="4、实现下载并在数码管上动态显示内存"><a href="#4、实现下载并在数码管上动态显示内存" class="headerlink" title="4、实现下载并在数码管上动态显示内存"></a>4、实现下载并在数码管上动态显示内存</h4><h2 id="详细设计过程"><a href="#详细设计过程" class="headerlink" title="详细设计过程"></a>详细设计过程</h2><h3 id="1、-MIPS指令格式"><a href="#1、-MIPS指令格式" class="headerlink" title="1、    MIPS指令格式"></a>1、    MIPS指令格式</h3><p>MIPS-IV指令集标准下的指令长度为32位，分为R型、I型和J型指令</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic1.png" alt=""><br>R-Tpye<br><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic2.png" alt=""><br>I-Tpye<br><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic3.png" alt=""><br>J-Tpye</p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic1.png" alt=""><br>R-Tpye<br><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic2.png" alt=""><br>I-Tpye<br><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic3.png" alt=""><br>J-Tpye</p>
 <p>它们的共同部分是26-31位的Op码，用来区分不同的指令，其中</p>
 <p>（1）R-Type的指令Op=000000，再根据0-5位的Funct部分区分不同指令</p>
 <p>（2）I-Type的指令0-15位为立即数，位扩展后用于直接计算或者访存和跳转偏移地址。Op=000001的I-Type指令，根据Rt的不同来区分。</p>
@@ -655,8 +655,8 @@ d)    实现下载
 </tr>
 </tbody>
 </table>
-<h3 id="2、-整体设计"><a href="#2、-整体设计" class="headerlink" title="2、    整体设计"></a>2、    整体设计</h3><h4 id="1-分为五个流水段IF、ID、EX、MEM、WB。"><a href="#1-分为五个流水段IF、ID、EX、MEM、WB。" class="headerlink" title="(1)    分为五个流水段IF、ID、EX、MEM、WB。"></a>(1)    分为五个流水段IF、ID、EX、MEM、WB。</h4><h4 id="2-clk上升沿为每段的开始，每段长度为一个clk。"><a href="#2-clk上升沿为每段的开始，每段长度为一个clk。" class="headerlink" title="(2)    clk上升沿为每段的开始，每段长度为一个clk。"></a>(2)    clk上升沿为每段的开始，每段长度为一个clk。</h4><h4 id="3-每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。"><a href="#3-每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。" class="headerlink" title="(3)    每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。"></a>(3)    每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。</h4><h4 id="4-甘特图如下"><a href="#4-甘特图如下" class="headerlink" title="(4)    甘特图如下"></a>(4)    甘特图如下</h4><p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic4.png" alt=""></p>
-<h4 id="5-详细数据通路图如下"><a href="#5-详细数据通路图如下" class="headerlink" title="(5)详细数据通路图如下"></a>(5)详细数据通路图如下</h4><p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic5.jpg" alt=""></p>
+<h3 id="2、-整体设计"><a href="#2、-整体设计" class="headerlink" title="2、    整体设计"></a>2、    整体设计</h3><h4 id="1-分为五个流水段IF、ID、EX、MEM、WB。"><a href="#1-分为五个流水段IF、ID、EX、MEM、WB。" class="headerlink" title="(1)    分为五个流水段IF、ID、EX、MEM、WB。"></a>(1)    分为五个流水段IF、ID、EX、MEM、WB。</h4><h4 id="2-clk上升沿为每段的开始，每段长度为一个clk。"><a href="#2-clk上升沿为每段的开始，每段长度为一个clk。" class="headerlink" title="(2)    clk上升沿为每段的开始，每段长度为一个clk。"></a>(2)    clk上升沿为每段的开始，每段长度为一个clk。</h4><h4 id="3-每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。"><a href="#3-每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。" class="headerlink" title="(3)    每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。"></a>(3)    每段的相关模块可以和clk上升沿同步也可以与clk下降沿同步。</h4><h4 id="4-甘特图如下"><a href="#4-甘特图如下" class="headerlink" title="(4)    甘特图如下"></a>(4)    甘特图如下</h4><p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic4.png" alt=""></p>
+<h4 id="5-详细数据通路图如下"><a href="#5-详细数据通路图如下" class="headerlink" title="(5)详细数据通路图如下"></a>(5)详细数据通路图如下</h4><p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic5.jpg" alt=""></p>
 <h3 id="3、-各模块设计，主要有以下几个模块"><a href="#3、-各模块设计，主要有以下几个模块" class="headerlink" title="3、    各模块设计，主要有以下几个模块"></a>3、    各模块设计，主要有以下几个模块</h3><h4 id="a-alu模块——算术逻辑单元"><a href="#a-alu模块——算术逻辑单元" class="headerlink" title="a)    alu模块——算术逻辑单元"></a>a)    alu模块——算术逻辑单元</h4><table>
 <thead>
 <tr>
@@ -1489,8 +1489,8 @@ d)    实现下载
 </tbody>
 </table>
 <p>这个模块实现从DMem输出到ALU输入以及ALU输出到ALU输入的转发。</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic6.png" alt=""></p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic7.png" alt=""></p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic6.png" alt=""></p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic7.png" alt=""></p>
 <h4 id="n-hazard模块——冒险检测模块，实现插入气泡"><a href="#n-hazard模块——冒险检测模块，实现插入气泡" class="headerlink" title="n) hazard模块——冒险检测模块，实现插入气泡"></a>n) hazard模块——冒险检测模块，实现插入气泡</h4><table>
 <thead>
 <tr>
@@ -1552,7 +1552,7 @@ d)    实现下载
 </tbody>
 </table>
 <p> lw之后R-Type需要使用访存结果，这在时间上是倒流的，不可能，只能插入一个气泡，清空IDEX寄存器，不更新IFID寄存器，不更新PC。</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic8.png" alt=""></p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic8.png" alt=""></p>
 <h4 id="o-control模块——产生控制信号"><a href="#o-control模块——产生控制信号" class="headerlink" title="o) control模块——产生控制信号"></a>o) control模块——产生控制信号</h4><table>
 <thead>
 <tr>
@@ -1804,11 +1804,11 @@ d)    实现下载
 <li>比如：RegRdout1_EX表示寄存器文件读端口1读出的数据传递到EX段的信号。</li>
 </ul>
 <h3 id="5、-DMem和IMem的初始化"><a href="#5、-DMem和IMem的初始化" class="headerlink" title="5、    DMem和IMem的初始化"></a>5、    DMem和IMem的初始化</h3><p>IP核选择Block Memory，设置为Single Port RAM，</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic9.png" alt=""> </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic9.png" alt=""> </p>
 <p>宽度为32，深度为256</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic10.png" alt="">  </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic10.png" alt="">  </p>
 <p>选中Load Init File设置，选择初始化coe文件的路径，</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic11.png" alt="">  </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic11.png" alt="">  </p>
 <p>其中IMem_init_test.coe文件内容为</p>
 <pre><code>    memory_initialization_radix = 16;
     memory_initialization_vector =
@@ -2028,17 +2028,17 @@ out:j out
 </code></pre>
 <p>完整汇编代码如上，36条指令均测试到了，每条语句的执行结果在该语句后面给出了注释，每测试几条指令就将结果写入内存，方便查看，并且3种相关有包括在上面的代码中。<br>​     </p>
 <h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><h3 id="（1）仿真结果"><a href="#（1）仿真结果" class="headerlink" title="（1）仿真结果"></a>（1）仿真结果</h3><p>汇编代码在Mars编译运行得到Data段为</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic12.png" alt=""> </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic12.png" alt=""> </p>
 <p>而ISE仿真结果显示DMem为</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic13.png" alt="">  </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic13.png" alt="">  </p>
 <p>汇编代码在Mars编译运行得到结束时寄存器数据和仿真结果的regfile数据     </p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic14.png" alt="">     </p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic15.png" alt="">             </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic14.png" alt="">     </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic15.png" alt="">             </p>
 <p>可见测试程序在编写的MIPS CPU上运行结果与Mars运行结果一致，并且符合上面注释的的预期结果。</p>
 <h3 id="（2）下载结果"><a href="#（2）下载结果" class="headerlink" title="（2）下载结果"></a>（2）下载结果</h3><p>按下按钮中键复位，拨动开关选择地址，数码管显示对应地址内存。</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic16.png" alt="">     </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic16.png" alt="">     </p>
 <p>由于数据为32位，4个数码管只能显示16位，为此还实现了动态显示，数字会向左移动循环显示。</p>
-<p><img src="//lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/pic17.png" alt=""> </p>
+<p><img src="//l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/pic17.png" alt=""> </p>
 <h2 id="附录"><a href="#附录" class="headerlink" title="附录:"></a>附录:</h2><h3 id="一、-编写过程中遇到问题和一些发现"><a href="#一、-编写过程中遇到问题和一些发现" class="headerlink" title="一、    编写过程中遇到问题和一些发现"></a>一、    编写过程中遇到问题和一些发现</h3><h4 id="1、如果位拼接作为左值，单个变量也要花括号，如"><a href="#1、如果位拼接作为左值，单个变量也要花括号，如" class="headerlink" title="1、如果位拼接作为左值，单个变量也要花括号，如"></a>1、如果位拼接作为左值，单个变量也要花括号，如</h4><pre><code>{{RegDst},{ALUSrc},{MemtoReg},{RegWrite},{MemWrite},{Branch},{ALUOp[1:0]},{Jump}}=9&#39;b100100100;
 </code></pre><h4 id="2、”-”会严格匹配每一位，比如module内5位数字比较（一个常量，一个input），但外部传入的是3位的，高位自动拓展好像是x，就导致“-”不成立，这是一个不好发现的问题。"><a href="#2、”-”会严格匹配每一位，比如module内5位数字比较（一个常量，一个input），但外部传入的是3位的，高位自动拓展好像是x，就导致“-”不成立，这是一个不好发现的问题。" class="headerlink" title="2、”==”会严格匹配每一位，比如module内5位数字比较（一个常量，一个input），但外部传入的是3位的，高位自动拓展好像是x，就导致“==”不成立，这是一个不好发现的问题。"></a>2、”==”会严格匹配每一位，比如module内5位数字比较（一个常量，一个input），但外部传入的是3位的，高位自动拓展好像是x，就导致“==”不成立，这是一个不好发现的问题。</h4><h4 id="3、仿真遇到高阻态，多半是这个信号不存在，经常是拼写错了，有时候ise检查不出来。"><a href="#3、仿真遇到高阻态，多半是这个信号不存在，经常是拼写错了，有时候ise检查不出来。" class="headerlink" title="3、仿真遇到高阻态，多半是这个信号不存在，经常是拼写错了，有时候ise检查不出来。"></a>3、仿真遇到高阻态，多半是这个信号不存在，经常是拼写错了，有时候ise检查不出来。</h4><h4 id="4、在top里的wire信号，如果通过control模块（或其他模块）进行控制，那么这个信号不能直接在top里赋初值，要到仿真模块里赋值，不然control里改变这个信号的值时，会变成不确定。"><a href="#4、在top里的wire信号，如果通过control模块（或其他模块）进行控制，那么这个信号不能直接在top里赋初值，要到仿真模块里赋值，不然control里改变这个信号的值时，会变成不确定。" class="headerlink" title="4、在top里的wire信号，如果通过control模块（或其他模块）进行控制，那么这个信号不能直接在top里赋初值，要到仿真模块里赋值，不然control里改变这个信号的值时，会变成不确定。"></a>4、在top里的wire信号，如果通过control模块（或其他模块）进行控制，那么这个信号不能直接在top里赋初值，要到仿真模块里赋值，不然control里改变这个信号的值时，会变成不确定。</h4><h4 id="5、在clk边缘用-lt-对某信号进行赋值时，如果同时刻需要对该信号进行判断（如状态机，根据状态以完成对应操作），则判断时信号的值是本次改变前的。（非阻塞赋值的特性体现）"><a href="#5、在clk边缘用-lt-对某信号进行赋值时，如果同时刻需要对该信号进行判断（如状态机，根据状态以完成对应操作），则判断时信号的值是本次改变前的。（非阻塞赋值的特性体现）" class="headerlink" title="5、在clk边缘用&lt;=对某信号进行赋值时，如果同时刻需要对该信号进行判断（如状态机，根据状态以完成对应操作），则判断时信号的值是本次改变前的。（非阻塞赋值的特性体现）"></a>5、在clk边缘用&lt;=对某信号进行赋值时，如果同时刻需要对该信号进行判断（如状态机，根据状态以完成对应操作），则判断时信号的值是本次改变前的。（非阻塞赋值的特性体现）</h4><h4 id="6、-srl是逻辑右移，高位直接补零，而sra是算术右移，高位补符号，在Verilog中，既可以自行实现，也可以这样实现"><a href="#6、-srl是逻辑右移，高位直接补零，而sra是算术右移，高位补符号，在Verilog中，既可以自行实现，也可以这样实现" class="headerlink" title="6、 srl是逻辑右移，高位直接补零，而sra是算术右移，高位补符号，在Verilog中，既可以自行实现，也可以这样实现"></a>6、 srl是逻辑右移，高位直接补零，而sra是算术右移，高位补符号，在Verilog中，既可以自行实现，也可以这样实现</h4><pre><code>`$signed(alu_a) &gt;&gt;&gt; alu_b`
 </code></pre><h4 id="应该注意，-gt-gt-gt-是算术右移，但对于无符号数，高位仍然补0，所以需要用-signed-转为有符号数"><a href="#应该注意，-gt-gt-gt-是算术右移，但对于无符号数，高位仍然补0，所以需要用-signed-转为有符号数" class="headerlink" title="应该注意， &gt;&gt;&gt; 是算术右移，但对于无符号数，高位仍然补0，所以需要用$signed()转为有符号数"></a>应该注意， &gt;&gt;&gt; 是算术右移，但对于无符号数，高位仍然补0，所以需要用<code>$signed()</code>转为有符号数</h4><pre><code>`$signed(alu_a) &gt;&gt; alu_b `
@@ -2825,8 +2825,8 @@ endmodule
         <p><span>发布时间:</span>2018-06-14, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-19, 19:09:01</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/06/14/cod/lab7_Pipeline-CPU/" title="计算机组成原理上机实验7 流水线CPU">https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2018/06/14/cod/lab7_Pipeline-CPU/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/06/14/cod/lab7_Pipeline-CPU/" title="计算机组成原理上机实验7 流水线CPU">https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/06/14/cod/lab7_Pipeline-CPU/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>

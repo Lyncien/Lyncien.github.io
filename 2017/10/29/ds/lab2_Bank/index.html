@@ -19,26 +19,26 @@
 <meta name="keywords" content="DS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据结构上机题2 模拟银行业务办理">
-<meta property="og:url" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/index.html">
+<meta property="og:url" content="https://l-x.me/2017/10/29/ds/lab2_Bank/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="题目 检查日期：10.28截止（下周六10.21做完的可以提前检查，人会比较少） 实验内容：参考题集中P100的实验2.6银行模拟（做P102实验2.8电梯模拟也可以）输出界面要求按照时间顺序输出时间，事件，并计算平均等待时间。不出意外的话，要么rand设置会出现队伍越来越长要么会出现队伍变空没人。那么设置关门时间清空所有排队者或者中午吃饭关门等等，vip通道可自己设计。可自己添加辅助条件，要求合">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/0.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/01.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/02.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/03.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/04.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/1.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/2.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/3.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/4.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/5.png">
-<meta property="og:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/6.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/0.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/01.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/02.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/03.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/04.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/1.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/2.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/3.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/4.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/5.png">
+<meta property="og:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/6.png">
 <meta property="og:updated_time" content="2019-02-19T11:11:30.503Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据结构上机题2 模拟银行业务办理">
 <meta name="twitter:description" content="题目 检查日期：10.28截止（下周六10.21做完的可以提前检查，人会比较少） 实验内容：参考题集中P100的实验2.6银行模拟（做P102实验2.8电梯模拟也可以）输出界面要求按照时间顺序输出时间，事件，并计算平均等待时间。不出意外的话，要么rand设置会出现队伍越来越长要么会出现队伍变空没人。那么设置关门时间清空所有排队者或者中午吃饭关门等等，vip通道可自己设计。可自己添加辅助条件，要求合">
-<meta name="twitter:image" content="https://lyncien.github.io/2017/10/29/ds/lab2_Bank/0.png">
+<meta name="twitter:image" content="https://l-x.me/2017/10/29/ds/lab2_Bank/0.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -395,7 +395,7 @@
 </code></pre><p>  }</p>
 </li>
 <li><p>本程序含四个模块</p>
-<p>(1)    主模块<br>(2)    用户队列模块<br>(3)    事件链表模块<br>(4)    图形界面模块<br><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/0.png" alt=""></p>
+<p>(1)    主模块<br>(2)    用户队列模块<br>(3)    事件链表模块<br>(4)    图形界面模块<br><img src="//l-x.me/2017/10/29/ds/lab2_Bank/0.png" alt=""></p>
 </li>
 </ol>
 <h2 id="三、-详细设计"><a href="#三、-详细设计" class="headerlink" title="三、    详细设计"></a>三、    详细设计</h2><p>1．    客户类型</p>
@@ -487,13 +487,13 @@ Status Check();
 <p>4．    ServeNextCustomerInQueue中使用了DeQueue,因此参数需要传入q1的地址，之前疏忽，直接以q1为参数，导致q1中的元素执行了DeQueue仍然存在。</p>
 <p>5．    本程序模拟银行业务，本来打算用时间作为循环变量，结束营业时间为结束条件，但是为了体现离散事件模拟，故采用事件驱动模式，即以事件为单位，一次循环发生一个事件，但在界面输出上，为了保证时间的连续性和可观看性，在输出上把两个事件之间的时间流逝体现出来</p>
 <p>6．    使用C语言且不使用第三方库进行图形界面编程实在困难，之前打算学习一下MFC，然而其繁琐得令人望而却步！</p>
-<h2 id="五、-用户手册"><a href="#五、-用户手册" class="headerlink" title="五、    用户手册"></a>五、    用户手册</h2><p><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/01.png" alt=""><br><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/02.png" alt="">  </p>
+<h2 id="五、-用户手册"><a href="#五、-用户手册" class="headerlink" title="五、    用户手册"></a>五、    用户手册</h2><p><img src="//l-x.me/2017/10/29/ds/lab2_Bank/01.png" alt=""><br><img src="//l-x.me/2017/10/29/ds/lab2_Bank/02.png" alt="">  </p>
 <h2 id="六、-测试结果"><a href="#六、-测试结果" class="headerlink" title="六、    测试结果"></a>六、    测试结果</h2><ol>
-<li><p>输入及输出如图，两个客户到达间隔极短，而客户办理时间极长。<br><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/03.png" alt="">  </p>
+<li><p>输入及输出如图，两个客户到达间隔极短，而客户办理时间极长。<br><img src="//l-x.me/2017/10/29/ds/lab2_Bank/03.png" alt="">  </p>
 </li>
-<li><p>输入及输出如图，两个客户到达间隔极长，而客户办理时间极短。<br><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/04.png" alt="">   </p>
+<li><p>输入及输出如图，两个客户到达间隔极长，而客户办理时间极短。<br><img src="//l-x.me/2017/10/29/ds/lab2_Bank/04.png" alt="">   </p>
 </li>
-<li><p>其他截图<br><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/1.png" alt=""><br><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/2.png" alt=""><br><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/3.png" alt=""><br><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/4.png" alt=""><br><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/5.png" alt=""><br><img src="//lyncien.github.io/2017/10/29/ds/lab2_Bank/6.png" alt="">  </p>
+<li><p>其他截图<br><img src="//l-x.me/2017/10/29/ds/lab2_Bank/1.png" alt=""><br><img src="//l-x.me/2017/10/29/ds/lab2_Bank/2.png" alt=""><br><img src="//l-x.me/2017/10/29/ds/lab2_Bank/3.png" alt=""><br><img src="//l-x.me/2017/10/29/ds/lab2_Bank/4.png" alt=""><br><img src="//l-x.me/2017/10/29/ds/lab2_Bank/5.png" alt=""><br><img src="//l-x.me/2017/10/29/ds/lab2_Bank/6.png" alt="">  </p>
 </li>
 </ol>
 <h2 id="七、-附录"><a href="#七、-附录" class="headerlink" title="七、    附录"></a>七、    附录</h2><ul>
@@ -1082,8 +1082,8 @@ usr.durtime=Random(CustomDurTime_LowerBound,CustomDurTime_UpperBound);
         <p><span>发布时间:</span>2017-10-29, 00:00:00</p>
         <p><span>最后更新:</span>2019-02-19, 19:11:30</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/10/29/ds/lab2_Bank/" title="数据结构上机题2 模拟银行业务办理">https://lyncien.github.io/2017/10/29/ds/lab2_Bank/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://lyncien.github.io/2017/10/29/ds/lab2_Bank/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/10/29/ds/lab2_Bank/" title="数据结构上机题2 模拟银行业务办理">https://l-x.me/2017/10/29/ds/lab2_Bank/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2017/10/29/ds/lab2_Bank/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
