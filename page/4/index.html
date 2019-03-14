@@ -181,7 +181,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
                     </div>
                 </section>
                 
@@ -254,6 +254,88 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-ds/lab2_Bank" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/29/ds/lab2_Bank/" class="article-date">
+      <time datetime="2017-10-28T16:00:00.000Z" itemprop="datePublished">2017-10-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><ol>
+<li>检查日期：<br>10.28截止（下周六10.21做完的可以提前检查，人会比较少）</li>
+<li>实验内容：<br>参考题集中P100的实验2.6银行模拟（做P102实验2.8电梯模拟也可以）输出界面要求按照时间顺序输出时间，事件，并计算平均等待时间。不出意外的话，要么rand设置会出现队伍越来越长要么会出现队伍变空没人。那么设置关门时间清空所有排队者或者中午吃饭关门等等，vip通道可自己设计。可自己添加辅助条件，要求合理，能说服助教。输出界面鼓励同学们用图形界面（动画的方式）来呈现。给分以完成程度评定（大家要仔细理解题集上面实验的题意哈）</li>
+<li>要求：数据结构用链表与队列，还要有上述能表现出事件先后顺序的输出界面（希望大家的输出界面友好一点…），源代码当场检查完拷到实验室电脑上（命名：学号+姓名+实验x），每次上机要先签到，依签到顺序检查，本次实验要写实验报告（格式参考题集P105迷宫问题的实习报告）实验报告要求纸质版，记得写名字学号，实验检查结束后周一上课交。<br>以及：实验一还没有检查的同学下周六还可以接着去检查。（实验一不需要实验报告，只需提交源代码）</li>
+</ol>
+<h2 id="一、-需求分析"><a href="#一、-需求分析" class="headerlink" title="一、    需求分析"></a>一、    需求分析</h2><ol>
+<li><p>实现功能：模拟银行业务办理。银行只能同时运行一个窗口，但设有两个队列。客户到达时，先排第一个队列，客户可以办理两种业务：取款或存款。如果是第一种业务，但银行现有的资金不能满足客户，那么客户立刻排入第二个队列队尾进行等候，否则，花费一定时间办理业务后立刻离开。每当办理完一个第二种业务客户时，顺序检查（假设检查不需要时间）第二个队列的客户，对于能满足者进行业务办理，否则排入队尾继续等候。如果检查过程中，银行的资金已经小于刚才办理完第一种业务的客户时的资金或者第二个队列中的所有客户已经检查了一遍，则停止检查，继续接待第一个队列中的客户。在到达营业结束时间时，所有客户立刻离开银行。计算所有客户在银行内逗留的平均时间并输出。</p>
+</li>
+<li><p>初始时需要设置银行营业时间CloseTime(int,&gt;0)、银行初始资金BankMoney(int,&gt;0)、下一个客户到来时间间隔的上下限NextCutormerTime(int,&gt;0)、客户办理业务所需时间的上下限DurTime(int,&gt;0)、客户交易金额的上下限Amount(int,!=0)，由用户通过控制台窗口输入。</p>
+</li>
+<li><p>模拟业务办理过程采用事件驱动方式，用动态链表数据结构实现事件的加入与执行。</p>
+</li>
+<li><p>客户队列用顺序存储的循环队列存放。</p>
+</li>
+<li><p>模拟过程中在控制台中实时输出当前时间、银行资金、正在办理业务的客户、两个队列中的客户、发生的事件。</p>
+</li>
+<li><p>测试数据：任意，注意测定两种极端情况，<br>（1）    两个客户到达间隔极短，而客户办理时间极长。<br>（2）    两个客户到达间隔极长，而客户办理时间极短。</p>
+</li>
+</ol>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DS/">DS</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/10/29/ds/lab2_Bank/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-ds/lab1_Polynome" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
@@ -283,7 +365,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h1 id="一元稀疏多项式计算"><a href="#一元稀疏多项式计算" class="headerlink" title="一元稀疏多项式计算"></a>一元稀疏多项式计算</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>参考习题集81页1.5题一元稀疏多项式计算</p>
+              <h1 id="一元稀疏多项式计算"><a href="#一元稀疏多项式计算" class="headerlink" title="一元稀疏多项式计算"></a>一元稀疏多项式计算</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>参考习题集81页1.5题一元稀疏多项式计算</p>
 <ul>
 <li>要求:<ul>
 <li>禁止使用STL库。自己练习链表操作并实现。必须用链表。打钩区分成绩。最多三个√，以半个√为一档表明该项完成程度。检查结束后需要提交源代码。源代码发送到<a href="mailto:qiweizhen1997@163.com" target="_blank" rel="noopener">qiweizhen1997@163.com</a>。标注清楚姓名和学号。需不需要写实验报告看今年教务处要求。先别写。</li>
@@ -322,538 +404,7 @@
 </ol>
 </li>
 </ul>
-<h2 id="测试截图"><a href="#测试截图" class="headerlink" title="测试截图"></a>测试截图</h2><p><img src="//l-x.me/2017/10/23/ds/lab1_Polynome/1.png" alt=""><br><img src="//l-x.me/2017/10/23/ds/lab1_Polynome/2.png" alt=""><br><img src="//l-x.me/2017/10/23/ds/lab1_Polynome/3.png" alt=""></p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code class="C">    /*
-        Last Update time: 2017-10-08 
-        Version：1.2 
-        Author：LinXiang (PB16020923) 
-        Description：
-            Polynome.
-    */
-    #include &lt;stdio.h&gt; 
-    #include &lt;stdlib.h&gt;
-    #include &lt;math.h&gt;
-    #include &lt;string.h&gt; 
-    #define OK 1
-    #define ERROR 0 
-    typedef int Status;
-    typedef struct TermOfPolynome{
-        double c;//Coefficient
-        int e;//Exponent
-        struct TermOfPolynome *next;
-    }term;
-    typedef term *poly;
-    typedef struct PolynomeNode{
-        poly thepoly;
-        struct PolynomeNode* next;
-    }polynode; 
-    int Menu_Selected=0,NumOfPoly=0;
-    polynode *list;//存放多个多项式的链表 
-    char opt[5]={&#39;\0&#39;,&#39;+&#39;,&#39;-&#39;,&#39;*&#39;,&#39;/&#39;};
-    //==================system===================
-    void ShowMenu(){
-        system(&quot;cls&quot;);
-        //printf(&quot;0-退出\n1-添加多项式\n2-管理多项式\n3-计算\n4-求值\n&quot;);
-        system(&quot;color 0B&quot;);
-        printf(&quot;┏━━━━━━━━━━━━━━━━━━━━━━━┓\n&quot;);
-        printf(&quot;┃                 多项式运算器V1.1             ┃\n&quot;);
-        printf(&quot;┣━━━━━━━┳━━━━━━━┳━━━━━━━┫\n&quot;);
-        printf(&quot;┃   0----退出  ┃ 1-添加多项式 ┃ 2-管理多项式 ┃\n&quot;);
-        printf(&quot;┣━━━━━━━╋━━━━━━━╋━━━━━━━┫\n&quot;);
-        printf(&quot;┃   3----计算  ┃   4----求值  ┃   5----求导  ┃\n&quot;);
-        printf(&quot;┣━━━━━━━┻━━━━━━━┻━━━━━━━┫\n&quot;);
-        printf(&quot;┃                    6-关于                    ┃\n&quot;);     
-        printf(&quot;┗━━━━━━━━━━━━━━━━━━━━━━━┛\n&quot;);
-    }
-    void SendMessage(char *p){
-        system(&quot;cls&quot;);
-        int l=strlen(p),i;
-        if(l/2*2!=l) l++;//使l能被2整除 
-        printf(&quot;┏━&quot;);
-        for(i=0;i&lt;l/2;i++){if(i==l/4-1) printf(&quot;信&quot;); else if(i==l/4) printf(&quot;息&quot;); else printf(&quot;━&quot;);} 
-        printf(&quot;━┓\n┃  &quot;);
-        printf(p); 
-        if(strlen(p)!=l) printf(&quot; &quot;);//不是2的倍数长度则补空格 
-        printf(&quot;  ┃\n┗━&quot;);
-        for(i=0;i&lt;l/2;i++) printf(&quot;━&quot;);
-        printf(&quot;━┛\n&quot;);
-        system(&quot;pause&quot;);
-    }
-    void PrintTitle(char *s){
-        printf(&quot;┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n&quot;);
-        printf(&quot;┃                                   %s                                   ┃\n&quot;,s);
-        printf(&quot;┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n&quot;);
-    }
-    void BackSpace(int n){//删除n个字符 
-        int i;
-        for(i=0;i&lt;n;i++) printf(&quot;\b&quot;);
-        for(i=0;i&lt;n;i++) printf(&quot; &quot;);
-        for(i=0;i&lt;n;i++) printf(&quot;\b&quot;);
-    }
-    int GetZeroNum(char *p){//计算浮点数末尾有几个0 
-        char *q=p;
-        int count=0;
-        while(*q++!=&#39;.&#39;);
-        while(*q){
-            if(*q++==&#39;0&#39;) count++;
-            else count=0;
-        }
-        return count; 
-    }
-    void ShowPoly(poly pl){
-        if(pl-&gt;next==NULL) printf(&quot;0\n&quot;);
-        else{
-            term *q=pl-&gt;next; 
-            while(q!=NULL){
-                char s[100];
-                sprintf(s,&quot;%6lf&quot;,q-&gt;c);//临时打印出系数 
-                int zn=GetZeroNum(s);
-                char text[10]=&quot;%s%.6lf&quot;;//格式文本 
-                text[4]=6-zn+&#39;0&#39;;//修改该显示的小数位数，删尾0 
-                printf(text,q-&gt;c&lt;0?&quot;\b&quot;:&quot;&quot;,q-&gt;c);//系数小于0,删&#39;+&#39; 
-                if(q-&gt;e){//指数不为0
-                    printf(&quot;%sX^%s%d%s&quot;,fabs(fabs(q-&gt;c)-1)&lt;1e-6?&quot;\b \b&quot;:&quot;&quot;\
-                    ,q-&gt;e&lt;0?&quot;(&quot;:&quot;&quot;,q-&gt;e,q-&gt;e&lt;0?&quot;)&quot;:&quot;&quot;);
-                }
-                if(q-&gt;e==1) BackSpace(2);//删除&quot;^1&quot; 
-                printf(&quot;+&quot;);
-                q=q-&gt;next; 
-            }
-            printf(&quot;\b \n&quot;);
-        }
-    }
-    void ShowAllPoly(polynode *list){
-        int i;
-        polynode *p=list-&gt;next;
-        printf(&quot;==================================多项式列表==================================\n&quot;); 
-        for(i=0;i&lt;NumOfPoly;i++,p=p-&gt;next){
-            printf(&quot;(%d) &quot;,i+1);
-            ShowPoly(p-&gt;thepoly);
-        }
-        printf(&quot;====================================共%2d个====================================\n&quot;,NumOfPoly); 
-    }
-    //======================term=====================
-    term *MakeTerm(double c,int e){//创建一个项 
-        term *p=(term *)malloc(sizeof(term));
-        p-&gt;c=c;
-        p-&gt;e=e;
-        p-&gt;next=NULL;
-        return p;
-    }
-    Status DeleteTermFromPolyByExponent(poly pl,int e){
-        term *q=pl;
-        while(q-&gt;next!=NULL &amp;&amp; q-&gt;next-&gt;e!=e){
-            q=q-&gt;next;
-        }
-        if(q-&gt;next==NULL) return ERROR;
-        else{
-            term *r=q-&gt;next;
-            q-&gt;next=q-&gt;next-&gt;next;
-            free(r);
-        }
-        return OK;    
-    }
-    Status InsertTermToPolyInOrder(poly pl,term *t){//插入后该项将成为多项式的一部分或被销毁 
-        term *q=pl;
-        while(q-&gt;next!=NULL &amp;&amp; q-&gt;next-&gt;e&gt;t-&gt;e){
-            q=q-&gt;next;
-        }
-        if(q-&gt;next==NULL){
-            q-&gt;next=t;
-            t-&gt;next=NULL;
-        }
-        else if(q-&gt;next-&gt;e==t-&gt;e){
-            q-&gt;next-&gt;c+=t-&gt;c;
-            free(t);
-            if(fabs(q-&gt;next-&gt;c)&lt;1e-6) DeleteTermFromPolyByExponent(pl,q-&gt;next-&gt;e);
-        }
-        else{
-             t-&gt;next=q-&gt;next;
-             q-&gt;next=t;
-        }
-        return OK;
-    }
-    //======================poly=====================
-    Status InitPoly(poly *pl){//这里传进指针的指针，是为了修改pl的值 
-        *pl=MakeTerm(0,0);
-        return OK;
-    }
-    Status DestoryPoly(poly *pl){
-        term *q=*pl,*s;
-        while(q!=NULL){
-            s=q-&gt;next;
-            free(q);
-            q=s;
-        }
-        *pl=NULL;
-        return OK;
-    }
-    Status AddPolyToList(polynode *list,poly pl){//把一个多项式加入到全局的列表里 
-        polynode *p=list;
-        while(p-&gt;next!=NULL) p=p-&gt;next;
-        p-&gt;next=(polynode *)malloc(sizeof(polynode));
-        p=p-&gt;next;
-        p-&gt;thepoly=pl;
-        p-&gt;next=NULL;
-        NumOfPoly++;
-    }
-    Status DeletePolyFromListById(polynode *list,int id){
-        polynode *p=list;
-        int i=1;
-        while(p-&gt;next!=NULL &amp;&amp; i++&lt;id) p=p-&gt;next;//找到要删除的前一个 
-        if(p-&gt;next==NULL) return ERROR;
-        polynode *q=p-&gt;next;
-        p-&gt;next=p-&gt;next-&gt;next;
-        DestoryPoly(&amp;(q-&gt;thepoly));
-        free(q);
-        NumOfPoly--;
-        return OK;
-    }
-    poly LocatePolyById(polynode *list,int id){
-        polynode *p=list-&gt;next;
-        int i=1;
-        while(p!=NULL &amp;&amp; i++&lt;id) p=p-&gt;next;
-        return p-&gt;thepoly;
-    }
-    //======================calculate=====================
-    poly Add(poly pl1,poly pl2){
-        poly pl;
-        InitPoly(&amp;pl);    
-        term *q1=pl1-&gt;next,*q2=pl2-&gt;next,*q=pl;
-        while(q1!=NULL &amp;&amp; q2!=NULL){
-            if(q1-&gt;e&gt;q2-&gt;e){
-                q-&gt;next=MakeTerm(q1-&gt;c,q1-&gt;e);
-                q1=q1-&gt;next;
-            } 
-            else if(q1-&gt;e&lt;q2-&gt;e){
-                q-&gt;next=MakeTerm(q2-&gt;c,q2-&gt;e);
-                q2=q2-&gt;next;
-            }
-            else{
-                if(fabs(q1-&gt;c+q2-&gt;c)&gt;1e-6) q-&gt;next=MakeTerm(q1-&gt;c+q2-&gt;c,q1-&gt;e);//不被抵消才加入 
-                q1=q1-&gt;next;
-                q2=q2-&gt;next; 
-            }
-            if(q-&gt;next!=NULL) q=q-&gt;next; //如果已经创建了下一项才后移 
-        }
-        while(q1!=NULL){
-            q-&gt;next=MakeTerm(q1-&gt;c,q1-&gt;e);
-            q1=q1-&gt;next;
-            q=q-&gt;next; 
-        } 
-        while(q2!=NULL){
-            q-&gt;next=MakeTerm(q2-&gt;c,q2-&gt;e);
-            q2=q2-&gt;next;
-            q=q-&gt;next; 
-        } 
-        return pl;    
-    } 
-    poly Subtract(poly pl1,poly pl2){
-        poly pl;
-        InitPoly(&amp;pl);    
-        term *q1=pl1-&gt;next,*q2=pl2-&gt;next,*q=pl;
-        while(q1!=NULL){
-            term *tq1=MakeTerm(q1-&gt;c,q1-&gt;e);
-            InsertTermToPolyInOrder(pl,tq1);
-            q1=q1-&gt;next;
-        }
-        while(q2!=NULL){
-            term *tq2=MakeTerm(-q2-&gt;c,q2-&gt;e);
-            InsertTermToPolyInOrder(pl,tq2);
-            q2=q2-&gt;next;
-        }
-        return pl;
-    }
-    poly Multiply(poly pl1,poly pl2){
-        poly pl;
-        InitPoly(&amp;pl);    
-        term *q1=pl1-&gt;next,*q2=pl2-&gt;next,*q=pl;
-        while(q1!=NULL){
-            while(q2!=NULL){
-                term *tq=MakeTerm(q1-&gt;c*q2-&gt;c,q1-&gt;e+q2-&gt;e);
-                InsertTermToPolyInOrder(pl,tq);
-                q2=q2-&gt;next;
-            }
-            q1=q1-&gt;next;
-            q2=pl2-&gt;next;
-        }
-        return pl;    
-    } 
-    Status GetHighestE(poly pl,double *c,int *e){//取最高次的次数和系数 
-        term *q=pl;
-        if(q-&gt;next==NULL){
-            *c=0;
-            *e=0;
-            return OK;
-        }
-        q=q-&gt;next;    
-        *c=q-&gt;c;
-        *e=q-&gt;e;
-        return OK;
-    }
-    Status CopyPoly(poly *pl1,poly *pl2){//2to1
-        InitPoly(pl1);
-        term *q2=(*pl2)-&gt;next,*q1=*pl1;
-        while(q2!=NULL){
-            q1-&gt;next=MakeTerm(q2-&gt;c,q2-&gt;e);
-            q2=q2-&gt;next;
-            q1=q1-&gt;next;
-        } 
-        return OK;
-    }
-    Status Divide(poly pl1,poly pl2,poly *res,poly *left){//res,left传递指向poly类型的指针 
-        CopyPoly(left,&amp;pl1);
-        poly xnpl;
-        InitPoly(&amp;xnpl);
-        InitPoly(res);
-        int de,e1,e2;
-        double c1,c2;
-        GetHighestE(pl2,&amp;c2,&amp;e2);
-        GetHighestE(*left,&amp;c1,&amp;e1);    
-        de=e1-e2;
-        while(de&gt;=0 &amp;&amp; (*left)-&gt;next!=NULL){//余数与除数最高次之差大于0 且余式不为0 
-            term *xn=MakeTerm(c1/c2,de);
-            xnpl-&gt;next=xn;
-            poly tmp=Multiply(pl2,xnpl);
-            poly tmpleft=Subtract(*left,tmp);
-            DestoryPoly(left);
-            CopyPoly(left,&amp;tmpleft);
-            DestoryPoly(&amp;tmpleft);
-            InsertTermToPolyInOrder(*res,xn);
-            GetHighestE(*left,&amp;c1,&amp;e1);    
-            de=e1-e2;
-        }
-        return OK; 
-    } 
-    poly Calculate(poly pl1,poly pl2,int op){
-        switch(op){
-            case 1: return Add(pl1,pl2);
-            case 2: return Subtract(pl1,pl2);
-            case 3: return Multiply(pl1,pl2);
-        }
-    }
-    double Value(poly pl,double x){//求值 
-        term *q=pl-&gt;next;
-        double sum=0;
-        while(q!=NULL){
-            sum+=q-&gt;c*pow(x,q-&gt;e);
-            q=q-&gt;next; 
-        }
-        return sum;
-    }
-    poly Dfx(poly pl1){ //求导 
-        poly pl;
-        InitPoly(&amp;pl);    
-        term *q1=pl1-&gt;next,*q=pl;
-        while(q1!=NULL){
-            if(q1-&gt;e){//非常数项 
-                q-&gt;next=MakeTerm(q1-&gt;c*q1-&gt;e,q1-&gt;e-1);
-                q=q-&gt;next;
-            }
-            q1=q1-&gt;next; 
-        }
-        return pl;    
-    } 
-    //======================menu=====================
-    int Menu_Add(){
-        double c;int e;
-        system(&quot;cls&quot;);
-        PrintTitle(&quot;添加&quot;);
-        printf(&quot;依次输入每项的系数和指数，空格隔开，ctrl+z结束:\n&quot;);
-        poly pl;
-        InitPoly(&amp;pl);
-        while(scanf(&quot;%lf&quot;,&amp;c)!=EOF){
-            if(scanf(&quot;%d&quot;,&amp;e)==EOF){
-                DestoryPoly(&amp;pl);
-                return 1;
-            } 
-            if(fabs(c)&lt;1e-6) continue;
-            term *t=MakeTerm(c,e);
-            InsertTermToPolyInOrder(pl,t);
-        }
-        AddPolyToList(list,pl);
-        return 0;
-    }
-    int Menu_Delete(){
-        int s;
-        system(&quot;cls&quot;);
-        PrintTitle(&quot;管理&quot;);
-        if(NumOfPoly==0) return 1;
-        else ShowAllPoly(list);
-        printf(&quot;\n选择一个多项式删除。输入序号数字(输入0返回): &quot;);
-        scanf(&quot;%d&quot;,&amp;s);
-        if(s&gt;0){
-            if(DeletePolyFromListById(list,s)==ERROR) return 2;
-            else return 0;
-        }
-        return -1;
-    }
-    int Menu_Calculate(){
-        int s1,s2,op;
-        system(&quot;cls&quot;);
-        PrintTitle(&quot;计算&quot;);
-        if(NumOfPoly==0) return 1;
-        else ShowAllPoly(list);
-        printf(&quot;\n选择两个多项式和一种运算符[ (1)+ (2)- (3)* (4)/ ]。\n依次输入多项式和运算符序号(空格隔开,回车结束,输入0返回): &quot;);
-        scanf(&quot;%d&quot;,&amp;s1);
-        if(s1==0) return 0; 
-        scanf(&quot;%d&quot;,&amp;s2);
-        if(s1&lt;0 || s2&lt;0 || s1&gt;NumOfPoly || s2&gt;NumOfPoly) return 2;
-        scanf(&quot;%d&quot;,&amp;op);
-        if(op&lt;=0 || op&gt;4) return 2;
-        printf(&quot;\n===================================运算结果===================================\n&quot;);
-        poly pl1=LocatePolyById(list,s1);
-        poly pl2=LocatePolyById(list,s2);
-        poly pl;
-        poly left;
-        if(op==4){
-            if(pl2-&gt;next==NULL) return 3;
-            Divide(pl1,pl2,&amp;pl,&amp;left);
-        }
-        else{
-            pl=Calculate(pl1,pl2,op);
-        }
-        ShowPoly(pl1);
-        printf(&quot;%c\n&quot;,opt[op]);
-        ShowPoly(pl2);
-        printf(&quot;=\n&quot;);
-        ShowPoly(pl);
-        if(op==4){
-            printf(&quot;...\n&quot;);
-            ShowPoly(left);
-        }
-        DestoryPoly(&amp;pl);
-        if(op==4) DestoryPoly(&amp;left);
-        printf(&quot;==============================================================================\n&quot;);
-        system(&quot;pause&quot;)    ;
-        return -1;    
-    }
-    int Menu_Value(){
-        int s;
-        double x; 
-        system(&quot;cls&quot;);
-        PrintTitle(&quot;求值&quot;);
-        if(NumOfPoly==0) return 1;
-        else ShowAllPoly(list);
-        printf(&quot;\n选择一个多项式求值。\n依次输入多项式序号和X值(空格隔开,回车结束,输入0返回): &quot;);
-        scanf(&quot;%d&quot;,&amp;s);
-        if(s==0) return 0; 
-        if(s&lt;0 || s&gt;NumOfPoly) return 2;
-        scanf(&quot;%lf&quot;,&amp;x); 
-        printf(&quot;\n===================================运算结果===================================\n&quot;);
-        poly pl=LocatePolyById(list,s);
-        ShowPoly(pl);
-        printf(&quot;在 X = %lf 处的值为:\n%lf\n&quot;,x,Value(pl,x));    
-        printf(&quot;==============================================================================\n&quot;);
-        system(&quot;pause&quot;)    ;
-        return -1;        
-    }
-    int Menu_Dfx(){ 
-        int s,n;
-        system(&quot;cls&quot;);
-        PrintTitle(&quot;求导&quot;);
-        if(NumOfPoly==0) return 1;
-        else ShowAllPoly(list);
-        printf(&quot;\n选择一个多项式求导。\n输入多项式序号和求导次数n(空格隔开,回车结束,输入0返回): &quot;);
-        scanf(&quot;%d&quot;,&amp;s);
-        if(s==0) return 0; 
-        scanf(&quot;%d&quot;,&amp;n);
-        if(n&lt;1 ||s&lt;0 || s&gt;NumOfPoly) return 2; 
-        printf(&quot;\n===================================运算结果===================================\n&quot;);
-        poly pl=LocatePolyById(list,s);
-        printf(&quot;F(X)=&quot;);
-        ShowPoly(pl);
-        int i;
-        poly tmp1,tmp2;
-        CopyPoly(&amp;tmp2,&amp;pl);
-        for(i=1;i&lt;=n;i++){
-            printf(&quot;F(X)^(%d)=&quot;,i);
-            tmp1=Dfx(tmp2);
-            DestoryPoly(&amp;tmp2);
-            CopyPoly(&amp;tmp2,&amp;tmp1);
-            DestoryPoly(&amp;tmp1);
-            ShowPoly(tmp2);
-        }
-        DestoryPoly(&amp;tmp2);
-        printf(&quot;==============================================================================\n&quot;);
-        system(&quot;pause&quot;)    ;
-        return -1;
-    }
-    int About(){
-        system(&quot;cls&quot;);
-        printf(&quot;┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n&quot;);
-        printf(&quot;┃                          About                           ┃\n&quot;);
-        printf(&quot;┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫\n&quot;);
-        printf(&quot;┃                PolynomeCalculator V1.1                   ┃\n&quot;);
-        printf(&quot;┃                 Made by LX  2017.10.06                   ┃\n&quot;);
-        printf(&quot;┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n&quot;);
-        system(&quot;pause&quot;);
-        return 0;
-    }
-    int main(){
-        list=(polynode *)malloc(sizeof(polynode));
-        list-&gt;next=NULL;
-        ShowMenu();
-        printf(&quot;请选择：&quot;);
-        //printf(&quot;abcdefg\b\b\b12&quot;);
-        scanf(&quot;%d&quot;,&amp;Menu_Selected);
-        while(Menu_Selected){
-            int status;
-            switch(Menu_Selected){
-                case 1: if(Menu_Add()==1) 
-                            SendMessage(&quot;输入有误!系数个数与指数个数不匹配！&quot;);
-                        else{
-                            SendMessage(&quot;添加成功！&quot;);    
-                        } 
-                        break;
-                case 2: status=Menu_Delete();
-                        if(status==1) 
-                            SendMessage(&quot;这里空空如也...&quot;);
-                        else if(status==2){
-                            SendMessage(&quot;输入的序号有误！&quot;);
-                        }
-                        else if(status==0){
-                            SendMessage(&quot;删除成功&quot;);
-                        }
-                        break;    
-                case 3:    status=Menu_Calculate();
-                        if(status==1){
-                            SendMessage(&quot;你需要先添加多项式~&quot;);
-                        }         
-                        else if(status==2){
-                            SendMessage(&quot;输入的序号有误！&quot;);
-                        }
-                        else if(status==3){
-                            SendMessage(&quot;0不能为除数！&quot;);
-                        }
-                        break;
-                case 4: status=Menu_Value(); 
-                        if(status==1){
-                            SendMessage(&quot;你需要先添加多项式~&quot;);
-                        }         
-                        else if(status==2){
-                            SendMessage(&quot;输入的序号和X值有误！&quot;);
-                        }
-                        break;    
-                case 5: status=Menu_Dfx(); 
-                        if(status==1){
-                            SendMessage(&quot;你需要先添加多项式~&quot;);
-                        }         
-                        else if(status==2){
-                            SendMessage(&quot;输入的序号和n值有误！&quot;);
-                        }
-                        break;    
-                case 6: About();
-                        break;
-            }            
-            ShowMenu();
-            printf(&quot;请选择：&quot;);
-            scanf(&quot;%d&quot;,&amp;Menu_Selected);
-        }    
-        return 0;
-    }
-</code></pre>
-
+          
       
     </div>
     
@@ -866,6 +417,10 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DS/">DS</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a href="/2017/10/23/ds/lab1_Polynome/#more">阅读全文 >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -1282,7 +837,7 @@ int main(){
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h1 id="“完美阴阳矩阵”"><a href="#“完美阴阳矩阵”" class="headerlink" title="“完美阴阳矩阵”"></a>“完美阴阳矩阵”</h1><h4 id="Time-limit-1000-ms"><a href="#Time-limit-1000-ms" class="headerlink" title="Time limit: 1000 ms"></a>Time limit: 1000 ms</h4><h4 id="Memory-limit-256-MB"><a href="#Memory-limit-256-MB" class="headerlink" title="Memory limit: 256 MB"></a>Memory limit: 256 MB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>$定义元素全为0或1的矩阵为“阴阳矩阵”，即一个n行m列的矩阵A为“阴阳矩阵”当且仅当：$</p>
+              <h1 id="“完美阴阳矩阵”"><a href="#“完美阴阳矩阵”" class="headerlink" title="“完美阴阳矩阵”"></a>“完美阴阳矩阵”</h1><h4 id="Time-limit-1000-ms"><a href="#Time-limit-1000-ms" class="headerlink" title="Time limit: 1000 ms"></a>Time limit: 1000 ms</h4><h4 id="Memory-limit-256-MB"><a href="#Memory-limit-256-MB" class="headerlink" title="Memory limit: 256 MB"></a>Memory limit: 256 MB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>$定义元素全为0或1的矩阵为“阴阳矩阵”，即一个n行m列的矩阵A为“阴阳矩阵”当且仅当：$</p>
 <p>$\forall i\forall j(A_{ij}\in {0,1})(1≤i≤n,1≤j≤m)$</p>
 <p>$对于一个n行m列的矩阵A和一个n’行m’列(1≤n’≤n,1≤m’≤m)的矩阵A’，称A’为A的子矩阵当且仅当：$</p>
 <p>$\exists i_0\exists j_0\forall i\forall j(A_{i_0+i,j_0+j}=A’_{ij}(1≤i≤n’,1≤j≤m’,0≤i_0≤n−n’,0≤j_0≤m−m’))$</p>
@@ -1295,127 +850,7 @@ int main(){
 <p>$2.求“阴阳矩阵”A的子矩阵中元素最多的“完美阴阳矩阵”，输出该子矩阵的元素数目。$</p>
 <h2 id="Input-Description"><a href="#Input-Description" class="headerlink" title="Input Description"></a>Input Description</h2><p>输入的第一行是两个空格隔开的整数n和m，分别表示矩阵的长和宽。接下来的n行，每行m个数，空格隔开，表示一个n×m的阴阳矩阵。</p>
 <h2 id="Output-Description"><a href="#Output-Description" class="headerlink" title="Output Description"></a>Output Description</h2><p>两行，每行一个数，表示所求答案。</p>
-<h2 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h2><h3 id="INPUT"><a href="#INPUT" class="headerlink" title="INPUT"></a>INPUT</h3><pre><code>3 3
-1 0 1
-0 1 0
-1 0 0
-</code></pre><h3 id="OUTPUT"><a href="#OUTPUT" class="headerlink" title="OUTPUT"></a>OUTPUT</h3><pre><code>4
-6
-</code></pre><h2 id="Hint"><a href="#Hint" class="headerlink" title="Hint"></a>Hint</h2><blockquote>
-<p>对于20%20%的数据，n,m≤80n,m≤80</p>
-<p>对于40%40%的数据，n,m≤400n,m≤400</p>
-<p>对于100%100%的数据，n,m≤2000n,m≤2000（各种暴力方法都会超时哦）</p>
-</blockquote>
-<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code class="C">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-typedef struct intervaldata{
-    int begin;
-    int end;
-    struct intervaldata *next;
-}Interval;//区间
-Interval** allhead;
-int m,n;
-int MaxSquareLen,MaxRectArea;//最大方阵的边长，最大矩阵的面积()
-int max(int a,int b){
-    return a&gt;b?a:b;
-}
-int min(int a,int b){
-    return a&lt;b?a:b;
-}
-Interval* MakeNode(int begin,int end){
-    Interval* p=(Interval*)malloc(sizeof(Interval));
-    p-&gt;begin=begin;
-    p-&gt;end=end;
-    p-&gt;next=NULL;
-    return p;
-}
-void UpdateMaxRectArea(int weith,int depth){//更新矩阵最大值,注意到阴阳矩阵应该比普通矩阵长宽各+1
-    MaxRectArea=max(MaxRectArea,(weith+1)*(depth+1));
-    MaxSquareLen=max(MaxSquareLen,min(weith,depth)+1);
-}
-int Search(int row,int left,int right,int depth){//row是当前行
-    //depth表示当前矩形纵深高度(占的行数，不包括当前行)
-    //left,right是上一行传递下来的区间范围
-    if(row&gt;=m-1){//超出地图了，地图最后一行是m-2（全地图化为普通矩阵后共m-1行）;
-        UpdateMaxRectArea(right-left+1,depth);
-        return 1;
-    }
-    Interval* p=allhead[row]-&gt;next;
-    int tmpleft,tmpright;
-    while(p!=NULL){
-        if(p-&gt;end&lt;left){
-                p=p-&gt;next;
-                continue;
-        } 
-        if(p-&gt;begin&gt;right) break;
-        tmpleft=max(left,p-&gt;begin);
-        tmpright=min(right,p-&gt;end);
-        Search(row+1,tmpleft,tmpright,depth+1);
-        p=p-&gt;next;
-    }
-    //结算
-    UpdateMaxRectArea(right-left+1,depth);
-    return 1;
-}
-int main(){
-    int i,j;
-    scanf(&quot;%d%d&quot;,&amp;m,&amp;n);
-    int **map=(int **)malloc(sizeof(int *)*m);
-    for(i=0;i&lt;m;i++){
-        map[i]=(int *)malloc(sizeof(int)*n);
-        for(j=0;j&lt;n;j++){
-            scanf(&quot;%d&quot;,&amp;map[i][j]);
-        }
-    }
-    allhead=(Interval**)malloc(sizeof(Interval*)*(m-1));//每一行的头结点指针
-    for(i=0;i&lt;m-1;i++){//化为普通0/1矩阵，同时求出每行的值为1区间存在链表里,问题化为求解最大1矩阵面积
-        int start=-1;
-        allhead[i]=MakeNode(0,0);//头结点不用
-        Interval* now=allhead[i];
-        for(j=0;j&lt;n-1;j++){
-            if(map[i][j+1]==!map[i][j] &amp;&amp; map[i+1][j]==!map[i][j] &amp;&amp; map[i+1][j+1]==map[i][j]){
-                map[i][j]=1;
-                if(start==-1) start=j;
-            }
-            else{
-                map[i][j]=0;
-                if(start!=-1){
-                    Interval* p=MakeNode(start,j-1);
-                    now-&gt;next=p;
-                    now=p;
-                    start=-1;
-                }
-            }
-        }
-        if(start!=-1){
-            Interval* p=MakeNode(start,j-1);
-            now-&gt;next=p;
-        }
-    }
-    for(i=0;i&lt;m-1;i++){//遍历每一行的区间
-        Interval* p=allhead[i]-&gt;next;
-        while(p!=NULL){
-            Search(i+1,p-&gt;begin,p-&gt;end,1);
-            p=p-&gt;next;
-        }
-    }
-    printf(&quot;%d\n%d&quot;,MaxSquareLen*MaxSquareLen,MaxRectArea);
-    for(i=0;i&lt;m;i++){
-        free(map[i]);
-    }
-    free(map);
-    for(i=0;i&lt;m-1;i++){
-        Interval* p=allhead[i];
-        while(p!=NULL){
-            allhead[i]=p-&gt;next;
-            free(p);
-            p=allhead[i];
-        }
-    }
-    return 0;
-}
-</code></pre>
-
+          
       
     </div>
     
@@ -1428,6 +863,10 @@ int main(){
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a href="/2017/07/14/clp/lab10b/#more">阅读全文 >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -1474,7 +913,7 @@ int main(){
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="杀蚂蚁"><a href="#杀蚂蚁" class="headerlink" title="杀蚂蚁"></a>杀蚂蚁</h2><h4 id="Time-limit-3000-ms"><a href="#Time-limit-3000-ms" class="headerlink" title="Time limit: 3000 ms"></a>Time limit: 3000 ms</h4><h4 id="Memory-limit-256-MB"><a href="#Memory-limit-256-MB" class="headerlink" title="Memory limit: 256 MB"></a>Memory limit: 256 MB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>最近，佳佳迷上了一款好玩的小游戏：antbuster。</p>
+              <h2 id="杀蚂蚁"><a href="#杀蚂蚁" class="headerlink" title="杀蚂蚁"></a>杀蚂蚁</h2><h4 id="Time-limit-3000-ms"><a href="#Time-limit-3000-ms" class="headerlink" title="Time limit: 3000 ms"></a>Time limit: 3000 ms</h4><h4 id="Memory-limit-256-MB"><a href="#Memory-limit-256-MB" class="headerlink" title="Memory limit: 256 MB"></a>Memory limit: 256 MB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>最近，佳佳迷上了一款好玩的小游戏：antbuster。</p>
 <p>游戏规则非常简单：在一张地图上，左上角是蚂蚁窝，右下角是蛋糕，蚂蚁会源源不断地从窝里爬出来，试图把蛋糕搬回蚂蚁窝。而你的任务，就是用原始资金以及杀蚂蚁获得的奖金造防御塔，杀掉这些试图跟你抢蛋糕的蚂蚁~</p>
 <p>下附一张游戏截图：</p>
 <p><img src="//l-x.me/2017/07/13/clp/lab10a/contest_17_B.jpg" alt=""></p>
@@ -1511,374 +950,7 @@ int main(){
 </ol>
 </li>
 </ul>
-<ul>
-<li><p>再介绍一下蚂蚁窝：</p>
-<ol>
-<li>如果地图上的蚂蚁不足6只，并且洞口没有蚂蚁，那么窝中每秒会爬出一只蚂蚁，直到地图上的蚂蚁数为6只。</li>
-<li>刚出生的蚂蚁站在洞口。</li>
-<li>每只蚂蚁有一个级别，级别决定了蚂蚁的血量，级别为k的蚂蚁的血量为int(4*1.1^k)（int(x)表示对x取下整）。每被塔打一次，蚂蚁的血减少d。注意，血量为0的蚂蚁仍能精力充沛地四处乱爬，只有一只蚂蚁的血被打成负数时，它才算挂了。</li>
-<li>蚂蚁的级别是这样算的：前6只出生的蚂蚁是1级，第7~12只是2级，依此类推。</li>
-</ol>
-</li>
-<li><p>最后给出关于蛋糕的介绍：</p>
-<ol>
-<li>简单起见，你可以认为此时只剩最后一块蛋糕了。如果有蚂蚁走到蛋糕的位置，并且此时蛋糕没有被扛走，那么这只蚂蚁就扛上了蛋糕。蚂蚁被打死后蛋糕归位。</li>
-<li>如果一只扛着蛋糕的蚂蚁走到蚂蚁窝的位置，我们就认为蚂蚁成功抢到了蛋糕，游戏结束。</li>
-<li>蚂蚁扛上蛋糕时，血量会增加int（该蚂蚁出生时血量 / 2），但不会超过上限。</li>
-</ol>
-</li>
-<li><p>整理一下1秒钟内发生的事件：</p>
-<ul>
-<li>1秒的最初，如果地图上蚂蚁数不足6，一只蚂蚁就会在洞口出生。</li>
-<li>接着，蚂蚁们在自己所在点留下一些信息素后，考虑移动。先出生的蚂蚁先移动。</li>
-<li>移动完毕后，如果有蚂蚁在蛋糕的位置上并且蛋糕没被拿走，它把蛋糕扛上，血量增加，并在这时被所有塔设成target。</li>
-<li>然后所有塔同时开始攻击。如果攻击结束后那只扛着蛋糕的蚂蚁挂了，蛋糕瞬间归位。</li>
-<li>攻击结束后，如果发现扛蛋糕的蚂蚁没死并在窝的位置，就认为蚂蚁抢到了蛋糕。游戏也在此时结束。</li>
-<li>最后，地图上所有点的信息素损失1单位。所有蚂蚁的年龄加1。</li>
-<li>漫长的1秒到此结束。</li>
-</ul>
-</li>
-</ul>
-<h2 id="Input-Description"><a href="#Input-Description" class="headerlink" title="Input Description"></a>Input Description</h2><p>输入的第一行是2个用空格隔开的整数，n、m，分别表示了地图的长和宽。</p>
-<p>第二行是3个用空格隔开的整数，s、d、r，依次表示炮塔的个数、单次攻击伤害以及攻击范围。</p>
-<p>接下来s行，每行是2个用空格隔开的整数x、y，描述了一个炮塔的位置。当然，蚂蚁窝的洞口以及蛋糕所在的位置上一定没有炮塔。</p>
-<p>最后一行是一个正整数t，表示我们模拟游戏的前t秒钟。</p>
-<h2 id="Output-Description"><a href="#Output-Description" class="headerlink" title="Output Description"></a>Output Description</h2><p>如果在第t秒或之前蚂蚁抢到了蛋糕，输出一行“Game over after x seconds”，其中x为游戏结束的时间，否则输出“The game is going on”。</p>
-<p>如果游戏在t秒或之前结束，输出游戏结束时所有蚂蚁的信息，否则输出t秒后所有蚂蚁的信息。格式如下：</p>
-<p>第一行是1个整数s，表示此时活着的蚂蚁的总数。</p>
-<p>接下来s行，每行5个整数，依次表示一只蚂蚁的年龄（单位为秒）、等级、当前血量，以及在地图上的位置（a，b）。输出按蚂蚁的年龄递减排序。</p>
-<h2 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h2><h3 id="INPUT"><a href="#INPUT" class="headerlink" title="INPUT"></a>INPUT</h3><pre><code>3 5
-1 1 2
-2 2
-5
-</code></pre><h3 id="OUTPUT"><a href="#OUTPUT" class="headerlink" title="OUTPUT"></a>OUTPUT</h3><pre><code>The game is going on
-5
-5 1 3 1 4
-4 1 3 0 4
-3 1 3 0 3
-2 1 3 0 2
-1 1 4 0 1
-</code></pre><h2 id="Hint"><a href="#Hint" class="headerlink" title="Hint"></a>Hint</h2><h3 id="样例说明："><a href="#样例说明：" class="headerlink" title="样例说明："></a>样例说明：</h3><blockquote>
-<p>3*5的地图，有1个单次伤害为1、攻击范围为2的激光炮塔，它的位置为（2，2），模拟游戏的前5秒。5秒内有5只蚂蚁出生，都是向东爬行，其中第1~4只在路过（0，2）点时被激光塔伤了1格血。在第5秒的时候，最早出生的蚂蚁按移动规则1~3本来该向东移动，但由于规则4的作用，它在发现向北和向西移动都会到达不可达点后，最终选择了向南移动。</p>
-</blockquote>
-<h3 id="数据说明："><a href="#数据说明：" class="headerlink" title="数据说明："></a>数据说明：</h3><blockquote>
-<p>100%的数据满足1 ≤ n,m ≤ 8，s ≤ 20，t ≤ 200,000</p>
-</blockquote>
-<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code class="c">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-#include &lt;math.h&gt;
-#define CANNON 1
-#define ANT 2
-//#define DEBUG 0
-struct antdata{
-    int age;
-    int id;//蚂蚁的id，从1开始不重复，往上递增，为0表示不存在 
-    int rank;//等级 
-    int health;//血量 
-    int x,y;
-    int lastx,lasty;
-    int cake;//0或1，是否有蛋糕 
-}ant[6]={}; 
-struct cannondata{
-    int x,y;
-};
-int time=0;
-int cake=-1;//记录蛋糕在哪只蚂蚁身上0-5 
-int antid=0;//记录蚂蚁出生的顺序 
-int antnum=0;//记录当前场上的蚂蚁数量 
-int **map,**info;//记录地图上的蚂蚁/炮台，信息素 
-int n,m;
-int cnum,churt,cdistance;//炮台cannon数,炮台伤害，炮台攻击范围
-struct cannondata *cannon;
-int direction[4][2]={{0,1},{1,0},{0,-1},{-1,0}};//右下左上(东南西北，顺时针) 
-int directionavailable[4]={};//记录可前进的方向 
-void initialize(){
-    int i,j;
-    for(i=0;i&lt;=n;i++) for(j=0;j&lt;=m;j++) {info[i][j]=0; map[i][j]=0;}
-}
-void MakeAnt(){//不满6只则生成蚂蚁 
-    int i;
-    if(antnum&lt;6 &amp;&amp; map[0][0]==0){
-        //for(i=0;i&lt;6;i++) 
-            i=antnum;
-            //if(ant[i].id==0){
-                antid++;
-                ant[i].id=antid;
-                ant[i].x=0;
-                ant[i].y=0;
-                ant[i].lastx=0;
-                ant[i].lasty=0;
-                ant[i].age=0;
-                ant[i].rank=(antid-1)/6+1;
-                ant[i].health=floor(4*pow(1.1,ant[i].rank));
-                ant[i].cake=0;
-            //}
-            antnum++;
-            map[0][0]=ANT+ant[i].id;
-    }
-}
-void DeleteAnt(int i){//i为0-5
-    int j;
-    for(j=i+1;j&lt;antnum;j++){//后面的前移 
-        ant[j-1]=ant[j];
-    }
-    antnum--; 
-    for(j=antnum;j&lt;6;j++){//置零表示不存在 
-        ant[j].id=0;
-
-    }    
-}
-void GiveInfo(){//增加信息素 
-    int i;
-    for(i=0;i&lt;6;i++) 
-        if(ant[i].id!=0)
-            if(ant[i].cake)
-                info[ant[i].x][ant[i].y]+=5;
-            else 
-                info[ant[i].x][ant[i].y]+=2;
-}
-void LostInfo(){//失去信息素 
-    int i,j;
-    for(i=0;i&lt;=n;i++) for(j=0;j&lt;=m;j++) if(info[i][j]) info[i][j]--;
-}
-void PutAnt(int i,int x,int y){//放置蚂蚁并在地图上标记 
-    ant[i].lastx=ant[i].x;
-    ant[i].lasty=ant[i].y;
-    map[ant[i].x][ant[i].y]=0;
-#ifdef DEBUG 
-    printf(&quot;AntID:%d from (%d,%d) to (%d,%d), it&#39;s time/Rank/Health is %d/%d/%d\n&quot;,ant[i].id,ant[i].x,ant[i].y,x,y,ant[i].age+1,ant[i].rank,ant[i].health);
-#endif
-    ant[i].x=x;
-    ant[i].y=y;
-    map[x][y]=ANT+ant[i].id;    
-}
-int SelectDirection(int i){//返回一个方向的序号，不能移动返回-1 
-    int j,tx,ty,anum=0,a,amaxnum=0;
-    memset(directionavailable,0,sizeof(directionavailable));
-    for(j=0;j&lt;4;j++){
-        tx=ant[i].x+direction[j][0];
-        ty=ant[i].y+direction[j][1];
-        if(tx==ant[i].lastx &amp;&amp; ty==ant[i].lasty) continue;
-        if(tx&lt;0 || ty&lt;0 || tx&gt;n || ty&gt;m) continue;
-        if(map[tx][ty]) continue;
-        directionavailable[j]=1;//置为可达 
-        a=j;
-        anum++;//可达的数量加1 
-    }
-    if(anum==0) return -1; 
-    if(anum==1) return a; 
-    //此时有多个可达点 
-    int max=-1;
-    for(j=0;j&lt;4;j++){
-        if(directionavailable[j]){
-            tx=ant[i].x+direction[j][0];
-            ty=ant[i].y+direction[j][1];
-            directionavailable[j]=info[tx][ty]+1;//将可达标志改为该方向前进一格的信息素+1,+1为了将信息素为0的与不可达点区分 
-            if(directionavailable[j]&gt;max) max=directionavailable[j];//更新最大值 
-        }
-    }
-    for(j=0;j&lt;4;j++){//该循环将信息素不是最大值的置零 （后来发现题意不是如此，不是最大值的仍是可达点,不该置零，这里做特殊标记-1） 
-        if(directionavailable[j]){//是可达点
-            if(directionavailable[j]&lt;max){//但不是信息素最大的 
-                directionavailable[j]=-1;
-                //anum--;
-            }
-            else{//是最大值 
-                a=j;// 记下最大值的下标,如果有多个，a将是最后一个最大值 
-                amaxnum++;//最大值方向的数量 
-            }
-        }
-    }
-    if(amaxnum!=1){//有多个最大值     
-        a=0;//东
-        while(directionavailable[a]&lt;=0){//该方向不是最大值的方向(-1)，或不可达(0) 
-             a++;//顺时针转90度 
-        }
-    }
-    //在多个可达点时才考虑年龄为5的倍数的情况，因为只有1个方向可达时，逆时针多次后最终仍是该方向 
-    if((ant[i].age+1)%5==0){
-        do{
-             a--;//逆时针转90度 
-             if(a&lt;0) a+=4;
-        }while(directionavailable[a]==0);//该方向不可达 
-    }
-    return a;
-} 
-void Move(){
-    int i,tx,ty,d;
-    for(i=0;i&lt;antnum;i++){
-        //if(ant[i].id==0) break;//后面都是空的 
-        d=SelectDirection(i); 
-        if(d==-1) PutAnt(i,ant[i].x,ant[i].y);
-        else {
-            tx=ant[i].x+direction[d][0];
-            ty=ant[i].y+direction[d][1];
-            PutAnt(i,tx,ty);
-        }
-        if(ant[i].x==n &amp;&amp; ant[i].y==m &amp;&amp; cake==-1){//到达蛋糕位置 
-            ant[i].cake=1; 
-            cake=i;
-            ant[i].health+=floor(floor(4*pow(1.1,ant[i].rank))/2);
-            if(ant[i].health&gt;(int)floor(4*pow(1.1,ant[i].rank)))
-                ant[i].health=(int)floor(4*pow(1.1,ant[i].rank));
-        }
-    } 
-}
-int GetDistance2(int x1,int y1,int x2,int y2){//为了避免浮点数运算，这里计算距离的平方 
-    return (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
-}
-int VectorProduct2(int x1,int y1,int x2,int y2){//两向量矢积的平方 
-    return (x1*y2-x2*y1)*(x1*y2-x2*y1);
-}
-int Mult(int x1,int y1,int x2,int y2){//两向量数量积 
-    return x1*x2+y1*y2;
-}
-int IsInAttackArea(int x1,int y1,int x2,int y2,int x3,int y3){
-    //判断以3点为圆心，半径为0.5的圆和1,2点连成的线段有无公共点（后来才注意蚂蚁的直径是1，不是半径...） 
-    int tmp,tmp2;
-    tmp2=(x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
-    tmp=Mult(x3-x1,y3-y1,x2-x1,y2-y1);
-    if(tmp&lt;0 || tmp&gt;tmp2){//printf(&quot;----------s1---------\n&quot;); 
-        return 0;
-    }
-    tmp=VectorProduct2(x3-x1,y3-y1,x2-x1,y2-y1);
-    if(4*tmp&gt;tmp2) {//printf(&quot;----------s2---------\n&quot;); 
-        return 0;
-    }
-    return 1;
-}
-void Attack(){//所有炮塔是一起攻击的，攻击结束后才判断蚂蚁生死 
-    int i,j;
-    for(j=0;j&lt;cnum;j++){
-        int imin=-1,target=-1;
-        int d2min=9999999,d2;
-        if(cake!=-1 &amp;&amp; GetDistance2(ant[cake].x,ant[cake].y,cannon[j].x,cannon[j].y)&lt;=cdistance*cdistance){
-            target=cake;
-        }
-        else{
-            for(i=0;i&lt;antnum;i++){
-                //if(ant[i].id==0) break;//后面都是空的 
-                d2=GetDistance2(ant[i].x,ant[i].y,cannon[j].x,cannon[j].y);
-                if(d2&lt;d2min) {d2min=d2;imin=i;}
-            }
-            target=imin;
-            if(GetDistance2(ant[target].x,ant[target].y,cannon[j].x,cannon[j].y)&gt;cdistance*cdistance) continue;//最近的都打不到 
-
-        }
-        ant[target].health-=churt;
-#ifdef DEBUG
-        printf(&quot;Targer:%d,TargetAntId:%d\n&quot;,target,ant[target].id);
-#endif
-        for(i=0;i&lt;antnum;i++){
-            if(i==target) continue;
-            if(IsInAttackArea(ant[target].x,ant[target].y,cannon[j].x,cannon[j].y,ant[i].x,ant[i].y)){
-                ant[i].health-=churt;
-#ifdef DEBUG
-                printf(&quot;!!!!!!!!!!!!!!!!!ExtraTargetAntId:%d!!!!!!!!!!!!!!!!!!!\n&quot;,ant[i].id);
-                //system(&quot;pause&quot;);
-#endif
-            } 
-        } 
-    }
-}
-void Judge1(){
-    int i;
-    for(i=0;i&lt;antnum;i++){
-        if(ant[i].health&lt;0){
-#ifdef DEBUG
-            printf(&quot;AntID:%d died.\n&quot;,ant[i].id);
-#endif
-            map[ant[i].x][ant[i].y]=0;
-            if(ant[i].cake) cake=-1;//蛋糕归位
-            else if(cake!=-1) if(cake&gt;i) cake--; 
-            DeleteAnt(i);
-            i--;
-        }
-    }
-}
-int Judge2(){
-    if(cake!=-1) if(ant[cake].x==0 &amp;&amp; ant[cake].y==0) return 1;
-    return 0;
-}
-void AgeAdd(){
-    int i;
-    for(i=0;i&lt;antnum;i++) ant[i].age++;
-}
-//-------------调试-----------
-
-int GetHealthById(int id){
-    int i;
-    for(i=0;i&lt;antnum;i++) if(ant[i].id==id) return ant[i].health;
-    return -1;
-} 
-void PFSTATE(){
-    int i,j;
-
-    for(i=0;i&lt;=n;i++){
-        for(j=0;j&lt;=m;j++){
-            printf(&quot;[%3d]&quot;,info[i][j]);
-            if(map[i][j]==CANNON) printf(&quot; CANNON &quot;);
-            else if(map[i][j]&gt;ANT) printf(&quot;%4d(%2d)&quot;,map[i][j]-ANT,GetHealthById(map[i][j]-ANT));
-            else printf(&quot;|------|&quot;);
-        }
-        printf(&quot;\n&quot;);
-    }
-    printf(&quot;Cake:%d,CakeAntId:%d,ant[cake].cake:%d\n&quot;,cake,ant[cake].id,ant[cake].cake);
-    printf(&quot;=====================time: %d=====================\n&quot;,time);
-} 
-
-//---------------------------
-int Clock(){//返回1表示结束 
-    time++; 
-    MakeAnt(); 
-    GiveInfo(); 
-    Move(); 
-    Attack();
-    Judge1(); 
-    if(Judge2()) return 1;
-    AgeAdd();
-    LostInfo();
-#ifdef DEBUG
-    PFSTATE();
-#endif
-    return 0;
-}
-int main(){
-    int i,tx,ty,runtime,isend=0;
-    scanf(&quot;%d%d&quot;,&amp;n,&amp;m);
-    map=(int **)malloc(sizeof(int *)*(n+1));
-    info=(int **)malloc(sizeof(int *)*(n+1));
-    for(i=0;i&lt;=n;i++){
-        map[i]=(int *)malloc(sizeof(int)*(m+1));
-        info[i]=(int *)malloc(sizeof(int *)*(m+1));
-    }
-    initialize();
-    scanf(&quot;%d%d%d&quot;,&amp;cnum,&amp;churt,&amp;cdistance);
-    cannon=(struct cannondata *)malloc(cnum*sizeof(struct cannondata));
-    for(i=0;i&lt;cnum;i++){
-        scanf(&quot;%d%d&quot;,&amp;tx,&amp;ty);
-        map[tx][ty]=CANNON;
-        cannon[i].x=tx;
-        cannon[i].y=ty;
-    }
-    scanf(&quot;%d&quot;,&amp;runtime);
-    for(i=0;i&lt;runtime;i++){
-        if(Clock()){
-            printf(&quot;Game over after %d seconds\n&quot;,time);
-            isend=1;
-            break;
-        }
-    }
-    if(!isend) printf(&quot;The game is going on\n&quot;);
-    printf(&quot;%d\n&quot;,antnum);
-    for(i=0;i&lt;antnum;i++){
-        printf(&quot;%d %d %d %d %d\n&quot;,ant[i].age,ant[i].rank,ant[i].health,ant[i].x,ant[i].y);
-    }
-    return 0;     
-}
-</code></pre>
-
+          
       
     </div>
     
@@ -1891,6 +963,10 @@ int main(){
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a href="/2017/07/13/clp/lab10a/#more">阅读全文 >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -1937,96 +1013,12 @@ int main(){
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="八数码问题"><a href="#八数码问题" class="headerlink" title="八数码问题"></a>八数码问题</h2><h4 id="Time-limit-1000-ms"><a href="#Time-limit-1000-ms" class="headerlink" title="Time limit: 1000 ms"></a>Time limit: 1000 ms</h4><h4 id="Memory-limit-1-GB"><a href="#Memory-limit-1-GB" class="headerlink" title="Memory limit: 1 GB"></a>Memory limit: 1 GB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>3×3九宫棋盘，放置数码为1-8的8个棋牌，剩下一个空格，只能通过棋牌向空格的移动来改变棋盘的布局。要求：根据给定初始布局，问：至少移动几次才能从初始布局到达目标布局。</p>
+              <h2 id="八数码问题"><a href="#八数码问题" class="headerlink" title="八数码问题"></a>八数码问题</h2><h4 id="Time-limit-1000-ms"><a href="#Time-limit-1000-ms" class="headerlink" title="Time limit: 1000 ms"></a>Time limit: 1000 ms</h4><h4 id="Memory-limit-1-GB"><a href="#Memory-limit-1-GB" class="headerlink" title="Memory limit: 1 GB"></a>Memory limit: 1 GB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>3×3九宫棋盘，放置数码为1-8的8个棋牌，剩下一个空格，只能通过棋牌向空格的移动来改变棋盘的布局。要求：根据给定初始布局，问：至少移动几次才能从初始布局到达目标布局。</p>
 <p>目标布局如下图：</p>
 <p><img src="//l-x.me/2017/07/12/clp/lab9b/contest_6_A_1.bmp" alt=""></p>
 <h2 id="Input-Description"><a href="#Input-Description" class="headerlink" title="Input Description"></a>Input Description</h2><p>3行，每行3个0-8的不重复整数，其中0表示空格所在的位置，数字间用空格隔开，表示初始布局，数据保证该初始布局一定能移到目标布局。</p>
 <h2 id="Output-Description"><a href="#Output-Description" class="headerlink" title="Output Description"></a>Output Description</h2><p>一个整数，表示最少移动到目标布局的次数。</p>
-<h2 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h2><h3 id="INPUT"><a href="#INPUT" class="headerlink" title="INPUT"></a>INPUT</h3><pre><code>0 7 6
-8 4 3
-5 2 1
-</code></pre><h3 id="OUTPUT"><a href="#OUTPUT" class="headerlink" title="OUTPUT"></a>OUTPUT</h3><pre><code>4
-</code></pre><h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code class="c">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-char state[362880]={};//记录是否已拓展过 ,用char节省空间 
-char end[9]={8,7,6,5,4,3,2,1,0};//目标序列 从左到右，从上到下 
-int endsub;//目标序列在数组中的下标 
-int factor[4]={-3,3,-1,1}; //方向 上下左右 
-int fac[8]={40320,5040,720,120,24,6,2,1};//阶乘
-struct node{
-    char list[9];
-    int step;
-    struct node* next;
-};
-struct node *head,*rear;
-struct node* MakeNode(char *list,int step){
-    struct node *p=(struct node *)malloc(sizeof(struct node));
-    memcpy(p-&gt;list,list,9);
-    p-&gt;step=step;
-    p-&gt;next=NULL;
-    return p;
-}
-int ToSub(char *list){//换算为数组下标，康托展开
-    int i,j,rank,sub = 0;
-    for (i = 0; i &lt; 8; i++) {
-        rank = 0;
-        for (j = i + 1; j &lt; 9; j++) if (list[j] &lt; list[i]) rank++;
-        sub+=rank*fac[i];
-    }
-    return sub;
-}
-int GetSpacePos(char *list){//获取空格位置 
-    int i;
-    for(i=0;i&lt;9;i++) if(list[i]==0) return i;
-}
-int Move(char *list,int f){//空格向某方向移动 ,返回0表示不可移动 
-    int i=GetSpacePos(list);
-    if(f==0 &amp;&amp; i-3&lt;0 ) return 0;//上
-    if(f==1 &amp;&amp; i+3&gt;8 ) return 0;//下     
-    if(f==2 &amp;&amp; (i+1)%3==1) return 0;//左 
-    if(f==3 &amp;&amp; (i+1)%3==0) return 0;//右 
-    list[i]=list[i+factor[f]];
-    list[i+factor[f]]=0;
-    return 1;
-}
-int Search(){
-    char tmp[9];
-    struct node* p;
-    int sub,i;
-    while(head!=NULL){
-        for(i=0;i&lt;4;i++){
-            memcpy(tmp,head-&gt;list,9);
-            if(Move(tmp,i)){
-                sub=ToSub(tmp);
-                if(sub==endsub) return head-&gt;step+1;
-                if(state[sub]) continue;
-                state[sub]=1;
-                p=MakeNode(tmp,head-&gt;step+1);
-                rear-&gt;next=p;
-                rear=p;
-            }
-        }
-        p=head;
-        head=head-&gt;next;
-        free(p); 
-    }
-    return 0;
-}
-int main(){
-    int i;
-    char start[9]={}; 
-    for(i=0;i&lt;9;i++){
-        scanf(&quot;%c&quot;,&amp;start[i]);
-        start[i]-=&#39;0&#39;;
-        getchar();
-    }
-    endsub=ToSub(end); 
-    rear=head=MakeNode(start,0);
-    printf(&quot;%d&quot;,Search());
-}
-</code></pre>
-
+          
       
     </div>
     
@@ -2039,6 +1031,10 @@ int main(){
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a href="/2017/07/12/clp/lab9b/#more">阅读全文 >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -2085,97 +1081,12 @@ int main(){
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h1 id="算24"><a href="#算24" class="headerlink" title="算24"></a>算24</h1><h4 id="Time-limit-1000-ms"><a href="#Time-limit-1000-ms" class="headerlink" title="Time limit: 1000 ms"></a>Time limit: 1000 ms</h4><h4 id="Memory-limit-256-MB"><a href="#Memory-limit-256-MB" class="headerlink" title="Memory limit: 256 MB"></a>Memory limit: 256 MB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>给出4个小于10的正整数，你可以使用加减乘除4种运算以及括号把这4个数连接起来得到一个表达式。现在的问题是，是否存在一种方式使得得到的表达式的结果等于24。</p>
+              <h1 id="算24"><a href="#算24" class="headerlink" title="算24"></a>算24</h1><h4 id="Time-limit-1000-ms"><a href="#Time-limit-1000-ms" class="headerlink" title="Time limit: 1000 ms"></a>Time limit: 1000 ms</h4><h4 id="Memory-limit-256-MB"><a href="#Memory-limit-256-MB" class="headerlink" title="Memory limit: 256 MB"></a>Memory limit: 256 MB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>给出4个小于10的正整数，你可以使用加减乘除4种运算以及括号把这4个数连接起来得到一个表达式。现在的问题是，是否存在一种方式使得得到的表达式的结果等于24。</p>
 <p>这里加减乘除以及括号的运算结果和运算的优先级跟我们平常的定义一致（这里的除法定义是实数除法）。</p>
 <p>比如，对于5，5，5，1，我们知道5 * (5 – 1 / 5) = 24，因此可以得到24。又比如，对于1，1，4，2，我们怎么都不能得到24。</p>
 <h2 id="Input-Description"><a href="#Input-Description" class="headerlink" title="Input Description"></a>Input Description</h2><p>输入数据包括多行，每行给出一组测试数据，包括4个小于10的正整数（用空格分开）。最后一组测试数据中包括4个0，表示输入的结束，这组数据不用处理。</p>
 <h2 id="Output-Description"><a href="#Output-Description" class="headerlink" title="Output Description"></a>Output Description</h2><p>对于每一组测试数据，输出一行，如果可以得到24，输出“YES”；否则，输出“NO”。</p>
-<h2 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h2><h3 id="INPUT"><a href="#INPUT" class="headerlink" title="INPUT"></a>INPUT</h3><pre><code>5 5 5 1
-1 1 4 2
-0 0 0 0
-</code></pre><h3 id="OUTPUT"><a href="#OUTPUT" class="headerlink" title="OUTPUT"></a>OUTPUT</h3><pre><code>YES
-NO
-</code></pre><h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code class="c">#include &lt;stdio.h&gt;
-#include &lt;math.h&gt;
-#define P 10e-4
-#define INF 99999
-int IsEqual(double a,double b)
-{
-    if(fabs(a-b)&lt;=P) return 1;
-    else return 0;
-}
-double Cal(double a,char op,double b)
-{
-    switch(op)
-    {
-        case &#39;+&#39;: return a+b;
-        case &#39;-&#39;: return a-b;
-        case &#39;*&#39;: return a*b;
-        case &#39;/&#39;: if(b==0) return INF; else return a/b;
-    }
-}
-int Game24(double n[])
-{
-    char op[]={&#39;+&#39;,&#39;-&#39;,&#39;*&#39;,&#39;/&#39;};
-    double res[5];
-    int i1,i2,i3,i4,j1,j2,j3,k,count=0;
-    for(i1=0;i1&lt;4;i1++)
-    {
-        for(i2=0;i2&lt;4;i2++)
-        {
-            if(i2!=i1)
-            {
-                for(i3=0;i3&lt;4;i3++)
-                {
-                    if(i3!=i2 &amp;&amp; i3!=i1)
-                    {
-                        for(i4=0;i4&lt;4;i4++)
-                        {
-                            if(i4!=i3 &amp;&amp; i4!=i2 &amp;&amp; i4!=i1)
-                            {
-                                for(j1=0;j1&lt;4;j1++)
-                                {
-                                    for(j2=0;j2&lt;4;j2++)
-                                    {
-                                        for(j3=0;j3&lt;4;j3++)
-                                        {
-                                            res[0]=Cal(Cal(Cal(n[i1],op[j1],n[i2]),op[j2],n[i3]),op[j3],n[i4]);
-                                            res[1]=Cal(Cal(n[i1],op[j1],n[i2]),op[j2],Cal(n[i3],op[j3],n[i4]));
-                                            res[2]=Cal(Cal(n[i1],op[j1],Cal(n[i2],op[j2],n[i3])),op[j3],n[i4]);
-                                            res[3]=Cal(n[i1],op[j1],Cal(Cal(n[i2],op[j2],n[i3]),op[j3],n[i4]));
-                                            res[4]=Cal(n[i1],op[j1],Cal(n[i2],op[j2],Cal(n[i3],op[j3],n[i4])));
-                                            for(k=0;k&lt;5;k++)
-                                            {
-                                                if(IsEqual(24,res[k]))
-                                                {
-                                                    return 1;    
-                                                }
-                                            }
-                                        }    
-                                    }    
-                                }
-                            }
-                        }                
-                    }            
-                }                
-            }
-        }
-    }
-    return 0;
-}
-int main()
-{
-    double n[4];
-    while(1)
-    {
-        scanf(&quot;%lf%lf%lf%lf&quot;,&amp;n[0],&amp;n[1],&amp;n[2],&amp;n[3]);
-        if(!n[0] &amp;&amp; !n[1] &amp;&amp; !n[2] &amp;&amp; !n[3]) break;
-        if(Game24(n)) printf(&quot;YES\n&quot;); else printf(&quot;NO\n&quot;);
-    }
-    return 0;
-}
-</code></pre>
-
+          
       
     </div>
     
@@ -2188,6 +1099,10 @@ int main()
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a href="/2017/07/11/clp/lab9a/#more">阅读全文 >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
