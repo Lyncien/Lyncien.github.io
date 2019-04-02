@@ -181,7 +181,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
                     </div>
                 </section>
                 
@@ -253,6 +253,89 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-ds/lab3_Haffman" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/11/11/ds/lab3_Haffman/" class="article-date">
+      <time datetime="2017-11-10T16:00:00.000Z" itemprop="datePublished">2017-11-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h1 id="哈夫曼压缩"><a href="#哈夫曼压缩" class="headerlink" title="哈夫曼压缩"></a>哈夫曼压缩</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>实验三: 此次实验限定语言C/C++，允许使用stl。</p>
+<p>ddl：下下周六（11月19日）。</p>
+<p>实验要求：实现任意二进制文件压缩解压。将哈夫曼树或者词频率表保存到文件，压缩后解压所需信息全部从你自己压缩得到的文件中拿到。检查:对于一般txt文档实现效果明显的压缩结果并正确解压7分，大文件（几十兆以上）非文本文件正确压缩解压。（9分）报告1分。本周六实验一和二未检查完的来检查，下周六实验三写好的可以提前来检查。下下周六ddl</p>
+<h2 id="一、-需求分析"><a href="#一、-需求分析" class="headerlink" title="一、    需求分析"></a>一、    需求分析</h2><ol>
+<li><p>实现功能：</p>
+<p>（1）    利用Haffman编码压缩文件。打开文件后扫描文件读入数据，以二进制方式读取，每次处理8位（1个字节），八位二进制码有256种组合，对应ascii码中0-255的字符，读取结束后，统计出字符频率表并降序排序，根据字符频率表创建Haffman树，导出Haffman编码，之后再次扫描文件，将每个字符对应的Haffman编码依次写入目标文件，完成压缩。</p>
+<p>（2）    解压本程序创建的压缩文件。打开文件后扫描文件读入数据，以二进制方式读取，首先读取创建压缩文件是存储在文件头的字符频率表或者Haffman树，然后读取压缩数据，设置一个缓存空间buf，每次处理1位的数据，查找Haffman编码对应的字符，输出至目标文件，完成解压。</p>
+<p>（3）    通过修改Windows注册表设置右键菜单快捷方式来打开本程序，以便传入要处理的文件路径。</p>
+</li>
+<li><p>模块化设计，创建词频表和Haffman树两种数据结构。</p>
+</li>
+<li><p>采用main函数的参数传入要压缩或者解压的文件路径，然后处理文件并显示处理界面。如果没有传入任何文件路径，则显示设置界面。</p>
+</li>
+<li><p>处理界面上显示当前处理过程（解压/压缩）、处理的文件名、文件大小，实时输出处理的进度、已花时间和剩余时间。</p>
+</li>
+<li><p>测试数据：选取几种代表性的文件：</p>
+<p>（1）    文本文件，实现较明显的压缩。</p>
+<p>（2）    可执行文件和较大的二进制文件，实现正确的解压缩，解压缩前后文件一致，能正确打开执行或访问。</p>
+</li>
+</ol>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DS/">DS</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/11/11/ds/lab3_Haffman/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-ds/lab2_Bank" class="article article-type-post" itemscope="" itemprop="blogPost">
   
