@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="今天是并行计算的第一节课，在介绍完重要性和历史后，老师提了一个问题，作为我们了解并行计算的开始  如何并行地尽快求解$n$个元素的最大值或排序？  老师讲解了求最大值的方法，我觉得挺有趣的，在此做个记录 朴素的串行算法遍历即可，时间复杂度$O(n)$，需要一个处理器 一般的并行算法类似淘汰赛的方式，每两个数用一个处理器进行比较，选出较大的数，在所有选出的数中重复该操作 时间复杂度$O(logn)$">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-07T07:27:01.654Z">
+<meta property="og:updated_time" content="2019-04-28T06:13:07.069Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并行计算初探">
 <meta name="twitter:description" content="今天是并行计算的第一节课，在介绍完重要性和历史后，老师提了一个问题，作为我们了解并行计算的开始  如何并行地尽快求解$n$个元素的最大值或排序？  老师讲解了求最大值的方法，我觉得挺有趣的，在此做个记录 朴素的串行算法遍历即可，时间复杂度$O(n)$，需要一个处理器 一般的并行算法类似淘汰赛的方式，每两个数用一个处理器进行比较，选出较大的数，在所有选出的数中重复该操作 时间复杂度$O(logn)$">
@@ -313,11 +313,25 @@
 <h4 id="朴素的串行算法"><a href="#朴素的串行算法" class="headerlink" title="朴素的串行算法"></a>朴素的串行算法</h4><p>遍历即可，时间复杂度$O(n)$，需要一个处理器</p>
 <h4 id="一般的并行算法"><a href="#一般的并行算法" class="headerlink" title="一般的并行算法"></a>一般的并行算法</h4><p>类似淘汰赛的方式，每两个数用一个处理器进行比较，选出较大的数，在所有选出的数中重复该操作</p>
 <p>时间复杂度$O(logn)$，需要处理器个数$O(n/logn)$</p>
-<h4 id="不计代价的并行算法"><a href="#不计代价的并行算法" class="headerlink" title="不计代价的并行算法"></a>不计代价的并行算法</h4><p>对于$n$个数，使用$n^2$个处理器，组成方阵，对于处理器$p_{ij}$比较第$i$和第$j$个数的大小，得到结果方阵$A$<br>$$<br>A_{ij} =<br>\begin{align}<br>0 &amp;&amp; N_i \ge N_j \<br>1 &amp;&amp; N_i \lt N_j \<br>\end{align}<br>$$</p>
+<h4 id="不计代价的并行算法"><a href="#不计代价的并行算法" class="headerlink" title="不计代价的并行算法"></a>不计代价的并行算法</h4><p>对于$n$个数的数组$A$，使用$n^2$个处理器：</p>
+<ul>
+<li>第1步， 每个处理器$p_{ij}, i \in [0, n - 1], j \in [0, n - 1]$，比较第$i$和第$j$个数的大小，得到结果方阵$B$</li>
+</ul>
+<p>$$<br>B_{ij} =<br>\begin{align}<br>1 &amp;&amp; if \ A_i \ge A_j \<br>0 &amp;&amp; if \ A_i \lt A_j \<br>\end{align}<br>\ ， i \in [0, n - 1]，j \in [0, n - 1]<br>$$</p>
+<ul>
+<li><p>第2步， 再使用一个列向量$M$，处理器$p_{i1}, i \in [0, n - 1]$初始化每个分量为$1$</p>
+</li>
+<li><p>第3步， 如果$B_{ij} = 0，i \in [0, n - 1]，j \in [0, n - 1]$ ，处理器$p_{ij}$置$M_i = 0$ （此处可能有写冲突，但不影响结果）</p>
+</li>
+<li><p>第4步，处理器$p_{i1}$对$M$的对应分量$M_i$进行检测。如此，只有最大的那个数对应$B$的行全为$1$，即对应$M$的分量为$1$</p>
+</li>
+</ul>
+<p>时间复杂度为$O(1)​$ </p>
+<p>举例如下：</p>
 <table>
 <thead>
 <tr>
-<th style="text-align:center"></th>
+<th style="text-align:center">A</th>
 <th style="text-align:center"></th>
 <th style="text-align:center"></th>
 <th style="text-align:center"></th>
@@ -335,13 +349,19 @@
 <table>
 <thead>
 <tr>
-<th style="text-align:center">1</th>
-<th style="text-align:center">0</th>
-<th style="text-align:center">0</th>
-<th style="text-align:center">0</th>
+<th style="text-align:center">B</th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+</tr>
 <tr>
 <td style="text-align:center">1</td>
 <td style="text-align:center">1</td>
@@ -362,15 +382,16 @@
 </tr>
 </tbody>
 </table>
-<p>再使用一个列向量，初始全为$1$</p>
-<p>对于$A$的第$i$行，如果$A_{ij} = 0$，置$B_i = 0$ （此处可能有写冲突，但不影响结果）</p>
 <table>
 <thead>
 <tr>
-<th style="text-align:center">0</th>
+<th style="text-align:center">M</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:center">0</td>
+</tr>
 <tr>
 <td style="text-align:center">0</td>
 </tr>
@@ -382,8 +403,15 @@
 </tr>
 </tbody>
 </table>
-<p>如此，只有最大的那个数对应的行全为$1$，对应B的分量为$1$</p>
-<p>时间复杂度为$O(1)$ ！！！</p>
+<p>最大数为$A_2 = 8$</p>
+<hr>
+<h4 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h4><p>布置了作业</p>
+<blockquote>
+<p>改写求最大值问题的并行算法，要求不使用数组M。</p>
+</blockquote>
+<p>很简单，不使用$M$数组，就直接在$B$上修改</p>
+<p>第3步，处理器$p_{ij}$置$M_i = 0$ ，修改为置$B_{i0} = 0$</p>
+<p>第4步，处理器$p_{i1}$对$M_i$进行检测，修改为对$B_{i0}$进行检测</p>
 
       
     </div>
@@ -395,7 +423,7 @@
         <p><span>本文标题:</span><a href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
         <p><span>发布时间:</span>2019-02-25, 00:00:00</p>
-        <p><span>最后更新:</span>2019-03-07, 15:27:01</p>
+        <p><span>最后更新:</span>2019-04-28, 14:13:07</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/02/25/article/pc_first_problem/" title="并行计算初探">https://l-x.me/2019/02/25/article/pc_first_problem/</a>
             <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2019/02/25/article/pc_first_problem/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -431,7 +459,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#朴素的串行算法"><span class="toc-text">朴素的串行算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一般的并行算法"><span class="toc-text">一般的并行算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#不计代价的并行算法"><span class="toc-text">不计代价的并行算法</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#朴素的串行算法"><span class="toc-text">朴素的串行算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一般的并行算法"><span class="toc-text">一般的并行算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#不计代价的并行算法"><span class="toc-text">不计代价的并行算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#更新"><span class="toc-text">更新</span></a></li></ol>
         
     </div>
     <style>
