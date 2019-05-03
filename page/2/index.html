@@ -267,6 +267,88 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-alg/lab4" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/12/02/alg/lab4/" class="article-date">
+      <time datetime="2018-12-01T16:00:00.000Z" itemprop="datePublished">2018-12-02</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>最佳调度问题</p>
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>设有n个任务由k个可并行工作的机器来完成，完成任务i需要时间为ti。试设计一个算法找出完成这n个任务的最佳调度，使完成全部任务的时间最早。（要求给出调度方案）</p>
+<p>完成全部任务的时间为运行时间最长的机器上运行的总时间，所有机器都是相同的。一个任务只能在一个机器上完成，且在完成之前不会被其他任务抢占。</p>
+<h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><h5 id="回溯法"><a href="#回溯法" class="headerlink" title="回溯法"></a>回溯法</h5><p>回溯法是一个既带有系统性又带有跳跃性的搜索算法。</p>
+<ul>
+<li><p>系统性：它在包含问题的所有解的解空间树中，按照深度优先的策略，从根结点出发搜索解空间树。</p>
+</li>
+<li><p>跳跃性：算法搜索至解空间树的任一结点时，判断该结点为根的子树是否包含问题的解，如果肯定不包含，则跳过以该结点为根的子树的搜索，逐层向其祖先结点回溯。否则，进入该子树，继续按深度优先的策略进行搜索。</p>
+</li>
+</ul>
+<p>这种以深度优先的方式系统地搜索问题的解的算法称为回溯法，它适用于解一些组合数较大的问题。</p>
+<p>提高回溯法效率的二种方法</p>
+<ul>
+<li><p>用约束函数剪去不满足约束的子树；</p>
+</li>
+<li><p>用限界函数剪去不能得到最优解的子树。</p>
+</li>
+</ul>
+<p>最佳调度问题可以用回溯法解决，并且是属于子集树回溯法。对于每个任务i，都可能分配到k台机器的任意一台上，解空间为<img src="//l-x.me/2018/12/02/alg/lab4/clip_image002.png" alt="img">，现在要求的是使得最长机器时间最短的解。</p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/">Algorithm</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2018/12/02/alg/lab4/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-mcps/lab3" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
@@ -981,80 +1063,6 @@ quick-brown-foxes-jump-over-the-lazy-dog =&gt; p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGN
       
         <p class="article-more-link">
           <a href="/2018/10/12/article/USTC_Hackergame2018_8/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-cod/lab7_Pipeline-CPU" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/06/14/cod/lab7_Pipeline-CPU/" class="article-date">
-      <time datetime="2018-06-13T16:00:00.000Z" itemprop="datePublished">2018-06-14</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><h3 id="设计一个MIPS指令集的CPU，"><a href="#设计一个MIPS指令集的CPU，" class="headerlink" title="设计一个MIPS指令集的CPU，"></a>设计一个MIPS指令集的CPU，</h3><h4 id="1、-基本要求："><a href="#1、-基本要求：" class="headerlink" title="1、    基本要求："></a>1、    基本要求：</h4><pre><code>a)    多周期
-b)    包含16条指令
-    i.    add addi addu sub subu 
-    ii.    and andi or nor xor
-    iii. bgtz bne j jr
-    iv.    lw sw
-</code></pre><h4 id="2、-扩展要求"><a href="#2、-扩展要求" class="headerlink" title="2、    扩展要求"></a>2、    扩展要求</h4><pre><code>a)    在16条的基础上，增加其他指令
-b)    实现中断功能
-c)    实现流水
-d)    实现下载
-</code></pre><h2 id="实验平台"><a href="#实验平台" class="headerlink" title="实验平台"></a>实验平台</h2><h4 id="EDA工具为ISE14-7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6-XC6SLX16-CS324。"><a href="#EDA工具为ISE14-7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6-XC6SLX16-CS324。" class="headerlink" title="EDA工具为ISE14.7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6 XC6SLX16-CS324。"></a>EDA工具为ISE14.7，开发板型号为Digilent的Nexys3，FPGA型号为Spartan-6 XC6SLX16-CS324。</h4><h2 id="使用部件"><a href="#使用部件" class="headerlink" title="使用部件"></a>使用部件</h2><h4 id="开发板上的开关，7段数码管和按钮。"><a href="#开发板上的开关，7段数码管和按钮。" class="headerlink" title="开发板上的开关，7段数码管和按钮。"></a>开发板上的开关，7段数码管和按钮。</h4><h2 id="最终实现功能"><a href="#最终实现功能" class="headerlink" title="最终实现功能"></a>最终实现功能</h2><h4 id="1、实现五段流水线"><a href="#1、实现五段流水线" class="headerlink" title="1、实现五段流水线"></a>1、实现五段流水线</h4><h4 id="2、实现完全转发和冒险检测"><a href="#2、实现完全转发和冒险检测" class="headerlink" title="2、实现完全转发和冒险检测"></a>2、实现完全转发和冒险检测</h4><h4 id="3、实现36条指令"><a href="#3、实现36条指令" class="headerlink" title="3、实现36条指令"></a>3、实现36条指令</h4><h4 id="4、实现下载并在数码管上动态显示内存"><a href="#4、实现下载并在数码管上动态显示内存" class="headerlink" title="4、实现下载并在数码管上动态显示内存"></a>4、实现下载并在数码管上动态显示内存</h4>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/COD/">COD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Verilog/">Verilog</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2018/06/14/cod/lab7_Pipeline-CPU/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>

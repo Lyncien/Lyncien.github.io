@@ -327,6 +327,121 @@
 
 
   
+    <article id="post-article/bit_operation_tips" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/04/29/article/bit_operation_tips/" class="article-date">
+      <time datetime="2019-04-28T16:00:00.000Z" itemprop="datePublished">2019-04-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/29/article/bit_operation_tips/">C/C++ 位运算总结</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h2 id="C-C-位运算总结"><a href="#C-C-位运算总结" class="headerlink" title="C/C++ 位运算总结"></a>C/C++ 位运算总结</h2><h4 id="一、基本的位操作运算符"><a href="#一、基本的位操作运算符" class="headerlink" title="一、基本的位操作运算符"></a>一、基本的位操作运算符</h4><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+<th>运算规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&amp;</code></td>
+<td>与</td>
+<td>两个位都为1时，结果才为1</td>
+</tr>
+<tr>
+<td><code>｜</code></td>
+<td>或</td>
+<td>两个位都为0时，结果才为0</td>
+</tr>
+<tr>
+<td><code>^</code></td>
+<td>异或</td>
+<td>两个位相同为0，相异为1</td>
+</tr>
+<tr>
+<td><code>~</code></td>
+<td>取反</td>
+<td>0变1，1变0</td>
+</tr>
+<tr>
+<td><code>&lt;&lt;</code></td>
+<td>左移</td>
+<td>各二进位全部左移若干位，高位丢弃，低位补0</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;</code></td>
+<td>右移</td>
+<td>各二进位全部右移若干位，对无符号数，高位补0，有符号数，各编译器处理方法不一样，有的补符号位（算术右移），有的补0（逻辑右移）</td>
+</tr>
+</tbody>
+</table>
+<p>注意：</p>
+<ul>
+<li>使用位操作算符时尽量添加括号，因为优先级低于一般的算术运算符</li>
+<li>只能对整形数据运算</li>
+</ul>
+<p>一些基本的等式</p>
+<pre><code>~~n = n
+-n = ~n + 1 = ~(n - 1)
+-~n = n + 1
+~-n = n - 1
+</code></pre>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2019/04/29/article/bit_operation_tips/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-article/Makefile" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
@@ -464,8 +579,21 @@
 <li><p>第4步，处理器$p_{i1}$对$M$的对应分量$M_i$进行检测。如此，只有最大的那个数对应$B$的行全为$1$，即对应$M$的分量为$1$</p>
 </li>
 </ul>
-<p>时间复杂度为$O(1)​$ </p>
-<p>举例如下：</p>
+<p>时间复杂度为$O(1)$ </p>
+<p>伪代码如下</p>
+<pre><code>begin
+    for 1 ≤ i, j ≤ p par-do //工作量O(p2); 时间O(1),因为允许同时读
+        if A[i] ≥ A[j] then 
+             B[i, j]=1 
+         else 
+             B[i, j]=0
+         end if
+    end for
+    for 1 ≤ i ≤ p par-do //工作量O(p2); 时间O(1),因为允许同时写
+        M[i] = B[i,1] ∧ B[i,2] ∧ … ∧ B[i,p]
+    end for
+end
+</code></pre><p>举例如下：</p>
 <table>
 <thead>
 <tr>
@@ -1053,88 +1181,6 @@
       
         <p class="article-more-link">
           <a href="/2018/12/03/mcps/lab4/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-alg/lab4" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/12/02/alg/lab4/" class="article-date">
-      <time datetime="2018-12-01T16:00:00.000Z" itemprop="datePublished">2018-12-02</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>最佳调度问题</p>
-<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>设有n个任务由k个可并行工作的机器来完成，完成任务i需要时间为ti。试设计一个算法找出完成这n个任务的最佳调度，使完成全部任务的时间最早。（要求给出调度方案）</p>
-<p>完成全部任务的时间为运行时间最长的机器上运行的总时间，所有机器都是相同的。一个任务只能在一个机器上完成，且在完成之前不会被其他任务抢占。</p>
-<h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><h5 id="回溯法"><a href="#回溯法" class="headerlink" title="回溯法"></a>回溯法</h5><p>回溯法是一个既带有系统性又带有跳跃性的搜索算法。</p>
-<ul>
-<li><p>系统性：它在包含问题的所有解的解空间树中，按照深度优先的策略，从根结点出发搜索解空间树。</p>
-</li>
-<li><p>跳跃性：算法搜索至解空间树的任一结点时，判断该结点为根的子树是否包含问题的解，如果肯定不包含，则跳过以该结点为根的子树的搜索，逐层向其祖先结点回溯。否则，进入该子树，继续按深度优先的策略进行搜索。</p>
-</li>
-</ul>
-<p>这种以深度优先的方式系统地搜索问题的解的算法称为回溯法，它适用于解一些组合数较大的问题。</p>
-<p>提高回溯法效率的二种方法</p>
-<ul>
-<li><p>用约束函数剪去不满足约束的子树；</p>
-</li>
-<li><p>用限界函数剪去不能得到最优解的子树。</p>
-</li>
-</ul>
-<p>最佳调度问题可以用回溯法解决，并且是属于子集树回溯法。对于每个任务i，都可能分配到k台机器的任意一台上，解空间为<img src="//l-x.me/2018/12/02/alg/lab4/clip_image002.png" alt="img">，现在要求的是使得最长机器时间最短的解。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/">Algorithm</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2018/12/02/alg/lab4/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
