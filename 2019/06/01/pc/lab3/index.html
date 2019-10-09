@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://l-x.me/2019/06/01/pc/lab3/clip_image016.gif">
 <meta property="og:image" content="https://l-x.me/2019/06/01/pc/lab3/clip_image018.gif">
 <meta property="og:image" content="https://l-x.me/2019/06/01/pc/lab3/clip_image020.jpg">
-<meta property="og:updated_time" content="2019-10-09T15:03:50.669Z">
+<meta property="og:updated_time" content="2019-10-09T16:01:26.437Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并行计算上机实验三 CUDA实现向量加法和矩阵乘法">
 <meta name="twitter:description" content="题目CUDA实现向量加法和矩阵乘法  用CUDA实现向量加法的计算  定义A,B两个一维数组，编写GPU程序将A和B对应项相加，将结果保存在数组C中。分别测试数组规模为10W、20W、100W、200W、1000W、2000W时其与CPU加法的运行时间之比。   用CUDA实现矩阵乘法的计算  定义A，B 两个二维数组。使用GPU 实现矩阵乘法。并对比串行程序，给出加速比。    算法设计向量加法">
@@ -346,6 +346,7 @@
 <p>算法基本流程：每个线程为了计算自己负责的一个C矩阵的元素，需要A的一行元素和一列元素，对应地，这个线程所在的C的子矩阵的计算需要A的一个子矩阵行和B的一个子矩阵列（如下图）。以A为例，每个线程遍历A的行时，分割为两层循环进行遍历，外层遍历对应行每个子矩阵，内层遍历子矩阵的对应行，而在同一个子矩阵内，可以由共享存储器共享子矩阵，因此，每次外循环一开始（对应一个新的子矩阵），负责该子矩阵的线程块内的线程，就一起从全局存储器的A把该子矩阵读到共享存储器，然后再开始遍历自己负责的子矩阵的行。</p>
 <p>对于下图，第一次外循环就是访问A和B的蓝色子矩阵，对应位置线程块的线程就一起把A和B的蓝色块读到共享存储器，然后用两个蓝色块的一行和一列相乘求和，作为C的这个元素的部分和。接下来的外循环会换到红色子矩阵…不断累加这个部分和，最后得到C的这个元素值。对于C的每个元素，由每个线程并行计算。</p>
 <p><img src="//l-x.me/2019/06/01/pc/lab3/clip_image004.jpg" alt="img"></p>
+<a id="more"></a>
 <h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><h4 id="向量加法的计算-1"><a href="#向量加法的计算-1" class="headerlink" title="向量加法的计算"></a>向量加法的计算</h4><p>设<em>n</em>为向量长度</p>
 <p>对于串行算法，时间复杂度为<em>O</em>(<em>n</em>)</p>
 <p>对于并行算法，时间复杂度为<em>O</em>(1)<em>，</em>这里假设每个线程计算一个分量，并且未考虑CPU与GPU的数据交换时间</p>
@@ -686,7 +687,7 @@ int main(int argc, char **argv){
         <p><span>本文标题:</span><a href="/2019/06/01/pc/lab3/">并行计算上机实验三 CUDA实现向量加法和矩阵乘法</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
         <p><span>发布时间:</span>2019-06-01, 00:00:00</p>
-        <p><span>最后更新:</span>2019-10-09, 23:03:50</p>
+        <p><span>最后更新:</span>2019-10-10, 00:01:26</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/06/01/pc/lab3/" title="并行计算上机实验三 CUDA实现向量加法和矩阵乘法">https://l-x.me/2019/06/01/pc/lab3/</a>
             <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2019/06/01/pc/lab3/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
