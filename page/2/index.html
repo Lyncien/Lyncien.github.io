@@ -267,6 +267,85 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-alg/lab5" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/12/09/alg/lab5/" class="article-date">
+      <time datetime="2018-12-08T16:00:00.000Z" itemprop="datePublished">2018-12-09</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>图搜索BFS算法及存储优化</p>
+<blockquote>
+<h5 id="实验要求："><a href="#实验要求：" class="headerlink" title="实验要求："></a>实验要求：</h5><p>1.模拟数据集</p>
+<p>自己随机生成有向图，边数的规模为10，100，1000，10000，100000；</p>
+<p>进行BFS搜索，记录程序完成时间和所需内存空间大小。</p>
+<p>2.真实数据集</p>
+<p><a href="https://pan.baidu.com/s/1pvfphiywjSXohO-bSnL1HA" target="_blank" rel="noopener">https://pan.baidu.com/s/1pvfphiywjSXohO-bSnL1HA</a></p>
+<p>数据集说明：均为twitter真实数据集，数据集规模如下：</p>
+<p>twitter_small: Nodes 81306, Edges 1768149, 有向图；</p>
+<p>twitter_large: Nodes 11316811, Edges 85331846, 有向图。</p>
+<p>进行BFS搜索，设计存储优化方案和加速方案，记录程序时间和内存空间大小。</p>
+<h5 id="实验说明"><a href="#实验说明" class="headerlink" title="实验说明"></a>实验说明</h5><p>1）编程语言和实验平台不限，可考虑并行（i.e., GPU/OpenMP/MapReduce）；</p>
+<p>2）至少需完成模拟数据集和twitter_small数据集的实验，twitter_large数据集为加分题。 </p>
+</blockquote>
+<h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><h4 id="BFS算法"><a href="#BFS算法" class="headerlink" title="BFS算法"></a>BFS算法</h4><p>BFS（Breadth First Search），即广度优先搜索，从某个结点s开始，自始至终一直通过已找到和未找到顶点之间的边界向外扩展，就是说，算法首先搜索和s距离为k的所有顶点，然后再去搜索和S距离为k+l的其他顶点。该算法需要一个先进先出队列，只要队列不为空，就从队首取出一个结点n，访问它的所有邻居，如果某个邻居未被标记为已访问（visit=0），则将该邻居加入到队列尾，最后将该结点n标记为已访问（visit=1）。</p>
+<p>BFS的时间复杂度为O(V+E)，V为结点数，E为边数。因为每个结点都进入队列一次，访问邻居时每条边至多被扫描一遍。</p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/">Algorithm</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2018/12/09/alg/lab5/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-mcps/lab_res" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
@@ -921,104 +1000,6 @@
         <p class="article-more-link">
           <a href="/2018/11/11/alg/lab1/#more">阅读全文 >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-article/learning_and_forgetting" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/10/27/article/learning_and_forgetting/" class="article-date">
-      <time datetime="2018-10-26T16:00:00.000Z" itemprop="datePublished">2018-10-27</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h4 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h4><p>之前一位大一的学弟问我微积分作业，我发现当时觉得还算简单的题，现在竟然已经不会做了。</p>
-<p>而且每当考试前我都会发现，平时努力记下的知识，大部分已经生疏了。</p>
-<p>我一直在想，如果所有的知识都将被遗忘，那么学习的意义在哪呢？</p>
-<h4 id="学习？记忆"><a href="#学习？记忆" class="headerlink" title="学习？记忆?"></a>学习？记忆?</h4><p>学习多年，我相信大部分人和我一样，在认知上认为记忆只是学习的一步，但行动上记忆几乎成为学习的全部，无论是记笔记或是所谓的错题本，都是强行以记忆代替学习。</p>
-<p>这些方法固然有效，在信息量小的时候增加强化次数以永久记忆，但在信息爆炸的现在，如何？</p>
-<p>曾经我和同学探讨这个问题。</p>
-<blockquote>
-<p>“你们是如何记住那些复杂的公式呢？”</p>
-<p>“记不住，马上推导的。”</p>
-<p>“如果过程很繁杂，一时推导不出来呢？”</p>
-<p>“那么就稍微思考下，查些资料。”</p>
-<p>“如何记得推导过程？”</p>
-<p>“学会了就记住了呀”</p>
-</blockquote>
-<p>这似乎陷入了死循环，如果很难记住一件事，那就需要记住这件事的前因后果。</p>
-<h4 id="遗忘"><a href="#遗忘" class="headerlink" title="遗忘"></a>遗忘</h4><p>遗忘是我们最为讨厌的事情，我们憎恨因为遗忘让我们误了多少重要的事件，但有些痛苦的记忆却也因为始终不能遗忘而如附骨之蛆，让我们长期沉浸在痛苦中。所以，遗忘的所有这些究竟是因为什么呢？</p>
-<p>百度百科给出的定义</p>
-<blockquote>
-<p>遗忘是对识记过的材料不能再认与回忆，或者错误的再认与回忆，是一种记忆的丧失。遗忘分为暂时性遗忘和永久性遗忘，前者指在适宜条件下还可能恢复记忆的遗忘；后者指不经重新学习就不可能恢复记忆的遗忘。</p>
-</blockquote>
-<p>Wikipedia给出的定义</p>
-<blockquote>
-<p><strong>Forgetting</strong> or <strong>disremembering</strong> is the apparent loss or modification of information already encoded and stored in an individual’s long-term memory.</p>
-</blockquote>
-<p>如此，遗忘是大脑的本能，它有助于调和新旧知识。</p>
-<p>知识会被遗忘，技能也会生疏，他们是<code>强化次数</code>和<code>时间</code>的函数。</p>
-<h4 id="临界点"><a href="#临界点" class="headerlink" title="临界点"></a>临界点</h4><p>回忆过去，会发现那些小时候背诵的诗文始终不会忘记，即使有些生疏，只要有些许提示或刺激，你就能很快记忆起来，这就是上面提到的<code>暂时性遗忘</code>，因为强化次数已经足够多。相反，对于那些考前恶补的知识，只有一次强化，不久之后便迅速忘记，这就是<code>永久性遗忘</code>。如果想要重新回忆起，几乎就是重新学习了。</p>
-<p>那么，恰当地选择多个时间点进行强化，能事半功倍，艾宾浩斯遗忘曲线给出了一些似乎可行的时间点。</p>
-<h4 id="学习的意义"><a href="#学习的意义" class="headerlink" title="学习的意义"></a>学习的意义</h4><p>关于记忆的问题，目前没有太多定论。这是自然规律，无法抗拒。这里不作太多讨论了。</p>
-<p>我们学习总是有目的，或是记住各种知识点，获取各种技能提高自己的能力，亦或是显摆？…</p>
-<p>但是时间有限，要考虑性价比问题。</p>
-<p>我们总是习惯于学习各种花哨的， 包装了的， 需要大量机械记忆的知识，比如某些现成工具的各种参数，某些标准的具体细节。或许这些东西对我们当前的工作特别重要，稍微的输入就能带来一时的快感。</p>
-<p>那么，长久呢？未来还会有更多的工具，更多的标准。</p>
-<p>我有时也会陷入这种短期的，低思考密度的诱惑陷阱。</p>
-<p>所以，我以后学习应该学习更加基础，原理性的东西。</p>
-<p>当然，有人会说，如果你学习使用那些现成的部分，那么真的需要用时，还是要花时间的。</p>
-<p>是啊，这时候就需要快速学习能力了。</p>
-<p>这和核心知识的积淀一样重要。</p>
-<p>我想这就是一个人的核心竞争力所在吧。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/感想/">感想</a></li></ul>
-    </div>
-
       
       <div class="clearfix"></div>
     </div>

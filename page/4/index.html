@@ -267,6 +267,84 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-os/Process_Concepts&amp;Operations,Thread/Process Concepts&amp;Operations,Thread" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/" class="article-date">
+      <time datetime="2018-03-30T16:00:00.000Z" itemprop="datePublished">2018-03-31</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h1 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h1><h2 id="进程的概念"><a href="#进程的概念" class="headerlink" title="进程的概念"></a>进程的概念</h2><ul>
+<li>我们知道，人们通过操作系统来更方便地操作硬件，提高使用计算机的效率。早期的计算机只允许一次执行一个程序，这样的程序完全控制了系统，能访问所有的资源。但随着操作系统的功能愈加复杂，计算机的应用更加广泛，人们往往需要同时进行多个作业，因此就有了进程的概念，不同的进程同时运行，互相独立，进行不同的工作。</li>
+</ul>
+<ul>
+<li>进程（Process），可以认为是执行中的程序。值得注意的是，程序本身不是进程。程序是被动实体，是存储在磁盘上的包含一系列指令的文件，而进程是活动实体，当一个程序被载入内存后并进行了相关资源分配后，才可以说进程开始运行了。</li>
+</ul>
+<h2 id="进程的信息"><a href="#进程的信息" class="headerlink" title="进程的信息"></a>进程的信息</h2><ul>
+<li>一个进程开始运行后，用户内存中将有一段空间被分配给这个进程，具体结构见右图1。其中，文本段（Text）存放程序代码，数据段（Data）存放全局变量，栈（Stack）存放函数参数、局部变量等，堆（Heap）用于动态分配空间。栈和堆朝着相反的方向增长，这是为了提高内存空间利用率。</li>
+</ul>
+<p><img src="//l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-1.png" alt=""> </p>
+<ul>
+<li>同时，操作系统会为每个进程在内核空间中设置一个进程控制块（Process Control Block，PCB），其结构如图2。进程状态由当前进行的活动定义，包括new（正在被创建）、Running（正在执行指令）、Waiting（等待某事件发生，如I/O完成）、Ready（等待处理器分配）、Terminated（终止），它们之间的相互转化见图3。进程编号是操作系统为每个进程分配的唯一的身份标识。进程计数器表示将要执行的下一个指令的地址。寄存器则存放进程执行时的中间信息。</li>
+<li>PCB的一个重要作用就是多道程序设计中操作系统在切换执行的进程时，可以将当前进程状态保存在PCB中，并从PCB读取新的进程的信息。</li>
+</ul>
+<p><img src="//l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-2.png" alt=""><br><img src="//l-x.me/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/20180526050442907-3.jpg" alt=""></p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-os/System_Call/System Call" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
@@ -1321,74 +1399,6 @@ int main(){
       
         <p class="article-more-link">
           <a href="/2017/07/13/clp/lab10a/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-clp/lab9b" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/07/12/clp/lab9b/" class="article-date">
-      <time datetime="2017-07-11T16:00:00.000Z" itemprop="datePublished">2017-07-12</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="八数码问题"><a href="#八数码问题" class="headerlink" title="八数码问题"></a>八数码问题</h2><h4 id="Time-limit-1000-ms"><a href="#Time-limit-1000-ms" class="headerlink" title="Time limit: 1000 ms"></a>Time limit: 1000 ms</h4><h4 id="Memory-limit-1-GB"><a href="#Memory-limit-1-GB" class="headerlink" title="Memory limit: 1 GB"></a>Memory limit: 1 GB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>3×3九宫棋盘，放置数码为1-8的8个棋牌，剩下一个空格，只能通过棋牌向空格的移动来改变棋盘的布局。要求：根据给定初始布局，问：至少移动几次才能从初始布局到达目标布局。</p>
-<p>目标布局如下图：</p>
-<p><img src="//l-x.me/2017/07/12/clp/lab9b/contest_6_A_1.bmp" alt=""></p>
-<h2 id="Input-Description"><a href="#Input-Description" class="headerlink" title="Input Description"></a>Input Description</h2><p>3行，每行3个0-8的不重复整数，其中0表示空格所在的位置，数字间用空格隔开，表示初始布局，数据保证该初始布局一定能移到目标布局。</p>
-<h2 id="Output-Description"><a href="#Output-Description" class="headerlink" title="Output Description"></a>Output Description</h2><p>一个整数，表示最少移动到目标布局的次数。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/07/12/clp/lab9b/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
