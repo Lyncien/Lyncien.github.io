@@ -188,7 +188,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
                     </div>
                 </section>
                 
@@ -517,6 +517,136 @@ A5 B5 C5 D5 E5 F5    --进程5的newsizes数组
         <p class="article-more-link">
           <a href="/2019/05/16/pc/lab2/#more">阅读全文 >></a>
         </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-leetcode/single-number-iv" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/05/04/leetcode/single-number-iv/" class="article-date">
+      <time datetime="2019-05-03T16:00:00.000Z" itemprop="datePublished">2019-05-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/04/leetcode/single-number-iv/">LeetCode题目改编——只出现一次的数字IV</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="LeetCode题目改编——只出现一次的数字IV"><a href="#LeetCode题目改编——只出现一次的数字IV" class="headerlink" title="LeetCode题目改编——只出现一次的数字IV"></a>LeetCode题目改编——只出现一次的数字IV</h2><h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>受LeetCode系列题目启发</p>
+<p><a href="https://leetcode-cn.com/problems/single-number/" target="_blank" rel="noopener">只出现一次的数字I</a></p>
+<p><a href="https://leetcode-cn.com/problems/single-number-ii/" target="_blank" rel="noopener">只出现一次的数字II</a></p>
+<p><a href="https://leetcode-cn.com/problems/single-number-iii/" target="_blank" rel="noopener">只出现一次的数字III</a></p>
+<p>已提交贡献（然而几个月了都是Pending，发到博客来吧~</p>
+<h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>给定一个正整数数组 <code>nums</code>，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。</p>
+<p><strong>示例 :</strong></p>
+<pre><code>输入: [1, 6, 2, 4, 1, 3, 2, 5, 6]
+输出: [3, 4, 5]
+</code></pre><p><strong>注意：</strong></p>
+<ol>
+<li>结果输出的顺序并不重要，对于上面的例子，可以是 3, 4, 5 的任意排列。</li>
+<li>你的算法应该具有线性时间复杂度。你能否仅使用常数空间复杂度来实现？</li>
+</ol>
+<h3 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h3><p>这道题比 “<a href="https://leetcode-cn.com/problems/single-number-iii/" target="_blank" rel="noopener">只出现一次的数字III</a>” 多了一个只出现一个的数字，我们只要找到三个只出现一个的数字中一个，加入数组中，再使用 “<a href="https://leetcode-cn.com/problems/single-number-iii/" target="_blank" rel="noopener">只出现一次的数字III</a>” 寻找两个只出现一次的数字即可</p>
+<p>首先记 <code>LSB(x) = x &amp; (-x)</code>，表示取<code>x</code>的二进制最低的位<code>1</code>，其他位均置为<code>0</code>，如<code>LSB(100110b) = 000010b</code>，若<code>x &gt; 0</code>，则 <code>LSB(x) &gt; 0</code></p>
+<p>设三个只出现一次的正整数为 <code>a, b, c</code>,  设 <code>n = a ^ b ^ c</code>（对数组中所有数进行异或可得<code>n</code>），由异或的交换律和结合律有 <code>(n ^ a) ^ (n ^ b) ^ (n ^ c) = 0</code></p>
+<p>显然也有  <code>LSB(n ^ a) ^ LSB(n ^ b) ^ LSB(n ^ c) != 0</code>， 即至少有一个二进制位是<code>1</code>，因为任意两个<code>LSB(·)</code>异或运算结果为<code>0</code>或者有两个二进制位<code>1</code> </p>
+<p>设 <code>k</code>为<code>LSB(LSB(n ^ a) ^ LSB(n ^ b) ^ LSB(n ^ c))</code> 的位1所在位置，即<code>k</code>是 <code>LSB(n ^ a)， LSB(n ^ b)， LSB(n ^ c)</code>为三者中最小的最低位1的位置，则 <code>(n ^ a)， (n ^ b)， (n ^ c)</code>三者在第 <code>k</code> 位上只有3种可能，有3个<code>1</code>，2个<code>1</code>或1个<code>1</code>。</p>
+<p>如果有3个<code>1</code>或者1个<code>1</code>，则第 <code>k</code>位异或结果为1，与 <code>(n ^ a) ^ (n ^ b) ^ (n ^ c) = 0</code>矛盾</p>
+<p>因此<code>(n ^ a)， (n ^ b)， (n ^ c)</code>三者在第 <code>k</code> 位上只能有2个<code>1</code>，我们现在要寻找的三个数种的第一个数就是第 <code>k</code> 位上是<code>0</code>的那个数，不妨设为<code>c</code></p>
+<p>为此，我们初始化<code>n = 0</code>遍历数组，依次计算<code>n ^= arr[i]</code>，得到<code>n = a ^ b ^ c</code>，</p>
+<p>初始化<code>lsb = 0</code>，再次遍历数组，依次计算<code>lsb ^= LSB(n ^ arr[i])</code>，结果得到的 <code>lsb</code> 就是<code>LSB(n ^ c)</code> ，因为对于那些出现两次的数x，<code>LSB(n ^ x) ^ LSB(n ^ x) = 0</code>，而对于<code>n ^ a</code>和<code>n ^ b</code>，它们在第<code>k</code>位（也是它们的最低位的<code>1</code>）都是<code>1</code>，因此，<code>LSB(n ^ a) ^ LSB(n ^ b) = 0</code></p>
+<p>初始化<code>c = 0</code>，再次遍历数组，如果<code>LSB(n ^ arr[i]) == lsb</code>，计算<code>c ^= arr[i]</code>，最后结果<code>c</code>就是我们要寻找的数，因为<code>LSB(n ^ arr[i]) == lsb</code>筛选出的<code>arr[i]</code>最低位<code>1</code>的位置和<code>lsb</code>相同（也就是和<code>c</code>相同），这些数的异或结果只会留下<code>c</code>，出现两次的数都抵消了</p>
+<h3 id="C-代码"><a href="#C-代码" class="headerlink" title="C++代码"></a>C++代码</h3><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+int LSB(int num){ //取最低位的1，其他位均置为0
+    return num &amp; (-num);
+}
+vector&lt;int&gt; Two(vector&lt;int&gt; arr){ //寻找数组中两个只出现一次的数（其他数都出现两次）
+    int a_xor_b = 0, a = 0, b = 0, lsb = 0;
+    for (int i = 0; i &lt; arr.size(); i++)
+        a_xor_b ^= arr[i];
+    lsb = LSB(a_xor_b);
+    for (int i = 0; i &lt; arr.size(); i++)
+        if(arr[i] &amp; lsb)
+            a ^= arr[i];
+    b = a_xor_b ^ a;
+    return vector&lt;int&gt;{a, b};
+}
+int OneOfThree(vector&lt;int&gt; arr){ //寻找数组中三个只出现一次的数中的一个（其他数都出现两次）
+    int a_xor_b_xor_c = 0, c = 0, lsb = 0;
+    for (int i = 0; i &lt; arr.size(); i++)
+        a_xor_b_xor_c ^= arr[i];
+    for (int i = 0; i &lt; arr.size(); i++)
+        lsb ^= LSB(a_xor_b_xor_c ^ arr[i]);
+    lsb = LSB(lsb);
+    for (int i = 0; i &lt; arr.size(); i++)
+        if (LSB(a_xor_b_xor_c ^ arr[i]) == lsb)
+            c ^= arr[i];
+    return c;
+}
+vector&lt;int&gt; Three(vector&lt;int&gt; arr){ //寻找数组中三个只出现一次的数（其他数都出现两次）
+    int c = OneOfThree(arr);
+    arr.push_back(c);
+    vector&lt;int&gt; res = Two(arr);
+    res.push_back(c);
+    return res;
+}
+int main(){
+    vector&lt;int&gt; arr = {1, 6, 2, 4, 1, 3, 2, 5, 6};
+    vector&lt;int&gt; res = Three(arr);
+    for(int i = 0; i &lt; 3; i++)
+        cout &lt;&lt; res[i] &lt;&lt; &quot; &quot;;
+    return 0;
+}
+
+</code></pre>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://lijinma.com/blog/2014/05/29/amazing-xor/" target="_blank" rel="noopener">http://lijinma.com/blog/2014/05/29/amazing-xor/</a></p>
+<p><a href="http://www.360doc.com/content/14/0728/12/14505022_397625773.shtml" target="_blank" rel="noopener">http://www.360doc.com/content/14/0728/12/14505022_397625773.shtml</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/">LeetCode</a></li></ul>
+    </div>
+
       
       <div class="clearfix"></div>
     </div>
@@ -1158,77 +1288,6 @@ end
       
         <p class="article-more-link">
           <a href="/2019/01/17/cp/lab_final/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-article/tea_and_health" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/12/10/article/tea_and_health/" class="article-date">
-      <time datetime="2018-12-09T16:00:00.000Z" itemprop="datePublished">2018-12-10</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/10/article/tea_and_health/">茶与健康</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="茶与健康"><a href="#茶与健康" class="headerlink" title="茶与健康"></a>茶与健康</h2><p>这学期有幸选中全校最热门的公选课——茶与健康。之前每学期都是1000+人选28人，在周一晚上上课，从上学期开始每周多开一次下午的课（这个时间选择人数较少），正好我这学期周一下午没课，就来碰碰运气，没想到真的抽中了。这门课之所以这么火，主要是因为上课就是喝喝茶，发表自己的感想，听老师讲述茶文化，期末交一篇论文就可以了，虽然可能被卡优秀率，但只有1学分，花点GPA喝喝茶还是很值得的。</p>
-<h3 id="18-09-03"><a href="#18-09-03" class="headerlink" title="18.09.03"></a>18.09.03</h3><p>今天是第一次上茶与健康课，由周先稠老师上课。老师是真·文化人，他说自己改革开放的第一批大学生，是受益者，也是开拓者践行者。今天，我们科技已经很发达，但却<strong>失去了一些内在的东西</strong>。他会在这门课慢慢讲述。虽然是老年人思维，不过有一些的确是<strong>时间沉淀之下的肺腑之言</strong>。老师确实用心在上这门课，我之前就听说曾经凌晨到肥西县的产茶地挑选刚刚产出的茶叶。比较神奇的是，他不用任何现代通讯设备，要找到他只能去办公室。</p>
-<p>今天，老师主要介绍了这门课的来源，他说这门茶艺课已经开了10几年了，和王祥老师的陶艺课一样很受欢迎。本来还要开一门食艺课，但是经费不足。。。对了，他还同时开了一门养生课。果然是养生大师，老师已经60多岁了，但还满头浓密的黑发，一看像是不到50岁的样子。</p>
-<p>这门课是在体育教学中心的301室上课，外门的装潢与其他教室并无两样，但一进门，经过短短的通道，进入另一扇门，就是另一番景象了，圆形的内室，木质地板，悬吊的灯笼，古朴的屏风围绕在几张茶几和靠椅周围，我简直不敢相信科大有这样的地方。老师说这个室内装修的材料是他亲自挑选的，但装修工人太不懂他的意思了。他讲要天圆地方，但结果地是圆的，而头上是纵横交错的横梁；他说古人讲究头顶为浅色有开阔感，地上为深色有厚重感（我怎么记得应该是“天玄地黄”，天是黑的，地是黄的），结果地板是淡黄色，头上横梁是深褐色；他讲墙边要一点中国传统风格的围栏，结果建筑工搞了罗马柱。还有水管也被漆成银色，后来他和几个学生一起用褐色麻绳缠绕了水管表面。</p>
-<p>老师讲了：</p>
-<blockquote>
-<p>“上这门课，我就是给你们倒茶喝的，你们在家里都会比较放肆，在外面比较收敛，在这里你们只要比在家稍微收敛一点就行了，不要太紧张和拘束。我们科大理工科课程压力大，这里就是给你们放松的机会。但是，我希望你们不要玩手机，而是用心去品茶，<strong>每节课只要有5秒钟是属于你自己的</strong>，我就满足了。”</p>
-</blockquote>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/感想/">感想</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2018/12/10/article/tea_and_health/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>

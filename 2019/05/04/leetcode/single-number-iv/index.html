@@ -15,18 +15,18 @@
 
 
 
-<meta name="description" content="今天是并行计算的第一节课，在介绍完重要性和历史后，老师提了一个问题，作为我们了解并行计算的开始  如何并行地尽快求解$n$个元素的最大值或排序？  老师讲解了求最大值的方法，我觉得挺有趣的，在此做个记录 朴素的串行算法遍历即可，时间复杂度$O(n)$，需要一个处理器 一般的并行算法类似淘汰赛的方式，每两个数用一个处理器进行比较，选出较大的数，在所有选出的数中重复该操作 时间复杂度$O(logn)$">
-<meta name="keywords" content="PC">
+<meta name="description" content="LeetCode题目改编——只出现一次的数字IV起源受LeetCode系列题目启发 只出现一次的数字I 只出现一次的数字II 只出现一次的数字III 已提交贡献（然而几个月了都是Pending，发到博客来吧~ 题目给定一个正整数数组 nums，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。 示例 : 输入: [1, 6, 2, 4, 1, 3, 2, 5, 6">
+<meta name="keywords" content="LeetCode">
 <meta property="og:type" content="article">
-<meta property="og:title" content="并行计算初探">
-<meta property="og:url" content="https://l-x.me/2019/02/25/article/pc_first_problem/index.html">
+<meta property="og:title" content="LeetCode题目改编——只出现一次的数字IV">
+<meta property="og:url" content="https://l-x.me/2019/05/04/leetcode/single-number-iv/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
-<meta property="og:description" content="今天是并行计算的第一节课，在介绍完重要性和历史后，老师提了一个问题，作为我们了解并行计算的开始  如何并行地尽快求解$n$个元素的最大值或排序？  老师讲解了求最大值的方法，我觉得挺有趣的，在此做个记录 朴素的串行算法遍历即可，时间复杂度$O(n)$，需要一个处理器 一般的并行算法类似淘汰赛的方式，每两个数用一个处理器进行比较，选出较大的数，在所有选出的数中重复该操作 时间复杂度$O(logn)$">
+<meta property="og:description" content="LeetCode题目改编——只出现一次的数字IV起源受LeetCode系列题目启发 只出现一次的数字I 只出现一次的数字II 只出现一次的数字III 已提交贡献（然而几个月了都是Pending，发到博客来吧~ 题目给定一个正整数数组 nums，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。 示例 : 输入: [1, 6, 2, 4, 1, 3, 2, 5, 6">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-28T06:56:33.106Z">
+<meta property="og:updated_time" content="2020-02-24T13:49:40.414Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="并行计算初探">
-<meta name="twitter:description" content="今天是并行计算的第一节课，在介绍完重要性和历史后，老师提了一个问题，作为我们了解并行计算的开始  如何并行地尽快求解$n$个元素的最大值或排序？  老师讲解了求最大值的方法，我觉得挺有趣的，在此做个记录 朴素的串行算法遍历即可，时间复杂度$O(n)$，需要一个处理器 一般的并行算法类似淘汰赛的方式，每两个数用一个处理器进行比较，选出较大的数，在所有选出的数中重复该操作 时间复杂度$O(logn)$">
+<meta name="twitter:title" content="LeetCode题目改编——只出现一次的数字IV">
+<meta name="twitter:description" content="LeetCode题目改编——只出现一次的数字IV起源受LeetCode系列题目启发 只出现一次的数字I 只出现一次的数字II 只出现一次的数字III 已提交贡献（然而几个月了都是Pending，发到博客来吧~ 题目给定一个正整数数组 nums，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。 示例 : 输入: [1, 6, 2, 4, 1, 3, 2, 5, 6">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -58,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>并行计算初探 | Lyncien&#39;s homepage</title>
+<title>LeetCode题目改编——只出现一次的数字IV | Lyncien&#39;s homepage</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -265,11 +265,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
 </nav>
-      <div class="body-wrap"><article id="post-article/pc_first_problem" class="article article-type-post" itemscope="" itemprop="blogPost">
+      <div class="body-wrap"><article id="post-leetcode/single-number-iv" class="article article-type-post" itemscope="" itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2019/02/25/article/pc_first_problem/" class="article-date">
-      <time datetime="2019-02-24T16:00:00.000Z" itemprop="datePublished">2019-02-25</time>
+      <a href="/2019/05/04/leetcode/single-number-iv/" class="article-date">
+      <time datetime="2019-05-03T16:00:00.000Z" itemprop="datePublished">2019-05-04</time>
 </a>
 
 
@@ -284,7 +284,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      并行计算初探
+      LeetCode题目改编——只出现一次的数字IV
     </h1>
   
 
@@ -295,7 +295,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PC/">PC</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/">LeetCode</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -305,126 +305,77 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>今天是并行计算的第一节课，在介绍完重要性和历史后，老师提了一个问题，作为我们了解并行计算的开始</p>
-<blockquote>
-<p>如何并行地尽快求解$n$个元素的最大值或排序？</p>
-</blockquote>
-<p>老师讲解了求最大值的方法，我觉得挺有趣的，在此做个记录</p>
-<h4 id="朴素的串行算法"><a href="#朴素的串行算法" class="headerlink" title="朴素的串行算法"></a>朴素的串行算法</h4><p>遍历即可，时间复杂度$O(n)$，需要一个处理器</p>
-<h4 id="一般的并行算法"><a href="#一般的并行算法" class="headerlink" title="一般的并行算法"></a>一般的并行算法</h4><p>类似淘汰赛的方式，每两个数用一个处理器进行比较，选出较大的数，在所有选出的数中重复该操作</p>
-<p>时间复杂度$O(logn)$，需要处理器个数$O(n/logn)$</p>
-<h4 id="不计代价的并行算法"><a href="#不计代价的并行算法" class="headerlink" title="不计代价的并行算法"></a>不计代价的并行算法</h4><p>对于$n$个数的数组$A$，使用$n^2$个处理器：</p>
-<ul>
-<li>第1步， 每个处理器$p_{ij}, i \in [0, n - 1], j \in [0, n - 1]$，比较第$i$和第$j$个数的大小，得到结果方阵$B$</li>
-</ul>
-<p>$$<br>B_{ij} =<br>\begin{align}<br>1 &amp;&amp; if \ A_i \ge A_j \<br>0 &amp;&amp; if \ A_i \lt A_j \<br>\end{align}<br>\ ， i \in [0, n - 1]，j \in [0, n - 1]<br>$$</p>
-<ul>
-<li><p>第2步， 再使用一个列向量$M$，处理器$p_{i1}, i \in [0, n - 1]$初始化每个分量为$1$</p>
-</li>
-<li><p>第3步， 如果$B_{ij} = 0，i \in [0, n - 1]，j \in [0, n - 1]$ ，处理器$p_{ij}$置$M_i = 0$ （此处可能有写冲突，但不影响结果）</p>
-</li>
-<li><p>第4步，处理器$p_{i1}$对$M$的对应分量$M_i$进行检测。如此，只有最大的那个数对应$B$的行全为$1$，即对应$M$的分量为$1$</p>
-</li>
-</ul>
-<p>时间复杂度为$O(1)$ </p>
-<p>伪代码如下</p>
-<pre><code>begin
-    for 1 ≤ i, j ≤ p par-do //工作量O(p2); 时间O(1),因为允许同时读
-        if A[i] ≥ A[j] then 
-             B[i, j]=1 
-         else 
-             B[i, j]=0
-         end if
-    end for
-    for 1 ≤ i ≤ p par-do //工作量O(p2); 时间O(1),因为允许同时写
-        M[i] = B[i,1] ∧ B[i,2] ∧ … ∧ B[i,p]
-    end for
-end
-</code></pre><p>举例如下：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">A</th>
-<th style="text-align:center"></th>
-<th style="text-align:center"></th>
-<th style="text-align:center"></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center">5</td>
-<td style="text-align:center">8</td>
-<td style="text-align:center">4</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">B</th>
-<th style="text-align:center"></th>
-<th style="text-align:center"></th>
-<th style="text-align:center"></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">1</td>
-</tr>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">1</td>
-</tr>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">1</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">M</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">1</td>
-</tr>
-<tr>
-<td style="text-align:center">0</td>
-</tr>
-</tbody>
-</table>
-<p>最大数为$A_2 = 8$</p>
-<hr>
-<h4 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h4><p>布置了作业</p>
-<blockquote>
-<p>改写求最大值问题的并行算法，要求不使用数组M。</p>
-</blockquote>
-<p>很简单，不使用$M$数组，就直接在$B$上修改</p>
-<p>第3步，处理器$p_{ij}$置$M_i = 0$ ，修改为置$B_{i0} = 0$</p>
-<p>第4步，处理器$p_{i1}$对$M_i$进行检测，修改为对$B_{i0}$进行检测</p>
+        <h2 id="LeetCode题目改编——只出现一次的数字IV"><a href="#LeetCode题目改编——只出现一次的数字IV" class="headerlink" title="LeetCode题目改编——只出现一次的数字IV"></a>LeetCode题目改编——只出现一次的数字IV</h2><h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>受LeetCode系列题目启发</p>
+<p><a href="https://leetcode-cn.com/problems/single-number/" target="_blank" rel="noopener">只出现一次的数字I</a></p>
+<p><a href="https://leetcode-cn.com/problems/single-number-ii/" target="_blank" rel="noopener">只出现一次的数字II</a></p>
+<p><a href="https://leetcode-cn.com/problems/single-number-iii/" target="_blank" rel="noopener">只出现一次的数字III</a></p>
+<p>已提交贡献（然而几个月了都是Pending，发到博客来吧~</p>
+<h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>给定一个正整数数组 <code>nums</code>，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。</p>
+<p><strong>示例 :</strong></p>
+<pre><code>输入: [1, 6, 2, 4, 1, 3, 2, 5, 6]
+输出: [3, 4, 5]
+</code></pre><p><strong>注意：</strong></p>
+<ol>
+<li>结果输出的顺序并不重要，对于上面的例子，可以是 3, 4, 5 的任意排列。</li>
+<li>你的算法应该具有线性时间复杂度。你能否仅使用常数空间复杂度来实现？</li>
+</ol>
+<h3 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h3><p>这道题比 “<a href="https://leetcode-cn.com/problems/single-number-iii/" target="_blank" rel="noopener">只出现一次的数字III</a>” 多了一个只出现一个的数字，我们只要找到三个只出现一个的数字中一个，加入数组中，再使用 “<a href="https://leetcode-cn.com/problems/single-number-iii/" target="_blank" rel="noopener">只出现一次的数字III</a>” 寻找两个只出现一次的数字即可</p>
+<p>首先记 <code>LSB(x) = x &amp; (-x)</code>，表示取<code>x</code>的二进制最低的位<code>1</code>，其他位均置为<code>0</code>，如<code>LSB(100110b) = 000010b</code>，若<code>x &gt; 0</code>，则 <code>LSB(x) &gt; 0</code></p>
+<p>设三个只出现一次的正整数为 <code>a, b, c</code>,  设 <code>n = a ^ b ^ c</code>（对数组中所有数进行异或可得<code>n</code>），由异或的交换律和结合律有 <code>(n ^ a) ^ (n ^ b) ^ (n ^ c) = 0</code></p>
+<p>显然也有  <code>LSB(n ^ a) ^ LSB(n ^ b) ^ LSB(n ^ c) != 0</code>， 即至少有一个二进制位是<code>1</code>，因为任意两个<code>LSB(·)</code>异或运算结果为<code>0</code>或者有两个二进制位<code>1</code> </p>
+<p>设 <code>k</code>为<code>LSB(LSB(n ^ a) ^ LSB(n ^ b) ^ LSB(n ^ c))</code> 的位1所在位置，即<code>k</code>是 <code>LSB(n ^ a)， LSB(n ^ b)， LSB(n ^ c)</code>为三者中最小的最低位1的位置，则 <code>(n ^ a)， (n ^ b)， (n ^ c)</code>三者在第 <code>k</code> 位上只有3种可能，有3个<code>1</code>，2个<code>1</code>或1个<code>1</code>。</p>
+<p>如果有3个<code>1</code>或者1个<code>1</code>，则第 <code>k</code>位异或结果为1，与 <code>(n ^ a) ^ (n ^ b) ^ (n ^ c) = 0</code>矛盾</p>
+<p>因此<code>(n ^ a)， (n ^ b)， (n ^ c)</code>三者在第 <code>k</code> 位上只能有2个<code>1</code>，我们现在要寻找的三个数种的第一个数就是第 <code>k</code> 位上是<code>0</code>的那个数，不妨设为<code>c</code></p>
+<p>为此，我们初始化<code>n = 0</code>遍历数组，依次计算<code>n ^= arr[i]</code>，得到<code>n = a ^ b ^ c</code>，</p>
+<p>初始化<code>lsb = 0</code>，再次遍历数组，依次计算<code>lsb ^= LSB(n ^ arr[i])</code>，结果得到的 <code>lsb</code> 就是<code>LSB(n ^ c)</code> ，因为对于那些出现两次的数x，<code>LSB(n ^ x) ^ LSB(n ^ x) = 0</code>，而对于<code>n ^ a</code>和<code>n ^ b</code>，它们在第<code>k</code>位（也是它们的最低位的<code>1</code>）都是<code>1</code>，因此，<code>LSB(n ^ a) ^ LSB(n ^ b) = 0</code></p>
+<p>初始化<code>c = 0</code>，再次遍历数组，如果<code>LSB(n ^ arr[i]) == lsb</code>，计算<code>c ^= arr[i]</code>，最后结果<code>c</code>就是我们要寻找的数，因为<code>LSB(n ^ arr[i]) == lsb</code>筛选出的<code>arr[i]</code>最低位<code>1</code>的位置和<code>lsb</code>相同（也就是和<code>c</code>相同），这些数的异或结果只会留下<code>c</code>，出现两次的数都抵消了</p>
+<h3 id="C-代码"><a href="#C-代码" class="headerlink" title="C++代码"></a>C++代码</h3><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+int LSB(int num){ //取最低位的1，其他位均置为0
+    return num &amp; (-num);
+}
+vector&lt;int&gt; Two(vector&lt;int&gt; arr){ //寻找数组中两个只出现一次的数（其他数都出现两次）
+    int a_xor_b = 0, a = 0, b = 0, lsb = 0;
+    for (int i = 0; i &lt; arr.size(); i++)
+        a_xor_b ^= arr[i];
+    lsb = LSB(a_xor_b);
+    for (int i = 0; i &lt; arr.size(); i++)
+        if(arr[i] &amp; lsb)
+            a ^= arr[i];
+    b = a_xor_b ^ a;
+    return vector&lt;int&gt;{a, b};
+}
+int OneOfThree(vector&lt;int&gt; arr){ //寻找数组中三个只出现一次的数中的一个（其他数都出现两次）
+    int a_xor_b_xor_c = 0, c = 0, lsb = 0;
+    for (int i = 0; i &lt; arr.size(); i++)
+        a_xor_b_xor_c ^= arr[i];
+    for (int i = 0; i &lt; arr.size(); i++)
+        lsb ^= LSB(a_xor_b_xor_c ^ arr[i]);
+    lsb = LSB(lsb);
+    for (int i = 0; i &lt; arr.size(); i++)
+        if (LSB(a_xor_b_xor_c ^ arr[i]) == lsb)
+            c ^= arr[i];
+    return c;
+}
+vector&lt;int&gt; Three(vector&lt;int&gt; arr){ //寻找数组中三个只出现一次的数（其他数都出现两次）
+    int c = OneOfThree(arr);
+    arr.push_back(c);
+    vector&lt;int&gt; res = Two(arr);
+    res.push_back(c);
+    return res;
+}
+int main(){
+    vector&lt;int&gt; arr = {1, 6, 2, 4, 1, 3, 2, 5, 6};
+    vector&lt;int&gt; res = Three(arr);
+    for(int i = 0; i &lt; 3; i++)
+        cout &lt;&lt; res[i] &lt;&lt; &quot; &quot;;
+    return 0;
+}
+
+</code></pre>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://lijinma.com/blog/2014/05/29/amazing-xor/" target="_blank" rel="noopener">http://lijinma.com/blog/2014/05/29/amazing-xor/</a></p>
+<p><a href="http://www.360doc.com/content/14/0728/12/14505022_397625773.shtml" target="_blank" rel="noopener">http://www.360doc.com/content/14/0728/12/14505022_397625773.shtml</a></p>
 
       
     </div>
@@ -433,13 +384,13 @@ end
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></p>
+        <p><span>本文标题:</span><a href="/2019/05/04/leetcode/single-number-iv/">LeetCode题目改编——只出现一次的数字IV</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
-        <p><span>发布时间:</span>2019-02-25, 00:00:00</p>
-        <p><span>最后更新:</span>2019-04-28, 14:56:33</p>
+        <p><span>发布时间:</span>2019-05-04, 00:00:00</p>
+        <p><span>最后更新:</span>2020-02-24, 21:49:40</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/02/25/article/pc_first_problem/" title="并行计算初探">https://l-x.me/2019/02/25/article/pc_first_problem/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2019/02/25/article/pc_first_problem/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/05/04/leetcode/single-number-iv/" title="LeetCode题目改编——只出现一次的数字IV">https://l-x.me/2019/05/04/leetcode/single-number-iv/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2019/05/04/leetcode/single-number-iv/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -452,15 +403,15 @@ end
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2019/04/02/article/Makefile/">
-                    Makefile 使用总结
+                <a href="/2019/05/16/pc/lab2/">
+                    并行计算上机实验二 MPI实现π值的计算和PSRS排序
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2019/02/21/article/dp_1-5/">
-                    动态规划入门（1）
+                <a href="/2019/05/02/pc/lab1/">
+                    并行计算上机实验一 OpenMP实现π值的计算和PSRS排序
                 </a>
             </div>
         
@@ -472,7 +423,7 @@ end
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#朴素的串行算法"><span class="toc-text">朴素的串行算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一般的并行算法"><span class="toc-text">一般的并行算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#不计代价的并行算法"><span class="toc-text">不计代价的并行算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#更新"><span class="toc-text">更新</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#LeetCode题目改编——只出现一次的数字IV"><span class="toc-text">LeetCode题目改编——只出现一次的数字IV</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#起源"><span class="toc-text">起源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#题目"><span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解题"><span class="toc-text">解题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-代码"><span class="toc-text">C++代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -508,7 +459,7 @@ end
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"并行计算初探　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"LeetCode题目改编——只出现一次的数字IV　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -528,7 +479,7 @@ end
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2019/04/02/article/Makefile/" title="上一篇: Makefile 使用总结">
+            <a href="/2019/05/16/pc/lab2/" title="上一篇: 并行计算上机实验二 MPI实现π值的计算和PSRS排序">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -536,7 +487,7 @@ end
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2019/02/21/article/dp_1-5/" title="下一篇: 动态规划入门（1）">
+            <a href="/2019/05/02/pc/lab1/" title="下一篇: 并行计算上机实验一 OpenMP实现π值的计算和PSRS排序">
                 <i class="fa fa-angle-right"></i>
             </a>
         

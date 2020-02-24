@@ -188,7 +188,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
                     </div>
                 </section>
                 
@@ -266,6 +266,85 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-alg/lab1" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/11/11/alg/lab1/" class="article-date">
+      <time datetime="2018-11-10T16:00:00.000Z" itemprop="datePublished">2018-11-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>求平面上n个顶点的最近点对问题</p>
+<h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><p><strong>分治法</strong></p>
+<h5 id="1．先考虑一维的情形，即线段上最近点对。"><a href="#1．先考虑一维的情形，即线段上最近点对。" class="headerlink" title="1．先考虑一维的情形，即线段上最近点对。"></a>1．先考虑一维的情形，即线段上最近点对。</h5><p>用x轴上某个点m将S划分为2个子集S1和S2，使得S1={x∈S|x≤m}；S2={x∈S|x&gt;m}，S1∪S2=S ，S1∩S2=Φ，则线段上最近点对为以下三者中的距离最小者：</p>
+<p>（1）左半边S1的最近点对</p>
+<p>（2）右半边S2的最近点对</p>
+<p>（3）跨越分点m的最近点对</p>
+<p><img src="//l-x.me/2018/11/11/alg/lab1/clip_image002.png" alt="img"></p>
+<p>左半边S1的最近点对和右半边S2的最近点对的求解可以递归地调用该过程。而跨越分点m的最近点对，我们可以将S1中的一点与S2中的每一点计算距离，但这将花费O(n^2)。</p>
+<p>事实上，通过求解左右两个子问题，我们已经得到一个当前最近点对的距离δ，在S1中，任何一个宽度为δ的区间内只分布着一个点，否则，存在两点距离小于δ，同理，S2中也是。因此，我们只需要考虑[m-δ,m+δ]区间内的点对距离，在[m-δ,m]如果有点，只能有一个点，这个点就是S1中距离m最近的点。区间[m,m+δ]同理。如果这两个点都存在，则计算距离，并与δ比较，因此，只需要O(n)时间完成问题的合并。</p>
+<p>m点的选取问题：任意选取分割点m，有可能造成划分出的子集S1和S2的不平衡，最坏情况下有递归式：</p>
+<p>T(n) = T(n-1) + O(n)</p>
+<p>其解为T(n)=O(n^2)</p>
+<p>如果我们恰当地选取m，是S1和S2中点的数量基本相同，则有递归式：</p>
+<p>T(n) = 2T(n/2) + O(n)</p>
+<p>其解为T(n)=O(nlogn)</p>
+<p>为了选取m，我们可以事先对这些点排序，取m为下标中位数的点的坐标。</p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/">Algorithm</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2018/11/11/alg/lab1/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-article/learning_and_forgetting" class="article article-type-post" itemscope="" itemprop="blogPost">
   
@@ -1147,100 +1226,6 @@ out:
       
         <p class="article-more-link">
           <a href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-cod/lab4_FiniteStateMachine" class="article article-type-post" itemscope="" itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/04/19/cod/lab4_FiniteStateMachine/" class="article-date">
-      <time datetime="2018-04-18T16:00:00.000Z" itemprop="datePublished">2018-04-19</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><ul>
-<li><p>综合利用三次实验的结果，完成以下功能：</p>
-<ul>
-<li><p>通过例化，向ram中0地址到13地址存入14个数，比如10-23；向ram中100地址到106地址存入7个数，比如0~6，分别代表运算符（与ALU的操作符对应），最后向ram 107地址写入-1</p>
-</li>
-<li><p>运算控制：</p>
-<pre><code>- 从ram 0地址开始的地方取两个数，分别放在reg0和reg1，然后从ram 100地址开始的地方取一个运算符，放到reg2，计算之后，把结果存入ram地址200
-
-- 从ram 2地址开始的地方取两个数，分别放在reg0和reg1，从ram 101地址开始的地方取一个运算符，放到reg2，计算之后，把结果存入ram地址201
-
-- ……
-
-- 如果取出操作符为-1，则结束。
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<h2 id="实验平台"><a href="#实验平台" class="headerlink" title="实验平台"></a>实验平台</h2><p>ISE 14.7</p>
-<h2 id="实验过程（分析）"><a href="#实验过程（分析）" class="headerlink" title="实验过程（分析）"></a>实验过程（分析）</h2><ol>
-<li><p>模块化设计，一个alu模块，一个regfile模块，一个IP核生成的ram模块，一个control模块，控制reg、ram和alu，顶层一个top模块实例化前几个模块，ram初始化有coe文件读入。</p>
-</li>
-<li><p>alu模块使用case语句判断7种操作类型。</p>
-</li>
-<li><p>regfile模块用组合逻辑读，时序逻辑写。</p>
-</li>
-<li><p>control模块思路（4周期）由于reg在这里没有实质作用（仅是复制了一份存储），故不考虑相关控制<br> <img src="//l-x.me/2018/04/19/cod/lab4_FiniteStateMachine/pic1.png" alt=""><br> 其中ram_ra为ram读地址，ram_rd为ram读数据，ram_we为ram写使能，tda、tdb为临时寄存上一周期的结果。</p>
-</li>
-<li><p>分析结果</p>
-<p> | Op | Data1 | Data2 | Result |<br> | — | :—: | :—: | :—: |<br> | 0(nop) | 11 | 10 | 0 |<br> | 1(add) | 13 | 12 | 25 |<br> | 2(sub) | 15 | 14 | 1 |<br> | 3(and) | 17(32’b0…10001) | 16(32’b0…10000) | 16(32’b0…10000) |<br> | 4(or) | 19(32’b0…10011) | 18(32’b0…10010) | 19(32’b0…10011) |<br> | 5(xor) | 21(32’b0…10101) | 20(32’b0…10100) | 1(32’b0…00001) |<br> | 6(nor) | 23(32’b0…10111) | 22(32’b0…10110) | -24(32’b1…101000) |</p>
-</li>
-</ol>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/COD/">COD</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Verilog/">Verilog</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2018/04/19/cod/lab4_FiniteStateMachine/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
