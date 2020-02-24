@@ -347,7 +347,134 @@
 <p>一种改进的方法是，在最开始的时候，在按x排序后，然后确定完m的坐标后，对所有点按y坐标排序，这样就不用在递归函数中使用排序，合并问题的时间取决于检查跨P1、P2点对的时间O(n)，有递归式</p>
 <p>T(n) = 2T(n/2) + O(n)</p>
 <p>其解为T(n) = O(nlogn)</p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INF 99999999</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_DOT_NUM 100000</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">dot</span>&#123;</span></span><br><span class="line">	<span class="keyword">double</span> x;</span><br><span class="line">	<span class="keyword">double</span> y;</span><br><span class="line">&#125;dot;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">dpair</span>&#123;</span></span><br><span class="line">	<span class="keyword">double</span> dis;</span><br><span class="line">	dot dota;</span><br><span class="line">	dot dotb;</span><br><span class="line">&#125;dpair;</span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line">dot *dots=<span class="keyword">new</span> dot[MAX_DOT_NUM+<span class="number">1</span>];</span><br><span class="line"><span class="function">dpair <span class="title">dpairmin</span><span class="params">(dpair dp1,dpair dp2)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> dp1.dis&lt;dp2.dis?dp1:dp2;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">distance</span><span class="params">(<span class="keyword">const</span> dot &amp;a,<span class="keyword">const</span> dot &amp;b)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">sqrt</span>((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">cmp</span><span class="params">(<span class="keyword">const</span> dot &amp;a,<span class="keyword">const</span> dot &amp;b)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a.x&lt;b.x || a.x==b.x &amp;&amp; a.y&lt;b.y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">cmpy</span><span class="params">(<span class="keyword">const</span> dot &amp;a,<span class="keyword">const</span> dot &amp;b)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a.y&lt;b.y;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">dpair <span class="title">minDistance</span><span class="params">(<span class="keyword">int</span> l,<span class="keyword">int</span> h)</span></span>&#123;</span><br><span class="line">	dpair tmpdp;</span><br><span class="line">	<span class="keyword">if</span>(l==h)&#123;</span><br><span class="line">		tmpdp.dis=INF;</span><br><span class="line">		<span class="keyword">return</span> tmpdp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(l==h<span class="number">-1</span>)&#123;</span><br><span class="line">		tmpdp.dis=distance(dots[l],dots[h]);</span><br><span class="line">		tmpdp.dota=dots[l];</span><br><span class="line">		tmpdp.dotb=dots[h];</span><br><span class="line">		<span class="keyword">return</span> tmpdp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> m=(l+h)/<span class="number">2</span>;</span><br><span class="line">	dpair dp1=minDistance(l,m);</span><br><span class="line">	dpair dp2=minDistance(m+<span class="number">1</span>,h);</span><br><span class="line">	dpair dp=dpairmin(dp1,dp2);</span><br><span class="line">	dot *ldots=<span class="keyword">new</span> dot[MAX_DOT_NUM/<span class="number">2</span>+<span class="number">2</span>];</span><br><span class="line">	dot *rdots=<span class="keyword">new</span> dot[MAX_DOT_NUM/<span class="number">2</span>+<span class="number">2</span>];</span><br><span class="line">	<span class="keyword">double</span> xm=(dots[m].x+dots[m+<span class="number">1</span>].x)/<span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> k,i,nl,nr;</span><br><span class="line">	<span class="keyword">for</span>(k=m;k&gt;=l;k--)&#123;</span><br><span class="line">		<span class="keyword">if</span>(dots[k].x&gt;=xm-dp.dis)</span><br><span class="line">			ldots[m-k+<span class="number">1</span>]=dots[k];</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	nl=m-k;</span><br><span class="line">	sort(ldots+<span class="number">1</span>,ldots+nl+<span class="number">1</span>,cmpy);</span><br><span class="line">	<span class="keyword">for</span>(i=m+<span class="number">1</span>;i&lt;=h;i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(dots[i].x&lt;=xm+dp.dis)</span><br><span class="line">			rdots[i-m]=dots[i];</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	nr=i-m<span class="number">-1</span>;</span><br><span class="line">	sort(rdots+<span class="number">1</span>,rdots+nr+<span class="number">1</span>,cmpy);</span><br><span class="line">	<span class="keyword">int</span> istart=<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span>(k=<span class="number">1</span>;k&lt;=nl;k++)&#123;</span><br><span class="line">		<span class="keyword">for</span>(i=istart;i&lt;=nr;i++)&#123;</span><br><span class="line">			<span class="keyword">if</span>(rdots[i].y-ldots[k].y&lt;=dp.dis)&#123;</span><br><span class="line">				tmpdp.dis=distance(ldots[k],rdots[i]);</span><br><span class="line">				tmpdp.dota=ldots[k];</span><br><span class="line">				tmpdp.dotb=rdots[i];</span><br><span class="line">				dp=dpairmin(dp,tmpdp);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span>&#123;</span><br><span class="line">				istart=i<span class="number">-6</span>&lt;<span class="number">1</span>?<span class="number">1</span>:i<span class="number">-6</span>;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">delete</span> []ldots;</span><br><span class="line">	<span class="keyword">delete</span> []rdots;</span><br><span class="line">	<span class="keyword">return</span> dp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> sel;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="keyword">char</span> path[<span class="number">128</span>];</span><br><span class="line">	srand(time(<span class="literal">NULL</span>));</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"MENU:\n1-INPUT\n2-FILE\n3-RANDOM\n"</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;sel);</span><br><span class="line">	<span class="keyword">switch</span>(sel)&#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">1</span>:&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"Input dots, the num of dots 'n' in first line, the next n lines are 'x' and 'y' for each dots.\n"</span>);</span><br><span class="line">			<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</span><br><span class="line">			<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">				<span class="built_in">scanf</span>(<span class="string">"%lf %lf"</span>,&amp;(dots[i].x),&amp;(dots[i].y));</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">2</span>:&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"Input file path, the data format is same as 1-INPUT.\nFile path:"</span>);</span><br><span class="line">			<span class="built_in">scanf</span>(<span class="string">"%s"</span>,path);</span><br><span class="line">			FILE *fp=fopen(path,<span class="string">"r"</span>);</span><br><span class="line">			<span class="built_in">fscanf</span>(fp,<span class="string">"%d"</span>,&amp;n);</span><br><span class="line">			<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">				<span class="built_in">fscanf</span>(fp,<span class="string">"%lf %lf"</span>,&amp;(dots[i].x),&amp;(dots[i].y));</span><br><span class="line">			fclose(fp);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">3</span>:&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"Input n, the program will generate n dots randomly.\nn:"</span>);</span><br><span class="line">			<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</span><br><span class="line">			<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">				dots[i].x=rand()%<span class="number">100</span>;</span><br><span class="line">				dots[i].y=rand()%<span class="number">100</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	sort(dots+<span class="number">1</span>,dots+n+<span class="number">1</span>,cmp);</span><br><span class="line">	dpair dp=minDistance(<span class="number">1</span>,n);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"(%lf,%lf) and (%lf,%lf) is dot pair with the min distance: %lf."</span>,dp.dota.x,dp.dota.y,dp.dotb.x,dp.dotb.y,dp.dis);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code class="c++">#include &lt;cstdio&gt;
+#include &lt;cstdlib&gt;
+#include &lt;ctime&gt;
+#include &lt;algorithm&gt;
+#define INF 99999999
+#define MAX_DOT_NUM 100000
+using namespace std;
+typedef struct _dot{
+    double x;
+    double y;
+}dot;
+typedef struct _dpair{
+    double dis;
+    dot dota;
+    dot dotb;
+}dpair;
+int n;
+dot *dots=new dot[MAX_DOT_NUM+1];
+dpair dpairmin(dpair dp1,dpair dp2){
+    return dp1.dis&lt;dp2.dis?dp1:dp2;
+}
+double distance(const dot &amp;a,const dot &amp;b){
+    return sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));
+}
+double cmp(const dot &amp;a,const dot &amp;b){
+    return a.x&lt;b.x || a.x==b.x &amp;&amp; a.y&lt;b.y;
+}
+double cmpy(const dot &amp;a,const dot &amp;b){
+    return a.y&lt;b.y;
+}
+dpair minDistance(int l,int h){
+    dpair tmpdp;
+    if(l==h){
+        tmpdp.dis=INF;
+        return tmpdp;
+    }
+    if(l==h-1){
+        tmpdp.dis=distance(dots[l],dots[h]);
+        tmpdp.dota=dots[l];
+        tmpdp.dotb=dots[h];
+        return tmpdp;
+    }
+    int m=(l+h)/2;
+    dpair dp1=minDistance(l,m);
+    dpair dp2=minDistance(m+1,h);
+    dpair dp=dpairmin(dp1,dp2);
+    dot *ldots=new dot[MAX_DOT_NUM/2+2];
+    dot *rdots=new dot[MAX_DOT_NUM/2+2];
+    double xm=(dots[m].x+dots[m+1].x)/2;
+    int k,i,nl,nr;
+    for(k=m;k&gt;=l;k--){
+        if(dots[k].x&gt;=xm-dp.dis)
+            ldots[m-k+1]=dots[k];
+        else
+            break;
+    }
+    nl=m-k;
+    sort(ldots+1,ldots+nl+1,cmpy);
+    for(i=m+1;i&lt;=h;i++){
+        if(dots[i].x&lt;=xm+dp.dis)
+            rdots[i-m]=dots[i];
+        else
+            break;
+    }
+    nr=i-m-1;
+    sort(rdots+1,rdots+nr+1,cmpy);
+    int istart=1;
+    for(k=1;k&lt;=nl;k++){
+        for(i=istart;i&lt;=nr;i++){
+            if(rdots[i].y-ldots[k].y&lt;=dp.dis){
+                tmpdp.dis=distance(ldots[k],rdots[i]);
+                tmpdp.dota=ldots[k];
+                tmpdp.dotb=rdots[i];
+                dp=dpairmin(dp,tmpdp);
+            }
+            else{
+                istart=i-6&lt;1?1:i-6;
+                break;
+            }
+        }
+    }
+    delete []ldots;
+    delete []rdots;
+    return dp;
+}
+
+int main(){
+    int sel;
+    int i;
+    char path[128];
+    srand(time(NULL));
+    printf(&quot;MENU:\n1-INPUT\n2-FILE\n3-RANDOM\n&quot;);
+    scanf(&quot;%d&quot;,&amp;sel);
+    switch(sel){
+        case 1:{
+            printf(&quot;Input dots, the num of dots &#39;n&#39; in first line, the next n lines are &#39;x&#39; and &#39;y&#39; for each dots.\n&quot;);
+            scanf(&quot;%d&quot;,&amp;n);
+            for(i=1;i&lt;=n;i++)
+                scanf(&quot;%lf %lf&quot;,&amp;(dots[i].x),&amp;(dots[i].y));
+            break;
+        }
+        case 2:{
+            printf(&quot;Input file path, the data format is same as 1-INPUT.\nFile path:&quot;);
+            scanf(&quot;%s&quot;,path);
+            FILE *fp=fopen(path,&quot;r&quot;);
+            fscanf(fp,&quot;%d&quot;,&amp;n);
+            for(i=1;i&lt;=n;i++)
+                fscanf(fp,&quot;%lf %lf&quot;,&amp;(dots[i].x),&amp;(dots[i].y));
+            fclose(fp);
+            break;
+        }
+        case 3:{
+            printf(&quot;Input n, the program will generate n dots randomly.\nn:&quot;);
+            scanf(&quot;%d&quot;,&amp;n);
+            for(i=1;i&lt;=n;i++){
+                dots[i].x=rand()%100;
+                dots[i].y=rand()%100;
+            }
+            break;
+        }
+    }
+    sort(dots+1,dots+n+1,cmp);
+    dpair dp=minDistance(1,n);
+    printf(&quot;(%lf,%lf) and (%lf,%lf) is dot pair with the min distance: %lf.&quot;,dp.dota.x,dp.dota.y,dp.dotb.x,dp.dotb.y,dp.dis);
+    return 0;
+}
+
+</code></pre>
 
       
     </div>

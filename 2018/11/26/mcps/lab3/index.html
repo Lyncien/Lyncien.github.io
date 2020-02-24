@@ -309,7 +309,144 @@
 <p>计算N!（0&lt;N&lt;20）</p>
 </blockquote>
 <a id="more"></a>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line">.MODEL SMALL    </span><br><span class="line"></span><br><span class="line">.DATA</span><br><span class="line">    D_N DW 4 DUP(0) ;N   (64bit)</span><br><span class="line">    D_N_FAC DW 4 DUP(0) ;N!    (64bit)</span><br><span class="line">    D_TMP DW 4 DUP(0) </span><br><span class="line">    D_I DW 4 DUP(0) </span><br><span class="line">    MAP DB &quot;0123456789ABCDEF&quot; </span><br><span class="line">    Q_TMP DW 0   </span><br><span class="line">    R_TMP DW 0</span><br><span class="line">.CODE</span><br><span class="line"></span><br><span class="line">PRINTNEWLINE MACRO _PSTRING ;打印换行符</span><br><span class="line">    PUSH AX</span><br><span class="line">    PUSH DX</span><br><span class="line">    MOV AH,2</span><br><span class="line">    MOV DL,0DH</span><br><span class="line">    INT 21H </span><br><span class="line">    MOV DL,0AH</span><br><span class="line">    INT 21H</span><br><span class="line">    POP DX</span><br><span class="line">    POP AX</span><br><span class="line">ENDM</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">PRINTNHEX PROC          ;打印一个64位整数(16进制)</span><br><span class="line">    PUSHA         </span><br><span class="line">    ;---------------- </span><br><span class="line">    MOV BX,7</span><br><span class="line">    MOV CX,8</span><br><span class="line">PLOOP:</span><br><span class="line">    MOV AL,BYTE PTR D_N_FAC[BX] </span><br><span class="line">    MOV AH,0</span><br><span class="line">    ;CMP AX,0</span><br><span class="line">    ;JZ PEND:</span><br><span class="line">    MOV DL,10H </span><br><span class="line">    DIV DL  ;商在AL，余数在AH</span><br><span class="line">    MOV BYTE PTR Q_TMP,AL</span><br><span class="line">    MOV BYTE PTR R_TMP,AH </span><br><span class="line">    MOV DI,Q_TMP   </span><br><span class="line">    MOV DL,BYTE PTR MAP[DI] </span><br><span class="line">    MOV AH,2H</span><br><span class="line">    INT 21H  </span><br><span class="line">    MOV DI,R_TMP</span><br><span class="line">    MOV DL,BYTE PTR MAP[DI]</span><br><span class="line">    MOV AH,2H</span><br><span class="line">    INT 21H </span><br><span class="line">    ;PEND:</span><br><span class="line">    DEC BX             </span><br><span class="line">    LOOP PLOOP       </span><br><span class="line">    ;----------------</span><br><span class="line">    POPA</span><br><span class="line">    RET</span><br><span class="line">ENDP</span><br><span class="line"></span><br><span class="line">MOV8 MACRO DATAA,DATAB</span><br><span class="line">    PUSH AX</span><br><span class="line">    MOV AX,DATAB[0]</span><br><span class="line">    MOV DATAA[0],AX</span><br><span class="line">    MOV AX,DATAB[2]</span><br><span class="line">    MOV DATAA[2],AX</span><br><span class="line">    MOV AX,DATAB[4]</span><br><span class="line">    MOV DATAA[4],AX</span><br><span class="line">    MOV AX,DATAB[6]</span><br><span class="line">    MOV DATAA[6],AX </span><br><span class="line">    POP AX</span><br><span class="line">ENDM</span><br><span class="line"></span><br><span class="line">BIGMUL MACRO RES,A,B  </span><br><span class="line">    PUSHA</span><br><span class="line">    ;----------------</span><br><span class="line">    MOV WORD PTR RES[0],0</span><br><span class="line">    MOV WORD PTR RES[2],0</span><br><span class="line">    MOV WORD PTR RES[4],0</span><br><span class="line">    MOV WORD PTR RES[6],0</span><br><span class="line">    MOV CX,4</span><br><span class="line">    MOV BX,0</span><br><span class="line">    LOOP1:</span><br><span class="line">    MOV DI,0</span><br><span class="line">    PUSH CX</span><br><span class="line">    ;------------</span><br><span class="line">        LOOP2:</span><br><span class="line">        MOV AX,B[BX]</span><br><span class="line">        MUL A[DI] ;DX:AX=A[DI]*B[BX]</span><br><span class="line">        MOV SI,BX</span><br><span class="line">        ADD SI,DI ;SI=BX+DI </span><br><span class="line">        ADD WORD PTR RES[SI],AX</span><br><span class="line">        PUSHF</span><br><span class="line">        CMP SI,6</span><br><span class="line">        JZ AEND</span><br><span class="line">        POPF</span><br><span class="line">        ADC WORD PTR RES[SI+2],DX</span><br><span class="line">        PUSHF  </span><br><span class="line">        CMP SI,4</span><br><span class="line">        JZ AEND</span><br><span class="line">        POPF</span><br><span class="line">        ADC WORD PTR RES[SI+4],0</span><br><span class="line">        PUSHF </span><br><span class="line">        CMP SI,2</span><br><span class="line">        JZ AEND</span><br><span class="line">        POPF</span><br><span class="line">        ADC WORD PTR RES[SI+6],0  </span><br><span class="line">        JMP AEND2</span><br><span class="line">        AEND:</span><br><span class="line">        POPF</span><br><span class="line">        AEND2:</span><br><span class="line">        ADD DI,2</span><br><span class="line">        LOOP LOOP2  </span><br><span class="line">    ;------------</span><br><span class="line">    POP CX</span><br><span class="line">    ADD BX,2</span><br><span class="line">    LOOP LOOP1</span><br><span class="line">    ;----------------</span><br><span class="line">    POPA </span><br><span class="line">ENDM </span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">.STARTUP</span><br><span class="line"></span><br><span class="line">    MOV WORD PTR D_N[0],19</span><br><span class="line">    MOV CX,WORD PTR D_N[0] ;循环次数</span><br><span class="line">    MOV D_I[0],1 ;当前i</span><br><span class="line">    MOV D_TMP[0],1 ;临时结果</span><br><span class="line">CALC:</span><br><span class="line">    BIGMUL D_N_FAC,D_TMP,D_I</span><br><span class="line">    MOV8 D_TMP,D_N_FAC  </span><br><span class="line">    CALL PRINTNHEX </span><br><span class="line">    PRINTNEWLINE</span><br><span class="line">    INC D_I[0]  ;I++</span><br><span class="line">    LOOP CALC </span><br><span class="line"></span><br><span class="line">      </span><br><span class="line">.EXIT </span><br><span class="line"></span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code class="assembly">.MODEL SMALL    
+
+.DATA
+    D_N DW 4 DUP(0) ;N   (64bit)
+    D_N_FAC DW 4 DUP(0) ;N!    (64bit)
+    D_TMP DW 4 DUP(0) 
+    D_I DW 4 DUP(0) 
+    MAP DB &quot;0123456789ABCDEF&quot; 
+    Q_TMP DW 0   
+    R_TMP DW 0
+.CODE
+
+PRINTNEWLINE MACRO _PSTRING ;打印换行符
+    PUSH AX
+    PUSH DX
+    MOV AH,2
+    MOV DL,0DH
+    INT 21H 
+    MOV DL,0AH
+    INT 21H
+    POP DX
+    POP AX
+ENDM
+
+
+
+
+PRINTNHEX PROC          ;打印一个64位整数(16进制)
+    PUSHA         
+    ;---------------- 
+    MOV BX,7
+    MOV CX,8
+PLOOP:
+    MOV AL,BYTE PTR D_N_FAC[BX] 
+    MOV AH,0
+    ;CMP AX,0
+    ;JZ PEND:
+    MOV DL,10H 
+    DIV DL  ;商在AL，余数在AH
+    MOV BYTE PTR Q_TMP,AL
+    MOV BYTE PTR R_TMP,AH 
+    MOV DI,Q_TMP   
+    MOV DL,BYTE PTR MAP[DI] 
+    MOV AH,2H
+    INT 21H  
+    MOV DI,R_TMP
+    MOV DL,BYTE PTR MAP[DI]
+    MOV AH,2H
+    INT 21H 
+    ;PEND:
+    DEC BX             
+    LOOP PLOOP       
+    ;----------------
+    POPA
+    RET
+ENDP
+
+MOV8 MACRO DATAA,DATAB
+    PUSH AX
+    MOV AX,DATAB[0]
+    MOV DATAA[0],AX
+    MOV AX,DATAB[2]
+    MOV DATAA[2],AX
+    MOV AX,DATAB[4]
+    MOV DATAA[4],AX
+    MOV AX,DATAB[6]
+    MOV DATAA[6],AX 
+    POP AX
+ENDM
+
+BIGMUL MACRO RES,A,B  
+    PUSHA
+    ;----------------
+    MOV WORD PTR RES[0],0
+    MOV WORD PTR RES[2],0
+    MOV WORD PTR RES[4],0
+    MOV WORD PTR RES[6],0
+    MOV CX,4
+    MOV BX,0
+    LOOP1:
+    MOV DI,0
+    PUSH CX
+    ;------------
+        LOOP2:
+        MOV AX,B[BX]
+        MUL A[DI] ;DX:AX=A[DI]*B[BX]
+        MOV SI,BX
+        ADD SI,DI ;SI=BX+DI 
+        ADD WORD PTR RES[SI],AX
+        PUSHF
+        CMP SI,6
+        JZ AEND
+        POPF
+        ADC WORD PTR RES[SI+2],DX
+        PUSHF  
+        CMP SI,4
+        JZ AEND
+        POPF
+        ADC WORD PTR RES[SI+4],0
+        PUSHF 
+        CMP SI,2
+        JZ AEND
+        POPF
+        ADC WORD PTR RES[SI+6],0  
+        JMP AEND2
+        AEND:
+        POPF
+        AEND2:
+        ADD DI,2
+        LOOP LOOP2  
+    ;------------
+    POP CX
+    ADD BX,2
+    LOOP LOOP1
+    ;----------------
+    POPA 
+ENDM 
+
+
+.STARTUP
+
+    MOV WORD PTR D_N[0],19
+    MOV CX,WORD PTR D_N[0] ;循环次数
+    MOV D_I[0],1 ;当前i
+    MOV D_TMP[0],1 ;临时结果
+CALC:
+    BIGMUL D_N_FAC,D_TMP,D_I
+    MOV8 D_TMP,D_N_FAC  
+    CALL PRINTNHEX 
+    PRINTNEWLINE
+    INC D_I[0]  ;I++
+    LOOP CALC 
+
+
+.EXIT 
+
+END
+</code></pre>
 
       
     </div>

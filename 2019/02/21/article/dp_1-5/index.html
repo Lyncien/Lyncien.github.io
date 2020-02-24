@@ -356,7 +356,16 @@
 <p>从上面的分析可以看出这样划分问题满足最优子结构，那满足无后效性么？显然对于第i个数时只考虑前i-1个数,显然满足无后效性，可以用动态规划解。</p>
 <p>分析到这里动态规划的三要素就不难得出了：如果按照序列编号划分阶段，设计一个状态opt[i]表示前i个数中用到第i个数所构成的最优解。那么决策就是在前i-1个状态中找到最大的opt[j]使得aj&gt;ai(或aj&lt;=ai)，opt[j]+1就是opt[i]的值；用方程表示为：{我习惯了这种写法，但不是状态转移方程的标准写法 }</p>
 <p>$$<br>最长上升序列: opt[i]=max(opt[j])+1   (0&lt;=j&lt;i 且a_j&lt;=a_i)       \<br>最长下降序列: opt[i]=max(opt[j])+1   (0&lt;=j<i 且a_j="">a_i)<br>$$<br>实现求解的部分代码：</i></p>
-<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">opt[<span class="number">0</span>]:=maxsize；<span class="comment">&#123;maxsize 为maxlongint或-maxlongint&#125;</span></span><br><span class="line"><span class="keyword">for</span> i:=<span class="number">1</span> <span class="keyword">to</span> n <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">for</span> j:=<span class="number">0</span> <span class="keyword">to</span> i-<span class="number">1</span> <span class="keyword">do</span></span><br><span class="line">        <span class="keyword">if</span> ( a[j]&gt;a[i]) <span class="keyword">and</span> (opt[j]+<span class="number">1</span>&gt;opt[i]) <span class="keyword">then</span></span><br><span class="line">            opt[i]:=opt[j]+<span class="number">1</span>;</span><br><span class="line">ans:=-maxlongint;</span><br><span class="line"><span class="keyword">for</span> i:=<span class="number">1</span> <span class="keyword">to</span> n <span class="keyword">do</span></span><br><span class="line">	<span class="keyword">if</span> opt[i]&gt;ans <span class="keyword">then</span></span><br><span class="line">		ans:=opt[i];                <span class="comment">&#123;ans 为最终解&#125;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="pascal">opt[0]:=maxsize；{maxsize 为maxlongint或-maxlongint}
+for i:=1 to n do
+    for j:=0 to i-1 do
+        if ( a[j]&gt;a[i]) and (opt[j]+1&gt;opt[i]) then
+            opt[i]:=opt[j]+1;
+ans:=-maxlongint;
+for i:=1 to n do
+    if opt[i]&gt;ans then
+        ans:=opt[i];                {ans 为最终解}
+</code></pre>
 <p>复杂度：</p>
 <p>从上面的实现不难看出时间复杂度为$O(N^2)$，空间复杂度$O(N)$；</p>
 <hr>
@@ -370,11 +379,12 @@
 <p>单独一行列出导弹依次飞来的高度。</p>
 <p>【输出文件】missile.out</p>
 <p>两行，分别是最多能拦截的导弹数，要拦截所有导弹最少要配备的系统数</p>
-<p>【输入样例】<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; 389 207 155 300 299 170 158 65</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<blockquote>
-<p>【输出样例】<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; 6</span><br><span class="line">&gt; 2</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
-</blockquote>
+<p>【输入样例】</p>
+<pre><code>389 207 155 300 299 170 158 65
+</code></pre><p>【输出样例】</p>
+<pre><code>6
+2
+</code></pre></blockquote>
 <p>【问题分析】</p>
 <p>有经验的选手不难看出这是一个求最长下降序列问题，显然标准算法是动态规划。</p>
 <p>以导弹依次飞来的顺序为阶段，设计状态opt[i]表示前i个导弹中拦截了导弹i可以拦截最多能拦截到的导弹的个数。</p>
@@ -382,11 +392,39 @@
 <p>最大的opt[i]就是最终的解。</p>
 <p>这只解决了第一问，对于第二问最直观的方法就是求完一次opt[i]后把刚才要打的导弹去掉，在求一次opt[i]直到打完所有的导弹，但这样做就错了。</p>
 <p>不难举出反例： 6 1 7 3 2       </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">错解：6 3 2/1/7</span><br><span class="line">正解：6 1/7 3 2</span><br></pre></td></tr></table></figure>
-<p>其实认真分析一下题就回发现：每一个导弹最终的结果都是要被打的，如果它后面有一个比它高的导弹，那打它的这个装置无论如何也不能打那个导弹了，经过这么一分析，这个问题便抽象成在已知序列里找最长上升序列的问题。</p>
+<pre><code>错解：6 3 2/1/7
+正解：6 1/7 3 2
+</code></pre><p>其实认真分析一下题就回发现：每一个导弹最终的结果都是要被打的，如果它后面有一个比它高的导弹，那打它的这个装置无论如何也不能打那个导弹了，经过这么一分析，这个问题便抽象成在已知序列里找最长上升序列的问题。</p>
 <p>求最长上升序列和上面说的求最长非升序列是一样的，这里就不多说了。</p>
 <p>复杂度：时间复杂度为$O(N^2)$，空间复杂度$O(N)$；</p>
-<p>【源代码】<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">missile</span><span class="params">()</span>:</span></span><br><span class="line">	high = [<span class="number">0</span>] + [int(s) <span class="keyword">for</span> s <span class="keyword">in</span> input().split(<span class="string">' '</span>)]</span><br><span class="line">	n = len(high)</span><br><span class="line">	dp1 = [<span class="number">0</span>] * n</span><br><span class="line">	dp2 = [<span class="number">0</span>] * n</span><br><span class="line">	<span class="comment">#寻找最长上升子序列</span></span><br><span class="line">	high[<span class="number">0</span>] = <span class="number">-9999999999</span></span><br><span class="line">	ans2 = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n):</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> range(i - <span class="number">1</span>, <span class="number">-1</span>, <span class="number">-1</span>):	</span><br><span class="line">			<span class="keyword">if</span> high[i] &gt; high[j] <span class="keyword">and</span> dp2[j] + <span class="number">1</span> &gt; dp2[i]:</span><br><span class="line">				dp2[i] = dp2[j] + <span class="number">1</span></span><br><span class="line">			<span class="keyword">if</span> dp2[i] &gt; ans2:</span><br><span class="line">				ans2 = dp2[i]</span><br><span class="line">	<span class="comment">#寻找最长非升子序列</span></span><br><span class="line">	high[<span class="number">0</span>] = <span class="number">9999999999</span></span><br><span class="line">	ans1 = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n):</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> range(i - <span class="number">1</span>, <span class="number">-1</span>, <span class="number">-1</span>):	</span><br><span class="line">			<span class="keyword">if</span> high[i] &lt; high[j] <span class="keyword">and</span> dp1[j] + <span class="number">1</span> &gt; dp1[i]:</span><br><span class="line">				dp1[i] = dp1[j] + <span class="number">1</span></span><br><span class="line">			<span class="keyword">if</span> dp1[i] &gt; ans1:</span><br><span class="line">				ans1 = dp1[i]</span><br><span class="line">	print(ans1)	</span><br><span class="line">	print(ans2)</span><br><span class="line">missile()</span><br></pre></td></tr></table></figure></p>
+<p>【源代码】</p>
+<pre><code class="python">def missile():
+    high = [0] + [int(s) for s in input().split(&#39; &#39;)]
+    n = len(high)
+    dp1 = [0] * n
+    dp2 = [0] * n
+    #寻找最长上升子序列
+    high[0] = -9999999999
+    ans2 = 0
+    for i in range(1, n):
+        for j in range(i - 1, -1, -1):    
+            if high[i] &gt; high[j] and dp2[j] + 1 &gt; dp2[i]:
+                dp2[i] = dp2[j] + 1
+            if dp2[i] &gt; ans2:
+                ans2 = dp2[i]
+    #寻找最长非升子序列
+    high[0] = 9999999999
+    ans1 = 0
+    for i in range(1, n):
+        for j in range(i - 1, -1, -1):    
+            if high[i] &lt; high[j] and dp1[j] + 1 &gt; dp1[i]:
+                dp1[i] = dp1[j] + 1
+            if dp1[i] &gt; ans1:
+                ans1 = dp1[i]
+    print(ans1)    
+    print(ans2)
+missile()
+</code></pre>
 <hr>
 <h5 id="例题2-合唱队形"><a href="#例题2-合唱队形" class="headerlink" title="例题2  合唱队形"></a>例题2  合唱队形</h5><blockquote>
 <p>(chorus.pas/c/cpp)</p>
@@ -398,13 +436,11 @@
 <p>【输出文件】</p>
 <p>输出文件chorus.out包括一行，这一行只包含一个整数，就是最少需要几位同学出列。</p>
 <p>【样例输入】</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; 8</span><br><span class="line">&gt; 186 186 150 200 160 130 197 220</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>【样例输出】<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; 4</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<blockquote>
-<p>【数据规模】<br>对于50％的数据，保证有n&lt;=20；<br>对于全部的数据，保证有n&lt;=100。</p>
+<pre><code>8
+186 186 150 200 160 130 197 220
+</code></pre><p>【样例输出】</p>
+<pre><code>4
+</code></pre><p>【数据规模】<br>对于50％的数据，保证有n&lt;=20；<br>对于全部的数据，保证有n&lt;=100。</p>
 </blockquote>
 <p>【问题分析】</p>
 <p>出列人数最少，也就是说留的人最多，也就是序列最长。</p>
@@ -414,7 +450,29 @@
 <p>其实最长子序列只要一次就可以了。因为最长下降（上升）子序列不受中间人的影响。</p>
 <p>只要用OPT1求一次最长上升子序列，OPT2求一次最长下降子序列。这样答案就是N-max(opt1[i]+opt2[i]-1).</p>
 <p>复杂度由O（N3）降到了O（N2）。</p>
-<p>【源代码】<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">chorus</span><span class="params">()</span>:</span></span><br><span class="line">	n = int(input())</span><br><span class="line">	high = [int(s) <span class="keyword">for</span> s <span class="keyword">in</span> input().split(<span class="string">' '</span>)]</span><br><span class="line">	dp1 = [<span class="number">1</span>] * n</span><br><span class="line">	dp2 = [<span class="number">1</span>] * n</span><br><span class="line">	<span class="comment">#寻找最长下降子序列</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n):</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> range(i - <span class="number">1</span>, <span class="number">-1</span>, <span class="number">-1</span>):	</span><br><span class="line">			<span class="keyword">if</span> high[i] &gt; high[j] <span class="keyword">and</span> dp1[j] + <span class="number">1</span> &gt; dp1[i]:</span><br><span class="line">				dp1[i] = dp1[j] + <span class="number">1</span></span><br><span class="line">	<span class="comment">#反向寻找最长下降子序列</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(n - <span class="number">2</span>, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> range(i + <span class="number">1</span>, n):	</span><br><span class="line">			<span class="keyword">if</span> high[i] &gt; high[j] <span class="keyword">and</span> dp2[j] + <span class="number">1</span> &gt; dp2[i]:</span><br><span class="line">				dp2[i] = dp2[j] + <span class="number">1</span></span><br><span class="line">	ans = <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, n):</span><br><span class="line">		<span class="keyword">if</span> dp1[i] + dp2[i] - <span class="number">1</span> &gt; ans:</span><br><span class="line">			ans = dp1[i] + dp2[i] - <span class="number">1</span></span><br><span class="line">	print(n - ans)</span><br><span class="line">chorus()</span><br></pre></td></tr></table></figure></p>
+<p>【源代码】</p>
+<pre><code class="python">def chorus():
+    n = int(input())
+    high = [int(s) for s in input().split(&#39; &#39;)]
+    dp1 = [1] * n
+    dp2 = [1] * n
+    #寻找最长下降子序列
+    for i in range(1, n):
+        for j in range(i - 1, -1, -1):    
+            if high[i] &gt; high[j] and dp1[j] + 1 &gt; dp1[i]:
+                dp1[i] = dp1[j] + 1
+    #反向寻找最长下降子序列
+    for i in range(n - 2, -1, -1):
+        for j in range(i + 1, n):    
+            if high[i] &gt; high[j] and dp2[j] + 1 &gt; dp2[i]:
+                dp2[i] = dp2[j] + 1
+    ans = 0
+    for i in range(0, n):
+        if dp1[i] + dp2[i] - 1 &gt; ans:
+            ans = dp1[i] + dp2[i] - 1
+    print(n - ans)
+chorus()
+</code></pre>
 <hr>
 <h5 id="例题3-逢低吸纳"><a href="#例题3-逢低吸纳" class="headerlink" title="例题3 逢低吸纳"></a>例题3 逢低吸纳</h5><blockquote>
 <p>来源: USACO 4-3-1</p>
@@ -490,13 +548,12 @@
 <p>只有一行，输出两个整数：</p>
 <p>能够买进股票的天数长度，达到这个值的股票购买方案数量</p>
 <p>在计算解的数量的时候，如果两个解所组成的字符串相同，那么这样的两个解被认为是相同的（只能算做一个解）。因此，两个不同的购买方案可能产生同一个字符串，这样只能计算一次。</p>
-<p>【输入样例】<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; 12 </span><br><span class="line">&gt; 68 69 54 64 68 64 70 67 78 62 98 87</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<blockquote>
-<p>【输出样例】<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; 4 2</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<blockquote>
-<p>【提交链接】</p>
+<p>【输入样例】</p>
+<pre><code>12 
+68 69 54 64 68 64 70 67 78 62 98 87
+</code></pre><p>【输出样例】</p>
+<pre><code>4 2
+</code></pre><p>【提交链接】</p>
 <p><a href="http://train.usaco.org/" target="_blank" rel="noopener">http://train.usaco.org/</a></p>
 </blockquote>
 <p>【问题分析】</p>
@@ -517,8 +574,13 @@
 <p>x = 4</p>
 <p>也就是说虽然opt[5]=X 和opt[6]=X，但个数只有两个，而实际上应该有四个方案，但在仔细观察发现，构成opt[5]=x 的这个方案中 opt[j]=x-1的方案数有两个,opt[j]=x-2的有一个，opt[j]=x-3 的有一个……</p>
 <p>显然这是满足递归定义的，设计函数F(i)表示前i张中用到第i张股票的方案数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">递推式：</span><br><span class="line">		1  			(i=0)</span><br><span class="line">F(i) = </span><br><span class="line">		Sum(F(j))	(0&lt;=j&lt;=n, a[j]&gt;a[i], opt[j]=opt[i]-1) </span><br><span class="line"></span><br><span class="line">答案 = sum(F(j))    &#123;0&lt;j&lt;=n, opt[j]=x&#125;</span><br></pre></td></tr></table></figure>
-<p>复杂度：</p>
+<pre><code>递推式：
+        1              (i=0)
+F(i) = 
+        Sum(F(j))    (0&lt;=j&lt;=n, a[j]&gt;a[i], opt[j]=opt[i]-1) 
+
+答案 = sum(F(j))    {0&lt;j&lt;=n, opt[j]=x}
+</code></pre><p>复杂度：</p>
 <p>求解第一问时间复杂度是O(N2),求解第二问如果用递推或递归+记忆化时间复杂度仍为O（N2）但要是用赤裸裸的递归那就复杂多了……，因为那样造成了好多不必要的计算。</p>
 <p>你认为这样做就解决了这道题目了么？还没有，还要注意一些东西：</p>
 <p>（1）如果有两个方案中出现序列一样，视为一个方案，要需要加一个数组next用next[i] 记录和第i个数情况一样（即：opt[i]=opt[j] 且 a[i]=a[j]）可看做一个方案的最近的位置。</p>
@@ -526,7 +588,32 @@
 <p>（2）为了方便操作可以将a[n+1]赋值为-maxlongint这样可以认为第n+1个一定可以买，答案就是sum(F(n+1))。</p>
 <p>（3）看数据规模显然要用高精度。</p>
 <p>注：USACO上最后一个点错了。我在程序中做了处理。</p>
-<p>【源代码】<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">buylow</span><span class="params">()</span>:</span></span><br><span class="line">	n = int(input())</span><br><span class="line">	price = [int(s) <span class="keyword">for</span> s <span class="keyword">in</span> input().split(<span class="string">' '</span>)] + [<span class="number">-99999999999</span>]</span><br><span class="line">	dp1 = [<span class="number">1</span>] * (n + <span class="number">1</span>)</span><br><span class="line">	next = [<span class="number">0</span>] * (n + <span class="number">1</span>)</span><br><span class="line">	<span class="comment">#寻找最长下降子序列</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> range(i - <span class="number">1</span>, <span class="number">-1</span>, <span class="number">-1</span>):	</span><br><span class="line">			<span class="keyword">if</span> price[i] &lt; price[j] <span class="keyword">and</span> dp1[j] + <span class="number">1</span> &gt; dp1[i]:</span><br><span class="line">				dp1[i] = dp1[j] + <span class="number">1</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">		j = i - <span class="number">1</span></span><br><span class="line">		<span class="keyword">while</span> j <span class="keyword">and</span> (dp1[i] != dp1[j] <span class="keyword">or</span> price[i] != price[j]):</span><br><span class="line">			j -= <span class="number">1</span></span><br><span class="line">		next[i] = j </span><br><span class="line">    <span class="comment">#方案数</span></span><br><span class="line">	f = [<span class="number">1</span> <span class="keyword">if</span> dp1[i] == <span class="number">1</span> <span class="keyword">else</span> <span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(n + <span class="number">1</span>)]</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> range(next[i], i):</span><br><span class="line">			<span class="keyword">if</span> price[i] &lt; price[j] <span class="keyword">and</span> dp1[j] + <span class="number">1</span> == dp1[i]:</span><br><span class="line">				f[i] += f[j]</span><br><span class="line">	<span class="comment">#print(dp1, f)</span></span><br><span class="line">	print(dp1[n] - <span class="number">1</span>, f[n])</span><br><span class="line">buylow()</span><br></pre></td></tr></table></figure></p>
+<p>【源代码】</p>
+<pre><code class="python">def buylow():
+    n = int(input())
+    price = [int(s) for s in input().split(&#39; &#39;)] + [-99999999999]
+    dp1 = [1] * (n + 1)
+    next = [0] * (n + 1)
+    #寻找最长下降子序列
+    for i in range(1, n + 1):
+        for j in range(i - 1, -1, -1):    
+            if price[i] &lt; price[j] and dp1[j] + 1 &gt; dp1[i]:
+                dp1[i] = dp1[j] + 1
+    for i in range(1, n + 1):
+        j = i - 1
+        while j and (dp1[i] != dp1[j] or price[i] != price[j]):
+            j -= 1
+        next[i] = j 
+    #方案数
+    f = [1 if dp1[i] == 1 else 0 for i in range(n + 1)]
+    for i in range(1, n + 1):
+        for j in range(next[i], i):
+            if price[i] &lt; price[j] and dp1[j] + 1 == dp1[i]:
+                f[i] += f[j]
+    #print(dp1, f)
+    print(dp1[n] - 1, f[n])
+buylow()
+</code></pre>
 <hr>
 <h5 id="例题4-船"><a href="#例题4-船" class="headerlink" title="例题4 船"></a>例题4 船</h5><blockquote>
 <p>(ships.pas/c/cpp)<br>来源：《奥赛经典》（提高篇）</p>
@@ -538,11 +625,20 @@
 <p>输入文件由几组数据组成。每组数据的第一行有2个整数X，Y，中间有一个空格隔开，X代表PALMIA河的长度（10&lt;=X&lt;=6000），Y代表河的宽度（10&lt;=Y&lt;=100）。第二行包含整数N，表示分别坐落在南北两岸上的村庄的数目（1&lt;=N&lt;=5000）。在接下来的N行中，每一行有两个非负整数C，D，由一个空格隔开，分别表示这一对朋友村庄沿河岸与PALMIA河最西边界的距离（C代表北岸的村庄，D代表南岸的村庄），不存在同岸又同位置的村庄。最后一组数据的下面仅有一行，是两个0，也被一空格隔开。</p>
 <p>【输出文件】ships.out</p>
 <p>对输入文件的每一组数据，输出文件应在连续的行中表示出最大可能满足上述条件的航线的数目。</p>
-<p>【输入样例】<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; 30 4</span><br><span class="line">&gt; 7</span><br><span class="line">&gt; 22 4</span><br><span class="line">&gt; 2 6</span><br><span class="line">&gt; 10 3</span><br><span class="line">&gt; 15 12</span><br><span class="line">&gt; 9 8</span><br><span class="line">&gt; 17 17</span><br><span class="line">&gt; 4 2</span><br><span class="line">&gt; 0 0</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<blockquote>
-<p>【输出样例】<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; 4</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
-</blockquote>
+<p>【输入样例】</p>
+<pre><code>30 4
+7
+22 4
+2 6
+10 3
+15 12
+9 8
+17 17
+4 2
+0 0
+</code></pre><p>【输出样例】</p>
+<pre><code>4
+</code></pre></blockquote>
 <p>【问题分析】</p>
 <p>这道题目相对来说思考难度较高，从字面意义上看不出问题的本质来，有点无法下手的感觉。这里我给大家推荐两种思考这类问题的方法。</p>
 <p>法一：寻找规律法（我前面总结提到的第3个方法）</p>
@@ -575,7 +671,26 @@
 <p>这样分析后显然是一个最长非降子序列问题。</p>
 <p>复杂度：排序可以用O（nlogn）的算法，求最长非降子序列时间复杂度是O(n2).</p>
 <p>总复杂度为O（n2）.</p>
-<p>【源代码】<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ships</span><span class="params">()</span>:</span></span><br><span class="line">	w, l = [int(s) <span class="keyword">for</span> s <span class="keyword">in</span> input().split(<span class="string">' '</span>)]</span><br><span class="line">	<span class="keyword">while</span> w <span class="keyword">and</span> l:</span><br><span class="line">		n = int(input())</span><br><span class="line">		pairs = []</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">			pairs.append([int(s) <span class="keyword">for</span> s <span class="keyword">in</span> input().split(<span class="string">' '</span>)])</span><br><span class="line">		pairs.sort(key = <span class="keyword">lambda</span> x : x[<span class="number">0</span>])</span><br><span class="line">		<span class="comment">#寻找最长上升子序列</span></span><br><span class="line">        dp = [<span class="number">1</span>] * n</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n):</span><br><span class="line">			<span class="keyword">for</span> j <span class="keyword">in</span> range(i):</span><br><span class="line">				<span class="keyword">if</span> pairs[j][<span class="number">1</span>] &lt; pairs[i][<span class="number">1</span>] <span class="keyword">and</span> dp[j] + <span class="number">1</span> &gt; dp[i]:</span><br><span class="line">					dp[i] = dp[j] + <span class="number">1</span>	</span><br><span class="line">		print(max(dp))</span><br><span class="line">		<span class="comment">#下一个测试			</span></span><br><span class="line">		w, l = [int(s) <span class="keyword">for</span> s <span class="keyword">in</span> input().split(<span class="string">' '</span>)]</span><br><span class="line">ships()</span><br></pre></td></tr></table></figure></p>
+<p>【源代码】</p>
+<pre><code class="python">def ships():
+    w, l = [int(s) for s in input().split(&#39; &#39;)]
+    while w and l:
+        n = int(input())
+        pairs = []
+        for i in range(n):
+            pairs.append([int(s) for s in input().split(&#39; &#39;)])
+        pairs.sort(key = lambda x : x[0])
+        #寻找最长上升子序列
+        dp = [1] * n
+        for i in range(1, n):
+            for j in range(i):
+                if pairs[j][1] &lt; pairs[i][1] and dp[j] + 1 &gt; dp[i]:
+                    dp[i] = dp[j] + 1    
+        print(max(dp))
+        #下一个测试            
+        w, l = [int(s) for s in input().split(&#39; &#39;)]
+ships()    
+</code></pre>
 
       
     </div>

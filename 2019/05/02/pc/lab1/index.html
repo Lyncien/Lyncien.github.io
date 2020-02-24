@@ -339,12 +339,251 @@
 <blockquote>
 <p>Theorem 1: In phase 3 of PSRS, each processor merges less than 2w elements.</p>
 </blockquote>
-<h3 id="算法源代码"><a href="#算法源代码" class="headerlink" title="算法源代码"></a>算法源代码</h3><h4 id="π值的计算-2"><a href="#π值的计算-2" class="headerlink" title="π值的计算"></a>π值的计算</h4><h5 id="基本的串行算法-1"><a href="#基本的串行算法-1" class="headerlink" title="基本的串行算法"></a>基本的串行算法</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">long</span> num_steps = <span class="number">100000</span>;<span class="comment">//越大值越精确</span></span><br><span class="line"><span class="keyword">double</span> step;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">double</span> x, pi, sum = <span class="number">0.0</span>;</span><br><span class="line">    step = <span class="number">1.0</span> / (<span class="keyword">double</span>)num_steps;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt;= num_steps; i++)&#123;</span><br><span class="line">        x = (i - <span class="number">0.5</span>) * step;</span><br><span class="line">        sum = sum + <span class="number">4.0</span>/(<span class="number">1.0</span> + x * x);</span><br><span class="line">    &#125;</span><br><span class="line">    pi = step * sum;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lf\n"</span>, pi);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="使用并行域并行化的程序-1"><a href="#使用并行域并行化的程序-1" class="headerlink" title="使用并行域并行化的程序"></a>使用并行域并行化的程序</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NUM_THREADS 2</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">long</span> num_steps = <span class="number">100000</span>;</span><br><span class="line"><span class="keyword">double</span> step;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">double</span> x, pi, sum[NUM_THREADS];</span><br><span class="line">    step = <span class="number">1.0</span> / (<span class="keyword">double</span>)num_steps;</span><br><span class="line">    omp_set_num_threads(NUM_THREADS);  <span class="comment">//设置2线程</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel private(i)  <span class="comment">//并行域开始，每个线程(0和1)都会执行该代码</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> x;</span><br><span class="line">    <span class="keyword">int</span> id;</span><br><span class="line">    id = omp_get_thread_num();</span><br><span class="line">    <span class="keyword">for</span>(i = id, sum[id] = <span class="number">0.0</span>; i &lt; num_steps; i = i + NUM_THREADS)&#123;</span><br><span class="line">        x = (i + <span class="number">0.5</span>) * step;</span><br><span class="line">        sum[id] += <span class="number">4.0</span> / (<span class="number">1.0</span> + x * x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>, pi = <span class="number">0.0</span>; i &lt; NUM_THREADS; i++)</span><br><span class="line">        pi += sum[i] * step;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lf\n"</span>, pi);</span><br><span class="line">&#125;   </span><br><span class="line"><span class="comment">//共2个线程参加计算，其中线程0进行迭代步0,2,4,...线程1进行迭代步1,3,5,....</span></span><br></pre></td></tr></table></figure>
-<h5 id="使用共享任务结构并行化的程序-1"><a href="#使用共享任务结构并行化的程序-1" class="headerlink" title="使用共享任务结构并行化的程序"></a>使用共享任务结构并行化的程序</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NUM_THREADS 2</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">long</span> num_steps = <span class="number">100000</span>;</span><br><span class="line"><span class="keyword">double</span> step;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">double</span> x, pi, sum[NUM_THREADS];</span><br><span class="line">    step = <span class="number">1.0</span> / (<span class="keyword">double</span>)num_steps;</span><br><span class="line">    omp_set_num_threads(NUM_THREADS);  <span class="comment">//设置2线程</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel  <span class="comment">//并行域开始，每个线程(0和1)都会执行该代码</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> x;</span><br><span class="line">    <span class="keyword">int</span> id;</span><br><span class="line">    id = omp_get_thread_num();</span><br><span class="line">    sum[id] = <span class="number">0</span>;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp for  <span class="comment">//未指定chunk，迭代平均分配给各线程（0和1），连续划分</span></span></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; num_steps; i++)&#123;</span><br><span class="line">        x = (i + <span class="number">0.5</span>) * step;</span><br><span class="line">        sum[id] += <span class="number">4.0</span> / (<span class="number">1.0</span> + x * x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>, pi = <span class="number">0.0</span>; i &lt; NUM_THREADS; i++)</span><br><span class="line">        pi += sum[i] * step;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lf\n"</span>, pi);</span><br><span class="line">&#125;<span class="comment">//共2个线程参加计算，其中线程0进行迭代步0~49999，线程1进行迭代步50000~99999.</span></span><br></pre></td></tr></table></figure>
-<h5 id="使用private子句和critical部分并行化的程序-1"><a href="#使用private子句和critical部分并行化的程序-1" class="headerlink" title="使用private子句和critical部分并行化的程序"></a>使用private子句和critical部分并行化的程序</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NUM_THREADS 2</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">long</span> num_steps = <span class="number">100000</span>;</span><br><span class="line"><span class="keyword">double</span> step;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">double</span> pi = <span class="number">0.0</span>, sum = <span class="number">0.0</span>, x = <span class="number">0.0</span>;</span><br><span class="line">    step = <span class="number">1.0</span> / (<span class="keyword">double</span>)num_steps;</span><br><span class="line">    omp_set_num_threads(NUM_THREADS);  <span class="comment">//设置2线程</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel private(x, sum, i) <span class="comment">//该子句表示x,sum,i变量对于每个线程是私有的</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> id; <span class="comment">//不用定义为私有，因为id是在并行域内定义的</span></span><br><span class="line">    id = omp_get_thread_num();</span><br><span class="line">    <span class="keyword">for</span>(i = id, sum = <span class="number">0.0</span>; i &lt; num_steps; i = i + NUM_THREADS)&#123;</span><br><span class="line">        x = (i + <span class="number">0.5</span>) * step;</span><br><span class="line">        sum += <span class="number">4.0</span> / (<span class="number">1.0</span> + x * x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp critical  <span class="comment">//指定代码段在同一时刻只能由一个线程进行执行</span></span></span><br><span class="line">    pi += sum * step;</span><br><span class="line">&#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lf\n"</span>, pi);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//共2个线程参加计算，其中线程0进行迭代步0,2,4,...线程1进行迭代步1,3,5,....</span></span><br><span class="line"><span class="comment">//当被指定为critical的代码段正在被0线程执行时，1线程的执行也到达该代码段，则它将被阻塞知道0线程退出临界区。</span></span><br></pre></td></tr></table></figure>
-<h5 id="使用并行规约的并行程序-1"><a href="#使用并行规约的并行程序-1" class="headerlink" title="使用并行规约的并行程序"></a>使用并行规约的并行程序</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NUM_THREADS 2</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">long</span> num_steps = <span class="number">100000</span>;</span><br><span class="line"><span class="keyword">double</span> step;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">double</span> pi = <span class="number">0.0</span>, sum = <span class="number">0.0</span>, x = <span class="number">0.0</span>;</span><br><span class="line">    step = <span class="number">1.0</span> / (<span class="keyword">double</span>)num_steps;</span><br><span class="line">    omp_set_num_threads(NUM_THREADS);  <span class="comment">//设置2线程</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for reduction(+:sum) private(x) <span class="comment">//每个线程保留一份私有拷贝sum，x为线程私有，最后对线程中所以sum进行+规约，并更新sum的全局值</span></span></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt;= num_steps; i++)&#123;</span><br><span class="line">        x = (i - <span class="number">0.5</span>) * step;</span><br><span class="line">        sum += <span class="number">4.0</span> / (<span class="number">1.0</span> + x * x);</span><br><span class="line">    &#125;</span><br><span class="line">    pi = sum * step;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lf\n"</span>,pi);</span><br><span class="line">&#125;   <span class="comment">//共2个线程参加计算，其中线程0进行迭代步0~49999，线程1进行迭代步50000~99999.</span></span><br></pre></td></tr></table></figure>
-<h4 id="PSRS排序-2"><a href="#PSRS排序-2" class="headerlink" title="PSRS排序"></a>PSRS排序</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;omp.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INF 2147483647</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NUM_THREADS 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 合并两个已排好序的子数组A[l : m], A[m + 1 : r], 写回A[l : r]</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Merge</span><span class="params">(<span class="keyword">int</span> *A, <span class="keyword">int</span> l, <span class="keyword">int</span> m, <span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, k, n1 = m - l + <span class="number">1</span>, n2 = r - m;</span><br><span class="line">    <span class="keyword">int</span> *L = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>((n1 + <span class="number">1</span>) * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="keyword">int</span> *R = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>((n2 + <span class="number">1</span>) * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; n1; i++) L[i] = A[l + i];</span><br><span class="line">    <span class="keyword">for</span>(j = <span class="number">0</span>; j &lt; n2; j++) R[j] = A[m + <span class="number">1</span> + j];</span><br><span class="line">    L[i] = R[j] = INF;</span><br><span class="line">    i = j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(k = l; k &lt;= r; k++) <span class="keyword">if</span>(L[i] &lt;= R[j]) A[k] = L[i++]; <span class="keyword">else</span> A[k] = R[j++];</span><br><span class="line">    <span class="built_in">free</span>(L); <span class="built_in">free</span>(R);</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 对A[l : r]进行归并排序</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MergeSort</span><span class="params">(<span class="keyword">int</span> *A, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(l &lt; r)&#123;</span><br><span class="line">        <span class="keyword">int</span> m = (l + r) / <span class="number">2</span>;</span><br><span class="line">        MergeSort(A, l, m);</span><br><span class="line">        MergeSort(A, m + <span class="number">1</span>, r);</span><br><span class="line">        Merge(A, l, m, r);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 对A[0 : n - 1]进行PSRS排序</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PSRS</span><span class="params">(<span class="keyword">int</span> *A, <span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">int</span> per = n / NUM_THREADS; <span class="comment">//A的n个元素划分为NUM_THREADS段，每个处理器处理per个元素</span></span><br><span class="line">    <span class="keyword">int</span> sample[NUM_THREADS * NUM_THREADS]; <span class="comment">//正则采样数为 NUM_THREADS * NUM_THREADS </span></span><br><span class="line">    <span class="keyword">int</span> pivot[NUM_THREADS]; <span class="comment">//NUM_THREADS - 1 个主元，最后一个设为INF，作为哨兵</span></span><br><span class="line">    <span class="keyword">int</span> *A2[NUM_THREADS][NUM_THREADS] = &#123;<span class="literal">NULL</span>&#125;; <span class="comment">//数组，NUM_THREADS处理器把自己的per个元素划分为NUM_THREADS段</span></span><br><span class="line">    <span class="keyword">int</span> A2len[NUM_THREADS][NUM_THREADS] = &#123;<span class="number">0</span>&#125;; <span class="comment">//上面数组的实际存储长度，每个处理器的每个段的元素个数</span></span><br><span class="line">    </span><br><span class="line">    omp_set_num_threads(NUM_THREADS);</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel private(id) shared(per, A, A2, n, sample, pivot, A2len) <span class="comment">//NUM_THREADS 个处理器同时执行，共用代码</span></span></span><br><span class="line">    &#123;</span><br><span class="line">        id = omp_get_thread_num(); <span class="comment">//当前处理器的id</span></span><br><span class="line">        <span class="comment">//（1）均匀划分 （2）每个处理器进行局部串行归并排序</span></span><br><span class="line">        MergeSort(A, id * per, (id + <span class="number">1</span>) * per - <span class="number">1</span>); </span><br><span class="line">        </span><br><span class="line">        <span class="comment">//（2）正则采样，每个处理器分别选出 NUM_THREADS 个样本，共 NUM_THREADS * NUM_THREADS 个</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; NUM_THREADS; k++) </span><br><span class="line">            sample[id * NUM_THREADS + k] = A[id * per + k * per / NUM_THREADS];</span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> omp barrier <span class="comment">//设置路障，同步所有线程</span></span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//（3）采样排序 （4）选择主元</span></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> omp master <span class="comment">//主线程执行，其他线程不执行</span></span></span><br><span class="line">        &#123;</span><br><span class="line">            MergeSort(sample, <span class="number">0</span>, NUM_THREADS * NUM_THREADS - <span class="number">1</span>); <span class="comment">//对采样的NUM_THREADS * NUM_THREADS个样本进行排序</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; NUM_THREADS - <span class="number">1</span>; k++) <span class="comment">//选出NUM_THREADS - 1个主元</span></span><br><span class="line">                pivot[k] = sample[(k + <span class="number">1</span>) * NUM_THREADS];</span><br><span class="line">            pivot[NUM_THREADS - <span class="number">1</span>] = INF; <span class="comment">//哨兵</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> omp barrier</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//（5）主元划分</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; NUM_THREADS; k++)</span><br><span class="line">            A2[id][k] = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>) * per * <span class="number">2</span>); <span class="comment">//每个处理器的每个段的数组申请空间，最长不会超过 2 * per 个</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>, j = id * per; j &lt; id * per + per; j++)&#123; <span class="comment">//每个处理器对自己的per个元素按主元划分为NUM_THREADS段</span></span><br><span class="line">            <span class="keyword">if</span>(A[j] &lt; pivot[k])&#123; <span class="comment">//这里如果不用哨兵，最后一段要单独考虑</span></span><br><span class="line">                A2[id][k][A2len[id][k]++] = A[j];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                k++;</span><br><span class="line">                A2[id][k][A2len[id][k]++] = A[j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> omp barrier <span class="comment">//这里必须有路障，否则部分处理器先划分结束后就开始全局交换，但此时数据还没有准备好</span></span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//（6）全局交换</span></span><br><span class="line">        <span class="comment">//每个处理器把自己的per个元素划分成的NUM_THREADS个段“发送”给对应的NUM_THREADS个处理器(除了对应自己的那段)</span></span><br><span class="line">        <span class="comment">//实际上是每个处理器主动去其他处理器的per里取来自己的那段</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; NUM_THREADS; k++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(k != id)&#123; <span class="comment">//A2[id][id]是每个处理器对应自己的那段</span></span><br><span class="line">                <span class="built_in">memcpy</span>(A2[id][id] + A2len[id][id], A2[k][id], <span class="keyword">sizeof</span>(<span class="keyword">int</span>) * A2len[k][id]);<span class="comment">//从其他处理器那里获取自己的那段直接接在后面</span></span><br><span class="line">                A2len[id][id] += A2len[k][id];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//（7）每个处理器归并排序</span></span><br><span class="line">        MergeSort(A2[id][id], <span class="number">0</span>, A2len[id][id] - <span class="number">1</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> omp barrier</span></span><br><span class="line">        <span class="comment">//（8）A2写回A</span></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> omp master <span class="comment">//主线程执行，其他线程不执行</span></span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>, k = <span class="number">0</span>; k &lt; NUM_THREADS; k++)&#123;</span><br><span class="line">                <span class="built_in">memcpy</span>(A + j, A2[k][k], <span class="keyword">sizeof</span>(<span class="keyword">int</span>) * A2len[k][k]);</span><br><span class="line">                j += A2len[k][k];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">#<span class="meta-keyword">pragma</span> omp barrier</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//销毁A2动态申请的空间</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; NUM_THREADS; k++)</span><br><span class="line">            <span class="built_in">free</span>(A2[id][k]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> A[<span class="number">27</span>] = &#123;<span class="number">15</span>, <span class="number">46</span>, <span class="number">48</span>, <span class="number">93</span>, <span class="number">39</span>, <span class="number">6</span>, <span class="number">72</span>, <span class="number">91</span>, <span class="number">14</span>, <span class="number">36</span>, <span class="number">69</span>, <span class="number">40</span>, <span class="number">89</span>, <span class="number">61</span>, <span class="number">97</span>, <span class="number">12</span>, <span class="number">21</span>, <span class="number">54</span>, <span class="number">53</span>, <span class="number">97</span>, <span class="number">84</span>, <span class="number">58</span>, <span class="number">32</span>, <span class="number">27</span>, <span class="number">33</span>, <span class="number">72</span>, <span class="number">20</span>&#125;;</span><br><span class="line">    <span class="keyword">double</span> t1, t2;</span><br><span class="line">    t1 = omp_get_wtime();</span><br><span class="line">    PSRS(A, <span class="number">27</span>);</span><br><span class="line">    t2 = omp_get_wtime();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"time: %lfs\n"</span>, t2 - t1);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">27</span>; i++)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, A[i]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="算法源代码"><a href="#算法源代码" class="headerlink" title="算法源代码"></a>算法源代码</h3><h4 id="π值的计算-2"><a href="#π值的计算-2" class="headerlink" title="π值的计算"></a>π值的计算</h4><h5 id="基本的串行算法-1"><a href="#基本的串行算法-1" class="headerlink" title="基本的串行算法"></a>基本的串行算法</h5><pre><code class="C">#include &lt;stdio.h&gt;
+static long num_steps = 100000;//越大值越精确
+double step;
+void main(){
+    int i;
+    double x, pi, sum = 0.0;
+    step = 1.0 / (double)num_steps;
+    for(i = 1; i &lt;= num_steps; i++){
+        x = (i - 0.5) * step;
+        sum = sum + 4.0/(1.0 + x * x);
+    }
+    pi = step * sum;
+    printf(&quot;%lf\n&quot;, pi);
+}
+</code></pre>
+<h5 id="使用并行域并行化的程序-1"><a href="#使用并行域并行化的程序-1" class="headerlink" title="使用并行域并行化的程序"></a>使用并行域并行化的程序</h5><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;omp.h&gt;
+#define NUM_THREADS 2
+static long num_steps = 100000;
+double step;
+void main ()
+{ 
+    int i;
+    double x, pi, sum[NUM_THREADS];
+    step = 1.0 / (double)num_steps;
+    omp_set_num_threads(NUM_THREADS);  //设置2线程
+#pragma omp parallel private(i)  //并行域开始，每个线程(0和1)都会执行该代码
+{
+    double x;
+    int id;
+    id = omp_get_thread_num();
+    for(i = id, sum[id] = 0.0; i &lt; num_steps; i = i + NUM_THREADS){
+        x = (i + 0.5) * step;
+        sum[id] += 4.0 / (1.0 + x * x);
+    }
+}
+    for(i = 0, pi = 0.0; i &lt; NUM_THREADS; i++)
+        pi += sum[i] * step;
+    printf(&quot;%lf\n&quot;, pi);
+}   
+//共2个线程参加计算，其中线程0进行迭代步0,2,4,...线程1进行迭代步1,3,5,....
+
+</code></pre>
+<h5 id="使用共享任务结构并行化的程序-1"><a href="#使用共享任务结构并行化的程序-1" class="headerlink" title="使用共享任务结构并行化的程序"></a>使用共享任务结构并行化的程序</h5><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;omp.h&gt;
+#define NUM_THREADS 2
+static long num_steps = 100000;
+double step;
+void main ()
+{ 
+    int i;
+    double x, pi, sum[NUM_THREADS];
+    step = 1.0 / (double)num_steps;
+    omp_set_num_threads(NUM_THREADS);  //设置2线程
+#pragma omp parallel  //并行域开始，每个线程(0和1)都会执行该代码
+{
+    double x;
+    int id;
+    id = omp_get_thread_num();
+    sum[id] = 0;
+    #pragma omp for  //未指定chunk，迭代平均分配给各线程（0和1），连续划分
+    for(i = 0; i &lt; num_steps; i++){
+        x = (i + 0.5) * step;
+        sum[id] += 4.0 / (1.0 + x * x);
+    }
+}
+    for(i = 0, pi = 0.0; i &lt; NUM_THREADS; i++)
+        pi += sum[i] * step;
+    printf(&quot;%lf\n&quot;, pi);
+}//共2个线程参加计算，其中线程0进行迭代步0~49999，线程1进行迭代步50000~99999.
+
+</code></pre>
+<h5 id="使用private子句和critical部分并行化的程序-1"><a href="#使用private子句和critical部分并行化的程序-1" class="headerlink" title="使用private子句和critical部分并行化的程序"></a>使用private子句和critical部分并行化的程序</h5><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;omp.h&gt;
+#define NUM_THREADS 2
+static long num_steps = 100000;
+double step;
+void main ()
+{ 
+    int i;
+    double pi = 0.0, sum = 0.0, x = 0.0;
+    step = 1.0 / (double)num_steps;
+    omp_set_num_threads(NUM_THREADS);  //设置2线程
+#pragma omp parallel private(x, sum, i) //该子句表示x,sum,i变量对于每个线程是私有的
+{
+    int id; //不用定义为私有，因为id是在并行域内定义的
+    id = omp_get_thread_num();
+    for(i = id, sum = 0.0; i &lt; num_steps; i = i + NUM_THREADS){
+        x = (i + 0.5) * step;
+        sum += 4.0 / (1.0 + x * x);
+    }
+    #pragma omp critical  //指定代码段在同一时刻只能由一个线程进行执行
+    pi += sum * step;
+}
+    printf(&quot;%lf\n&quot;, pi);
+}
+//共2个线程参加计算，其中线程0进行迭代步0,2,4,...线程1进行迭代步1,3,5,....
+//当被指定为critical的代码段正在被0线程执行时，1线程的执行也到达该代码段，则它将被阻塞知道0线程退出临界区。
+
+</code></pre>
+<h5 id="使用并行规约的并行程序-1"><a href="#使用并行规约的并行程序-1" class="headerlink" title="使用并行规约的并行程序"></a>使用并行规约的并行程序</h5><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;omp.h&gt;
+#define NUM_THREADS 2
+static long num_steps = 100000;
+double step;
+void main ()
+{ 
+    int i;
+    double pi = 0.0, sum = 0.0, x = 0.0;
+    step = 1.0 / (double)num_steps;
+    omp_set_num_threads(NUM_THREADS);  //设置2线程
+    #pragma omp parallel for reduction(+:sum) private(x) //每个线程保留一份私有拷贝sum，x为线程私有，最后对线程中所以sum进行+规约，并更新sum的全局值
+    for(i = 1; i &lt;= num_steps; i++){
+        x = (i - 0.5) * step;
+        sum += 4.0 / (1.0 + x * x);
+    }
+    pi = sum * step;
+    printf(&quot;%lf\n&quot;,pi);
+}   //共2个线程参加计算，其中线程0进行迭代步0~49999，线程1进行迭代步50000~99999.
+</code></pre>
+<h4 id="PSRS排序-2"><a href="#PSRS排序-2" class="headerlink" title="PSRS排序"></a>PSRS排序</h4><pre><code class="C">#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;omp.h&gt;
+
+#define INF 2147483647
+#define NUM_THREADS 3
+
+/**************************************************
+* 合并两个已排好序的子数组A[l : m], A[m + 1 : r], 写回A[l : r]
+***************************************************/
+void Merge(int *A, int l, int m, int r){
+    int i, j, k, n1 = m - l + 1, n2 = r - m;
+    int *L = (int *)malloc((n1 + 1) * sizeof(int));
+    int *R = (int *)malloc((n2 + 1) * sizeof(int));
+    for(i = 0; i &lt; n1; i++) L[i] = A[l + i];
+    for(j = 0; j &lt; n2; j++) R[j] = A[m + 1 + j];
+    L[i] = R[j] = INF;
+    i = j = 0;
+    for(k = l; k &lt;= r; k++) if(L[i] &lt;= R[j]) A[k] = L[i++]; else A[k] = R[j++];
+    free(L); free(R);
+} 
+
+/**************************************************
+* 对A[l : r]进行归并排序
+***************************************************/
+void MergeSort(int *A, int l, int r){
+    if(l &lt; r){
+        int m = (l + r) / 2;
+        MergeSort(A, l, m);
+        MergeSort(A, m + 1, r);
+        Merge(A, l, m, r);
+    }
+} 
+
+/**************************************************
+* 对A[0 : n - 1]进行PSRS排序
+***************************************************/
+void PSRS(int *A, int n){
+    int id;
+    int per = n / NUM_THREADS; //A的n个元素划分为NUM_THREADS段，每个处理器处理per个元素
+    int sample[NUM_THREADS * NUM_THREADS]; //正则采样数为 NUM_THREADS * NUM_THREADS 
+    int pivot[NUM_THREADS]; //NUM_THREADS - 1 个主元，最后一个设为INF，作为哨兵
+    int *A2[NUM_THREADS][NUM_THREADS] = {NULL}; //数组，NUM_THREADS处理器把自己的per个元素划分为NUM_THREADS段
+    int A2len[NUM_THREADS][NUM_THREADS] = {0}; //上面数组的实际存储长度，每个处理器的每个段的元素个数
+
+    omp_set_num_threads(NUM_THREADS);
+    #pragma omp parallel private(id) shared(per, A, A2, n, sample, pivot, A2len) //NUM_THREADS 个处理器同时执行，共用代码
+    {
+        id = omp_get_thread_num(); //当前处理器的id
+        //（1）均匀划分 （2）每个处理器进行局部串行归并排序
+        MergeSort(A, id * per, (id + 1) * per - 1); 
+
+        //（2）正则采样，每个处理器分别选出 NUM_THREADS 个样本，共 NUM_THREADS * NUM_THREADS 个
+        for(int k = 0; k &lt; NUM_THREADS; k++) 
+            sample[id * NUM_THREADS + k] = A[id * per + k * per / NUM_THREADS];
+        #pragma omp barrier //设置路障，同步所有线程
+
+        //（3）采样排序 （4）选择主元
+        #pragma omp master //主线程执行，其他线程不执行
+        {
+            MergeSort(sample, 0, NUM_THREADS * NUM_THREADS - 1); //对采样的NUM_THREADS * NUM_THREADS个样本进行排序
+            for(int k = 0; k &lt; NUM_THREADS - 1; k++) //选出NUM_THREADS - 1个主元
+                pivot[k] = sample[(k + 1) * NUM_THREADS];
+            pivot[NUM_THREADS - 1] = INF; //哨兵
+        }
+        #pragma omp barrier
+
+        //（5）主元划分
+        for(int k = 0; k &lt; NUM_THREADS; k++)
+            A2[id][k] = (int *)malloc(sizeof(int) * per * 2); //每个处理器的每个段的数组申请空间，最长不会超过 2 * per 个
+        for(int k = 0, j = id * per; j &lt; id * per + per; j++){ //每个处理器对自己的per个元素按主元划分为NUM_THREADS段
+            if(A[j] &lt; pivot[k]){ //这里如果不用哨兵，最后一段要单独考虑
+                A2[id][k][A2len[id][k]++] = A[j];
+            }
+            else{
+                k++;
+                A2[id][k][A2len[id][k]++] = A[j];
+            }
+        }
+        #pragma omp barrier //这里必须有路障，否则部分处理器先划分结束后就开始全局交换，但此时数据还没有准备好
+
+        //（6）全局交换
+        //每个处理器把自己的per个元素划分成的NUM_THREADS个段“发送”给对应的NUM_THREADS个处理器(除了对应自己的那段)
+        //实际上是每个处理器主动去其他处理器的per里取来自己的那段
+        for(int k = 0; k &lt; NUM_THREADS; k++){
+            if(k != id){ //A2[id][id]是每个处理器对应自己的那段
+                memcpy(A2[id][id] + A2len[id][id], A2[k][id], sizeof(int) * A2len[k][id]);//从其他处理器那里获取自己的那段直接接在后面
+                A2len[id][id] += A2len[k][id];
+            }
+        }
+
+        //（7）每个处理器归并排序
+        MergeSort(A2[id][id], 0, A2len[id][id] - 1);
+
+        #pragma omp barrier
+        //（8）A2写回A
+        #pragma omp master //主线程执行，其他线程不执行
+        {
+            for(int j = 0, k = 0; k &lt; NUM_THREADS; k++){
+                memcpy(A + j, A2[k][k], sizeof(int) * A2len[k][k]);
+                j += A2len[k][k];
+            }
+        }
+        #pragma omp barrier
+
+        //销毁A2动态申请的空间
+        for(int k = 0; k &lt; NUM_THREADS; k++)
+            free(A2[id][k]);
+    }
+}
+
+int main(){
+    int A[27] = {15, 46, 48, 93, 39, 6, 72, 91, 14, 36, 69, 40, 89, 61, 97, 12, 21, 54, 53, 97, 84, 58, 32, 27, 33, 72, 20};
+    double t1, t2;
+    t1 = omp_get_wtime();
+    PSRS(A, 27);
+    t2 = omp_get_wtime();
+    printf(&quot;time: %lfs\n&quot;, t2 - t1);
+    for(int i = 0; i &lt; 27; i++)
+        printf(&quot;%d &quot;, A[i]);
+    printf(&quot;\n&quot;);
+    return 0;
+}
+</code></pre>
 <h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="//l-x.me/2019/05/02/pc/lab1/clip_image002-1570631920818.jpg" alt="img"></p>
 <p><img src="//l-x.me/2019/05/02/pc/lab1/clip_image002-1570631936971.jpg" alt="img"></p>
 

@@ -23,7 +23,6 @@
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="哈夫曼压缩题目实验三: 此次实验限定语言C/C++，允许使用stl。 ddl：下下周六（11月19日）。 实验要求：实现任意二进制文件压缩解压。将哈夫曼树或者词频率表保存到文件，压缩后解压所需信息全部从你自己压缩得到的文件中拿到。检查:对于一般txt文档实现效果明显的压缩结果并正确解压7分，大文件（几十兆以上）非文本文件正确压缩解压。（9分）报告1分。本周六实验一和二未检查完的来检查，下周六实验三">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/0.png">
 <meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/1.png">
 <meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/2.png">
 <meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/3.png">
@@ -36,7 +35,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据结构上机题3 哈夫曼压缩">
 <meta name="twitter:description" content="哈夫曼压缩题目实验三: 此次实验限定语言C/C++，允许使用stl。 ddl：下下周六（11月19日）。 实验要求：实现任意二进制文件压缩解压。将哈夫曼树或者词频率表保存到文件，压缩后解压所需信息全部从你自己压缩得到的文件中拿到。检查:对于一般txt文档实现效果明显的压缩结果并正确解压7分，大文件（几十兆以上）非文本文件正确压缩解压。（9分）报告1分。本周六实验一和二未检查完的来检查，下周六实验三">
-<meta name="twitter:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/0.png">
+<meta name="twitter:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/1.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -338,50 +337,111 @@
 <a id="more"></a>
 <h2 id="二、-概要设计"><a href="#二、-概要设计" class="headerlink" title="二、    概要设计"></a>二、    概要设计</h2><ol>
 <li><p>抽象数据类型词频表定义如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ADT FrequencyList&#123;</span><br><span class="line">    数据对象：Frequency=&#123;ch,f|0&lt;=ch&lt;=255,f&gt;=0&#125;</span><br><span class="line">              FrequencyList=&#123;Frequency&#125;</span><br><span class="line">    数据关系：无</span><br><span class="line">    基本操作：	</span><br><span class="line">        CreateFrequencyListFromFile(&amp;file,&amp;fl);</span><br><span class="line">            初始条件：文件file存在且被打开。</span><br><span class="line">            操作结果：从文件数据创建词频表fl。</span><br><span class="line">        SaveFrequencyListToFile(&amp;file,fl);</span><br><span class="line">            初始条件：词频表fl存在，文件file存在且被打开。</span><br><span class="line">            操作结果：保存词频表fl到文件file中。</span><br><span class="line">        LoadFrequencyListFromFile(&amp;file,&amp;fl);</span><br><span class="line">            初始条件：文件file存在且被打开，文件file是按</span><br><span class="line">CreateFrequencyListFromFile方法创建的文件。</span><br><span class="line">            操作结果：从文件数据载入存储的词频表fl。 </span><br><span class="line">&#125;ADT FrequencyList</span><br></pre></td></tr></table></figure>
-</li>
+<pre><code>ADT FrequencyList{
+    数据对象：Frequency={ch,f|0&lt;=ch&lt;=255,f&gt;=0}
+              FrequencyList={Frequency}
+    数据关系：无
+    基本操作：    
+        CreateFrequencyListFromFile(&amp;file,&amp;fl);
+            初始条件：文件file存在且被打开。
+            操作结果：从文件数据创建词频表fl。
+        SaveFrequencyListToFile(&amp;file,fl);
+            初始条件：词频表fl存在，文件file存在且被打开。
+            操作结果：保存词频表fl到文件file中。
+        LoadFrequencyListFromFile(&amp;file,&amp;fl);
+            初始条件：文件file存在且被打开，文件file是按
+CreateFrequencyListFromFile方法创建的文件。
+            操作结果：从文件数据载入存储的词频表fl。 
+}ADT FrequencyList
+</code></pre></li>
 <li><p>抽象数据类型哈夫曼树定义如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ADT HaffmanTree&#123;</span><br><span class="line">    数据对象：HaffmanTreeNode=&#123;lchild,rchild,parent,ch,f&#125;</span><br><span class="line">              HaffmanTree=&#123;HaffmanTreeNode&#125;</span><br><span class="line">    数据关系：每个节点指向左右两个孩子节点（如果有的话）</span><br><span class="line">    基本操作：</span><br><span class="line">        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);</span><br><span class="line">            初始条件：词频表fl存在。</span><br><span class="line">            操作结果：从词频表fl创建哈夫曼树ht。</span><br><span class="line">        CreateHaffmanCode(ht,&amp;haffmancode);</span><br><span class="line">            初始条件：Haffman树ht存在。</span><br><span class="line">            操作结果：根据哈夫曼树ht生成哈夫曼编码haffmancode。  </span><br><span class="line">&#125;ADT HaffmanTree</span><br></pre></td></tr></table></figure>
-</li>
+<pre><code>ADT HaffmanTree{
+    数据对象：HaffmanTreeNode={lchild,rchild,parent,ch,f}
+              HaffmanTree={HaffmanTreeNode}
+    数据关系：每个节点指向左右两个孩子节点（如果有的话）
+    基本操作：
+        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);
+            初始条件：词频表fl存在。
+            操作结果：从词频表fl创建哈夫曼树ht。
+        CreateHaffmanCode(ht,&amp;haffmancode);
+            初始条件：Haffman树ht存在。
+            操作结果：根据哈夫曼树ht生成哈夫曼编码haffmancode。  
+}ADT HaffmanTree
+</code></pre></li>
 <li><p>主函数，压缩函数，解压函数的实现框架</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//以下代码是实现框架，不保证细节完备，详情请看后附源代码</span><br><span class="line">int main(int argc,char *argv[])&#123;</span><br><span class="line">    界面初始化;</span><br><span class="line">    if(argc&gt;1)&#123;</span><br><span class="line">        根据argv[1]的文件路径获取文件名FILENAME;</span><br><span class="line">        获取文件大小FILESIZE;</span><br><span class="line">        判断文件类型FILETYPE;</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">​</span><br></pre></td></tr></table></figure>
-<pre><code>绘制文件处理界面;
-
-计时开始，记录time_begin; 
-if(FILETYPE==0){
-    HaffmanCompress压缩;
-}
-else{
-    HaffmanDecompress解压;
-}
-</code></pre><p>}<br>else{</p>
-<pre><code>绘制设置界面;
-for(;;){
-    读取鼠标信息;
-    if (鼠标点击){
-        设置右键;
-    }
-}
-</code></pre><p>}<br>输出完成信息;<br>​<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">Status HaffmanCompress(当前文件,目标文件,哈夫曼编码表,当前文件总长度)&#123;//压缩</span><br><span class="line">    while(读取文件每次n字节 &amp;&amp; 文件没有结束)&#123;//</span><br><span class="line">        for(i=0;i&lt;n;i++)&#123;   </span><br><span class="line">            获取该字节对应的哈夫曼编码;</span><br><span class="line">            while(哈夫曼编码指针)&#123;</span><br><span class="line">                缓存左移一位; </span><br><span class="line">                缓存最低位存哈夫曼编码的当前位;</span><br><span class="line">                哈夫曼编码指针++;</span><br><span class="line">                缓存长度++;</span><br><span class="line">                if(缓存达到输出长度)&#123;</span><br><span class="line">                    缓存长度=0;</span><br><span class="line">                    把缓存写到文件;</span><br><span class="line">                &#125; </span><br><span class="line">            &#125;</span><br><span class="line">            进度++;</span><br><span class="line">            刷新显示进度;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    while(缓存长度不足指定长度)&#123;</span><br><span class="line">        文件尾补足长度;</span><br><span class="line">    &#125;</span><br><span class="line">    把缓存写到文件;</span><br><span class="line">    return OK;</span><br><span class="line">&#125;</span><br><span class="line">Status HaffmanDecompress(当前文件,目标文件,哈夫曼树)&#123;//解压</span><br><span class="line">    读取目标文件总长度bytenum;</span><br><span class="line">    htn=哈夫曼树根结点;</span><br><span class="line">    while(k&lt;总长度)&#123;</span><br><span class="line">        读取一定长度数据写入缓存inbuf;</span><br><span class="line">        do&#123;</span><br><span class="line">            取缓存inbuf最高位b; </span><br><span class="line">            缓存inbuf左移一位;</span><br><span class="line">            if(b==0)&#123;</span><br><span class="line">                htn=htn-&gt;lchild;</span><br><span class="line">            &#125;</span><br><span class="line">            else&#123;</span><br><span class="line">                htn=htn-&gt;rchild;</span><br><span class="line">            &#125;</span><br><span class="line">            if(htn左孩子和右孩子都是空)&#123;//到达叶结点 </span><br><span class="line">                输出叶上的字符到缓存outbuf;</span><br><span class="line">                if(outbuf到一定长度)&#123;</span><br><span class="line">                    写出缓存outbuf到目标文件;</span><br><span class="line">                &#125;</span><br><span class="line">                计数k++; </span><br><span class="line">                if(k==bytenum) break;</span><br><span class="line">                回根结点; </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;while(缓存inbuf还没处理完);</span><br><span class="line">        刷新显示进度;</span><br><span class="line">    &#125;</span><br><span class="line">    return OK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-</li>
-<li><p>本程序含四个模块</p>
-<p>(1)    主模块<br>(2)    词频表模块<br>(3)    哈夫曼树、编码和解压缩模块<br>(4)    图形界面模块</p>
-</li>
+<p><code>`</code><br>//以下代码是实现框架，不保证细节完备，详情请看后附源代码<br>int main(int argc,char *argv[]){</p>
+<pre><code>界面初始化;
+if(argc&gt;1){
+    根据argv[1]的文件路径获取文件名FILENAME;
+    获取文件大小FILESIZE;
+    判断文件类型FILETYPE;
+</code></pre></li>
 </ol>
-<p><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/0.png" alt=""></p>
-<h2 id="三、-详细设计"><a href="#三、-详细设计" class="headerlink" title="三、    详细设计"></a>三、    详细设计</h2><p>1．    词频结点类型</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Frequency</span>&#123;</span><span class="comment">//一个字符(8位)及其出现频次 </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> ch;<span class="comment">//0&lt;=ch&lt;=255</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> f;</span><br><span class="line">&#125;fre,*pfre;</span><br></pre></td></tr></table></figure>
-<p>2．    词频表类型</p>
+<p>   ​<code>`</code><br>       绘制文件处理界面;</p>
+<pre><code>   计时开始，记录time_begin; 
+   if(FILETYPE==0){
+       HaffmanCompress压缩;
+   }
+   else{
+       HaffmanDecompress解压;
+   }
+</code></pre><p>   }<br>   else{<br>       绘制设置界面;<br>       for(;;){<br>           读取鼠标信息;<br>           if (鼠标点击){<br>               设置右键;<br>           }<br>       }<br>   }<br>   输出完成信息;<br>   ​<code>`</code></p>
+<p>   }<br>   Status HaffmanCompress(当前文件,目标文件,哈夫曼编码表,当前文件总长度){//压缩<br>       while(读取文件每次n字节 &amp;&amp; 文件没有结束){//<br>           for(i=0;i&lt;n;i++){<br>               获取该字节对应的哈夫曼编码;<br>               while(哈夫曼编码指针){<br>                   缓存左移一位;<br>                   缓存最低位存哈夫曼编码的当前位;<br>                   哈夫曼编码指针++;<br>                   缓存长度++;<br>                   if(缓存达到输出长度){<br>                       缓存长度=0;<br>                       把缓存写到文件;<br>                   }<br>               }<br>               进度++;<br>               刷新显示进度;<br>           }<br>       }<br>       while(缓存长度不足指定长度){<br>           文件尾补足长度;<br>       }<br>       把缓存写到文件;<br>       return OK;<br>   }<br>   Status HaffmanDecompress(当前文件,目标文件,哈夫曼树){//解压<br>       读取目标文件总长度bytenum;<br>       htn=哈夫曼树根结点;<br>       while(k&lt;总长度){<br>           读取一定长度数据写入缓存inbuf;<br>           do{<br>               取缓存inbuf最高位b;<br>               缓存inbuf左移一位;<br>               if(b==0){<br>                   htn=htn-&gt;lchild;<br>               }<br>               else{<br>                   htn=htn-&gt;rchild;<br>               }<br>               if(htn左孩子和右孩子都是空){//到达叶结点<br>                   输出叶上的字符到缓存outbuf;<br>                   if(outbuf到一定长度){<br>                       写出缓存outbuf到目标文件;<br>                   }<br>                   计数k++;<br>                   if(k==bytenum) break;<br>                   回根结点;<br>               }<br>           }while(缓存inbuf还没处理完);<br>           刷新显示进度;<br>       }<br>       return OK;<br>   }</p>
+<pre><code>
+4. 本程序含四个模块
+
+   (1)    主模块
+   (2)    词频表模块
+   (3)    哈夫曼树、编码和解压缩模块
+   (4)    图形界面模块
+
+![](lab3_Haffman/0.png)
+
+
+
+
+
+## 三、    详细设计
+1．    词频结点类型
+
+```c
+typedef struct Frequency{//一个字符(8位)及其出现频次 
+    unsigned char ch;//0&lt;=ch&lt;=255
+    unsigned int f;
+}fre,*pfre;
+</code></pre><p>2．    词频表类型</p>
 <pre><code>typedef struct FrequencyList{//频度表，所有出现的字符及频次
     int num;//1&lt;=num&lt;=256
     pfre list; //频度表数组，动态申请 
 }frelist,*pfrelist;
 </code></pre><p>3．    哈夫曼树类型</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">HaffmanTreeNode</span>&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">HaffmanTreeNode</span> *<span class="title">lchild</span>,*<span class="title">rchild</span>,*<span class="title">parent</span>;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> f;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> ch;</span><br><span class="line">&#125;htreenode,*htree;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">typedef struct HaffmanTreeNode{
+    struct HaffmanTreeNode *lchild,*rchild,*parent;
+    unsigned int f;
+    unsigned char ch;
+}htreenode,*htree;
+</code></pre>
 <p>4．    词频表操作</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Status <span class="title">CreateFrequencyListFromFile</span><span class="params">(FILE *fp,pfrelist *fl)</span></span>;</span><br><span class="line">    <span class="comment">//从任意文件中创建频度表 </span></span><br><span class="line"><span class="function">Status <span class="title">SaveFrequencyListToFile</span><span class="params">(FILE *fp,pfrelist fl)</span></span>;</span><br><span class="line">    <span class="comment">//保存频度表到压缩文件中 </span></span><br><span class="line"><span class="function">Status <span class="title">LoadFrequencyListFromFile</span><span class="params">(FILE *fp,pfrelist *fl)</span></span>;</span><br><span class="line"><span class="comment">//从压缩文件中读取频度表</span></span><br></pre></td></tr></table></figure>
+<pre><code class="c">Status CreateFrequencyListFromFile(FILE *fp,pfrelist *fl);
+    //从任意文件中创建频度表 
+Status SaveFrequencyListToFile(FILE *fp,pfrelist fl);
+    //保存频度表到压缩文件中 
+Status LoadFrequencyListFromFile(FILE *fp,pfrelist *fl);
+//从压缩文件中读取频度表
+</code></pre>
 <p>5．    哈夫曼树操作及解压缩</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Status <span class="title">CreateHaffmanTreeFromFrequencyList</span><span class="params">(pfrelist fl,htree* ht)</span></span>&#123;</span><br><span class="line"><span class="comment">//从频度表创建哈夫曼数，频度表保证至少两种字符 </span></span><br><span class="line"><span class="function">Status <span class="title">PreOrderTraverse</span><span class="params">(htree ht,<span class="keyword">int</span> child,<span class="keyword">int</span> i,<span class="keyword">char</span> code[],<span class="keyword">char</span> haffmancode[<span class="number">256</span>][<span class="number">256</span>])</span></span>&#123;</span><br><span class="line"><span class="comment">//先序遍历，child=0表示当前是左孩子，child=1表示当前是右孩子</span></span><br><span class="line"><span class="comment">//i为当前层次,code为当前遍历路径已存编码，haffmancode是编码表 </span></span><br><span class="line"><span class="function">Status <span class="title">CreateHaffmanCode</span><span class="params">(htree ht,<span class="keyword">char</span> haffmancode[<span class="number">256</span>][<span class="number">256</span>])</span></span>&#123;</span><br><span class="line"><span class="comment">//创建编码表haffmancode[256][256],牺牲一些空间以便快速索引</span></span><br><span class="line"><span class="function">Status <span class="title">HaffmanCompress</span><span class="params">(FILE *fp1,FILE *fp2,<span class="keyword">char</span> haffmancode[<span class="number">256</span>][<span class="number">256</span>],<span class="keyword">unsigned</span> <span class="keyword">int</span> bytenum)</span></span>&#123;</span><br><span class="line"><span class="comment">//压缩,bytenum为总长度 </span></span><br><span class="line"><span class="function">Status <span class="title">HaffmanDecompress</span><span class="params">(FILE *fp1,FILE *fp2,htree ht)</span></span>&#123;</span><br><span class="line"><span class="comment">//解压,解压时直接用哈夫曼树搜索对应字符</span></span><br></pre></td></tr></table></figure>
+<pre><code class="c">Status CreateHaffmanTreeFromFrequencyList(pfrelist fl,htree* ht){
+//从频度表创建哈夫曼数，频度表保证至少两种字符 
+Status PreOrderTraverse(htree ht,int child,int i,char code[],char haffmancode[256][256]){
+//先序遍历，child=0表示当前是左孩子，child=1表示当前是右孩子
+//i为当前层次,code为当前遍历路径已存编码，haffmancode是编码表 
+Status CreateHaffmanCode(htree ht,char haffmancode[256][256]){
+//创建编码表haffmancode[256][256],牺牲一些空间以便快速索引
+Status HaffmanCompress(FILE *fp1,FILE *fp2,char haffmancode[256][256],unsigned int bytenum){
+//压缩,bytenum为总长度 
+Status HaffmanDecompress(FILE *fp1,FILE *fp2,htree ht){
+//解压,解压时直接用哈夫曼树搜索对应字符 
+</code></pre>
 <p>6．    图形界面操作</p>
 <pre><code>SMALL_RECT UI_SetRect(int left,int top,int right,int bottom);
 //根据坐标取返回对应矩形区域数据 
@@ -530,9 +590,490 @@ Status LoadFrequencyListFromFile(FILE *fp,pfrelist *fl){//从压缩文件中读�
 }
 #endif
 </code></pre><p>HaffmanTree.h</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Last Update time: 2017-11-01 </span></span><br><span class="line"><span class="comment">    Version：1.0</span></span><br><span class="line"><span class="comment">    Author：LinXiang (PB16020923) </span></span><br><span class="line"><span class="comment">    Description：</span></span><br><span class="line"><span class="comment">        HaffmanTree.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> HAFFMANTREE_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> HAFFMANTREE_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OK 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"FrequencyList.h"</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> Status; </span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">HaffmanTreeNode</span>&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">HaffmanTreeNode</span> *<span class="title">lchild</span>,*<span class="title">rchild</span>,*<span class="title">parent</span>;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> f;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> ch;</span><br><span class="line">&#125;htreenode,*htree;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UpdateTimeText</span><span class="params">(<span class="keyword">double</span> progress)</span></span>;<span class="comment">//声明以便下面函数调用更新进度 </span></span><br><span class="line"><span class="function">Status <span class="title">CreateHaffmanTreeFromFrequencyList</span><span class="params">(pfrelist fl,htree* ht)</span></span>&#123;</span><br><span class="line"><span class="comment">//从频度表创建哈夫曼数，频度表保证至少两种字符 </span></span><br><span class="line">    <span class="keyword">int</span> hfn=fl-&gt;num*<span class="number">2</span><span class="number">-1</span>;<span class="comment">//haffmantreenode个数</span></span><br><span class="line">    htreenode *arr=(htreenode *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(htreenode)*hfn);</span><br><span class="line">    <span class="keyword">int</span> i,t;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;fl-&gt;num;i++)&#123;<span class="comment">//前 fl-&gt;num 个放叶结点 </span></span><br><span class="line">        t=fl-&gt;num-i<span class="number">-1</span>;<span class="comment">//使升序排列 </span></span><br><span class="line">        arr[t].ch=fl-&gt;<span class="built_in">list</span>[i].ch;</span><br><span class="line">        arr[t].f=fl-&gt;<span class="built_in">list</span>[i].f;</span><br><span class="line">        arr[t].lchild=<span class="literal">NULL</span>;</span><br><span class="line">        arr[t].rchild=<span class="literal">NULL</span>;</span><br><span class="line">        arr[t].parent=<span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> j,k;</span><br><span class="line">    <span class="keyword">for</span>(j=i,k=<span class="number">0</span>;i&lt;hfn;i++)&#123;</span><br><span class="line">        arr[i].f=<span class="number">0</span>;<span class="comment">//权值初始为0 </span></span><br><span class="line">        <span class="comment">//先选择最小的一个做左孩子 </span></span><br><span class="line">        <span class="keyword">if</span>(i-j&gt;=<span class="number">1</span> &amp;&amp; fl-&gt;num-k&gt;=<span class="number">1</span>)&#123;<span class="comment">//叶结点和非叶结点都至少有一个可选 </span></span><br><span class="line">            <span class="keyword">if</span>(arr[k].f&lt;=arr[j].f)&#123;</span><br><span class="line">                arr[i].lchild=&amp;arr[k];</span><br><span class="line">                arr[k].parent=&amp;arr[i];</span><br><span class="line">                arr[i].f+=arr[k].f; </span><br><span class="line">                k++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                arr[i].lchild=&amp;arr[j];</span><br><span class="line">                arr[j].parent=&amp;arr[i];</span><br><span class="line">                arr[i].f+=arr[j].f; </span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(fl-&gt;num-k&gt;=<span class="number">1</span>)&#123;<span class="comment">//只有叶结点可选 </span></span><br><span class="line">            arr[i].lchild=&amp;arr[k];</span><br><span class="line">            arr[k].parent=&amp;arr[i];</span><br><span class="line">            arr[i].f+=arr[k].f; </span><br><span class="line">            k++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;<span class="comment">//只有非叶结点可选 </span></span><br><span class="line">            arr[i].lchild=&amp;arr[j];</span><br><span class="line">            arr[j].parent=&amp;arr[i];</span><br><span class="line">            arr[i].f+=arr[j].f; </span><br><span class="line">            j++;</span><br><span class="line">        &#125; </span><br><span class="line">         </span><br><span class="line">        <span class="comment">//再选择最小的一个做右孩子 </span></span><br><span class="line">        <span class="keyword">if</span>(i-j&gt;=<span class="number">1</span> &amp;&amp; fl-&gt;num-k&gt;=<span class="number">1</span>)&#123;<span class="comment">//叶结点和非叶结点都至少有一个可选 </span></span><br><span class="line">            <span class="keyword">if</span>(arr[k].f&lt;=arr[j].f)&#123;</span><br><span class="line">                arr[i].rchild=&amp;arr[k];</span><br><span class="line">                arr[k].parent=&amp;arr[i];</span><br><span class="line">                arr[i].f+=arr[k].f;</span><br><span class="line">                k++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                arr[i].rchild=&amp;arr[j];</span><br><span class="line">                arr[j].parent=&amp;arr[i];</span><br><span class="line">                arr[i].f+=arr[j].f;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(fl-&gt;num-k&gt;=<span class="number">1</span>)&#123;<span class="comment">//只有叶结点可选 </span></span><br><span class="line">            arr[i].rchild=&amp;arr[k];</span><br><span class="line">            arr[k].parent=&amp;arr[i];</span><br><span class="line">            arr[i].f+=arr[k].f;</span><br><span class="line">            k++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;<span class="comment">//只有非叶结点可选 </span></span><br><span class="line">            arr[i].rchild=&amp;arr[j];</span><br><span class="line">            arr[j].parent=&amp;arr[i];</span><br><span class="line">            arr[i].f+=arr[j].f;</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    *ht=&amp;arr[hfn<span class="number">-1</span>];<span class="comment">//指向根 </span></span><br><span class="line">    <span class="keyword">return</span> OK; </span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">PreOrderTraverse</span><span class="params">(htree ht,<span class="keyword">int</span> child,<span class="keyword">int</span> i,<span class="keyword">char</span> code[],<span class="keyword">char</span> haffmancode[<span class="number">256</span>][<span class="number">256</span>])</span></span>&#123;</span><br><span class="line"><span class="comment">//先序遍历，child=0表示当前是左孩子，child=1表示当前是右孩子,i为当前层次,code为当前遍历路径已存编码，haffmancode是编码表 </span></span><br><span class="line">    <span class="keyword">if</span>(ht==<span class="literal">NULL</span>) <span class="keyword">return</span> ERROR;</span><br><span class="line">    code[i]=child+<span class="string">'0'</span>;</span><br><span class="line">    <span class="keyword">if</span>(ht-&gt;lchild==<span class="literal">NULL</span> &amp;&amp; ht-&gt;rchild==<span class="literal">NULL</span>)&#123;<span class="comment">//这是个叶结点  </span></span><br><span class="line">        <span class="built_in">strcpy</span>(haffmancode[ht-&gt;ch],code);<span class="comment">//把当前编码保存到编码表里 </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        PreOrderTraverse(ht-&gt;lchild,<span class="number">0</span>,i+<span class="number">1</span>,code,haffmancode);</span><br><span class="line">        PreOrderTraverse(ht-&gt;rchild,<span class="number">1</span>,i+<span class="number">1</span>,code,haffmancode);</span><br><span class="line">    &#125;</span><br><span class="line">    code[i]=<span class="number">0</span>;<span class="comment">//恢复</span></span><br><span class="line">    <span class="keyword">return</span> OK; </span><br><span class="line">&#125; </span><br><span class="line"><span class="function">Status <span class="title">CreateHaffmanCode</span><span class="params">(htree ht,<span class="keyword">char</span> haffmancode[<span class="number">256</span>][<span class="number">256</span>])</span></span>&#123;</span><br><span class="line"><span class="comment">//编码表haffmancode[256][256]牺牲一些空间以便快速索引</span></span><br><span class="line">    <span class="keyword">char</span> code[<span class="number">256</span>]=&#123;&#125;;<span class="comment">//临时存放编码 </span></span><br><span class="line">    PreOrderTraverse(ht-&gt;lchild,<span class="number">0</span>,<span class="number">0</span>,code,haffmancode);</span><br><span class="line">    PreOrderTraverse(ht-&gt;rchild,<span class="number">1</span>,<span class="number">0</span>,code,haffmancode);</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">HaffmanCompress</span><span class="params">(FILE *fp1,FILE *fp2,<span class="keyword">char</span> haffmancode[<span class="number">256</span>][<span class="number">256</span>],<span class="keyword">unsigned</span> <span class="keyword">int</span> bytenum)</span></span>&#123;</span><br><span class="line"><span class="comment">//压缩,bytenum为总长度 </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> inbuf[<span class="number">262144</span>]=&#123;&#125;;<span class="comment">//当前读入 </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> outbuf=<span class="number">0</span>;<span class="comment">//操作的缓存，满32位(4字节)才写入outbuf2，这个缓存主要用于位操作 </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> outbuf2[<span class="number">262144</span>]=&#123;&#125;;<span class="comment">//输出的缓存1024*4字节 </span></span><br><span class="line">    fwrite(&amp;bytenum,<span class="number">4</span>,<span class="number">1</span>,fp2);<span class="comment">//记下总长度 </span></span><br><span class="line">    <span class="keyword">int</span> up=bytenum/<span class="number">100</span>;<span class="comment">//设置界面更新间隔</span></span><br><span class="line">    <span class="keyword">if</span>(up==<span class="number">0</span>) up=<span class="number">1</span>; <span class="comment">//文件过小，界面更新间隔为0，置1 </span></span><br><span class="line">    <span class="keyword">int</span> cnt=<span class="number">0</span>;<span class="comment">//循环计数器，缓存输出用的 </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> k=<span class="number">0</span>;<span class="comment">//计数器，更新界面用的</span></span><br><span class="line">    <span class="keyword">int</span> cnt2=<span class="number">0</span>; <span class="comment">//循环计数器，缓存输出用的</span></span><br><span class="line">    <span class="keyword">int</span> i,n=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>((n=fread(inbuf,<span class="number">1</span>,<span class="number">262144</span>,fp1)) || !feof(fp1))&#123;<span class="comment">//读取文件每次262144字节</span></span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;n;i++)&#123;   </span><br><span class="line">            <span class="keyword">char</span> *p=haffmancode[inbuf[i]];</span><br><span class="line">            <span class="keyword">while</span>(*p)&#123;</span><br><span class="line">                outbuf&lt;&lt;=<span class="number">1</span>;<span class="comment">//左移一位 </span></span><br><span class="line">                outbuf | = (*p-<span class="string">'0'</span>);<span class="comment">//最低位存p</span></span><br><span class="line">                p++;</span><br><span class="line">                cnt++;</span><br><span class="line">                <span class="keyword">if</span>(cnt%<span class="number">32</span>==<span class="number">0</span>)&#123;<span class="comment">//满8位输出 </span></span><br><span class="line">                    cnt=<span class="number">0</span>;</span><br><span class="line">                    outbuf2[cnt2++]=outbuf;</span><br><span class="line">                    outbuf=<span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">if</span>(cnt2==<span class="number">262144</span>)&#123;</span><br><span class="line">                        cnt2=<span class="number">0</span>;</span><br><span class="line">                        fwrite(outbuf2,<span class="number">4</span>,<span class="number">262144</span>,fp2);</span><br><span class="line">                        <span class="built_in">memset</span>(outbuf2,<span class="number">0</span>,<span class="number">262144</span>*<span class="number">4</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; </span><br><span class="line">            &#125;</span><br><span class="line">            k++;</span><br><span class="line">            <span class="keyword">if</span>(k%up==<span class="number">0</span>) UpdateTimeText((<span class="keyword">double</span>)k/(<span class="keyword">double</span>)bytenum);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(cnt%<span class="number">32</span>!=<span class="number">0</span>)&#123;<span class="comment">//文件尾补足为32位的整数倍 </span></span><br><span class="line">        outbuf&lt;&lt;=<span class="number">1</span>;</span><br><span class="line">        cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">    outbuf2[cnt2++]=outbuf;</span><br><span class="line">    fwrite(outbuf2,<span class="number">4</span>,cnt2,fp2);</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">HaffmanDecompress</span><span class="params">(FILE *fp1,FILE *fp2,htree ht)</span></span>&#123;<span class="comment">//解压,解压时直接用哈夫曼数搜索对应字符 </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> inbuf=<span class="number">0</span>;<span class="comment">//输入的缓存，每次读取32位(4字节)</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> outbuf=<span class="number">0</span>;<span class="comment">//输出缓存（1字节） </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> outbuf2[<span class="number">1048576</span>]=&#123;&#125;;<span class="comment">//输出缓存2（1048576字节） </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> bytenum;<span class="comment">//总字节数 </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> k=<span class="number">0</span>; </span><br><span class="line">    <span class="keyword">int</span> cnt=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> b;</span><br><span class="line">    htreenode* htn=ht;</span><br><span class="line">    fread(&amp;bytenum,<span class="number">4</span>,<span class="number">1</span>,fp1);<span class="comment">//读取总长度 </span></span><br><span class="line">    <span class="keyword">int</span> up=bytenum/<span class="number">100</span>;<span class="comment">//设置界面更新间隔</span></span><br><span class="line">    <span class="keyword">if</span>(up==<span class="number">0</span>) up=<span class="number">1</span>; <span class="comment">//文件过小，界面更新间隔为0，置1 </span></span><br><span class="line">    <span class="keyword">int</span> cnt2=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(k&lt;bytenum)&#123;</span><br><span class="line">        fread(&amp;inbuf,<span class="number">1</span>,<span class="number">4</span>,fp1);<span class="comment">//size=1,count=4</span></span><br><span class="line">        <span class="keyword">do</span>&#123;</span><br><span class="line">            b=inbuf &amp; <span class="number">0x80000000</span>;<span class="comment">//取最高位 </span></span><br><span class="line">            inbuf&lt;&lt;=<span class="number">1</span>;<span class="comment">//左移一位 </span></span><br><span class="line">            cnt++;</span><br><span class="line">            <span class="keyword">if</span>(b==<span class="number">0</span>)&#123;</span><br><span class="line">                htn=htn-&gt;lchild;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                htn=htn-&gt;rchild;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(htn-&gt;lchild==<span class="literal">NULL</span> &amp;&amp; htn-&gt;rchild==<span class="literal">NULL</span>)&#123;<span class="comment">//到达叶结点 </span></span><br><span class="line">                outbuf=htn-&gt;ch;</span><br><span class="line">                outbuf2[cnt2++]=outbuf;</span><br><span class="line">                outbuf=<span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span>(cnt2==<span class="number">1048576</span>)&#123;</span><br><span class="line">                    cnt2=<span class="number">0</span>;</span><br><span class="line">                    fwrite(outbuf2,<span class="number">1</span>,<span class="number">1048576</span>,fp2);</span><br><span class="line">                    <span class="built_in">memset</span>(outbuf2,<span class="number">0</span>,<span class="number">1048576</span>);</span><br><span class="line">                &#125;   </span><br><span class="line">                k++;<span class="comment">//计数加一 </span></span><br><span class="line">                <span class="keyword">if</span>(k==bytenum) <span class="keyword">break</span>;</span><br><span class="line">                htn=ht;<span class="comment">//回根结点 </span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">while</span>(cnt%<span class="number">32</span>!=<span class="number">0</span>);</span><br><span class="line">        cnt=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(k%up==<span class="number">0</span>) UpdateTimeText((<span class="keyword">double</span>)k/(<span class="keyword">double</span>)bytenum);</span><br><span class="line">    &#125;</span><br><span class="line">    fwrite(outbuf2,<span class="number">1</span>,cnt2,fp2);</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<pre><code class="c">/*
+    Last Update time: 2017-11-01 
+    Version：1.0
+    Author：LinXiang (PB16020923) 
+    Description：
+        HaffmanTree.
+*/
+#ifndef HAFFMANTREE_H
+#define HAFFMANTREE_H
+#define OK 1
+#define ERROR 0
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &quot;FrequencyList.h&quot;
+typedef int Status; 
+typedef struct HaffmanTreeNode{
+    struct HaffmanTreeNode *lchild,*rchild,*parent;
+    unsigned int f;
+    unsigned char ch;
+}htreenode,*htree;
+void UpdateTimeText(double progress);//声明以便下面函数调用更新进度 
+Status CreateHaffmanTreeFromFrequencyList(pfrelist fl,htree* ht){
+//从频度表创建哈夫曼数，频度表保证至少两种字符 
+    int hfn=fl-&gt;num*2-1;//haffmantreenode个数
+    htreenode *arr=(htreenode *)malloc(sizeof(htreenode)*hfn);
+    int i,t;
+    for(i=0;i&lt;fl-&gt;num;i++){//前 fl-&gt;num 个放叶结点 
+        t=fl-&gt;num-i-1;//使升序排列 
+        arr[t].ch=fl-&gt;list[i].ch;
+        arr[t].f=fl-&gt;list[i].f;
+        arr[t].lchild=NULL;
+        arr[t].rchild=NULL;
+        arr[t].parent=NULL;
+    }
+    int j,k;
+    for(j=i,k=0;i&lt;hfn;i++){
+        arr[i].f=0;//权值初始为0 
+        //先选择最小的一个做左孩子 
+        if(i-j&gt;=1 &amp;&amp; fl-&gt;num-k&gt;=1){//叶结点和非叶结点都至少有一个可选 
+            if(arr[k].f&lt;=arr[j].f){
+                arr[i].lchild=&amp;arr[k];
+                arr[k].parent=&amp;arr[i];
+                arr[i].f+=arr[k].f; 
+                k++;
+            }
+            else{
+                arr[i].lchild=&amp;arr[j];
+                arr[j].parent=&amp;arr[i];
+                arr[i].f+=arr[j].f; 
+                j++;
+            }
+        }
+        else if(fl-&gt;num-k&gt;=1){//只有叶结点可选 
+            arr[i].lchild=&amp;arr[k];
+            arr[k].parent=&amp;arr[i];
+            arr[i].f+=arr[k].f; 
+            k++;
+        }
+        else{//只有非叶结点可选 
+            arr[i].lchild=&amp;arr[j];
+            arr[j].parent=&amp;arr[i];
+            arr[i].f+=arr[j].f; 
+            j++;
+        } 
+
+        //再选择最小的一个做右孩子 
+        if(i-j&gt;=1 &amp;&amp; fl-&gt;num-k&gt;=1){//叶结点和非叶结点都至少有一个可选 
+            if(arr[k].f&lt;=arr[j].f){
+                arr[i].rchild=&amp;arr[k];
+                arr[k].parent=&amp;arr[i];
+                arr[i].f+=arr[k].f;
+                k++;
+            }
+            else{
+                arr[i].rchild=&amp;arr[j];
+                arr[j].parent=&amp;arr[i];
+                arr[i].f+=arr[j].f;
+                j++;
+            }
+        }
+        else if(fl-&gt;num-k&gt;=1){//只有叶结点可选 
+            arr[i].rchild=&amp;arr[k];
+            arr[k].parent=&amp;arr[i];
+            arr[i].f+=arr[k].f;
+            k++;
+        }
+        else{//只有非叶结点可选 
+            arr[i].rchild=&amp;arr[j];
+            arr[j].parent=&amp;arr[i];
+            arr[i].f+=arr[j].f;
+            j++;
+        }
+    }
+    *ht=&amp;arr[hfn-1];//指向根 
+    return OK; 
+}
+Status PreOrderTraverse(htree ht,int child,int i,char code[],char haffmancode[256][256]){
+//先序遍历，child=0表示当前是左孩子，child=1表示当前是右孩子,i为当前层次,code为当前遍历路径已存编码，haffmancode是编码表 
+    if(ht==NULL) return ERROR;
+    code[i]=child+&#39;0&#39;;
+    if(ht-&gt;lchild==NULL &amp;&amp; ht-&gt;rchild==NULL){//这是个叶结点  
+        strcpy(haffmancode[ht-&gt;ch],code);//把当前编码保存到编码表里 
+    }
+    else{
+        PreOrderTraverse(ht-&gt;lchild,0,i+1,code,haffmancode);
+        PreOrderTraverse(ht-&gt;rchild,1,i+1,code,haffmancode);
+    }
+    code[i]=0;//恢复
+    return OK; 
+} 
+Status CreateHaffmanCode(htree ht,char haffmancode[256][256]){
+//编码表haffmancode[256][256]牺牲一些空间以便快速索引
+    char code[256]={};//临时存放编码 
+    PreOrderTraverse(ht-&gt;lchild,0,0,code,haffmancode);
+    PreOrderTraverse(ht-&gt;rchild,1,0,code,haffmancode);
+    return OK;
+}
+Status HaffmanCompress(FILE *fp1,FILE *fp2,char haffmancode[256][256],unsigned int bytenum){
+//压缩,bytenum为总长度 
+    unsigned char inbuf[262144]={};//当前读入 
+    unsigned int outbuf=0;//操作的缓存，满32位(4字节)才写入outbuf2，这个缓存主要用于位操作 
+    unsigned int outbuf2[262144]={};//输出的缓存1024*4字节 
+    fwrite(&amp;bytenum,4,1,fp2);//记下总长度 
+    int up=bytenum/100;//设置界面更新间隔
+    if(up==0) up=1; //文件过小，界面更新间隔为0，置1 
+    int cnt=0;//循环计数器，缓存输出用的 
+    unsigned int k=0;//计数器，更新界面用的
+    int cnt2=0; //循环计数器，缓存输出用的
+    int i,n=0;
+    while((n=fread(inbuf,1,262144,fp1)) || !feof(fp1)){//读取文件每次262144字节
+        for(i=0;i&lt;n;i++){   
+            char *p=haffmancode[inbuf[i]];
+            while(*p){
+                outbuf&lt;&lt;=1;//左移一位 
+                outbuf | = (*p-&#39;0&#39;);//最低位存p
+                p++;
+                cnt++;
+                if(cnt%32==0){//满8位输出 
+                    cnt=0;
+                    outbuf2[cnt2++]=outbuf;
+                    outbuf=0;
+                    if(cnt2==262144){
+                        cnt2=0;
+                        fwrite(outbuf2,4,262144,fp2);
+                        memset(outbuf2,0,262144*4);
+                    }
+                } 
+            }
+            k++;
+            if(k%up==0) UpdateTimeText((double)k/(double)bytenum);
+        }
+    }
+    while(cnt%32!=0){//文件尾补足为32位的整数倍 
+        outbuf&lt;&lt;=1;
+        cnt++;
+    }
+    outbuf2[cnt2++]=outbuf;
+    fwrite(outbuf2,4,cnt2,fp2);
+    return OK;
+}
+Status HaffmanDecompress(FILE *fp1,FILE *fp2,htree ht){//解压,解压时直接用哈夫曼数搜索对应字符 
+    unsigned int inbuf=0;//输入的缓存，每次读取32位(4字节)
+    unsigned char outbuf=0;//输出缓存（1字节） 
+    unsigned char outbuf2[1048576]={};//输出缓存2（1048576字节） 
+    unsigned int bytenum;//总字节数 
+    unsigned int k=0; 
+    int cnt=0;
+    int b;
+    htreenode* htn=ht;
+    fread(&amp;bytenum,4,1,fp1);//读取总长度 
+    int up=bytenum/100;//设置界面更新间隔
+    if(up==0) up=1; //文件过小，界面更新间隔为0，置1 
+    int cnt2=0;
+    while(k&lt;bytenum){
+        fread(&amp;inbuf,1,4,fp1);//size=1,count=4
+        do{
+            b=inbuf &amp; 0x80000000;//取最高位 
+            inbuf&lt;&lt;=1;//左移一位 
+            cnt++;
+            if(b==0){
+                htn=htn-&gt;lchild;
+            }
+            else{
+                htn=htn-&gt;rchild;
+            }
+            if(htn-&gt;lchild==NULL &amp;&amp; htn-&gt;rchild==NULL){//到达叶结点 
+                outbuf=htn-&gt;ch;
+                outbuf2[cnt2++]=outbuf;
+                outbuf=0;
+                if(cnt2==1048576){
+                    cnt2=0;
+                    fwrite(outbuf2,1,1048576,fp2);
+                    memset(outbuf2,0,1048576);
+                }   
+                k++;//计数加一 
+                if(k==bytenum) break;
+                htn=ht;//回根结点 
+            }
+        }while(cnt%32!=0);
+        cnt=0;
+        if(k%up==0) UpdateTimeText((double)k/(double)bytenum);
+    }
+    fwrite(outbuf2,1,cnt2,fp2);
+    return OK;
+}
+#endif
+</code></pre>
 <p>Hzip.c</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Last Update time: 2017-11-11     </span></span><br><span class="line"><span class="comment">    Version：1.1</span></span><br><span class="line"><span class="comment">    Author：LinXiang (PB16020923) </span></span><br><span class="line"><span class="comment">    Description：</span></span><br><span class="line"><span class="comment">        Hzip.c.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt; </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"MyUI.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"FrequencyList.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"HaffmanTree.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> WIDTH 50 <span class="comment">//窗口的宽和高 </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> HEIGHT 15</span></span><br><span class="line">HANDLE hout;</span><br><span class="line">HANDLE hin;</span><br><span class="line"><span class="keyword">time_t</span> time_begin;</span><br><span class="line"><span class="keyword">time_t</span> time_now;</span><br><span class="line"><span class="keyword">long</span> FILESIZE;<span class="comment">//记录文件长度，用于读取文件时计算进度</span></span><br><span class="line"><span class="keyword">int</span> FILETYPE;<span class="comment">// </span></span><br><span class="line"><span class="keyword">char</span> FILENAME[<span class="number">30</span>]; </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">GetCompressedFilePath</span><span class="params">(<span class="keyword">char</span> *FPath,<span class="keyword">char</span> *CFPath)</span></span>&#123;<span class="comment">//从传入的路径求得对应压缩文件路径 </span></span><br><span class="line">    <span class="built_in">strcpy</span>(CFPath,FPath);</span><br><span class="line">    <span class="built_in">strcat</span>(CFPath,<span class="string">".hzip"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">GetDecompressedFilePath</span><span class="params">(<span class="keyword">char</span> *FPath,<span class="keyword">char</span> *DFPath)</span></span>&#123;<span class="comment">//从传入的压缩文路径求得对应解压文件路径 </span></span><br><span class="line">    <span class="built_in">strcpy</span>(DFPath,FPath);</span><br><span class="line">    DFPath[<span class="built_in">strlen</span>(DFPath)<span class="number">-5</span>]=<span class="number">0</span>;<span class="comment">//去除尾部".hzip" </span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">GetFileNameFromPath</span><span class="params">(<span class="keyword">char</span> *FPath,<span class="keyword">char</span> *FName)</span></span>&#123;<span class="comment">//从路径中提取文件名</span></span><br><span class="line">    <span class="keyword">char</span> *pos;<span class="comment">//最后一个\的位置 </span></span><br><span class="line">    <span class="keyword">char</span> *p=FPath;</span><br><span class="line">    <span class="keyword">while</span>(*p)&#123;</span><br><span class="line">        <span class="keyword">if</span>(*p==<span class="string">'\\'</span>) pos=p;</span><br><span class="line">        p++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(*pos)&#123;</span><br><span class="line">        *FName++=*(++pos);<span class="comment">//此法即可跳过‘\’本身，又可复制字符串结束符到FName中 </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">GetFileSizeFromPath</span><span class="params">(<span class="keyword">char</span> *FPath)</span></span>&#123; <span class="comment">//获取文件大小 </span></span><br><span class="line">    FILE *fp=fopen(FPath,<span class="string">"r"</span>);  </span><br><span class="line">    <span class="keyword">if</span>(!fp) <span class="keyword">return</span> <span class="number">-1</span>;  </span><br><span class="line">    fseek(fp,<span class="number">0L</span>,SEEK_END);  </span><br><span class="line">    <span class="keyword">long</span> size=ftell(fp);  </span><br><span class="line">    fclose(fp);  </span><br><span class="line">    <span class="keyword">return</span> size;  </span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">GetFileTypeFromPath</span><span class="params">(<span class="keyword">char</span> *FPath)</span></span>&#123;<span class="comment">//判断是解压(1)还是压缩(0)</span></span><br><span class="line">    FILE *fp=fopen(FPath,<span class="string">"rb+"</span>);</span><br><span class="line">    <span class="keyword">char</span> MARK[<span class="number">22</span>];</span><br><span class="line">    <span class="keyword">int</span> type;</span><br><span class="line">    <span class="keyword">if</span>(!fread(MARK,<span class="number">21</span>,<span class="number">1</span>,fp))&#123;</span><br><span class="line">        type=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        MARK[<span class="number">21</span>]=<span class="number">0</span>;<span class="comment">//字符串结尾 </span></span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strcmp</span>(<span class="string">"#HAFFMANCOMPRESSFILE#"</span>,MARK)) type=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">else</span> type=<span class="number">1</span>;    </span><br><span class="line">    &#125;</span><br><span class="line">    fclose(fp);</span><br><span class="line">    <span class="keyword">return</span> type;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UIInit</span><span class="params">()</span></span>&#123;<span class="comment">//UI初始化 </span></span><br><span class="line">    UI_InitSTDHandle(&amp;hout,&amp;hin,WIDTH,HEIGHT);</span><br><span class="line">    UI_SetConsoleScreenBufferSize(hout,WIDTH,HEIGHT);<span class="comment">//设置缓冲区大小</span></span><br><span class="line">    UI_SetConsoleWindowSize(hout,WIDTH,HEIGHT);<span class="comment">//设置窗口大小 </span></span><br><span class="line">    <span class="comment">//system("color F0");此句与鼠标操作冲突！！！！！不要用system() </span></span><br><span class="line">    ClearScreen(hout,B_WHITE); <span class="comment">//清屏并设置前景背景色，不要用上句 </span></span><br><span class="line">    </span><br><span class="line">    COORD curpos;</span><br><span class="line">    curpos.X=<span class="number">5</span>;</span><br><span class="line">    curpos.Y=HEIGHT<span class="number">-2</span>;</span><br><span class="line">    SetConsoleCursorPosition(hout,curpos);<span class="comment">//设置光标位置 </span></span><br><span class="line">    CONSOLE_CURSOR_INFO cursor_info=&#123;<span class="number">1</span>,<span class="number">0</span>&#125;; </span><br><span class="line">    SetConsoleCursorInfo(hout,&amp;cursor_info);<span class="comment">//隐藏光标 </span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DrawAllBox</span><span class="params">()</span></span>&#123;<span class="comment">//绘制所有方框 </span></span><br><span class="line">    SMALL_RECT rc;</span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>,<span class="number">0</span>,WIDTH<span class="number">-1</span>,<span class="number">3</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">1</span>,rc,B_WHITE | F_RED);</span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>,<span class="number">4</span>,WIDTH<span class="number">-1</span>,<span class="number">7</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">1</span>,rc,B_WHITE | F_BLUE);</span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>,<span class="number">8</span>,WIDTH<span class="number">-1</span>,<span class="number">11</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">1</span>,rc,B_WHITE | F_BLUE); </span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>,<span class="number">12</span>,WIDTH<span class="number">-1</span>,<span class="number">14</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">1</span>,rc,B_WHITE | F_CYAN); </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DrawInfoText</span><span class="params">(<span class="keyword">char</span> *filename,<span class="keyword">int</span> type,<span class="keyword">int</span> size)</span></span>&#123;<span class="comment">//文件名，类型是解压(1)还是压缩(0)</span></span><br><span class="line">    <span class="keyword">char</span> t_title[<span class="number">30</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_title,<span class="string">"Hzip V1.1"</span>);</span><br><span class="line">    UI_DrawText(hout,B_WHITE | F_RED,t_title,<span class="built_in">strlen</span>(t_title),<span class="number">1</span>,<span class="number">0</span>+<span class="number">2</span>,WIDTH<span class="number">-1</span><span class="number">-2</span>);</span><br><span class="line">    <span class="built_in">sprintf</span>(t_title,<span class="string">"Code by PB16020923"</span>);</span><br><span class="line">    UI_DrawText(hout,B_WHITE | F_RED,t_title,<span class="built_in">strlen</span>(t_title),<span class="number">2</span>,<span class="number">0</span>+<span class="number">2</span>,WIDTH<span class="number">-1</span><span class="number">-2</span>);</span><br><span class="line">    <span class="comment">//窗口标题显示当前操作</span></span><br><span class="line">    <span class="keyword">char</span> t_info[<span class="number">38</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_info,<span class="string">"Hzip V1.1 - %s"</span>,type==<span class="number">0</span>?<span class="string">"Compressing..."</span>:<span class="string">"Decompressing..."</span>);</span><br><span class="line">    SetConsoleTitle(t_info);</span><br><span class="line">    <span class="comment">//文件名</span></span><br><span class="line">    <span class="keyword">char</span> t_filename[<span class="number">38</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_filename,<span class="string">"FileName: %s"</span>,filename);    </span><br><span class="line">    UI_DrawText(hout,B_WHITE | F_BLUE,t_filename,<span class="built_in">strlen</span>(t_filename),<span class="number">5</span>,<span class="number">0</span>+<span class="number">2</span>,WIDTH<span class="number">-1</span><span class="number">-2</span>);</span><br><span class="line">    <span class="comment">//文件大小 </span></span><br><span class="line">    <span class="keyword">char</span> t_size[<span class="number">38</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_size,<span class="string">"Size: %0.2f KB"</span>,(<span class="keyword">double</span>)size/<span class="number">1024</span>);</span><br><span class="line">    UI_DrawText(hout,B_WHITE | F_BLUE,t_size,<span class="built_in">strlen</span>(t_size),<span class="number">6</span>,<span class="number">0</span>+<span class="number">2</span>,WIDTH<span class="number">-1</span><span class="number">-2</span>);   </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UpdateTimeText</span><span class="params">(<span class="keyword">double</span> progress)</span></span>&#123;<span class="comment">//根据进度(0-1)更新剩余时间 </span></span><br><span class="line">    time(&amp;time_now); </span><br><span class="line">    <span class="comment">//已花时间 </span></span><br><span class="line">    <span class="keyword">char</span> t_spenttime[<span class="number">40</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_spenttime,<span class="string">"Spent Time: %d s"</span>,time_now-time_begin);</span><br><span class="line">    UI_CleanText(hout,<span class="number">9</span>,<span class="number">0</span>+<span class="number">2</span>,WIDTH<span class="number">-1</span><span class="number">-2</span>);</span><br><span class="line">    UI_DrawText(hout,B_WHITE | F_BLUE,t_spenttime,<span class="built_in">strlen</span>(t_spenttime),<span class="number">9</span>,<span class="number">0</span>+<span class="number">2</span>,WIDTH<span class="number">-1</span><span class="number">-2</span>);</span><br><span class="line">    <span class="comment">//剩余时间 </span></span><br><span class="line">    <span class="keyword">char</span> t_remainedtime[<span class="number">40</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_remainedtime,<span class="string">"Remained Time: %d s"</span>,(<span class="keyword">int</span>)((time_now-time_begin)*(<span class="number">1</span>-progress)/progress));</span><br><span class="line">    UI_CleanText(hout,<span class="number">10</span>,<span class="number">0</span>+<span class="number">2</span>,WIDTH<span class="number">-1</span><span class="number">-2</span>);</span><br><span class="line">    UI_DrawText(hout,B_WHITE | F_BLUE,t_remainedtime,<span class="built_in">strlen</span>(t_remainedtime),<span class="number">10</span>,<span class="number">0</span>+<span class="number">2</span>,WIDTH<span class="number">-1</span><span class="number">-2</span>);</span><br><span class="line">    <span class="comment">//画进度条 </span></span><br><span class="line">    <span class="keyword">int</span> k=<span class="number">47</span>*progress,i;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">2</span>;i&lt;=k;i++)&#123;</span><br><span class="line">        <span class="comment">//UI_DrawText(hout,B_BLUE," ",1,12,i,i);</span></span><br><span class="line">        UI_DrawText(hout,B_CYAN,<span class="string">" "</span>,<span class="number">1</span>,<span class="number">13</span>,i,i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DrawSelect</span><span class="params">(<span class="keyword">int</span> select)</span></span>&#123;<span class="comment">//没有文件传入时显示配置界面,select=1表示已选中，即当前已创建右键菜单</span></span><br><span class="line">    ClearScreen(hout,B_WHITE); </span><br><span class="line">    SMALL_RECT rc;</span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>,<span class="number">0</span>,WIDTH<span class="number">-1</span>,<span class="number">4</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">1</span>,rc,B_WHITE | F_RED);      </span><br><span class="line">    <span class="keyword">char</span> t_title[<span class="number">38</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_title,<span class="string">"Hzip V1.1 - Setting"</span>);</span><br><span class="line">    UI_DrawText(hout,B_WHITE | F_RED,t_title,<span class="built_in">strlen</span>(t_title),<span class="number">2</span>,<span class="number">0</span>+<span class="number">2</span>,WIDTH<span class="number">-1</span><span class="number">-2</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> dx=<span class="number">10</span>,dy=<span class="number">5</span>;</span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>+dx,<span class="number">0</span>+dy,<span class="number">5</span>+dx,<span class="number">2</span>+dy);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">1</span>,rc,B_WHITE | F_BLUE);</span><br><span class="line">    UI_DrawText(hout,B_WHITE | F_BLUE,select==<span class="number">1</span>?<span class="string">"√"</span>:<span class="string">"  "</span>,<span class="number">2</span>,<span class="number">1</span>+dy,<span class="number">2</span>+dx,<span class="number">3</span>+dx);   </span><br><span class="line">    <span class="keyword">char</span> t_cj[<span class="number">30</span>]=<span class="string">"Create right-click menu"</span>;</span><br><span class="line">    UI_DrawText(hout,B_WHITE | F_BLUE,t_cj,<span class="built_in">strlen</span>(t_cj),<span class="number">1</span>+dy,<span class="number">7</span>+dx,<span class="number">7</span>+dx+<span class="built_in">strlen</span>(t_cj));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">CheckKey</span><span class="params">()</span></span>&#123;<span class="comment">//检查右键菜单注册表是否已设置 </span></span><br><span class="line">    HKEY k1,k2,k3;</span><br><span class="line">    <span class="keyword">if</span>(RegOpenKeyEx(HKEY_CLASSES_ROOT,<span class="string">"*"</span>,<span class="number">0</span>,KEY_ALL_ACCESS,&amp;k1) != ERROR_SUCCESS)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(RegOpenKeyEx(k1,<span class="string">"shell"</span>,<span class="number">0</span>,KEY_ALL_ACCESS,&amp;k2) != ERROR_SUCCESS)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(RegOpenKeyEx(k2,<span class="string">"Use Hzip to compress/decompress..."</span>,<span class="number">0</span>,KEY_ALL_ACCESS,&amp;k3) != ERROR_SUCCESS)&#123; </span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SetKey</span><span class="params">(<span class="keyword">char</span> *exepath)</span></span>&#123;<span class="comment">//设置或取消右键菜单注册表 </span></span><br><span class="line">    HKEY k1,k2,k3,k4;</span><br><span class="line">    <span class="keyword">char</span> readvalue[<span class="number">128</span>]=&#123;&#125;;</span><br><span class="line">    <span class="keyword">char</span> setvalue[<span class="number">128</span>]=&#123;&#125;;</span><br><span class="line">    <span class="keyword">if</span>(RegOpenKeyEx(HKEY_CLASSES_ROOT,<span class="string">"*"</span>,<span class="number">0</span>,KEY_ALL_ACCESS,&amp;k1) != ERROR_SUCCESS)&#123;</span><br><span class="line">        RegCreateKey(HKEY_CLASSES_ROOT,<span class="string">"*"</span>,&amp;k1);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(RegOpenKeyEx(k1,<span class="string">"shell"</span>,<span class="number">0</span>,KEY_ALL_ACCESS,&amp;k2) != ERROR_SUCCESS)&#123;</span><br><span class="line">        RegCreateKey(k1,<span class="string">"shell"</span>,&amp;k2);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(RegOpenKeyEx(k2,<span class="string">"Use Hzip to compress/decompress..."</span>,<span class="number">0</span>,KEY_ALL_ACCESS,&amp;k3) != ERROR_SUCCESS)&#123;<span class="comment">//没有右键 </span></span><br><span class="line">        RegCreateKey(k2,<span class="string">"Use Hzip to compress/decompress..."</span>,&amp;k3);</span><br><span class="line">        RegCreateKey(k3,<span class="string">"command"</span>,&amp;k4);</span><br><span class="line">        <span class="built_in">strcpy</span>(setvalue,exepath);</span><br><span class="line">        <span class="built_in">strcat</span>(setvalue,<span class="string">" %1"</span>);</span><br><span class="line">        RegSetValueEx(k4,<span class="literal">NULL</span>,<span class="number">0</span>,REG_SZ,setvalue,<span class="keyword">sizeof</span>(setvalue));</span><br><span class="line">        DrawSelect(<span class="number">1</span>);</span><br><span class="line">        MessageBox(<span class="literal">NULL</span>,<span class="string">"Program has created a right-click menu to use Hzip."</span>,<span class="string">"SET"</span>,MB_OK|MB_ICONINFORMATION);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;<span class="comment">//有右键，删除 </span></span><br><span class="line">        RegDeleteKey(k3,<span class="string">"command"</span>);</span><br><span class="line">        RegDeleteKey(k2,<span class="string">"Use Hzip to compress/decompress..."</span>);</span><br><span class="line">        DrawSelect(<span class="number">0</span>);</span><br><span class="line">        MessageBox(<span class="literal">NULL</span>,<span class="string">"Program has deteled the right-click menu to use Hzip."</span>,<span class="string">"DETELE"</span>,MB_OK|MB_ICONINFORMATION);</span><br><span class="line">    &#125;   </span><br><span class="line">    RegCloseKey(k1);</span><br><span class="line">    RegCloseKey(k2);</span><br><span class="line">    RegCloseKey(k3);</span><br><span class="line">    RegCloseKey(k4);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Compress</span><span class="params">(<span class="keyword">char</span> *fpath)</span></span>&#123;<span class="comment">//预处理及压缩 </span></span><br><span class="line">    FILE *fp1=fopen(fpath,<span class="string">"rb+"</span>);</span><br><span class="line">    <span class="keyword">char</span> cfpath[<span class="number">512</span>];</span><br><span class="line">    GetCompressedFilePath(fpath,cfpath);<span class="comment">//生成压缩文件存储路径 </span></span><br><span class="line">    FILE *fp2=fopen(cfpath,<span class="string">"wb+"</span>);</span><br><span class="line">    <span class="keyword">char</span> MARK[<span class="number">21</span>]=<span class="string">"#HAFFMANCOMPRESSFILE#"</span>;</span><br><span class="line">    fwrite(MARK,<span class="number">21</span>,<span class="number">1</span>,fp2);<span class="comment">//标记这是一个压缩文件 </span></span><br><span class="line">    </span><br><span class="line">    pfrelist fl;</span><br><span class="line">    CreateFrequencyListFromFile(fp1,&amp;fl);<span class="comment">//读取源文件，创建频度表</span></span><br><span class="line">    SaveFrequencyListToFile(fp2,fl);<span class="comment">//保存频度表到目标文件</span></span><br><span class="line"><span class="keyword">if</span>(fl-&gt;num!=<span class="number">0</span> &amp;&amp; fl-&gt;num!=<span class="number">1</span>)&#123;</span><br><span class="line"><span class="comment">//0表示空文件，1表示只有一种字符，这两种情况都不用编码，保存频度表即可 </span></span><br><span class="line">        htree ht;</span><br><span class="line">        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);<span class="comment">//从频度表创建哈夫曼树 </span></span><br><span class="line">        <span class="keyword">char</span> haffmancode[<span class="number">256</span>][<span class="number">256</span>]=&#123;&#125;;</span><br><span class="line">        CreateHaffmanCode(ht,haffmancode);</span><br><span class="line">        fseek(fp1,<span class="number">0</span>,SEEK_SET);<span class="comment">//源文件移回文件头 </span></span><br><span class="line">        HaffmanCompress(fp1,fp2,haffmancode,ht-&gt;f);<span class="comment">//根结点的权值即为总字符数        </span></span><br><span class="line">    &#125;</span><br><span class="line">    fclose(fp1);</span><br><span class="line">    fclose(fp2);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Decompress</span><span class="params">(<span class="keyword">char</span> *fpath)</span></span>&#123;<span class="comment">//预处理及解压 </span></span><br><span class="line">    FILE *fp1=fopen(fpath,<span class="string">"rb+"</span>);</span><br><span class="line">    <span class="keyword">char</span> dfpath[<span class="number">512</span>];</span><br><span class="line">    GetDecompressedFilePath(fpath,dfpath);<span class="comment">//生成解压文件存储路径 </span></span><br><span class="line">    FILE *fp2=fopen(dfpath,<span class="string">"wb+"</span>);</span><br><span class="line">    fseek(fp1,<span class="number">21</span>,SEEK_SET);<span class="comment">//跳过标记 </span></span><br><span class="line">    </span><br><span class="line">    pfrelist fl;</span><br><span class="line">    LoadFrequencyListFromFile(fp1,&amp;fl);</span><br><span class="line">    <span class="keyword">if</span>(fl-&gt;num==<span class="number">0</span>) ;<span class="comment">//空文件，不操作</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(fl-&gt;num==<span class="number">1</span>)&#123;<span class="comment">//只有一种字符的文件 </span></span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> i;</span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;fl-&gt;<span class="built_in">list</span>[<span class="number">0</span>].f;i++) fwrite(&amp;(fl-&gt;<span class="built_in">list</span>[<span class="number">0</span>].ch),<span class="number">1</span>,<span class="number">1</span>,fp2);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        htree ht;</span><br><span class="line">        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);</span><br><span class="line"><span class="comment">//从频度表创建哈夫曼树，解压时不用再生成哈夫曼编码，搜索树即可 </span></span><br><span class="line">        HaffmanDecompress(fp1,fp2,ht);      </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fclose(fp1);</span><br><span class="line">    fclose(fp2);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> *argv[])</span></span>&#123;</span><br><span class="line">    UIInit();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(argc&gt;<span class="number">1</span>)&#123;<span class="comment">//有传入路径</span></span><br><span class="line">        DrawAllBox();</span><br><span class="line">        FILETYPE=GetFileTypeFromPath(argv[<span class="number">1</span>]);  </span><br><span class="line">        FILESIZE=GetFileSizeFromPath(argv[<span class="number">1</span>]); </span><br><span class="line">        GetFileNameFromPath(argv[<span class="number">1</span>],FILENAME); </span><br><span class="line">        DrawInfoText(FILENAME,FILETYPE,FILESIZE);</span><br><span class="line">        </span><br><span class="line">        time(&amp;time_begin); <span class="comment">//计时开始 </span></span><br><span class="line">        <span class="keyword">if</span>(FILETYPE==<span class="number">0</span>)&#123;</span><br><span class="line">            Compress(argv[<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            Decompress(argv[<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        UpdateTimeText(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        DrawSelect(CheckKey());</span><br><span class="line">        INPUT_RECORD inrec;</span><br><span class="line">        DWORD res;<span class="comment">//返回已读取的记录数</span></span><br><span class="line">        COORD pos=&#123;<span class="number">0</span>,<span class="number">0</span>&#125;;</span><br><span class="line">        <span class="keyword">int</span> k;</span><br><span class="line">        <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">            k++;</span><br><span class="line">            ReadConsoleInput(hin,&amp;inrec,<span class="number">1</span>,&amp;res);<span class="comment">//读取鼠标信息</span></span><br><span class="line">            <span class="keyword">if</span> (inrec.EventType==MOUSE_EVENT)&#123;</span><br><span class="line">                <span class="keyword">if</span> (inrec.Event.MouseEvent.dwEventFlags==<span class="number">0</span> &amp;&amp; \</span><br><span class="line">                inrec.Event.MouseEvent.dwButtonState==FROM_LEFT_1ST_BUTTON_PRESSED)&#123;</span><br><span class="line">                    SetKey(argv[<span class="number">0</span>]);<span class="comment">//设置右键</span></span><br><span class="line">                    </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">char</span> t_finish[<span class="number">30</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_finish,<span class="string">"Finished! Press any key to exit!"</span>);</span><br><span class="line">    UI_DrawText(hout,F_CYAN | B_BLACK,t_finish,<span class="built_in">strlen</span>(t_finish),HEIGHT<span class="number">-2</span>,<span class="number">0</span>+<span class="number">2</span>,WIDTH<span class="number">-1</span><span class="number">-2</span>);</span><br><span class="line">    getchar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">/*
+    Last Update time: 2017-11-11     
+    Version：1.1
+    Author：LinXiang (PB16020923) 
+    Description：
+        Hzip.c.
+*/
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt; 
+#include &lt;time.h&gt;
+#include &quot;MyUI.h&quot;
+#include &quot;FrequencyList.h&quot;
+#include &quot;HaffmanTree.h&quot;
+#define WIDTH 50 //窗口的宽和高 
+#define HEIGHT 15
+HANDLE hout;
+HANDLE hin;
+time_t time_begin;
+time_t time_now;
+long FILESIZE;//记录文件长度，用于读取文件时计算进度
+int FILETYPE;// 
+char FILENAME[30]; 
+void GetCompressedFilePath(char *FPath,char *CFPath){//从传入的路径求得对应压缩文件路径 
+    strcpy(CFPath,FPath);
+    strcat(CFPath,&quot;.hzip&quot;);
+}
+void GetDecompressedFilePath(char *FPath,char *DFPath){//从传入的压缩文路径求得对应解压文件路径 
+    strcpy(DFPath,FPath);
+    DFPath[strlen(DFPath)-5]=0;//去除尾部&quot;.hzip&quot; 
+}
+void GetFileNameFromPath(char *FPath,char *FName){//从路径中提取文件名
+    char *pos;//最后一个\的位置 
+    char *p=FPath;
+    while(*p){
+        if(*p==&#39;\\&#39;) pos=p;
+        p++;
+    }
+    while(*pos){
+        *FName++=*(++pos);//此法即可跳过‘\’本身，又可复制字符串结束符到FName中 
+    }
+}
+long GetFileSizeFromPath(char *FPath){ //获取文件大小 
+    FILE *fp=fopen(FPath,&quot;r&quot;);  
+    if(!fp) return -1;  
+    fseek(fp,0L,SEEK_END);  
+    long size=ftell(fp);  
+    fclose(fp);  
+    return size;  
+} 
+int GetFileTypeFromPath(char *FPath){//判断是解压(1)还是压缩(0)
+    FILE *fp=fopen(FPath,&quot;rb+&quot;);
+    char MARK[22];
+    int type;
+    if(!fread(MARK,21,1,fp)){
+        type=0;
+    }
+    else{
+        MARK[21]=0;//字符串结尾 
+        if(strcmp(&quot;#HAFFMANCOMPRESSFILE#&quot;,MARK)) type=0;
+        else type=1;    
+    }
+    fclose(fp);
+    return type;
+}
+void UIInit(){//UI初始化 
+    UI_InitSTDHandle(&amp;hout,&amp;hin,WIDTH,HEIGHT);
+    UI_SetConsoleScreenBufferSize(hout,WIDTH,HEIGHT);//设置缓冲区大小
+    UI_SetConsoleWindowSize(hout,WIDTH,HEIGHT);//设置窗口大小 
+    //system(&quot;color F0&quot;);此句与鼠标操作冲突！！！！！不要用system() 
+    ClearScreen(hout,B_WHITE); //清屏并设置前景背景色，不要用上句 
+
+    COORD curpos;
+    curpos.X=5;
+    curpos.Y=HEIGHT-2;
+    SetConsoleCursorPosition(hout,curpos);//设置光标位置 
+    CONSOLE_CURSOR_INFO cursor_info={1,0}; 
+    SetConsoleCursorInfo(hout,&amp;cursor_info);//隐藏光标 
+}
+void DrawAllBox(){//绘制所有方框 
+    SMALL_RECT rc;
+    rc=UI_SetRect(0,0,WIDTH-1,3);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_RED);
+    rc=UI_SetRect(0,4,WIDTH-1,7);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_BLUE);
+    rc=UI_SetRect(0,8,WIDTH-1,11);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_BLUE); 
+    rc=UI_SetRect(0,12,WIDTH-1,14);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_CYAN); 
+}
+void DrawInfoText(char *filename,int type,int size){//文件名，类型是解压(1)还是压缩(0)
+    char t_title[30];
+    sprintf(t_title,&quot;Hzip V1.1&quot;);
+    UI_DrawText(hout,B_WHITE | F_RED,t_title,strlen(t_title),1,0+2,WIDTH-1-2);
+    sprintf(t_title,&quot;Code by PB16020923&quot;);
+    UI_DrawText(hout,B_WHITE | F_RED,t_title,strlen(t_title),2,0+2,WIDTH-1-2);
+    //窗口标题显示当前操作
+    char t_info[38];
+    sprintf(t_info,&quot;Hzip V1.1 - %s&quot;,type==0?&quot;Compressing...&quot;:&quot;Decompressing...&quot;);
+    SetConsoleTitle(t_info);
+    //文件名
+    char t_filename[38];
+    sprintf(t_filename,&quot;FileName: %s&quot;,filename);    
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_filename,strlen(t_filename),5,0+2,WIDTH-1-2);
+    //文件大小 
+    char t_size[38];
+    sprintf(t_size,&quot;Size: %0.2f KB&quot;,(double)size/1024);
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_size,strlen(t_size),6,0+2,WIDTH-1-2);   
+}
+void UpdateTimeText(double progress){//根据进度(0-1)更新剩余时间 
+    time(&amp;time_now); 
+    //已花时间 
+    char t_spenttime[40];
+    sprintf(t_spenttime,&quot;Spent Time: %d s&quot;,time_now-time_begin);
+    UI_CleanText(hout,9,0+2,WIDTH-1-2);
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_spenttime,strlen(t_spenttime),9,0+2,WIDTH-1-2);
+    //剩余时间 
+    char t_remainedtime[40];
+    sprintf(t_remainedtime,&quot;Remained Time: %d s&quot;,(int)((time_now-time_begin)*(1-progress)/progress));
+    UI_CleanText(hout,10,0+2,WIDTH-1-2);
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_remainedtime,strlen(t_remainedtime),10,0+2,WIDTH-1-2);
+    //画进度条 
+    int k=47*progress,i;
+    for(i=2;i&lt;=k;i++){
+        //UI_DrawText(hout,B_BLUE,&quot; &quot;,1,12,i,i);
+        UI_DrawText(hout,B_CYAN,&quot; &quot;,1,13,i,i);
+    }
+}
+void DrawSelect(int select){//没有文件传入时显示配置界面,select=1表示已选中，即当前已创建右键菜单
+    ClearScreen(hout,B_WHITE); 
+    SMALL_RECT rc;
+    rc=UI_SetRect(0,0,WIDTH-1,4);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_RED);      
+    char t_title[38];
+    sprintf(t_title,&quot;Hzip V1.1 - Setting&quot;);
+    UI_DrawText(hout,B_WHITE | F_RED,t_title,strlen(t_title),2,0+2,WIDTH-1-2);
+
+    int dx=10,dy=5;
+    rc=UI_SetRect(0+dx,0+dy,5+dx,2+dy);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_BLUE);
+    UI_DrawText(hout,B_WHITE | F_BLUE,select==1?&quot;√&quot;:&quot;  &quot;,2,1+dy,2+dx,3+dx);   
+    char t_cj[30]=&quot;Create right-click menu&quot;;
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_cj,strlen(t_cj),1+dy,7+dx,7+dx+strlen(t_cj));
+}
+int CheckKey(){//检查右键菜单注册表是否已设置 
+    HKEY k1,k2,k3;
+    if(RegOpenKeyEx(HKEY_CLASSES_ROOT,&quot;*&quot;,0,KEY_ALL_ACCESS,&amp;k1) != ERROR_SUCCESS){
+        return 0;
+    }
+    if(RegOpenKeyEx(k1,&quot;shell&quot;,0,KEY_ALL_ACCESS,&amp;k2) != ERROR_SUCCESS){
+        return 0;
+    }
+    if(RegOpenKeyEx(k2,&quot;Use Hzip to compress/decompress...&quot;,0,KEY_ALL_ACCESS,&amp;k3) != ERROR_SUCCESS){ 
+        return 0;
+    }   
+    return 1;
+}
+void SetKey(char *exepath){//设置或取消右键菜单注册表 
+    HKEY k1,k2,k3,k4;
+    char readvalue[128]={};
+    char setvalue[128]={};
+    if(RegOpenKeyEx(HKEY_CLASSES_ROOT,&quot;*&quot;,0,KEY_ALL_ACCESS,&amp;k1) != ERROR_SUCCESS){
+        RegCreateKey(HKEY_CLASSES_ROOT,&quot;*&quot;,&amp;k1);
+    }
+    if(RegOpenKeyEx(k1,&quot;shell&quot;,0,KEY_ALL_ACCESS,&amp;k2) != ERROR_SUCCESS){
+        RegCreateKey(k1,&quot;shell&quot;,&amp;k2);
+    }
+    if(RegOpenKeyEx(k2,&quot;Use Hzip to compress/decompress...&quot;,0,KEY_ALL_ACCESS,&amp;k3) != ERROR_SUCCESS){//没有右键 
+        RegCreateKey(k2,&quot;Use Hzip to compress/decompress...&quot;,&amp;k3);
+        RegCreateKey(k3,&quot;command&quot;,&amp;k4);
+        strcpy(setvalue,exepath);
+        strcat(setvalue,&quot; %1&quot;);
+        RegSetValueEx(k4,NULL,0,REG_SZ,setvalue,sizeof(setvalue));
+        DrawSelect(1);
+        MessageBox(NULL,&quot;Program has created a right-click menu to use Hzip.&quot;,&quot;SET&quot;,MB_OK|MB_ICONINFORMATION);
+    }
+    else{//有右键，删除 
+        RegDeleteKey(k3,&quot;command&quot;);
+        RegDeleteKey(k2,&quot;Use Hzip to compress/decompress...&quot;);
+        DrawSelect(0);
+        MessageBox(NULL,&quot;Program has deteled the right-click menu to use Hzip.&quot;,&quot;DETELE&quot;,MB_OK|MB_ICONINFORMATION);
+    }   
+    RegCloseKey(k1);
+    RegCloseKey(k2);
+    RegCloseKey(k3);
+    RegCloseKey(k4);
+}
+int Compress(char *fpath){//预处理及压缩 
+    FILE *fp1=fopen(fpath,&quot;rb+&quot;);
+    char cfpath[512];
+    GetCompressedFilePath(fpath,cfpath);//生成压缩文件存储路径 
+    FILE *fp2=fopen(cfpath,&quot;wb+&quot;);
+    char MARK[21]=&quot;#HAFFMANCOMPRESSFILE#&quot;;
+    fwrite(MARK,21,1,fp2);//标记这是一个压缩文件 
+
+    pfrelist fl;
+    CreateFrequencyListFromFile(fp1,&amp;fl);//读取源文件，创建频度表
+    SaveFrequencyListToFile(fp2,fl);//保存频度表到目标文件
+if(fl-&gt;num!=0 &amp;&amp; fl-&gt;num!=1){
+//0表示空文件，1表示只有一种字符，这两种情况都不用编码，保存频度表即可 
+        htree ht;
+        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);//从频度表创建哈夫曼树 
+        char haffmancode[256][256]={};
+        CreateHaffmanCode(ht,haffmancode);
+        fseek(fp1,0,SEEK_SET);//源文件移回文件头 
+        HaffmanCompress(fp1,fp2,haffmancode,ht-&gt;f);//根结点的权值即为总字符数        
+    }
+    fclose(fp1);
+    fclose(fp2);
+}
+int Decompress(char *fpath){//预处理及解压 
+    FILE *fp1=fopen(fpath,&quot;rb+&quot;);
+    char dfpath[512];
+    GetDecompressedFilePath(fpath,dfpath);//生成解压文件存储路径 
+    FILE *fp2=fopen(dfpath,&quot;wb+&quot;);
+    fseek(fp1,21,SEEK_SET);//跳过标记 
+
+    pfrelist fl;
+    LoadFrequencyListFromFile(fp1,&amp;fl);
+    if(fl-&gt;num==0) ;//空文件，不操作
+    else if(fl-&gt;num==1){//只有一种字符的文件 
+        unsigned int i;
+        for(i=0;i&lt;fl-&gt;list[0].f;i++) fwrite(&amp;(fl-&gt;list[0].ch),1,1,fp2);
+    }
+    else{
+        htree ht;
+        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);
+//从频度表创建哈夫曼树，解压时不用再生成哈夫曼编码，搜索树即可 
+        HaffmanDecompress(fp1,fp2,ht);      
+    }
+
+    fclose(fp1);
+    fclose(fp2);
+}
+int main(int argc,char *argv[]){
+    UIInit();
+
+    if(argc&gt;1){//有传入路径
+        DrawAllBox();
+        FILETYPE=GetFileTypeFromPath(argv[1]);  
+        FILESIZE=GetFileSizeFromPath(argv[1]); 
+        GetFileNameFromPath(argv[1],FILENAME); 
+        DrawInfoText(FILENAME,FILETYPE,FILESIZE);
+
+        time(&amp;time_begin); //计时开始 
+        if(FILETYPE==0){
+            Compress(argv[1]);
+        }
+        else{
+            Decompress(argv[1]);
+        }
+        UpdateTimeText(1);
+    }
+    else{
+        DrawSelect(CheckKey());
+        INPUT_RECORD inrec;
+        DWORD res;//返回已读取的记录数
+        COORD pos={0,0};
+        int k;
+        for(;;){
+            k++;
+            ReadConsoleInput(hin,&amp;inrec,1,&amp;res);//读取鼠标信息
+            if (inrec.EventType==MOUSE_EVENT){
+                if (inrec.Event.MouseEvent.dwEventFlags==0 &amp;&amp; \
+                inrec.Event.MouseEvent.dwButtonState==FROM_LEFT_1ST_BUTTON_PRESSED){
+                    SetKey(argv[0]);//设置右键
+
+                }
+            }
+        }
+    }
+    char t_finish[30];
+    sprintf(t_finish,&quot;Finished! Press any key to exit!&quot;);
+    UI_DrawText(hout,F_CYAN | B_BLACK,t_finish,strlen(t_finish),HEIGHT-2,0+2,WIDTH-1-2);
+    getchar();
+}
+</code></pre>
 <p>MyUI.h<br>​<br>​    界面部分，代码过长且与数据结构关系不大，此处不贴出</p>
 
       
@@ -581,7 +1122,7 @@ Status LoadFrequencyListFromFile(FILE *fp,pfrelist *fl){//从压缩文件中读�
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#哈夫曼压缩"><span class="toc-text">哈夫曼压缩</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#题目"><span class="toc-text">题目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一、-需求分析"><span class="toc-text">一、    需求分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、-概要设计"><span class="toc-text">二、    概要设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、-详细设计"><span class="toc-text">三、    详细设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、-调试分析"><span class="toc-text">四、    调试分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、-用户手册"><span class="toc-text">五、    用户手册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、-测试结果"><span class="toc-text">六、    测试结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#七、-附录"><span class="toc-text">七、    附录</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#哈夫曼压缩"><span class="toc-text">哈夫曼压缩</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#题目"><span class="toc-text">题目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一、-需求分析"><span class="toc-text">一、    需求分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、-概要设计"><span class="toc-text">二、    概要设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、-调试分析"><span class="toc-text">四、    调试分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、-用户手册"><span class="toc-text">五、    用户手册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、-测试结果"><span class="toc-text">六、    测试结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#七、-附录"><span class="toc-text">七、    附录</span></a></li></ol></li></ol>
         
     </div>
     <style>

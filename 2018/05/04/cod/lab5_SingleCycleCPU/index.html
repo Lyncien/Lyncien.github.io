@@ -339,16 +339,75 @@
 </li>
 <li><p>bgtz的实现：bgtz是伪指令（类似地有la和li），不是MIPS指令集的指令，编译时会进行处理，转换为几条指令实现。</p>
 <p>这里我用以下三条指令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">slt $t6,$zero,$t1 # if $t1 &gt; 0, that $t6 = 1, else $t6 = 0</span><br><span class="line">  </span><br><span class="line">addi $t7,$zero,1 # set $t7 = 1</span><br><span class="line">  </span><br><span class="line">beq $t6,$t7,loop # jump if $t6 = 1, that is to say, $t1 &gt; 0</span><br></pre></td></tr></table></figure>
+<pre><code class="assembly">slt $t6,$zero,$t1 # if $t1 &gt; 0, that $t6 = 1, else $t6 = 0
+
+addi $t7,$zero,1 # set $t7 = 1
+
+beq $t6,$t7,loop # jump if $t6 = 1, that is to say, $t1 &gt; 0
+</code></pre>
 <p>实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bgtz $t1, loop # repeat if not finished yet.</span><br></pre></td></tr></table></figure>
+<pre><code class="assembly">bgtz $t1, loop # repeat if not finished yet.
+</code></pre>
 </li>
+</ol>
+<ol start="9">
 <li><p>完整的数据通路</p>
 <p> <img src="//l-x.me/2018/05/04/cod/lab5_SingleCycleCPU/20180527111736051-1.png" alt=""></p>
 </li>
 </ol>
 <p>10、分析结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">.data</span><br><span class="line"></span><br><span class="line">fibs: .word 0 : 20 # &quot;array&quot; of 20 words to contain fib values</span><br><span class="line"></span><br><span class="line">size: .word 20 # size of &quot;array&quot;</span><br><span class="line"></span><br><span class="line">temp: .word 3  3</span><br><span class="line"></span><br><span class="line">.text</span><br><span class="line"></span><br><span class="line">   la $t0, fibs # load address of array</span><br><span class="line"></span><br><span class="line">   la $t5, size # load address of size variable</span><br><span class="line"></span><br><span class="line">   lw $t5, 0($t5) # load array size</span><br><span class="line"></span><br><span class="line">   la $t3, temp # load</span><br><span class="line"></span><br><span class="line">   lw $t3, 0($t3)</span><br><span class="line"></span><br><span class="line">   la $t4, temp</span><br><span class="line"></span><br><span class="line">   lw $t4, 4($t4)</span><br><span class="line"></span><br><span class="line">   sw $t3, 0($t0) # F[0] = $t3</span><br><span class="line"></span><br><span class="line">   sw $t4, 4($t0) # F[1] = $t4</span><br><span class="line"></span><br><span class="line">   addi $t1, $t5,  -2 # Counter for loop, will execute (size-2) times</span><br><span class="line"></span><br><span class="line">loop: lw $t3, 0($t0) # Get value from array F[n]</span><br><span class="line"></span><br><span class="line">   lw $t4, 4($t0) # Get value from array F[n+1]</span><br><span class="line"></span><br><span class="line">   add $t2, $t3, $t4 # $t2 = F[n] + F[n+1]</span><br><span class="line"></span><br><span class="line">   sw $t2, 8($t0) # Store F[n+2] = F[n] + F[n+1] in array</span><br><span class="line"></span><br><span class="line">   addi $t0, $t0,  4 # increment address of Fib. number source</span><br><span class="line"></span><br><span class="line">   addi $t1, $t1,  -1 # decrement loop counter</span><br><span class="line"></span><br><span class="line">   slt $t6,$zero,$t1 # if $t1 &gt; 0, that $t6 = 1, else $t6 = 0</span><br><span class="line"></span><br><span class="line">   addi $t7,$zero,1 # set $t7 = 1</span><br><span class="line"></span><br><span class="line">   beq $t6,$t7,loop # jump if $t6 = 1, that is to say, $t1 &gt; 0</span><br><span class="line"></span><br><span class="line">out: </span><br><span class="line"></span><br><span class="line">   j out</span><br></pre></td></tr></table></figure>
+<pre><code class="assembly">.data
+
+fibs: .word 0 : 20 # &quot;array&quot; of 20 words to contain fib values
+
+size: .word 20 # size of &quot;array&quot;
+
+temp: .word 3  3
+
+.text
+
+   la $t0, fibs # load address of array
+
+   la $t5, size # load address of size variable
+
+   lw $t5, 0($t5) # load array size
+
+   la $t3, temp # load
+
+   lw $t3, 0($t3)
+
+   la $t4, temp
+
+   lw $t4, 4($t4)
+
+   sw $t3, 0($t0) # F[0] = $t3
+
+   sw $t4, 4($t0) # F[1] = $t4
+
+   addi $t1, $t5,  -2 # Counter for loop, will execute (size-2) times
+
+loop: lw $t3, 0($t0) # Get value from array F[n]
+
+   lw $t4, 4($t0) # Get value from array F[n+1]
+
+   add $t2, $t3, $t4 # $t2 = F[n] + F[n+1]
+
+   sw $t2, 8($t0) # Store F[n+2] = F[n] + F[n+1] in array
+
+   addi $t0, $t0,  4 # increment address of Fib. number source
+
+   addi $t1, $t1,  -1 # decrement loop counter
+
+   slt $t6,$zero,$t1 # if $t1 &gt; 0, that $t6 = 1, else $t6 = 0
+
+   addi $t7,$zero,1 # set $t7 = 1
+
+   beq $t6,$t7,loop # jump if $t6 = 1, that is to say, $t1 &gt; 0
+
+out: 
+
+   j out
+</code></pre>
 <ul>
 <li><p>完整汇编代码如上，可知程序先向内存数据段读取数组首地址和大小（循环次数），读取并写入f[0]=3, f[1]=3，然后循环18次，执行f[i]=f[i-1]+f[i-2]计算斐波那契数列。</p>
 </li>
@@ -362,95 +421,95 @@
 <p>  其中IMem内容为</p>
 </li>
 </ul>
-<pre><code>MEMORY_INITIALIZATION_RADIX=16;
+<pre><code>    MEMORY_INITIALIZATION_RADIX=16;
 
-MEMORY_INITIALIZATION_VECTOR=
+    MEMORY_INITIALIZATION_VECTOR=
 
-20080000,
+    20080000,
 
-200d0050,
+    200d0050,
 
-8dad0000,
+    8dad0000,
 
-200b0054,
+    200b0054,
 
-8d6b0000,
+    8d6b0000,
 
-200c0054,
+    200c0054,
 
-8d8c0004,
+    8d8c0004,
 
-ad0b0000,
+    ad0b0000,
 
-ad0c0004,
+    ad0c0004,
 
-21a9fffe,
+    21a9fffe,
 
-8d0b0000,
+    8d0b0000,
 
-8d0c0004,
+    8d0c0004,
 
-016c5020,
+    016c5020,
 
-ad0a0008,
+    ad0a0008,
 
-21080004,
+    21080004,
 
-2129ffff,
+    2129ffff,
 
-1d20fff9,
+    1d20fff9,
 
-08000011,
+    08000011,
 </code></pre><p>DMem内容为</p>
-<pre><code>MEMORY_INITIALIZATION_RADIX=16;
+<pre><code>    MEMORY_INITIALIZATION_RADIX=16;
 
-MEMORY_INITIALIZATION_VECTOR=
+    MEMORY_INITIALIZATION_VECTOR=
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000000
+    00000000
 
-00000014
+    00000014
 
-00000003
+    00000003
 
-00000003
+    00000003
 </code></pre><p>仿真得DMem和reg数据为</p>
 <p><img src="//l-x.me/2018/05/04/cod/lab5_SingleCycleCPU/20180527111736051-2.png" alt=""> </p>
 <p>DMem</p>
@@ -461,7 +520,7 @@ MEMORY_INITIALIZATION_VECTOR=
 <li><p>编写过程中遇到问题和一些发现</p>
 <ol>
 <li><p>位拼接作为左值，单个变量也要花括号，如</p>
-<pre><code>`{{RegDst},{ALUSrc},{MemtoReg},{RegWrite},{MemWrite},{Branch},{ALUOp[1:0]},{Jump}}=9&apos;b100100100;`
+<pre><code> `{{RegDst},{ALUSrc},{MemtoReg},{RegWrite},{MemWrite},{Branch},{ALUOp[1:0]},{Jump}}=9&#39;b100100100;`
 </code></pre></li>
 <li><p>“==”会严格匹配每一位，比如module内5位数字比较（一个常量，一个input），但外部传入的是3位的，高位自动拓展好像是x，就导致“==”不成立，这是一个不好发现的问题。</p>
 </li>
@@ -476,25 +535,295 @@ MEMORY_INITIALIZATION_VECTOR=
 <li><p>模块源代码</p>
 <ul>
 <li><p>top.v</p>
-<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> top(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> rst_n,    </span><br><span class="line">    );</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">wire</span> ALUSrc;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] ALUSrcA;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] ALUSrcB;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">2</span>:<span class="number">0</span>] ALUControl;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] ALUResult;</span><br><span class="line">    <span class="keyword">wire</span> Zero;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] SignExtented;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">5</span>:<span class="number">0</span>] RegRdaddr1;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] RegRdout1;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">5</span>:<span class="number">0</span>] RegRdaddr2;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] RegRdout2;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">5</span>:<span class="number">0</span>] RegWdaddr;   </span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] RegWdin;</span><br><span class="line">    <span class="keyword">wire</span> RegWrite;</span><br><span class="line">    <span class="keyword">wire</span> RegDst;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] DMemaddr;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] DMemout;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] DMemin;</span><br><span class="line">    <span class="keyword">wire</span> DMemWrite;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] IMemRdaddr;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] IMemRdout;</span><br><span class="line">    <span class="keyword">wire</span> MemtoReg;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] Instr;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] PC=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] nextPC;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">5</span>:<span class="number">0</span>] Funct;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">15</span>:<span class="number">0</span>] IMM16;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">4</span>:<span class="number">0</span>] Rd;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">4</span>:<span class="number">0</span>] Rt;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">4</span>:<span class="number">0</span>] Rs;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">5</span>:<span class="number">0</span>] Op;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">25</span>:<span class="number">0</span>] JumpIMM;</span><br><span class="line">    <span class="keyword">wire</span> Jump;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">wire</span> Branch;</span><br><span class="line">    <span class="keyword">integer</span> first;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//=======================PC========================</span></span><br><span class="line">    <span class="keyword">always</span> @(<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)</span><br><span class="line">        <span class="keyword">if</span>(~rst_n) <span class="keyword">begin</span> first &lt;= <span class="number">1</span>; PC &lt;= <span class="number">0</span>; <span class="keyword">end</span> </span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(first == <span class="number">1</span>) <span class="keyword">begin</span> first &lt;= <span class="number">0</span>; PC &lt;= PC; <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">else</span> </span><br><span class="line">            PC &lt;= nextPC;       </span><br><span class="line">        </span><br><span class="line">    nextpclogic nextpclogic(PC,Jump,JumpIMM,Branch,Zero,SignExtented,nextPC);   </span><br><span class="line">    </span><br><span class="line">    <span class="comment">//=====================Instruction Memory======================</span></span><br><span class="line">	<span class="keyword">assign</span> IMemRdaddr = PC &gt;&gt; <span class="number">2</span>;<span class="comment">//&gt;&gt;2是因为这里IMem是每个地址存储4字节，和实际上的（一地址一字节）不一样</span></span><br><span class="line">    IMem IMem(<span class="number">0</span>,<span class="number">0</span>,IMemRdaddr,<span class="number">0</span>,<span class="number">0</span>,IMemRdout);</span><br><span class="line">    <span class="keyword">assign</span> Instr = IMemRdout;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">assign</span> JumpIMM = Instr[<span class="number">25</span>:<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">assign</span> Funct = Instr[<span class="number">5</span>:<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">assign</span> IMM16 = Instr[<span class="number">15</span>:<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">assign</span> Rd = Instr[<span class="number">15</span>:<span class="number">11</span>];</span><br><span class="line">    <span class="keyword">assign</span> Rt = Instr[<span class="number">20</span>:<span class="number">16</span>];</span><br><span class="line">    <span class="keyword">assign</span> Rs = Instr[<span class="number">25</span>:<span class="number">21</span>];</span><br><span class="line">    <span class="keyword">assign</span> Op = Instr[<span class="number">31</span>:<span class="number">26</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//=======================Regfile========================</span></span><br><span class="line">    <span class="keyword">assign</span> RegRdaddr1 = Rs;</span><br><span class="line">    <span class="keyword">assign</span> RegRdaddr2 = Rt;</span><br><span class="line">    mux <span class="variable">#(6) MUXRegWdaddr(RegDst,&#123;1'b0,Rt&#125;,&#123;1'b0,Rd&#125;,RegWdaddr)</span>;</span><br><span class="line">	regfile regfile(~clk,rst_n,RegRdaddr1,RegRdout1,RegRdaddr2,RegRdout2,RegWdaddr,RegWdin,RegWrite);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//=========================ALU==========================</span></span><br><span class="line">    <span class="keyword">assign</span> SignExtented = &#123;&#123;<span class="number">16</span>&#123;IMM16[<span class="number">15</span>]&#125;&#125;,IMM16&#125;;</span><br><span class="line">    <span class="keyword">assign</span> ALUSrcA = RegRdout1;</span><br><span class="line">    mux MUXALUSrc(ALUSrc,RegRdout2,SignExtented,ALUSrcB);</span><br><span class="line">    alu alu(ALUSrcA,ALUSrcB,&#123;<span class="number">2'b00</span>,&#123;ALUControl&#125;&#125;,ALUResult,Zero);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//=======================Control========================</span></span><br><span class="line">	control control(clk,Op,Funct,RegDst,ALUSrc,MemtoReg,RegWrite,DMemWrite,Branch,ALUControl,Jump); </span><br><span class="line">    </span><br><span class="line">    <span class="comment">//=======================Data Memory========================</span></span><br><span class="line">    <span class="keyword">assign</span> DMemaddr = ALUResult &gt;&gt; <span class="number">2</span>;<span class="comment">//&gt;&gt;2理由同上</span></span><br><span class="line">    <span class="keyword">assign</span> DMemin = RegRdout2;</span><br><span class="line">    DMem DMem(DMemaddr,DMemin,~clk,DMemWrite,DMemout);  </span><br><span class="line">    mux MUXtoReg(MemtoReg,ALUResult,DMemout,RegWdin);</span><br><span class="line">    </span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<pre><code class="verilog">  module top(
+      input clk,
+      input rst_n,    
+      );
+
+      wire ALUSrc;
+      wire [31:0] ALUSrcA;
+      wire [31:0] ALUSrcB;
+      wire [2:0] ALUControl;
+      wire [31:0] ALUResult;
+      wire Zero;
+
+      wire [31:0] SignExtented;
+
+      wire [5:0] RegRdaddr1;
+      wire [31:0] RegRdout1;
+      wire [5:0] RegRdaddr2;
+      wire [31:0] RegRdout2;
+      wire [5:0] RegWdaddr;   
+      wire [31:0] RegWdin;
+      wire RegWrite;
+      wire RegDst;
+
+      wire [31:0] DMemaddr;
+      wire [31:0] DMemout;
+      wire [31:0] DMemin;
+      wire DMemWrite;
+      wire [31:0] IMemRdaddr;
+      wire [31:0] IMemRdout;
+      wire MemtoReg;
+
+      wire [31:0] Instr;
+
+      reg [31:0] PC=0;
+      wire [31:0] nextPC;
+
+      wire [5:0] Funct;
+      wire [15:0] IMM16;
+      wire [4:0] Rd;
+      wire [4:0] Rt;
+      wire [4:0] Rs;
+      wire [5:0] Op;
+
+      wire [25:0] JumpIMM;
+      wire Jump;
+
+      wire Branch;
+      integer first;
+
+      //=======================PC========================
+      always @(posedge clk or negedge rst_n)
+          if(~rst_n) begin first &lt;= 1; PC &lt;= 0; end 
+          else if(first == 1) begin first &lt;= 0; PC &lt;= PC; end
+          else 
+              PC &lt;= nextPC;       
+
+      nextpclogic nextpclogic(PC,Jump,JumpIMM,Branch,Zero,SignExtented,nextPC);   
+
+      //=====================Instruction Memory======================
+      assign IMemRdaddr = PC &gt;&gt; 2;//&gt;&gt;2是因为这里IMem是每个地址存储4字节，和实际上的（一地址一字节）不一样
+      IMem IMem(0,0,IMemRdaddr,0,0,IMemRdout);
+      assign Instr = IMemRdout;
+
+      assign JumpIMM = Instr[25:0];
+      assign Funct = Instr[5:0];
+      assign IMM16 = Instr[15:0];
+      assign Rd = Instr[15:11];
+      assign Rt = Instr[20:16];
+      assign Rs = Instr[25:21];
+      assign Op = Instr[31:26];
+
+      //=======================Regfile========================
+      assign RegRdaddr1 = Rs;
+      assign RegRdaddr2 = Rt;
+      mux #(6) MUXRegWdaddr(RegDst,{1&#39;b0,Rt},{1&#39;b0,Rd},RegWdaddr);
+      regfile regfile(~clk,rst_n,RegRdaddr1,RegRdout1,RegRdaddr2,RegRdout2,RegWdaddr,RegWdin,RegWrite);
+
+      //=========================ALU==========================
+      assign SignExtented = {{16{IMM16[15]}},IMM16};
+      assign ALUSrcA = RegRdout1;
+      mux MUXALUSrc(ALUSrc,RegRdout2,SignExtented,ALUSrcB);
+      alu alu(ALUSrcA,ALUSrcB,{2&#39;b00,{ALUControl}},ALUResult,Zero);
+
+      //=======================Control========================
+      control control(clk,Op,Funct,RegDst,ALUSrc,MemtoReg,RegWrite,DMemWrite,Branch,ALUControl,Jump); 
+
+      //=======================Data Memory========================
+      assign DMemaddr = ALUResult &gt;&gt; 2;//&gt;&gt;2理由同上
+      assign DMemin = RegRdout2;
+      DMem DMem(DMemaddr,DMemin,~clk,DMemWrite,DMemout);  
+      mux MUXtoReg(MemtoReg,ALUResult,DMemout,RegWdin);
+
+  endmodule
+</code></pre>
 </li>
 <li><p>alu.v</p>
-<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">parameter</span> A_NOP =<span class="number">5'h00</span>; <span class="comment">//nop</span></span><br><span class="line"><span class="keyword">parameter</span> A_ADD =<span class="number">5'h01</span>; <span class="comment">//sign_add</span></span><br><span class="line"><span class="keyword">parameter</span> A_SUB =<span class="number">5'h02</span>; <span class="comment">//sign_sub</span></span><br><span class="line"><span class="keyword">parameter</span> A_AND =<span class="number">5'h03</span>; <span class="comment">//and</span></span><br><span class="line"><span class="keyword">parameter</span> A_OR  =<span class="number">5'h04</span>; <span class="comment">//or</span></span><br><span class="line"><span class="keyword">parameter</span> A_XOR =<span class="number">5'h05</span>; <span class="comment">//xor</span></span><br><span class="line"><span class="keyword">parameter</span> A_NOR =<span class="number">5'h06</span>; <span class="comment">//nor</span></span><br><span class="line"><span class="keyword">parameter</span> A_SLT =<span class="number">5'h07</span>; <span class="comment">//slt</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> alu(</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] alu_a,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] alu_b,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">4</span>:<span class="number">0</span>] alu_op,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] alu_out,</span><br><span class="line">     <span class="keyword">output</span> zero</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">assign</span> zero = (alu_out == <span class="number">32'b0</span>)?<span class="number">1</span>:<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">always</span>@(*)</span><br><span class="line">        <span class="keyword">case</span> (alu_op)</span><br><span class="line">            A_NOP: alu_out = <span class="number">0</span>;</span><br><span class="line">            A_ADD: alu_out = alu_a + alu_b;</span><br><span class="line">            A_SUB: alu_out = alu_a - alu_b;</span><br><span class="line">            A_AND: alu_out = alu_a &amp; alu_b;</span><br><span class="line">            A_OR : alu_out = alu_a | alu_b;</span><br><span class="line">            A_XOR: alu_out = alu_a ^ alu_b;</span><br><span class="line">            A_NOR: alu_out = ~(alu_a | alu_b);</span><br><span class="line">            A_SLT: <span class="comment">//a&lt;b(signed) return 1 else return 0;</span></span><br><span class="line">                <span class="keyword">begin</span></span><br><span class="line">                    <span class="keyword">if</span>(alu_a[<span class="number">31</span>] == alu_b[<span class="number">31</span>]) alu_out = (alu_a &lt; alu_b) ? <span class="number">32'b1</span> : <span class="number">32'b0</span>;</span><br><span class="line">                    <span class="comment">//同号情况，后面的小于是视为无符号的比较</span></span><br><span class="line">                    <span class="keyword">else</span> alu_out = (alu_a[<span class="number">31</span>] &lt; alu_b[<span class="number">31</span>]) ? <span class="number">32'b0</span> : <span class="number">32'b1</span>;</span><br><span class="line"><span class="comment">//有符号比较符号</span></span><br><span class="line">                <span class="keyword">end</span>         </span><br><span class="line">            <span class="keyword">default</span>: ;</span><br><span class="line">        <span class="keyword">endcase</span></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<pre><code class="verilog">  parameter A_NOP =5&#39;h00; //nop
+  parameter A_ADD =5&#39;h01; //sign_add
+  parameter A_SUB =5&#39;h02; //sign_sub
+  parameter A_AND =5&#39;h03; //and
+  parameter A_OR  =5&#39;h04; //or
+  parameter A_XOR =5&#39;h05; //xor
+  parameter A_NOR =5&#39;h06; //nor
+  parameter A_SLT =5&#39;h07; //slt
+
+  module alu(
+      input [31:0] alu_a,
+      input [31:0] alu_b,
+      input [4:0] alu_op,
+      output reg [31:0] alu_out,
+       output zero
+      );
+      assign zero = (alu_out == 32&#39;b0)?1:0;
+      always@(*)
+          case (alu_op)
+              A_NOP: alu_out = 0;
+              A_ADD: alu_out = alu_a + alu_b;
+              A_SUB: alu_out = alu_a - alu_b;
+              A_AND: alu_out = alu_a &amp; alu_b;
+              A_OR : alu_out = alu_a | alu_b;
+              A_XOR: alu_out = alu_a ^ alu_b;
+              A_NOR: alu_out = ~(alu_a | alu_b);
+              A_SLT: //a&lt;b(signed) return 1 else return 0;
+                  begin
+                      if(alu_a[31] == alu_b[31]) alu_out = (alu_a &lt; alu_b) ? 32&#39;b1 : 32&#39;b0;
+                      //同号情况，后面的小于是视为无符号的比较
+                      else alu_out = (alu_a[31] &lt; alu_b[31]) ? 32&#39;b0 : 32&#39;b1;
+  //有符号比较符号
+                  end         
+              default: ;
+          endcase
+  endmodule
+</code></pre>
 </li>
 <li><p>regfile.v</p>
-<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> regfile(</span><br><span class="line">    <span class="keyword">input</span>   clk,</span><br><span class="line">    <span class="keyword">input</span> rst_n,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">5</span>:<span class="number">0</span>] rAddr1,<span class="comment">//读地址1</span></span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] rDout1,<span class="comment">//读数据1</span></span><br><span class="line">    <span class="keyword">input</span> [<span class="number">5</span>:<span class="number">0</span>] rAddr2,<span class="comment">//读地址2</span></span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] rDout2,<span class="comment">//读数据2</span></span><br><span class="line">    <span class="keyword">input</span> [<span class="number">5</span>:<span class="number">0</span>] wAddr,<span class="comment">//写地址</span></span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] wDin,<span class="comment">//写数据</span></span><br><span class="line">    <span class="keyword">input</span> wEna<span class="comment">//写使能</span></span><br><span class="line">    </span><br><span class="line">);</span><br><span class="line">    <span class="keyword">reg</span> [<span class="number">31</span>:<span class="number">0</span>] data [<span class="number">0</span>:<span class="number">63</span>];</span><br><span class="line">    <span class="keyword">integer</span> i;</span><br><span class="line">    <span class="keyword">assign</span> rDout1=data[rAddr1];<span class="comment">//读1</span></span><br><span class="line">    <span class="keyword">assign</span> rDout2=data[rAddr2];<span class="comment">//读2</span></span><br><span class="line">    <span class="keyword">always</span>@(<span class="keyword">posedge</span> clk <span class="keyword">or</span> <span class="keyword">negedge</span> rst_n)<span class="comment">//写和复位</span></span><br><span class="line">        <span class="keyword">if</span>(~rst_n)</span><br><span class="line">        <span class="keyword">begin</span></span><br><span class="line">            <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">64</span>; i=i+<span class="number">1</span>) data[i]&lt;=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">begin</span></span><br><span class="line">            <span class="keyword">if</span>(wEna)</span><br><span class="line">                data[wAddr]&lt;=wDin;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<pre><code class="verilog">  module regfile(
+      input   clk,
+      input rst_n,
+      input [5:0] rAddr1,//读地址1
+      output [31:0] rDout1,//读数据1
+      input [5:0] rAddr2,//读地址2
+      output [31:0] rDout2,//读数据2
+      input [5:0] wAddr,//写地址
+      input [31:0] wDin,//写数据
+      input wEna//写使能
+
+  );
+      reg [31:0] data [0:63];
+      integer i;
+      assign rDout1=data[rAddr1];//读1
+      assign rDout2=data[rAddr2];//读2
+      always@(posedge clk or negedge rst_n)//写和复位
+          if(~rst_n)
+          begin
+              for(i=0; i&lt;64; i=i+1) data[i]&lt;=0;
+          end
+          else
+          begin
+              if(wEna)
+                  data[wAddr]&lt;=wDin;
+          end
+  endmodule
+</code></pre>
 </li>
 <li><p>nextpclogic.v</p>
-<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> nextpclogic(</span><br><span class="line">   <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] PC,</span><br><span class="line">    <span class="keyword">input</span> Jump,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">25</span>:<span class="number">0</span>] JumpIMM,</span><br><span class="line">   <span class="keyword">input</span> Branch,</span><br><span class="line">   <span class="keyword">input</span> Zero,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">31</span>:<span class="number">0</span>] SignExtented,</span><br><span class="line">    <span class="keyword">output</span> [<span class="number">31</span>:<span class="number">0</span>] nextPC</span><br><span class="line">   );</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] ShiftLeft2;</span><br><span class="line">    <span class="keyword">wire</span> PCSrc;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] PCPlus4;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] PCBeq;</span><br><span class="line">    <span class="keyword">wire</span> [<span class="number">31</span>:<span class="number">0</span>] tmpPC;</span><br><span class="line">    <span class="keyword">wire</span> tmpzero1,tmpzero2;<span class="comment">//no used</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">assign</span> ShiftLeft2 = SignExtented &lt;&lt; <span class="number">2</span>;</span><br><span class="line">    alu ALUPCPlus4(PC,<span class="number">4</span>,A_ADD,PCPlus4,tmpzero1);</span><br><span class="line">    alu ALUPCOffset(ShiftLeft2,PCPlus4,A_ADD,PCBeq,tmpzero2);</span><br><span class="line">    <span class="keyword">and</span>(PCSrc,Branch,Zero);</span><br><span class="line">    mux MUXPC(PCSrc,PCPlus4,PCBeq,tmpPC);</span><br><span class="line">    mux MUXPC2(Jump,tmpPC,&#123;&#123;PCPlus4[<span class="number">31</span>:<span class="number">28</span>]&#125;,&#123;&#123;<span class="number">2'b00</span>,JumpIMM&#125;&lt;&lt;<span class="number">2</span>&#125;&#125;,nextPC);</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<pre><code class="verilog">  module nextpclogic(
+     input [31:0] PC,
+      input Jump,
+      input [25:0] JumpIMM,
+     input Branch,
+     input Zero,
+      input [31:0] SignExtented,
+      output [31:0] nextPC
+     );
+
+      wire [31:0] ShiftLeft2;
+      wire PCSrc;
+      wire [31:0] PCPlus4;
+      wire [31:0] PCBeq;
+      wire [31:0] tmpPC;
+      wire tmpzero1,tmpzero2;//no used
+
+      assign ShiftLeft2 = SignExtented &lt;&lt; 2;
+      alu ALUPCPlus4(PC,4,A_ADD,PCPlus4,tmpzero1);
+      alu ALUPCOffset(ShiftLeft2,PCPlus4,A_ADD,PCBeq,tmpzero2);
+      and(PCSrc,Branch,Zero);
+      mux MUXPC(PCSrc,PCPlus4,PCBeq,tmpPC);
+      mux MUXPC2(Jump,tmpPC,{{PCPlus4[31:28]},{{2'b00,JumpIMM}<<2}},nextpc); endmodule="" <="" code=""></2}},nextpc);></code></pre>
 </li>
 <li><p>control.v</p>
-<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> control(</span><br><span class="line">    <span class="keyword">input</span> clk,</span><br><span class="line">    <span class="keyword">input</span> [<span class="number">5</span>:<span class="number">0</span>] Op, <span class="comment">//instr[31:26]</span></span><br><span class="line">    <span class="keyword">input</span> [<span class="number">5</span>:<span class="number">0</span>] Funct,<span class="comment">//instr[5:0]</span></span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> RegDst,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> ALUSrc,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> MemtoReg,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> RegWrite,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> MemWrite,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> Branch,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> [<span class="number">2</span>:<span class="number">0</span>] ALUContol,</span><br><span class="line">    <span class="keyword">output</span> <span class="keyword">reg</span> Jump</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">reg</span> [<span class="number">1</span>:<span class="number">0</span>] ALUOp;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">always</span> @(*)</span><br><span class="line">    <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">case</span>(Op)</span><br><span class="line">            <span class="number">6'b000000</span>:<span class="comment">//R type</span></span><br><span class="line">                &#123;&#123;RegDst&#125;,&#123;ALUSrc&#125;,&#123;MemtoReg&#125;,&#123;RegWrite&#125;,&#123;MemWrite&#125;,&#123;Branch&#125;,&#123;ALUOp[<span class="number">1</span>:<span class="number">0</span>]&#125;,&#123;Jump&#125;&#125;=<span class="number">9'b100100100</span>;</span><br><span class="line">            <span class="number">6'b100011</span>:<span class="comment">//lw</span></span><br><span class="line">                &#123;&#123;RegDst&#125;,&#123;ALUSrc&#125;,&#123;MemtoReg&#125;,&#123;RegWrite&#125;,&#123;MemWrite&#125;,&#123;Branch&#125;,&#123;ALUOp[<span class="number">1</span>:<span class="number">0</span>]&#125;,&#123;Jump&#125;&#125;=<span class="number">9'b011100000</span>;</span><br><span class="line">            <span class="number">6'b101011</span>:<span class="comment">//sw  </span></span><br><span class="line">                &#123;&#123;RegDst&#125;,&#123;ALUSrc&#125;,&#123;MemtoReg&#125;,&#123;RegWrite&#125;,&#123;MemWrite&#125;,&#123;Branch&#125;,&#123;ALUOp[<span class="number">1</span>:<span class="number">0</span>]&#125;,&#123;Jump&#125;&#125;=<span class="number">9'bx1x010000</span>;</span><br><span class="line">            <span class="number">6'b000100</span>:<span class="comment">//beq</span></span><br><span class="line">                &#123;&#123;RegDst&#125;,&#123;ALUSrc&#125;,&#123;MemtoReg&#125;,&#123;RegWrite&#125;,&#123;MemWrite&#125;,&#123;Branch&#125;,&#123;ALUOp[<span class="number">1</span>:<span class="number">0</span>]&#125;,&#123;Jump&#125;&#125;=<span class="number">9'bx0x001010</span>;</span><br><span class="line">            <span class="number">6'b000010</span>:<span class="comment">//jump</span></span><br><span class="line">                &#123;&#123;RegDst&#125;,&#123;ALUSrc&#125;,&#123;MemtoReg&#125;,&#123;RegWrite&#125;,&#123;MemWrite&#125;,&#123;Branch&#125;,&#123;ALUOp[<span class="number">1</span>:<span class="number">0</span>]&#125;,&#123;Jump&#125;&#125;=<span class="number">9'bxxxxxxxx1</span>;</span><br><span class="line">            <span class="number">6'b001000</span>:<span class="comment">//addi</span></span><br><span class="line">                &#123;&#123;RegDst&#125;,&#123;ALUSrc&#125;,&#123;MemtoReg&#125;,&#123;RegWrite&#125;,&#123;MemWrite&#125;,&#123;Branch&#125;,&#123;ALUOp[<span class="number">1</span>:<span class="number">0</span>]&#125;,&#123;Jump&#125;&#125;=<span class="number">9'b010100000</span>; </span><br><span class="line">            <span class="keyword">default</span>: ;</span><br><span class="line">        <span class="keyword">endcase</span>             </span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">always</span> @(*)</span><br><span class="line">    <span class="keyword">begin</span></span><br><span class="line">        <span class="keyword">case</span>(ALUOp)</span><br><span class="line">            <span class="number">2'b00</span>:<span class="comment">//lw,sw,addi</span></span><br><span class="line">                ALUContol = <span class="number">5'h01</span>;<span class="comment">//add</span></span><br><span class="line">            <span class="number">2'b01</span>:<span class="comment">//beq</span></span><br><span class="line">                ALUContol = <span class="number">5'h02</span>;<span class="comment">//sub</span></span><br><span class="line">            <span class="number">2'b10</span>:<span class="comment">//R type</span></span><br><span class="line">                <span class="keyword">case</span>(Funct)</span><br><span class="line">                    <span class="number">6'b100000</span>: ALUContol = <span class="number">5'h01</span>;<span class="comment">//add</span></span><br><span class="line">                    <span class="number">6'b100010</span>: ALUContol = <span class="number">5'h02</span>;<span class="comment">//sub</span></span><br><span class="line">                    <span class="number">6'b100100</span>: ALUContol = <span class="number">5'h03</span>;<span class="comment">//and</span></span><br><span class="line">                    <span class="number">6'b100101</span>: ALUContol = <span class="number">5'h04</span>;<span class="comment">//or</span></span><br><span class="line">                    <span class="number">6'b100110</span>: ALUContol = <span class="number">5'h05</span>;<span class="comment">//xor</span></span><br><span class="line">                    <span class="number">6'b100111</span>: ALUContol = <span class="number">5'h06</span>;<span class="comment">//nor      </span></span><br><span class="line">                    <span class="number">6'b101010</span>: ALUContol = <span class="number">5'h07</span>;<span class="comment">//slt</span></span><br><span class="line">                    <span class="keyword">default</span>: ;</span><br><span class="line">                <span class="keyword">endcase</span></span><br><span class="line">            <span class="number">2'b11</span>:</span><br><span class="line">                ALUContol = <span class="number">5'h00</span>;<span class="comment">//nop</span></span><br><span class="line">            <span class="keyword">default</span>: ;</span><br><span class="line">        <span class="keyword">endcase</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<pre><code class="verilog">  module control(
+      input clk,
+      input [5:0] Op, //instr[31:26]
+      input [5:0] Funct,//instr[5:0]
+      output reg RegDst,
+      output reg ALUSrc,
+      output reg MemtoReg,
+      output reg RegWrite,
+      output reg MemWrite,
+      output reg Branch,
+      output reg [2:0] ALUContol,
+      output reg Jump
+      );
+      reg [1:0] ALUOp;
+
+      always @(*)
+      begin
+          case(Op)
+              6&#39;b000000://R type
+                  {{RegDst},{ALUSrc},{MemtoReg},{RegWrite},{MemWrite},{Branch},{ALUOp[1:0]},{Jump}}=9&#39;b100100100;
+              6&#39;b100011://lw
+                  {{RegDst},{ALUSrc},{MemtoReg},{RegWrite},{MemWrite},{Branch},{ALUOp[1:0]},{Jump}}=9&#39;b011100000;
+              6&#39;b101011://sw  
+                  {{RegDst},{ALUSrc},{MemtoReg},{RegWrite},{MemWrite},{Branch},{ALUOp[1:0]},{Jump}}=9&#39;bx1x010000;
+              6&#39;b000100://beq
+                  {{RegDst},{ALUSrc},{MemtoReg},{RegWrite},{MemWrite},{Branch},{ALUOp[1:0]},{Jump}}=9&#39;bx0x001010;
+              6&#39;b000010://jump
+                  {{RegDst},{ALUSrc},{MemtoReg},{RegWrite},{MemWrite},{Branch},{ALUOp[1:0]},{Jump}}=9&#39;bxxxxxxxx1;
+              6&#39;b001000://addi
+                  {{RegDst},{ALUSrc},{MemtoReg},{RegWrite},{MemWrite},{Branch},{ALUOp[1:0]},{Jump}}=9&#39;b010100000; 
+              default: ;
+          endcase             
+      end
+
+      always @(*)
+      begin
+          case(ALUOp)
+              2&#39;b00://lw,sw,addi
+                  ALUContol = 5&#39;h01;//add
+              2&#39;b01://beq
+                  ALUContol = 5&#39;h02;//sub
+              2&#39;b10://R type
+                  case(Funct)
+                      6&#39;b100000: ALUContol = 5&#39;h01;//add
+                      6&#39;b100010: ALUContol = 5&#39;h02;//sub
+                      6&#39;b100100: ALUContol = 5&#39;h03;//and
+                      6&#39;b100101: ALUContol = 5&#39;h04;//or
+                      6&#39;b100110: ALUContol = 5&#39;h05;//xor
+                      6&#39;b100111: ALUContol = 5&#39;h06;//nor      
+                      6&#39;b101010: ALUContol = 5&#39;h07;//slt
+                      default: ;
+                  endcase
+              2&#39;b11:
+                  ALUContol = 5&#39;h00;//nop
+              default: ;
+          endcase
+      end
+
+  endmodule
+</code></pre>
 </li>
-<li><p>mux.v</p>
-<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> mux #(<span class="keyword">parameter</span> WIDTH = <span class="number">32</span>)(</span><br><span class="line">    <span class="keyword">input</span> sel,</span><br><span class="line">    <span class="keyword">input</span> [WIDTH-<span class="number">1</span>:<span class="number">0</span>] d0,</span><br><span class="line">    <span class="keyword">input</span> [WIDTH-<span class="number">1</span>:<span class="number">0</span>] d1,</span><br><span class="line">    <span class="keyword">output</span> [WIDTH-<span class="number">1</span>:<span class="number">0</span>] out</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">assign</span> out = (sel == <span class="number">1'b1</span> ? d1 : d0);</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<li>mux.v<pre><code class="verilog">  module mux #(parameter WIDTH = 32)(
+      input sel,
+      input [WIDTH-1:0] d0,
+      input [WIDTH-1:0] d1,
+      output [WIDTH-1:0] out
+      );
+      assign out = (sel == 1&#39;b1 ? d1 : d0);
+  endmodule
+</code></pre>
 </li>
 <li><p>test.v</p>
-<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> test;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Inputs</span></span><br><span class="line">    <span class="keyword">reg</span> clk;</span><br><span class="line">    <span class="keyword">reg</span> rst_n;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Instantiate the Unit Under Test (UUT)</span></span><br><span class="line">    top uut (</span><br><span class="line">        <span class="variable">.clk</span>(clk), </span><br><span class="line">        <span class="variable">.rst_n</span>(rst_n),</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">always</span> #<span class="number">10</span> clk=~clk;</span><br><span class="line">    <span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">        <span class="comment">// Initialize Inputs</span></span><br><span class="line">        clk = <span class="number">0</span>;</span><br><span class="line">        rst_n = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Wait 100 ns for global reset to finish</span></span><br><span class="line">        #<span class="number">100</span>;</span><br><span class="line">        rst_n = <span class="number">1</span>;</span><br><span class="line">         </span><br><span class="line">        <span class="comment">// Add stimulus here</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">      </span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<pre><code class="verilog">  module test;
+
+      // Inputs
+      reg clk;
+      reg rst_n;
+
+      // Instantiate the Unit Under Test (UUT)
+      top uut (
+          .clk(clk), 
+          .rst_n(rst_n),
+      );
+      always #10 clk=~clk;
+      initial begin
+          // Initialize Inputs
+          clk = 0;
+          rst_n = 0;
+
+          // Wait 100 ns for global reset to finish
+          #100;
+          rst_n = 1;
+
+          // Add stimulus here
+
+      end
+
+  endmodule
+</code></pre>
 </li>
 </ul>
 </li>

@@ -357,14 +357,25 @@
 </li>
 <li><p>调用没有参数的PROC时可直接CALL</p>
 <p>有参数的应该用<code>INVOKE</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INVOKE FGETN,FILEHANDLE,DNUMS[BX]</span><br></pre></td></tr></table></figure>
+<pre><code class="assembly">INVOKE FGETN,FILEHANDLE,DNUMS[BX]
+</code></pre>
 <p>INVOKE格式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">invoke procedure, parameter1, parameter2, parameter3</span><br></pre></td></tr></table></figure>
-<p>等价于手动PUSH参数，然后用CALL</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">push parameter3</span><br><span class="line">push parameter2</span><br><span class="line">push parameter1</span><br><span class="line">call procedure</span><br></pre></td></tr></table></figure>
-</li>
+<pre><code>invoke procedure, parameter1, parameter2, parameter3 
+</code></pre><p>等价于手动PUSH参数，然后用CALL</p>
+<pre><code>push parameter3
+push parameter2
+push parameter1
+call procedure 
+</code></pre></li>
 <li><p>在masmplus中编译</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CALC:</span><br><span class="line">    BIGMUL D_N_FAC,D_TMP,D_I</span><br><span class="line">    MOV8 D_TMP,D_N_FAC  </span><br><span class="line">    CALL PRINTNHEX </span><br><span class="line">    PRINTNEWLINE</span><br><span class="line">    INC D_I[0]  ;I++</span><br><span class="line">	LOOP CALC</span><br></pre></td></tr></table></figure>
+<pre><code class="assembly">CALC:
+   BIGMUL D_N_FAC,D_TMP,D_I
+   MOV8 D_TMP,D_N_FAC  
+   CALL PRINTNHEX 
+   PRINTNEWLINE
+   INC D_I[0]  ;I++
+   LOOP CALC 
+</code></pre>
 <p>提示</p>
 <blockquote>
 <p>error A2075: jump destination too far : by 22 byte(s)</p>
@@ -375,7 +386,10 @@
 </blockquote>
 <p>前面几条宏展开后指令非常长</p>
 <p>把LOOP改用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DEC CX</span><br><span class="line">CMP CX,0</span><br><span class="line">JNE CALC</span><br></pre></td></tr></table></figure>
+<pre><code class="assembly">DEC CX
+CMP CX,0
+JNE CALC
+</code></pre>
 <p>就行了 </p>
 </li>
 </ul>

@@ -998,7 +998,7 @@
 <li><p>支持浮点数的+,-,*,/,%(求余)</p>
 </li>
 <li><p>支持常见的初等函数运算</p>
-<pre><code>abs,sgn,ln,lg,log,sin,cos,tan,cot,sec,csc,asin,acos,atan,acot,asec,acsc,exp,sinh,cosh,tanh,coth,sech,csch,asinh,acosh,atanh,acoth,asech,acsch,max,min,ceil,floor,pow,fac,gcd,lcm
+<pre><code>  abs,sgn,ln,lg,log,sin,cos,tan,cot,sec,csc,asin,acos,atan,acot,asec,acsc,exp,sinh,cosh,tanh,coth,sech,csch,asinh,acosh,atanh,acoth,asech,acsch,max,min,ceil,floor,pow,fac,gcd,lcm
 </code></pre></li>
 <li><p>支持嵌套任意层数的括号</p>
 </li>
@@ -1206,13 +1206,13 @@ Data Expression(char **p){//处理加减和逗号
     int more=1;
     while(more){
         char op=**p;
-        if(op==&apos;+&apos; || op==&apos;-&apos;){
+        if(op==&#39;+&#39; || op==&#39;-&#39;){
             (*p)++;
             double value=term(p);
-            if(op==&apos;+&apos;) result.num[result.n]+=value;
+            if(op==&#39;+&#39;) result.num[result.n]+=value;
             else result.num[result.n]-=value;
         }
-        else if(op==&apos;,&apos;){
+        else if(op==&#39;,&#39;){
             (*p)++;
             result.n++;
             result.num[result.n]=term(p);
@@ -1226,12 +1226,12 @@ double term(char **p){//处理乘除求余
     int more=1;
     while(more){
         char op=**p;
-        if(op==&apos;*&apos; || op==&apos;/&apos; || op==&apos;%&apos;){
+        if(op==&#39;*&#39; || op==&#39;/&#39; || op==&#39;%&#39;){
             (*p)++;
             double value=factor(p);
-            if(op==&apos;*&apos;) result*=value;
-            else if(op==&apos;/&apos;) result/=value;
-            else if(op==&apos;%&apos;) result=(int)result%(int)value;
+            if(op==&#39;*&#39;) result*=value;
+            else if(op==&#39;/&#39;) result/=value;
+            else if(op==&#39;%&#39;) result=(int)result%(int)value;
         }
         else more=0;
     }
@@ -1240,11 +1240,11 @@ double term(char **p){//处理乘除求余
 double factor(char **p){//除了数字和函数和括号
     double result=0;
     char c=**p;
-    if(c==&apos;(&apos;){
+    if(c==&#39;(&#39;){
         (*p)++;
         Data tmp=Expression(p);
         result=tmp.num[0];
-        (*p)++;//跳过&apos;)&apos;
+        (*p)++;//跳过&#39;)&#39;
         return result;
     }
     else{
@@ -1256,19 +1256,19 @@ double factor(char **p){//除了数字和函数和括号
 double GetNumber(char **p,double *res){
     int sign=1;
     if(!isdigit(**p)){
-        if(**p==&apos;-&apos;) sign=-1;
+        if(**p==&#39;-&#39;) sign=-1;
         else return 0;
     }
     *res=0;
     while(isdigit(**p)){
-        *res=*res*10+**p-&apos;0&apos;;
+        *res=*res*10+**p-&#39;0&#39;;
         (*p)++;
     }
-    if(**p==&apos;.&apos;){
+    if(**p==&#39;.&#39;){
         (*p)++;
         double k=0.1;
         while(isdigit(**p)){
-            *res=*res+(**p-&apos;0&apos;)*k;
+            *res=*res+(**p-&#39;0&#39;)*k;
             (*p)++;
             k/=10;
         }
@@ -1280,16 +1280,16 @@ double Function(char **p){
     char funcname[20];
     int i=0;
     double result=0;
-    while(**p!=&apos;(&apos;)
+    while(**p!=&#39;(&#39;)
         funcname[i++]=*((*p)++);
-    (*p)++;//跳过&apos;(&apos;
+    (*p)++;//跳过&#39;(&#39;
     funcname[i]=0;//字符串结束
     //printf(&quot;%s\n&quot;,funcname);
     for(i=0;i&lt;FUNCNUM;i++){
         if(strcmp(funcname,FuncNameArray[i])==0){//匹配函数
             Data tmp=Expression(p);
             result=FuncArray[i](tmp);
-            (*p)++;//跳过&apos;)&apos;
+            (*p)++;//跳过&#39;)&#39;
             //printf(&quot;%lf,%lf,%s,%lf\n&quot;,tmp.num[0],tmp.num[1],FuncNameArray[i],result);
             return result;
         }

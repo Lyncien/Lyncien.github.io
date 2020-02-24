@@ -353,8 +353,303 @@
 <h4 id="矩阵分块乘法的计算"><a href="#矩阵分块乘法的计算" class="headerlink" title="矩阵分块乘法的计算"></a>矩阵分块乘法的计算</h4><p>设<em>n</em>为矩阵高度和宽度的较大值，</p>
 <p>对于串行算法，时间复杂度为<em>O(n^3)</em></p>
 <p>对于并行算法，时间复杂度为<em>O</em>(<em>n</em>)，因为每个线程计算C矩阵的一个元素，需要访问A一行和B一列。在使用了分块方法和利用了共享存储器之后，常数因子会有所减少。这里未考虑CPU与GPU的数据交换时间。</p>
-<h3 id="算法源代码"><a href="#算法源代码" class="headerlink" title="算法源代码"></a>算法源代码</h3><h4 id="向量加法的计算-2"><a href="#向量加法的计算-2" class="headerlink" title="向量加法的计算"></a>向量加法的计算</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//系统头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//cuda头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cuda_runtime.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"device_launch_parameters.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//线程块大小（只用一维）</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BLOCK_SIZE 500</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* GPU上的向量加法,每一个线程块(bx, by)内线程(tx, ty)都将执行，所有变量各有一份</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line">__<span class="function">global__ <span class="keyword">void</span> <span class="title">vectorAdd</span><span class="params">(<span class="keyword">float</span> *C, <span class="keyword">float</span> *A, <span class="keyword">float</span> *B)</span></span>&#123;</span><br><span class="line">    <span class="comment">//块索引</span></span><br><span class="line">    <span class="keyword">int</span> bx = blockIdx.x;</span><br><span class="line">    <span class="comment">//int by = blockIdx.y; //必为1</span></span><br><span class="line">    <span class="comment">//线程索引</span></span><br><span class="line">    <span class="keyword">int</span> tx = threadIdx.x;</span><br><span class="line">    <span class="comment">//int ty = threadIdx.y; //必为1</span></span><br><span class="line">    <span class="comment">//当前线程块(bx, by)内线程(tx, ty)负责的向量下标</span></span><br><span class="line">    <span class="keyword">int</span> i = bx * BLOCK_SIZE + tx;</span><br><span class="line">    <span class="comment">//计算</span></span><br><span class="line">    C[i] = A[i] + B[i];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 初始化向量为随机数值</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">randomInit</span><span class="params">(<span class="keyword">float</span>* data, <span class="keyword">unsigned</span> <span class="keyword">int</span> size)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++)</span><br><span class="line">        data[i] = rand() / (<span class="keyword">float</span>)RAND_MAX;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* CPU上的串行向量加法</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vectorAdd_seq</span><span class="params">(<span class="keyword">float</span>* C, <span class="keyword">const</span> <span class="keyword">float</span>* A, <span class="keyword">const</span> <span class="keyword">float</span>* B, <span class="keyword">unsigned</span> <span class="keyword">int</span> size)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++)</span><br><span class="line">        C[i] = A[i] + B[i];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 对比串行和并行计算向量的差异</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printDiff</span><span class="params">(<span class="keyword">float</span> *data1, <span class="keyword">float</span> *data2, <span class="keyword">unsigned</span> <span class="keyword">int</span> size)</span></span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> i, error_count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; size; i++)&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">fabs</span>(data1[i] - data2[i]) &gt; <span class="number">1e-6</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"diff(%d) CPU=%lf, GPU=%lf \n"</span>, i, data1[i], data2[i]);</span><br><span class="line">            error_count++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Compare Result: Total Errors = %d \n"</span>, error_count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 主机端主函数</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">    <span class="comment">// set seed for rand()</span></span><br><span class="line">    srand((<span class="keyword">unsigned</span>)time(<span class="literal">NULL</span>));</span><br><span class="line">    <span class="keyword">float</span> *h_A, *h_B, *h_C, *h_C_reference, *d_A, *d_B, *d_C;</span><br><span class="line">    <span class="keyword">clock_t</span> t1, t2, t3, t4;</span><br><span class="line">    <span class="keyword">double</span> time_gpu, time_cpu;</span><br><span class="line">    <span class="keyword">int</span> sizeArray[<span class="number">6</span>] = &#123;<span class="number">100000</span>, <span class="number">200000</span>, <span class="number">1000000</span>, <span class="number">2000000</span>, <span class="number">10000000</span>, <span class="number">20000000</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; <span class="number">6</span>; k++)&#123;</span><br><span class="line">        <span class="keyword">int</span> size = sizeArray[k];</span><br><span class="line">        <span class="keyword">int</span> mem_size = size * <span class="keyword">sizeof</span>(<span class="keyword">float</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"----- Vector size: %d -----\n"</span>, size);</span><br><span class="line">        <span class="comment">//在主机内存申请A，B，C向量的空间</span></span><br><span class="line">        h_A = (<span class="keyword">float</span>*)<span class="built_in">malloc</span>(mem_size);</span><br><span class="line">        h_B = (<span class="keyword">float</span>*)<span class="built_in">malloc</span>(mem_size);</span><br><span class="line">        h_C = (<span class="keyword">float</span>*)<span class="built_in">malloc</span>(mem_size);</span><br><span class="line">        <span class="comment">//在GPU设备申请A, B, C向量的空间</span></span><br><span class="line">        cudaMalloc((<span class="keyword">void</span>**)&amp;d_A, mem_size);</span><br><span class="line">        cudaMalloc((<span class="keyword">void</span>**)&amp;d_B, mem_size);</span><br><span class="line">        cudaMalloc((<span class="keyword">void</span>**)&amp;d_C, mem_size);</span><br><span class="line">        <span class="comment">//初始化主机内存的A, B向量</span></span><br><span class="line">        randomInit(h_A, size);</span><br><span class="line">        randomInit(h_B, size);</span><br><span class="line">        <span class="comment">//拷贝主机内存的A, B的内容到GPU设备的A, B</span></span><br><span class="line">        cudaMemcpy(d_A, h_A, mem_size, cudaMemcpyHostToDevice);</span><br><span class="line">        cudaMemcpy(d_B, h_B, mem_size, cudaMemcpyHostToDevice);</span><br><span class="line">        <span class="comment">//GPU内核函数的维度参数</span></span><br><span class="line">        <span class="function">dim3 <span class="title">dimBlock</span><span class="params">(BLOCK_SIZE, <span class="number">1</span>)</span></span>;</span><br><span class="line">        <span class="function">dim3 <span class="title">dimGrid</span><span class="params">(size / BLOCK_SIZE, <span class="number">1</span>)</span></span>;</span><br><span class="line">        <span class="comment">//执行GPU内核函数</span></span><br><span class="line">        t1 = clock();</span><br><span class="line">        vectorAdd&lt;&lt;&lt;dimGrid, dimBlock&gt;&gt;&gt;(d_C, d_A, d_B);</span><br><span class="line">        cudaThreadSynchronize(); <span class="comment">//CPU等待GPU运算结束</span></span><br><span class="line">        t2 = clock();</span><br><span class="line">        time_gpu = (<span class="keyword">double</span>)(t2 - t1) / CLOCKS_PER_SEC;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"GPU Processing time: %lf s \n"</span>, time_gpu);</span><br><span class="line">        <span class="comment">//从GPU设备复制结果向量C到主机内存的C</span></span><br><span class="line">        cudaMemcpy(h_C, d_C, mem_size, cudaMemcpyDeviceToHost);</span><br><span class="line">        <span class="comment">//用CPU串行计算向量C，并比较差异</span></span><br><span class="line">        h_C_reference = (<span class="keyword">float</span>*)<span class="built_in">malloc</span>(mem_size);</span><br><span class="line">        t3 = clock();</span><br><span class="line">        vectorAdd_seq(h_C_reference, h_A, h_B, size);</span><br><span class="line">        t4 = clock();</span><br><span class="line">        time_cpu = (<span class="keyword">double</span>)(t4 - t3) / CLOCKS_PER_SEC;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"CPU Processing time: %lf s \n"</span>, time_cpu);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Speedup: %lf \n"</span>, time_cpu / time_gpu);</span><br><span class="line">        printDiff(h_C_reference, h_C, size);</span><br><span class="line">        <span class="comment">//释放主机和设备申请的空间</span></span><br><span class="line">        <span class="built_in">free</span>(h_A);</span><br><span class="line">        <span class="built_in">free</span>(h_B);</span><br><span class="line">        <span class="built_in">free</span>(h_C);</span><br><span class="line">        <span class="built_in">free</span>(h_C_reference);</span><br><span class="line">        cudaFree(d_A);</span><br><span class="line">        cudaFree(d_B);</span><br><span class="line">        cudaFree(d_C);</span><br><span class="line">    &#125;</span><br><span class="line">    system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="矩阵分块乘法的计算-1"><a href="#矩阵分块乘法的计算-1" class="headerlink" title="矩阵分块乘法的计算"></a>矩阵分块乘法的计算</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//系统头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//cuda头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cuda_runtime.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"device_launch_parameters.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//线程块大小（每一维大小）</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BLOCK_SIZE 16</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//矩阵规模，为线程块的整数倍</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> WA (5 * BLOCK_SIZE) <span class="comment">// Matrix A width</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> HA (8 * BLOCK_SIZE) <span class="comment">// Matrix A height</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> WB (12 * BLOCK_SIZE) <span class="comment">// Matrix B width</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> HB WA  <span class="comment">// Matrix B height</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> WC WB  <span class="comment">// Matrix C width </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> HC HA  <span class="comment">// Matrix C height</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//以下代码中x对应width, y对应height</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 设备端：取子矩阵起始地址</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line">__<span class="function">device__  <span class="keyword">float</span> *<span class="title">GetSubMatrixBeginAddr</span><span class="params">(<span class="keyword">float</span> *M, <span class="keyword">int</span> wM, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span>  M + wM * BLOCK_SIZE * y + BLOCK_SIZE * x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 设备端：取子矩阵元素地址</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line">__<span class="function">device__  <span class="keyword">float</span> *<span class="title">GetSubMatrixElementAddr</span><span class="params">(<span class="keyword">float</span> *subM, <span class="keyword">int</span> wSubM, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span>  subM + wSubM * y + x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* GPU上的矩阵分块乘法</span></span><br><span class="line"><span class="comment">* 每一个线程块(bx, by)内线程(tx, ty)都将执行，所有变量各有一份，除了下面的共享子矩阵为同一线程块(bx, by)内所有线程共有</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line">__<span class="function">global__ <span class="keyword">void</span> <span class="title">matrixMul</span><span class="params">(<span class="keyword">float</span> *C, <span class="keyword">float</span> *A, <span class="keyword">float</span> *B, <span class="keyword">int</span> wA, <span class="keyword">int</span> wB)</span></span>&#123; </span><br><span class="line">    <span class="comment">//共享存储器上的A的子矩阵</span></span><br><span class="line">    __shared__ <span class="keyword">float</span> subA_shared[BLOCK_SIZE][BLOCK_SIZE];</span><br><span class="line">    <span class="comment">//共享存储器上的B的子矩阵</span></span><br><span class="line">    __shared__ <span class="keyword">float</span> subB_shared[BLOCK_SIZE][BLOCK_SIZE];</span><br><span class="line">    <span class="comment">//块索引</span></span><br><span class="line">    <span class="keyword">int</span> bx = blockIdx.x;</span><br><span class="line">    <span class="keyword">int</span> by = blockIdx.y;</span><br><span class="line">    <span class="comment">//线程索引</span></span><br><span class="line">    <span class="keyword">int</span> tx = threadIdx.x;</span><br><span class="line">    <span class="keyword">int</span> ty = threadIdx.y;</span><br><span class="line">    <span class="comment">//结果矩阵C的宽度</span></span><br><span class="line">    <span class="keyword">int</span> wC = wB;</span><br><span class="line">    <span class="comment">//线程块(bx, by)内线程(tx, ty)负责计算的结果矩阵C的值</span></span><br><span class="line">    <span class="keyword">float</span> CElement = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//同一线程块内的线程负责同一个C的子矩阵，下面遍历一横A的子矩阵和一竖B的子矩阵</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> m = <span class="number">0</span>; m &lt; wA / BLOCK_SIZE; m++)&#123;</span><br><span class="line">        <span class="comment">//同一线程块的线程共享A/B的一个子矩阵，先从全局存储器拷贝到共享存储器，一个线程拷贝一个元素</span></span><br><span class="line">        <span class="comment">//获取指向当前矩阵A/B子矩阵的指针Msub</span></span><br><span class="line">        <span class="keyword">float</span> *subA = GetSubMatrixBeginAddr(A, wA, m, by);</span><br><span class="line">        <span class="keyword">float</span> *subB = GetSubMatrixBeginAddr(B, wB, bx, m);</span><br><span class="line">        subA_shared[ty][tx] = *(GetSubMatrixElementAddr(subA, wA, tx, ty));</span><br><span class="line">        subB_shared[ty][tx] = *(GetSubMatrixElementAddr(subB, wB, tx, ty));</span><br><span class="line">        __syncthreads(); <span class="comment">//线程块内同步，在计算之前，确保共享A/B的子矩阵所有的元素都已载入共享存储器中</span></span><br><span class="line">        <span class="comment">//计算结果矩阵C的子矩阵的一个元素，遍历求和当前A子矩阵的一横和B子矩阵的一竖对应元素的积</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; BLOCK_SIZE; ++k)</span><br><span class="line">            CElement += subA_shared[ty][k] * subB_shared[k][tx];</span><br><span class="line">        __syncthreads(); <span class="comment">//线程块内同步，确保当前线程块内所有线程都完成了计算，才能开始下一组A/B的子矩阵</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//当前线程把负责的C的子矩阵的一个元素结果写回</span></span><br><span class="line">    <span class="keyword">float</span> *subC = GetSubMatrixBeginAddr(C, wC, bx, by);</span><br><span class="line">    *(GetSubMatrixElementAddr(subC, wC, tx, ty)) = CElement;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 初始化矩阵为随机数值</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">randomInit</span><span class="params">(<span class="keyword">float</span>* data, <span class="keyword">int</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; ++i)</span><br><span class="line">        data[i] = rand() / (<span class="keyword">float</span>)RAND_MAX;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* CPU上的串行矩阵乘法</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">matrixMul_seq</span><span class="params">(<span class="keyword">float</span>* C, <span class="keyword">const</span> <span class="keyword">float</span>* A, <span class="keyword">const</span> <span class="keyword">float</span>* B, <span class="keyword">unsigned</span> <span class="keyword">int</span> hA, <span class="keyword">unsigned</span> <span class="keyword">int</span> wA, <span class="keyword">unsigned</span> <span class="keyword">int</span> wB)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; hA; ++i)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> j = <span class="number">0</span>; j &lt; wB; ++j)&#123;</span><br><span class="line">        <span class="keyword">double</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; wA; ++k)</span><br><span class="line">            sum += A[i * wA + k] * B[k * wB + j];</span><br><span class="line">        C[i * wB + j] = (<span class="keyword">float</span>)sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 对比串行和并行计算矩阵的差异</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printDiff</span><span class="params">(<span class="keyword">float</span> *data1, <span class="keyword">float</span> *data2, <span class="keyword">int</span> width, <span class="keyword">int</span> height)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, k, error_count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; height; j++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; width; i++)&#123;</span><br><span class="line">            k = j * width + i;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">fabs</span>(data1[k] - data2[k]) &gt; <span class="number">1e-4</span>)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"diff(%d, %d) CPU=%4.4f, GPU=%4.4f \n"</span>, i, j, data1[k], data2[k]);</span><br><span class="line">                error_count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Compare Result: Total Errors = %d \n"</span>, error_count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 主机端主函数</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">    <span class="comment">// set seed for rand()</span></span><br><span class="line">    srand((<span class="keyword">unsigned</span>)time(<span class="literal">NULL</span>));</span><br><span class="line">    <span class="comment">//在主机内存申请A，B，C矩阵的空间</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> size_A = WA * HA;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> mem_size_A = <span class="keyword">sizeof</span>(<span class="keyword">float</span>) * size_A;</span><br><span class="line">    <span class="keyword">float</span>* h_A = (<span class="keyword">float</span>*)<span class="built_in">malloc</span>(mem_size_A);</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> size_B = WB * HB;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> mem_size_B = <span class="keyword">sizeof</span>(<span class="keyword">float</span>)* size_B;</span><br><span class="line">    <span class="keyword">float</span>* h_B = (<span class="keyword">float</span>*)<span class="built_in">malloc</span>(mem_size_B);</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> size_C = WC * HC;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> mem_size_C = <span class="keyword">sizeof</span>(<span class="keyword">float</span>)* size_C;</span><br><span class="line">    <span class="keyword">float</span>* h_C = (<span class="keyword">float</span>*)<span class="built_in">malloc</span>(mem_size_C);</span><br><span class="line">    <span class="comment">//在GPU设备申请A, B, C矩阵的空间</span></span><br><span class="line">    <span class="keyword">float</span>* d_A;</span><br><span class="line">    cudaMalloc((<span class="keyword">void</span>**)&amp;d_A, mem_size_A);</span><br><span class="line">    <span class="keyword">float</span>* d_B;</span><br><span class="line">    cudaMalloc((<span class="keyword">void</span>**)&amp;d_B, mem_size_B);</span><br><span class="line">    <span class="keyword">float</span>* d_C;</span><br><span class="line">    cudaMalloc((<span class="keyword">void</span>**)&amp;d_C, mem_size_C);</span><br><span class="line">    <span class="comment">//初始化主机内存的A, B矩阵</span></span><br><span class="line">    randomInit(h_A, size_A);</span><br><span class="line">    randomInit(h_B, size_B);</span><br><span class="line">    <span class="comment">//拷贝主机内存的A, B的内容到GPU设备的A, B</span></span><br><span class="line">    cudaMemcpy(d_A, h_A, mem_size_A, cudaMemcpyHostToDevice);</span><br><span class="line">    cudaMemcpy(d_B, h_B, mem_size_B, cudaMemcpyHostToDevice);</span><br><span class="line">    <span class="comment">//GPU内核函数的维度参数</span></span><br><span class="line">    <span class="function">dim3 <span class="title">dimBlock</span><span class="params">(BLOCK_SIZE, BLOCK_SIZE)</span></span>;</span><br><span class="line">    <span class="function">dim3 <span class="title">dimGrid</span><span class="params">(WC / BLOCK_SIZE, HC / BLOCK_SIZE)</span></span>;</span><br><span class="line">    <span class="comment">//执行GPU内核函数</span></span><br><span class="line">    <span class="keyword">clock_t</span> t1 = clock();</span><br><span class="line">    matrixMul&lt;&lt;&lt;dimGrid, dimBlock&gt;&gt;&gt;(d_C, d_A, d_B, WA, WB);</span><br><span class="line">    cudaThreadSynchronize(); <span class="comment">//CPU等待GPU运算结束</span></span><br><span class="line">    <span class="keyword">clock_t</span> t2 = clock();</span><br><span class="line">    <span class="keyword">double</span> time_gpu = (<span class="keyword">double</span>)(t2 - t1) / CLOCKS_PER_SEC;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"GPU Processing time: %lf s \n"</span>, time_gpu);</span><br><span class="line">    <span class="comment">//从GPU设备复制结果矩阵C到主机内存的C</span></span><br><span class="line">    cudaMemcpy(h_C, d_C, mem_size_C, cudaMemcpyDeviceToHost);</span><br><span class="line">    <span class="comment">//用CPU串行计算矩阵C，并比较差异</span></span><br><span class="line">    <span class="keyword">float</span>* hC_reference = (<span class="keyword">float</span>*)<span class="built_in">malloc</span>(mem_size_C);</span><br><span class="line">    <span class="keyword">clock_t</span> t3 = clock();</span><br><span class="line">    matrixMul_seq(hC_reference, h_A, h_B, HA, WA, WB);</span><br><span class="line">    <span class="keyword">clock_t</span> t4 = clock();</span><br><span class="line">    <span class="keyword">double</span> time_cpu = (<span class="keyword">double</span>)(t4 - t3) / CLOCKS_PER_SEC;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"CPU Processing time: %lf s \n"</span>, time_cpu);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Speedup: %lf \n"</span>, time_cpu / time_gpu);</span><br><span class="line">    printDiff(hC_reference, h_C, WC, HC);</span><br><span class="line">    <span class="comment">//释放主机和设备申请的空间</span></span><br><span class="line">    <span class="built_in">free</span>(h_A);</span><br><span class="line">    <span class="built_in">free</span>(h_B);</span><br><span class="line">    <span class="built_in">free</span>(h_C);</span><br><span class="line">    <span class="built_in">free</span>(hC_reference);</span><br><span class="line">    cudaFree(d_A);</span><br><span class="line">    cudaFree(d_B);</span><br><span class="line">    cudaFree(d_C);</span><br><span class="line">    system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="算法源代码"><a href="#算法源代码" class="headerlink" title="算法源代码"></a>算法源代码</h3><h4 id="向量加法的计算-2"><a href="#向量加法的计算-2" class="headerlink" title="向量加法的计算"></a>向量加法的计算</h4><pre><code class="C">//系统头文件
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;time.h&gt;
+#include &lt;math.h&gt;
+
+//cuda头文件
+#include &lt;cuda_runtime.h&gt;
+#include &quot;device_launch_parameters.h&quot;
+
+//线程块大小（只用一维）
+#define BLOCK_SIZE 500
+
+/**************************************************
+* GPU上的向量加法,每一个线程块(bx, by)内线程(tx, ty)都将执行，所有变量各有一份
+***************************************************/
+__global__ void vectorAdd(float *C, float *A, float *B){
+    //块索引
+    int bx = blockIdx.x;
+    //int by = blockIdx.y; //必为1
+    //线程索引
+    int tx = threadIdx.x;
+    //int ty = threadIdx.y; //必为1
+    //当前线程块(bx, by)内线程(tx, ty)负责的向量下标
+    int i = bx * BLOCK_SIZE + tx;
+    //计算
+    C[i] = A[i] + B[i];
+}
+
+/**************************************************
+* 初始化向量为随机数值
+***************************************************/
+void randomInit(float* data, unsigned int size){
+    for (unsigned int i = 0; i &lt; size; i++)
+        data[i] = rand() / (float)RAND_MAX;
+}
+
+/**************************************************
+* CPU上的串行向量加法
+***************************************************/
+void vectorAdd_seq(float* C, const float* A, const float* B, unsigned int size){
+    for (unsigned int i = 0; i &lt; size; i++)
+        C[i] = A[i] + B[i];
+}
+
+/**************************************************
+* 对比串行和并行计算向量的差异
+***************************************************/
+void printDiff(float *data1, float *data2, unsigned int size){
+    unsigned int i, error_count = 0;
+    for (i = 0; i &lt; size; i++){
+        if (fabs(data1[i] - data2[i]) &gt; 1e-6){
+            printf(&quot;diff(%d) CPU=%lf, GPU=%lf \n&quot;, i, data1[i], data2[i]);
+            error_count++;
+        }
+    }
+    printf(&quot;Compare Result: Total Errors = %d \n&quot;, error_count);
+}
+
+/**************************************************
+* 主机端主函数
+***************************************************/
+int main(int argc, char **argv){
+    // set seed for rand()
+    srand((unsigned)time(NULL));
+    float *h_A, *h_B, *h_C, *h_C_reference, *d_A, *d_B, *d_C;
+    clock_t t1, t2, t3, t4;
+    double time_gpu, time_cpu;
+    int sizeArray[6] = {100000, 200000, 1000000, 2000000, 10000000, 20000000};
+    for(int k = 0; k &lt; 6; k++){
+        int size = sizeArray[k];
+        int mem_size = size * sizeof(float);
+        printf(&quot;----- Vector size: %d -----\n&quot;, size);
+        //在主机内存申请A，B，C向量的空间
+        h_A = (float*)malloc(mem_size);
+        h_B = (float*)malloc(mem_size);
+        h_C = (float*)malloc(mem_size);
+        //在GPU设备申请A, B, C向量的空间
+        cudaMalloc((void**)&amp;d_A, mem_size);
+        cudaMalloc((void**)&amp;d_B, mem_size);
+        cudaMalloc((void**)&amp;d_C, mem_size);
+        //初始化主机内存的A, B向量
+        randomInit(h_A, size);
+        randomInit(h_B, size);
+        //拷贝主机内存的A, B的内容到GPU设备的A, B
+        cudaMemcpy(d_A, h_A, mem_size, cudaMemcpyHostToDevice);
+        cudaMemcpy(d_B, h_B, mem_size, cudaMemcpyHostToDevice);
+        //GPU内核函数的维度参数
+        dim3 dimBlock(BLOCK_SIZE, 1);
+        dim3 dimGrid(size / BLOCK_SIZE, 1);
+        //执行GPU内核函数
+        t1 = clock();
+        vectorAdd&lt;&lt;&lt;dimGrid, dimBlock&gt;&gt;&gt;(d_C, d_A, d_B);
+        cudaThreadSynchronize(); //CPU等待GPU运算结束
+        t2 = clock();
+        time_gpu = (double)(t2 - t1) / CLOCKS_PER_SEC;
+        printf(&quot;GPU Processing time: %lf s \n&quot;, time_gpu);
+        //从GPU设备复制结果向量C到主机内存的C
+        cudaMemcpy(h_C, d_C, mem_size, cudaMemcpyDeviceToHost);
+        //用CPU串行计算向量C，并比较差异
+        h_C_reference = (float*)malloc(mem_size);
+        t3 = clock();
+        vectorAdd_seq(h_C_reference, h_A, h_B, size);
+        t4 = clock();
+        time_cpu = (double)(t4 - t3) / CLOCKS_PER_SEC;
+        printf(&quot;CPU Processing time: %lf s \n&quot;, time_cpu);
+        printf(&quot;Speedup: %lf \n&quot;, time_cpu / time_gpu);
+        printDiff(h_C_reference, h_C, size);
+        //释放主机和设备申请的空间
+        free(h_A);
+        free(h_B);
+        free(h_C);
+        free(h_C_reference);
+        cudaFree(d_A);
+        cudaFree(d_B);
+        cudaFree(d_C);
+    }
+    system(&quot;pause&quot;);
+}
+</code></pre>
+<h4 id="矩阵分块乘法的计算-1"><a href="#矩阵分块乘法的计算-1" class="headerlink" title="矩阵分块乘法的计算"></a>矩阵分块乘法的计算</h4><pre><code class="c">//系统头文件
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;time.h&gt;
+#include &lt;math.h&gt;
+
+//cuda头文件
+#include &lt;cuda_runtime.h&gt;
+#include &quot;device_launch_parameters.h&quot;
+
+//线程块大小（每一维大小）
+#define BLOCK_SIZE 16
+
+//矩阵规模，为线程块的整数倍
+#define WA (5 * BLOCK_SIZE) // Matrix A width
+#define HA (8 * BLOCK_SIZE) // Matrix A height
+#define WB (12 * BLOCK_SIZE) // Matrix B width
+#define HB WA  // Matrix B height
+#define WC WB  // Matrix C width 
+#define HC HA  // Matrix C height
+
+//以下代码中x对应width, y对应height
+
+/**************************************************
+* 设备端：取子矩阵起始地址
+***************************************************/
+__device__  float *GetSubMatrixBeginAddr(float *M, int wM, int x, int y){
+    return  M + wM * BLOCK_SIZE * y + BLOCK_SIZE * x;
+}
+
+/**************************************************
+* 设备端：取子矩阵元素地址
+***************************************************/
+__device__  float *GetSubMatrixElementAddr(float *subM, int wSubM, int x, int y){
+    return  subM + wSubM * y + x;
+}
+
+/**************************************************
+* GPU上的矩阵分块乘法
+* 每一个线程块(bx, by)内线程(tx, ty)都将执行，所有变量各有一份，除了下面的共享子矩阵为同一线程块(bx, by)内所有线程共有
+***************************************************/
+__global__ void matrixMul(float *C, float *A, float *B, int wA, int wB){ 
+    //共享存储器上的A的子矩阵
+    __shared__ float subA_shared[BLOCK_SIZE][BLOCK_SIZE];
+    //共享存储器上的B的子矩阵
+    __shared__ float subB_shared[BLOCK_SIZE][BLOCK_SIZE];
+    //块索引
+    int bx = blockIdx.x;
+    int by = blockIdx.y;
+    //线程索引
+    int tx = threadIdx.x;
+    int ty = threadIdx.y;
+    //结果矩阵C的宽度
+    int wC = wB;
+    //线程块(bx, by)内线程(tx, ty)负责计算的结果矩阵C的值
+    float CElement = 0;
+    //同一线程块内的线程负责同一个C的子矩阵，下面遍历一横A的子矩阵和一竖B的子矩阵
+    for (int m = 0; m &lt; wA / BLOCK_SIZE; m++){
+        //同一线程块的线程共享A/B的一个子矩阵，先从全局存储器拷贝到共享存储器，一个线程拷贝一个元素
+        //获取指向当前矩阵A/B子矩阵的指针Msub
+        float *subA = GetSubMatrixBeginAddr(A, wA, m, by);
+        float *subB = GetSubMatrixBeginAddr(B, wB, bx, m);
+        subA_shared[ty][tx] = *(GetSubMatrixElementAddr(subA, wA, tx, ty));
+        subB_shared[ty][tx] = *(GetSubMatrixElementAddr(subB, wB, tx, ty));
+        __syncthreads(); //线程块内同步，在计算之前，确保共享A/B的子矩阵所有的元素都已载入共享存储器中
+        //计算结果矩阵C的子矩阵的一个元素，遍历求和当前A子矩阵的一横和B子矩阵的一竖对应元素的积
+        for (int k = 0; k &lt; BLOCK_SIZE; ++k)
+            CElement += subA_shared[ty][k] * subB_shared[k][tx];
+        __syncthreads(); //线程块内同步，确保当前线程块内所有线程都完成了计算，才能开始下一组A/B的子矩阵
+    }
+    //当前线程把负责的C的子矩阵的一个元素结果写回
+    float *subC = GetSubMatrixBeginAddr(C, wC, bx, by);
+    *(GetSubMatrixElementAddr(subC, wC, tx, ty)) = CElement;
+}
+
+/**************************************************
+* 初始化矩阵为随机数值
+***************************************************/
+void randomInit(float* data, int size)
+{
+    for (int i = 0; i &lt; size; ++i)
+        data[i] = rand() / (float)RAND_MAX;
+}
+
+/**************************************************
+* CPU上的串行矩阵乘法
+***************************************************/
+void matrixMul_seq(float* C, const float* A, const float* B, unsigned int hA, unsigned int wA, unsigned int wB){
+    for (unsigned int i = 0; i &lt; hA; ++i)
+    for (unsigned int j = 0; j &lt; wB; ++j){
+        double sum = 0;
+        for (unsigned int k = 0; k &lt; wA; ++k)
+            sum += A[i * wA + k] * B[k * wB + j];
+        C[i * wB + j] = (float)sum;
+    }
+}
+
+/**************************************************
+* 对比串行和并行计算矩阵的差异
+***************************************************/
+void printDiff(float *data1, float *data2, int width, int height){
+    int i, j, k, error_count = 0;
+    for (j = 0; j &lt; height; j++){
+        for (i = 0; i &lt; width; i++){
+            k = j * width + i;
+            if (fabs(data1[k] - data2[k]) &gt; 1e-4){
+                printf(&quot;diff(%d, %d) CPU=%4.4f, GPU=%4.4f \n&quot;, i, j, data1[k], data2[k]);
+                error_count++;
+            }
+        }
+    }
+    printf(&quot;Compare Result: Total Errors = %d \n&quot;, error_count);
+}
+
+/**************************************************
+* 主机端主函数
+***************************************************/
+int main(int argc, char **argv){
+    // set seed for rand()
+    srand((unsigned)time(NULL));
+    //在主机内存申请A，B，C矩阵的空间
+    unsigned int size_A = WA * HA;
+    unsigned int mem_size_A = sizeof(float) * size_A;
+    float* h_A = (float*)malloc(mem_size_A);
+    unsigned int size_B = WB * HB;
+    unsigned int mem_size_B = sizeof(float)* size_B;
+    float* h_B = (float*)malloc(mem_size_B);
+    unsigned int size_C = WC * HC;
+    unsigned int mem_size_C = sizeof(float)* size_C;
+    float* h_C = (float*)malloc(mem_size_C);
+    //在GPU设备申请A, B, C矩阵的空间
+    float* d_A;
+    cudaMalloc((void**)&amp;d_A, mem_size_A);
+    float* d_B;
+    cudaMalloc((void**)&amp;d_B, mem_size_B);
+    float* d_C;
+    cudaMalloc((void**)&amp;d_C, mem_size_C);
+    //初始化主机内存的A, B矩阵
+    randomInit(h_A, size_A);
+    randomInit(h_B, size_B);
+    //拷贝主机内存的A, B的内容到GPU设备的A, B
+    cudaMemcpy(d_A, h_A, mem_size_A, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, h_B, mem_size_B, cudaMemcpyHostToDevice);
+    //GPU内核函数的维度参数
+    dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
+    dim3 dimGrid(WC / BLOCK_SIZE, HC / BLOCK_SIZE);
+    //执行GPU内核函数
+    clock_t t1 = clock();
+    matrixMul&lt;&lt;&lt;dimGrid, dimBlock&gt;&gt;&gt;(d_C, d_A, d_B, WA, WB);
+    cudaThreadSynchronize(); //CPU等待GPU运算结束
+    clock_t t2 = clock();
+    double time_gpu = (double)(t2 - t1) / CLOCKS_PER_SEC;
+    printf(&quot;GPU Processing time: %lf s \n&quot;, time_gpu);
+    //从GPU设备复制结果矩阵C到主机内存的C
+    cudaMemcpy(h_C, d_C, mem_size_C, cudaMemcpyDeviceToHost);
+    //用CPU串行计算矩阵C，并比较差异
+    float* hC_reference = (float*)malloc(mem_size_C);
+    clock_t t3 = clock();
+    matrixMul_seq(hC_reference, h_A, h_B, HA, WA, WB);
+    clock_t t4 = clock();
+    double time_cpu = (double)(t4 - t3) / CLOCKS_PER_SEC;
+    printf(&quot;CPU Processing time: %lf s \n&quot;, time_cpu);
+    printf(&quot;Speedup: %lf \n&quot;, time_cpu / time_gpu);
+    printDiff(hC_reference, h_C, WC, HC);
+    //释放主机和设备申请的空间
+    free(h_A);
+    free(h_B);
+    free(h_C);
+    free(hC_reference);
+    cudaFree(d_A);
+    cudaFree(d_B);
+    cudaFree(d_C);
+    system(&quot;pause&quot;);
+}
+</code></pre>
 <h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p>登录集群，建立个人文件夹，建立代码文件和任务文件</p>
 <p><img src="//l-x.me/2019/06/01/pc/lab3/clip_image002.gif" alt="img"></p>
 <h4 id="向量加法的计算-3"><a href="#向量加法的计算-3" class="headerlink" title="向量加法的计算"></a>向量加法的计算</h4><p>使用vim编辑pbs文件，填写任务相关信息</p>

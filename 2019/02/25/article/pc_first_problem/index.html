@@ -328,8 +328,19 @@
 </ul>
 <p>时间复杂度为$O(1)$ </p>
 <p>伪代码如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">begin</span><br><span class="line">	for 1 ≤ i, j ≤ p par-do //工作量O(p2); 时间O(1),因为允许同时读</span><br><span class="line">        if A[i] ≥ A[j] then </span><br><span class="line"> 			B[i, j]=1 </span><br><span class="line"> 		else </span><br><span class="line"> 			B[i, j]=0</span><br><span class="line"> 		end if</span><br><span class="line">	end for</span><br><span class="line">	for 1 ≤ i ≤ p par-do //工作量O(p2); 时间O(1),因为允许同时写</span><br><span class="line">		M[i] = B[i,1] ∧ B[i,2] ∧ … ∧ B[i,p]</span><br><span class="line">	end for</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
-<p>举例如下：</p>
+<pre><code>begin
+    for 1 ≤ i, j ≤ p par-do //工作量O(p2); 时间O(1),因为允许同时读
+        if A[i] ≥ A[j] then 
+             B[i, j]=1 
+         else 
+             B[i, j]=0
+         end if
+    end for
+    for 1 ≤ i ≤ p par-do //工作量O(p2); 时间O(1),因为允许同时写
+        M[i] = B[i,1] ∧ B[i,2] ∧ … ∧ B[i,p]
+    end for
+end
+</code></pre><p>举例如下：</p>
 <table>
 <thead>
 <tr>

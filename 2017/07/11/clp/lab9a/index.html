@@ -316,7 +316,86 @@
 0 0 0 0
 </code></pre><h3 id="OUTPUT"><a href="#OUTPUT" class="headerlink" title="OUTPUT"></a>OUTPUT</h3><pre><code>YES
 NO
-</code></pre><h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> P 10e-4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INF 99999</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">IsEqual</span><span class="params">(<span class="keyword">double</span> a,<span class="keyword">double</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="built_in">fabs</span>(a-b)&lt;=P) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">Cal</span><span class="params">(<span class="keyword">double</span> a,<span class="keyword">char</span> op,<span class="keyword">double</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">switch</span>(op)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'+'</span>: <span class="keyword">return</span> a+b;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'-'</span>: <span class="keyword">return</span> a-b;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'*'</span>: <span class="keyword">return</span> a*b;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'/'</span>: <span class="keyword">if</span>(b==<span class="number">0</span>) <span class="keyword">return</span> INF; <span class="keyword">else</span> <span class="keyword">return</span> a/b;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Game24</span><span class="params">(<span class="keyword">double</span> n[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> op[]=&#123;<span class="string">'+'</span>,<span class="string">'-'</span>,<span class="string">'*'</span>,<span class="string">'/'</span>&#125;;</span><br><span class="line">	<span class="keyword">double</span> res[<span class="number">5</span>];</span><br><span class="line">	<span class="keyword">int</span> i1,i2,i3,i4,j1,j2,j3,k,count=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(i1=<span class="number">0</span>;i1&lt;<span class="number">4</span>;i1++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span>(i2=<span class="number">0</span>;i2&lt;<span class="number">4</span>;i2++)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span>(i2!=i1)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">for</span>(i3=<span class="number">0</span>;i3&lt;<span class="number">4</span>;i3++)</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="keyword">if</span>(i3!=i2 &amp;&amp; i3!=i1)</span><br><span class="line">					&#123;</span><br><span class="line">						<span class="keyword">for</span>(i4=<span class="number">0</span>;i4&lt;<span class="number">4</span>;i4++)</span><br><span class="line">						&#123;</span><br><span class="line">							<span class="keyword">if</span>(i4!=i3 &amp;&amp; i4!=i2 &amp;&amp; i4!=i1)</span><br><span class="line">							&#123;</span><br><span class="line">								<span class="keyword">for</span>(j1=<span class="number">0</span>;j1&lt;<span class="number">4</span>;j1++)</span><br><span class="line">								&#123;</span><br><span class="line">									<span class="keyword">for</span>(j2=<span class="number">0</span>;j2&lt;<span class="number">4</span>;j2++)</span><br><span class="line">									&#123;</span><br><span class="line">										<span class="keyword">for</span>(j3=<span class="number">0</span>;j3&lt;<span class="number">4</span>;j3++)</span><br><span class="line">										&#123;</span><br><span class="line">											res[<span class="number">0</span>]=Cal(Cal(Cal(n[i1],op[j1],n[i2]),op[j2],n[i3]),op[j3],n[i4]);</span><br><span class="line">											res[<span class="number">1</span>]=Cal(Cal(n[i1],op[j1],n[i2]),op[j2],Cal(n[i3],op[j3],n[i4]));</span><br><span class="line">											res[<span class="number">2</span>]=Cal(Cal(n[i1],op[j1],Cal(n[i2],op[j2],n[i3])),op[j3],n[i4]);</span><br><span class="line">											res[<span class="number">3</span>]=Cal(n[i1],op[j1],Cal(Cal(n[i2],op[j2],n[i3]),op[j3],n[i4]));</span><br><span class="line">											res[<span class="number">4</span>]=Cal(n[i1],op[j1],Cal(n[i2],op[j2],Cal(n[i3],op[j3],n[i4])));</span><br><span class="line">											<span class="keyword">for</span>(k=<span class="number">0</span>;k&lt;<span class="number">5</span>;k++)</span><br><span class="line">											&#123;</span><br><span class="line">												<span class="keyword">if</span>(IsEqual(<span class="number">24</span>,res[k]))</span><br><span class="line">												&#123;</span><br><span class="line">													<span class="keyword">return</span> <span class="number">1</span>;	</span><br><span class="line">												&#125;</span><br><span class="line">											&#125;</span><br><span class="line">										&#125;	</span><br><span class="line">									&#125;	</span><br><span class="line">								&#125;</span><br><span class="line">							&#125;</span><br><span class="line">						&#125;				</span><br><span class="line">					&#125;			</span><br><span class="line">				&#125;				</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">double</span> n[<span class="number">4</span>];</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">"%lf%lf%lf%lf"</span>,&amp;n[<span class="number">0</span>],&amp;n[<span class="number">1</span>],&amp;n[<span class="number">2</span>],&amp;n[<span class="number">3</span>]);</span><br><span class="line">		<span class="keyword">if</span>(!n[<span class="number">0</span>] &amp;&amp; !n[<span class="number">1</span>] &amp;&amp; !n[<span class="number">2</span>] &amp;&amp; !n[<span class="number">3</span>]) <span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">if</span>(Game24(n)) <span class="built_in">printf</span>(<span class="string">"YES\n"</span>); <span class="keyword">else</span> <span class="built_in">printf</span>(<span class="string">"NO\n"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#define P 10e-4
+#define INF 99999
+int IsEqual(double a,double b)
+{
+    if(fabs(a-b)&lt;=P) return 1;
+    else return 0;
+}
+double Cal(double a,char op,double b)
+{
+    switch(op)
+    {
+        case &#39;+&#39;: return a+b;
+        case &#39;-&#39;: return a-b;
+        case &#39;*&#39;: return a*b;
+        case &#39;/&#39;: if(b==0) return INF; else return a/b;
+    }
+}
+int Game24(double n[])
+{
+    char op[]={&#39;+&#39;,&#39;-&#39;,&#39;*&#39;,&#39;/&#39;};
+    double res[5];
+    int i1,i2,i3,i4,j1,j2,j3,k,count=0;
+    for(i1=0;i1&lt;4;i1++)
+    {
+        for(i2=0;i2&lt;4;i2++)
+        {
+            if(i2!=i1)
+            {
+                for(i3=0;i3&lt;4;i3++)
+                {
+                    if(i3!=i2 &amp;&amp; i3!=i1)
+                    {
+                        for(i4=0;i4&lt;4;i4++)
+                        {
+                            if(i4!=i3 &amp;&amp; i4!=i2 &amp;&amp; i4!=i1)
+                            {
+                                for(j1=0;j1&lt;4;j1++)
+                                {
+                                    for(j2=0;j2&lt;4;j2++)
+                                    {
+                                        for(j3=0;j3&lt;4;j3++)
+                                        {
+                                            res[0]=Cal(Cal(Cal(n[i1],op[j1],n[i2]),op[j2],n[i3]),op[j3],n[i4]);
+                                            res[1]=Cal(Cal(n[i1],op[j1],n[i2]),op[j2],Cal(n[i3],op[j3],n[i4]));
+                                            res[2]=Cal(Cal(n[i1],op[j1],Cal(n[i2],op[j2],n[i3])),op[j3],n[i4]);
+                                            res[3]=Cal(n[i1],op[j1],Cal(Cal(n[i2],op[j2],n[i3]),op[j3],n[i4]));
+                                            res[4]=Cal(n[i1],op[j1],Cal(n[i2],op[j2],Cal(n[i3],op[j3],n[i4])));
+                                            for(k=0;k&lt;5;k++)
+                                            {
+                                                if(IsEqual(24,res[k]))
+                                                {
+                                                    return 1;    
+                                                }
+                                            }
+                                        }    
+                                    }    
+                                }
+                            }
+                        }                
+                    }            
+                }                
+            }
+        }
+    }
+    return 0;
+}
+int main()
+{
+    double n[4];
+    while(1)
+    {
+        scanf(&quot;%lf%lf%lf%lf&quot;,&amp;n[0],&amp;n[1],&amp;n[2],&amp;n[3]);
+        if(!n[0] &amp;&amp; !n[1] &amp;&amp; !n[2] &amp;&amp; !n[3]) break;
+        if(Game24(n)) printf(&quot;YES\n&quot;); else printf(&quot;NO\n&quot;);
+    }
+    return 0;
+}
+</code></pre>
 
       
     </div>

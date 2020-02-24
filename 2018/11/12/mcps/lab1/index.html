@@ -309,7 +309,75 @@
 <p>把1~36的自然数按行顺序存入一个6*6的二维数组中，然后打印出该数组的左下半三角</p>
 </blockquote>
 <a id="more"></a>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">.MODEL SMALL </span><br><span class="line"></span><br><span class="line">.DATA</span><br><span class="line">    D136 DB 36 DUP (0)   </span><br><span class="line">    </span><br><span class="line">.CODE   </span><br><span class="line"></span><br><span class="line">PROC PRINT_N ;打印换行符 </span><br><span class="line">    PUSH AX  </span><br><span class="line">    PUSH DX  </span><br><span class="line">    MOV AH,2</span><br><span class="line">    MOV DL,0Dh</span><br><span class="line">    INT 21h  </span><br><span class="line">    MOV DL,0Ah</span><br><span class="line">    INT 21h   </span><br><span class="line">    POP DX </span><br><span class="line">    POP AX      </span><br><span class="line">    RET</span><br><span class="line">ENDP</span><br><span class="line">PROC PRINTC ;打印DL的字符</span><br><span class="line">    PUSH AX </span><br><span class="line">    MOV AH,2</span><br><span class="line">    INT 21h</span><br><span class="line">    POP AX     </span><br><span class="line">    RET</span><br><span class="line">ENDP</span><br><span class="line"></span><br><span class="line">.STARTUP  </span><br><span class="line">;初始化数据</span><br><span class="line">    MOV CX,36</span><br><span class="line">    MOV BX,36</span><br><span class="line">INIT_LOOP:</span><br><span class="line">    DEC BX</span><br><span class="line">    MOV D136[BX],CL</span><br><span class="line">    LOOP INIT_LOOP</span><br><span class="line">    </span><br><span class="line">    MOV CX,0 </span><br><span class="line">MAIN:</span><br><span class="line">    MOV AL,6 ;AL=6</span><br><span class="line">    MUL CH   ;AL=6*CH</span><br><span class="line">    ADD AL,CL;AL=AL+CL AL为要打印的数的下标</span><br><span class="line">    MOV BX,AX</span><br><span class="line">    MOV AL,D136[BX] ;AL为要打印的数 </span><br><span class="line">    MOV DL,10</span><br><span class="line">    DIV DL ;AL/10,商在AL,余数在AH</span><br><span class="line">    MOV DL,AL ;十位</span><br><span class="line">    ADD DL,30H ;转为字符</span><br><span class="line">    CALL PRINTC</span><br><span class="line">    MOV DL,AH ;个位</span><br><span class="line">    ADD DL,30H ;转为字符</span><br><span class="line">    CALL PRINTC    </span><br><span class="line">    CMP CH,CL</span><br><span class="line">    JZ NEXTLINE ;行结束，进行判断</span><br><span class="line">    MOV DL,32 ;否则打印空格</span><br><span class="line">    CALL PRINTC</span><br><span class="line">    INC CL</span><br><span class="line">    JMP MAIN</span><br><span class="line">    </span><br><span class="line">NEXTLINE:</span><br><span class="line">    CALL PRINT_N</span><br><span class="line">    MOV CL,0 ;列=0</span><br><span class="line">    INC CH   ;行++</span><br><span class="line">    CMP CH,6 ;CH&lt;6则继续下一行 </span><br><span class="line">    JNZ MAIN</span><br><span class="line"></span><br><span class="line">.EXIT </span><br><span class="line"></span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code class="assembly">.MODEL SMALL 
+
+.DATA
+    D136 DB 36 DUP (0)   
+
+.CODE   
+
+PROC PRINT_N ;打印换行符 
+    PUSH AX  
+    PUSH DX  
+    MOV AH,2
+    MOV DL,0Dh
+    INT 21h  
+    MOV DL,0Ah
+    INT 21h   
+    POP DX 
+    POP AX      
+    RET
+ENDP
+PROC PRINTC ;打印DL的字符
+    PUSH AX 
+    MOV AH,2
+    INT 21h
+    POP AX     
+    RET
+ENDP
+
+.STARTUP  
+;初始化数据
+    MOV CX,36
+    MOV BX,36
+INIT_LOOP:
+    DEC BX
+    MOV D136[BX],CL
+    LOOP INIT_LOOP
+
+    MOV CX,0 
+MAIN:
+    MOV AL,6 ;AL=6
+    MUL CH   ;AL=6*CH
+    ADD AL,CL;AL=AL+CL AL为要打印的数的下标
+    MOV BX,AX
+    MOV AL,D136[BX] ;AL为要打印的数 
+    MOV DL,10
+    DIV DL ;AL/10,商在AL,余数在AH
+    MOV DL,AL ;十位
+    ADD DL,30H ;转为字符
+    CALL PRINTC
+    MOV DL,AH ;个位
+    ADD DL,30H ;转为字符
+    CALL PRINTC    
+    CMP CH,CL
+    JZ NEXTLINE ;行结束，进行判断
+    MOV DL,32 ;否则打印空格
+    CALL PRINTC
+    INC CL
+    JMP MAIN
+
+NEXTLINE:
+    CALL PRINT_N
+    MOV CL,0 ;列=0
+    INC CH   ;行++
+    CMP CH,6 ;CH&lt;6则继续下一行 
+    JNZ MAIN
+
+.EXIT 
+
+END
+</code></pre>
 
       
     </div>
