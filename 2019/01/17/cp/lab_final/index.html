@@ -421,73 +421,10 @@
 </ul>
 </li>
 <li><p>字符类型定义</p>
-<pre><code class="C">typedef enum _tCharType{
-    LETTER, /* A-Za-z_ */
-    DIGIT,  /* 0-9 */
-    SPACE,  /* */
-    TAB,    /* \t */
-    NEWLINE,/* \n */
-    PLUS,   /* + */
-    MINUS,    /* - */
-    TIMES,    /* * */
-    SLASH,    /* / */
-    EQU,    /* = */
-    LES,    /* &lt; */
-    GTR,    /* &gt; */
-    LPAREN,    /* ( */
-    RPAREN,    /* ) */
-    COMMA,    /* , */
-    SEMICOLON,/* ; */
-    PERIOD,    /* . */
-    COLON,    /* : */
-    EXCLAMA,/* ! */
-    AND,    /* &amp; */
-    OR,        /* | */
-    ILLEGAL    /* other */
-} CharType;
-</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> _tCharType&#123;</span><br><span class="line">	LETTER, <span class="comment">/* A-Za-z_ */</span></span><br><span class="line">	DIGIT,  <span class="comment">/* 0-9 */</span></span><br><span class="line">	SPACE,  <span class="comment">/* */</span></span><br><span class="line">	TAB,	<span class="comment">/* \t */</span></span><br><span class="line">	NEWLINE,<span class="comment">/* \n */</span></span><br><span class="line">	PLUS,   <span class="comment">/* + */</span></span><br><span class="line">	MINUS,	<span class="comment">/* - */</span></span><br><span class="line">	TIMES,	<span class="comment">/* * */</span></span><br><span class="line">	SLASH,	<span class="comment">/* / */</span></span><br><span class="line">	EQU,	<span class="comment">/* = */</span></span><br><span class="line">	LES,	<span class="comment">/* &lt; */</span></span><br><span class="line">	GTR,	<span class="comment">/* &gt; */</span></span><br><span class="line">	LPAREN,	<span class="comment">/* ( */</span></span><br><span class="line">	RPAREN,	<span class="comment">/* ) */</span></span><br><span class="line">	COMMA,	<span class="comment">/* , */</span></span><br><span class="line">	SEMICOLON,<span class="comment">/* ; */</span></span><br><span class="line">	PERIOD,	<span class="comment">/* . */</span></span><br><span class="line">	COLON,	<span class="comment">/* : */</span></span><br><span class="line">	EXCLAMA,<span class="comment">/* ! */</span></span><br><span class="line">	AND,	<span class="comment">/* &amp; */</span></span><br><span class="line">	OR,		<span class="comment">/* | */</span></span><br><span class="line">	ILLEGAL	<span class="comment">/* other */</span></span><br><span class="line">&#125; CharType;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>状态定义</p>
-<pre><code class="c">typedef enum _tState{
-    START,
-    SLASH_SEL,
-    LES_SEL,
-    GTR_SEL,
-    IN_NUM,
-    IN_ID,
-    IN_LINECOMMENTS,
-    IN_BLOCKCOMMENTS,
-    TO_END_BLOCKCOMMENTS,
-    COLON_SEL,
-    EXCLAMA_SEL,
-    AND_SEL,
-    OR_SEL, //以上是中间状态（非接受）
-    PLUS_AC,
-    MINUS_AC,
-    TIMES_AC,
-    SLASH_AC,
-    EQU_AC,
-    NEQ_AC,
-    LES_AC,
-    LEQ_AC,
-    GTR_AC,
-    GEQ_AC,
-    LPAREN_AC,
-    RPAREN_AC,
-    COMMA_AC,
-    SEMICOLON_AC,
-    PERIOD_AC,
-    BECOMES_AC,
-    NOT_AC,
-    AND_AC,
-    OR_AC,
-    NUM_AC,
-    ID_AC, //以上是接受状态
-    ERROR1,// &quot;:&quot; expect &quot;=&quot;
-    ERROR2,//expect &quot;&amp;&amp;&quot; but find &quot;&amp;&quot;
-    ERROR3    //expect &quot;||&quot; but find &quot;|&quot;
-} State;
-</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> _tState&#123;</span><br><span class="line">	START,</span><br><span class="line">	SLASH_SEL,</span><br><span class="line">	LES_SEL,</span><br><span class="line">	GTR_SEL,</span><br><span class="line">	IN_NUM,</span><br><span class="line">	IN_ID,</span><br><span class="line">	IN_LINECOMMENTS,</span><br><span class="line">	IN_BLOCKCOMMENTS,</span><br><span class="line">	TO_END_BLOCKCOMMENTS,</span><br><span class="line">	COLON_SEL,</span><br><span class="line">	EXCLAMA_SEL,</span><br><span class="line">	AND_SEL,</span><br><span class="line">	OR_SEL, <span class="comment">//以上是中间状态（非接受）</span></span><br><span class="line">	PLUS_AC,</span><br><span class="line">	MINUS_AC,</span><br><span class="line">	TIMES_AC,</span><br><span class="line">	SLASH_AC,</span><br><span class="line">	EQU_AC,</span><br><span class="line">	NEQ_AC,</span><br><span class="line">	LES_AC,</span><br><span class="line">	LEQ_AC,</span><br><span class="line">	GTR_AC,</span><br><span class="line">	GEQ_AC,</span><br><span class="line">	LPAREN_AC,</span><br><span class="line">	RPAREN_AC,</span><br><span class="line">	COMMA_AC,</span><br><span class="line">	SEMICOLON_AC,</span><br><span class="line">	PERIOD_AC,</span><br><span class="line">	BECOMES_AC,</span><br><span class="line">	NOT_AC,</span><br><span class="line">	AND_AC,</span><br><span class="line">	OR_AC,</span><br><span class="line">	NUM_AC,</span><br><span class="line">	ID_AC, <span class="comment">//以上是接受状态</span></span><br><span class="line">	ERROR1,<span class="comment">// ":" expect "="</span></span><br><span class="line">	ERROR2,<span class="comment">//expect "&amp;&amp;" but find "&amp;"</span></span><br><span class="line">	ERROR3	<span class="comment">//expect "||" but find "|"</span></span><br><span class="line">&#125; State;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
@@ -572,11 +509,7 @@
 <ul>
 <li><p>每条代码有两个参数，第一个参数是指令名称，第二个参数用于<code>PUT</code>的常数或者<code>JMP</code>的目标地址，其他指令的第二个参数为NONE（预先定义的一个值）</p>
 </li>
-<li><pre><code class="c">typedef struct _code{
-    char ins[4];
-    int para;
-}code;
-</code></pre>
+<li><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">code</span>&#123;</span></span><br><span class="line">	<span class="keyword">char</span> ins[<span class="number">4</span>];</span><br><span class="line">	<span class="keyword">int</span> para;</span><br><span class="line">&#125;code;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
@@ -587,16 +520,10 @@
 <li><p>这里，stack只作为运算使用，当前运算总是对stack顶端的一个或两个值进行操作(虚拟机指令决定了这个特性)</p>
 </li>
 <li><p>memory被划分为两部分，从低地址端memory[1]开始增长作为模拟的运行栈(runstack)，从高地址端memory[1023]开始递减作为寄存器</p>
-<p><code>`</code><br>————–men[0]<br>|null<br>|runstack<br>|..<br>|..            &lt;– runstack’s top(REG_SP)<br>|<br>|reg4 //REG_SP<br>|reg3 //REG_BP<br>|reg2 //REG_BX<br>|reg1 //REG_AX<br>————–men[1023]</p>
-<p>a record in runstack (running)<br>————–low address<br>|return value<br>|return address(in codeheap)<br>|parameters<br>|old base                    &lt;—base (REG_BP)<br>|local id(var/const/procedure)<br>————–high address  &lt;—top (REG_SP)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">--------------men[0]</span><br><span class="line">|null</span><br><span class="line">|runstack</span><br><span class="line">|..</span><br><span class="line">|..			&lt;-- runstack&apos;s top(REG_SP)</span><br><span class="line">|</span><br><span class="line">|reg4 //REG_SP</span><br><span class="line">|reg3 //REG_BP </span><br><span class="line">|reg2 //REG_BX</span><br><span class="line">|reg1 //REG_AX</span><br><span class="line">--------------men[1023]</span><br><span class="line"></span><br><span class="line">a record in runstack (running)</span><br><span class="line">--------------low address  </span><br><span class="line">|return value</span><br><span class="line">|return address(in codeheap)</span><br><span class="line">|parameters</span><br><span class="line">|old base					&lt;---base (REG_BP) </span><br><span class="line">|local id(var/const/procedure)					</span><br><span class="line">--------------high address  &lt;---top (REG_SP)</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
-</ul>
-</li>
-</ul>
-<pre><code>  ```
-</code></pre><ul>
 <li><p>用虚拟机的指令以及memory模拟一个运行栈和寄存器组，实现以下函数</p>
 <ul>
 <li><code>gen_savereg(REG regid)</code>函数，将stack栈顶值保存到上面的某个寄存器</li>
@@ -665,6 +592,8 @@
 <li>不在词法分析中实现</li>
 <li><code>const_declaration</code>取得常量数字Token时，如果前面一个Token是减号，则数取反后再存入加入标识符表</li>
 <li><code>factor</code>中，根据语法图，识别到负号时，再次调用<code>factor</code>，结果在栈顶，此时再生成两条代码<code>PUT 0; SUB;</code>实现将栈顶值取反</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

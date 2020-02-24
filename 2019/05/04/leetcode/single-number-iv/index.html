@@ -15,18 +15,18 @@
 
 
 
-<meta name="description" content="起源受LeetCode系列题目启发 只出现一次的数字I 只出现一次的数字II 只出现一次的数字III 已提交贡献（然而几个月了都是Pending，发到博客来吧~ 题目给定一个正整数数组 nums，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。 示例 : 输入: [1, 6, 2, 4, 1, 3, 2, 5, 6] 输出: [3, 4, 5] 注意：  结果输">
+<meta name="description" content="起源受LeetCode系列题目启发 只出现一次的数字I 只出现一次的数字II 只出现一次的数字III 已提交贡献（然而几个月了都是Pending，发到博客来吧~ 题目给定一个正整数数组 nums，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。 示例 : 12输入: [1, 6, 2, 4, 1, 3, 2, 5, 6]输出: [3, 4, 5] 注意：  结果">
 <meta name="keywords" content="LeetCode">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode题目改编——只出现一次的数字IV">
 <meta property="og:url" content="https://l-x.me/2019/05/04/leetcode/single-number-iv/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
-<meta property="og:description" content="起源受LeetCode系列题目启发 只出现一次的数字I 只出现一次的数字II 只出现一次的数字III 已提交贡献（然而几个月了都是Pending，发到博客来吧~ 题目给定一个正整数数组 nums，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。 示例 : 输入: [1, 6, 2, 4, 1, 3, 2, 5, 6] 输出: [3, 4, 5] 注意：  结果输">
+<meta property="og:description" content="起源受LeetCode系列题目启发 只出现一次的数字I 只出现一次的数字II 只出现一次的数字III 已提交贡献（然而几个月了都是Pending，发到博客来吧~ 题目给定一个正整数数组 nums，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。 示例 : 12输入: [1, 6, 2, 4, 1, 3, 2, 5, 6]输出: [3, 4, 5] 注意：  结果">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2020-02-24T14:05:22.372Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeetCode题目改编——只出现一次的数字IV">
-<meta name="twitter:description" content="起源受LeetCode系列题目启发 只出现一次的数字I 只出现一次的数字II 只出现一次的数字III 已提交贡献（然而几个月了都是Pending，发到博客来吧~ 题目给定一个正整数数组 nums，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。 示例 : 输入: [1, 6, 2, 4, 1, 3, 2, 5, 6] 输出: [3, 4, 5] 注意：  结果输">
+<meta name="twitter:description" content="起源受LeetCode系列题目启发 只出现一次的数字I 只出现一次的数字II 只出现一次的数字III 已提交贡献（然而几个月了都是Pending，发到博客来吧~ 题目给定一个正整数数组 nums，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。 示例 : 12输入: [1, 6, 2, 4, 1, 3, 2, 5, 6]输出: [3, 4, 5] 注意：  结果">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -312,9 +312,8 @@
 <p>已提交贡献（然而几个月了都是Pending，发到博客来吧~</p>
 <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>给定一个正整数数组 <code>nums</code>，其中恰好有三个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那三个元素。</p>
 <p><strong>示例 :</strong></p>
-<pre><code>输入: [1, 6, 2, 4, 1, 3, 2, 5, 6]
-输出: [3, 4, 5]
-</code></pre><p><strong>注意：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [1, 6, 2, 4, 1, 3, 2, 5, 6]</span><br><span class="line">输出: [3, 4, 5]</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong></p>
 <ol>
 <li>结果输出的顺序并不重要，对于上面的例子，可以是 3, 4, 5 的任意排列。</li>
 <li>你的算法应该具有线性时间复杂度。你能否仅使用常数空间复杂度来实现？</li>
@@ -329,51 +328,7 @@
 <p>为此，我们初始化<code>n = 0</code>遍历数组，依次计算<code>n ^= arr[i]</code>，得到<code>n = a ^ b ^ c</code>，</p>
 <p>初始化<code>lsb = 0</code>，再次遍历数组，依次计算<code>lsb ^= LSB(n ^ arr[i])</code>，结果得到的 <code>lsb</code> 就是<code>LSB(n ^ c)</code> ，因为对于那些出现两次的数x，<code>LSB(n ^ x) ^ LSB(n ^ x) = 0</code>，而对于<code>n ^ a</code>和<code>n ^ b</code>，它们在第<code>k</code>位（也是它们的最低位的<code>1</code>）都是<code>1</code>，因此，<code>LSB(n ^ a) ^ LSB(n ^ b) = 0</code></p>
 <p>初始化<code>c = 0</code>，再次遍历数组，如果<code>LSB(n ^ arr[i]) == lsb</code>，计算<code>c ^= arr[i]</code>，最后结果<code>c</code>就是我们要寻找的数，因为<code>LSB(n ^ arr[i]) == lsb</code>筛选出的<code>arr[i]</code>最低位<code>1</code>的位置和<code>lsb</code>相同（也就是和<code>c</code>相同），这些数的异或结果只会留下<code>c</code>，出现两次的数都抵消了</p>
-<h3 id="C-代码"><a href="#C-代码" class="headerlink" title="C++代码"></a>C++代码</h3><pre><code class="cpp">#include &lt;iostream&gt;
-#include &lt;vector&gt;
-using namespace std;
-int LSB(int num){ //取最低位的1，其他位均置为0
-    return num &amp; (-num);
-}
-vector&lt;int&gt; Two(vector&lt;int&gt; arr){ //寻找数组中两个只出现一次的数（其他数都出现两次）
-    int a_xor_b = 0, a = 0, b = 0, lsb = 0;
-    for (int i = 0; i &lt; arr.size(); i++)
-        a_xor_b ^= arr[i];
-    lsb = LSB(a_xor_b);
-    for (int i = 0; i &lt; arr.size(); i++)
-        if(arr[i] &amp; lsb)
-            a ^= arr[i];
-    b = a_xor_b ^ a;
-    return vector&lt;int&gt;{a, b};
-}
-int OneOfThree(vector&lt;int&gt; arr){ //寻找数组中三个只出现一次的数中的一个（其他数都出现两次）
-    int a_xor_b_xor_c = 0, c = 0, lsb = 0;
-    for (int i = 0; i &lt; arr.size(); i++)
-        a_xor_b_xor_c ^= arr[i];
-    for (int i = 0; i &lt; arr.size(); i++)
-        lsb ^= LSB(a_xor_b_xor_c ^ arr[i]);
-    lsb = LSB(lsb);
-    for (int i = 0; i &lt; arr.size(); i++)
-        if (LSB(a_xor_b_xor_c ^ arr[i]) == lsb)
-            c ^= arr[i];
-    return c;
-}
-vector&lt;int&gt; Three(vector&lt;int&gt; arr){ //寻找数组中三个只出现一次的数（其他数都出现两次）
-    int c = OneOfThree(arr);
-    arr.push_back(c);
-    vector&lt;int&gt; res = Two(arr);
-    res.push_back(c);
-    return res;
-}
-int main(){
-    vector&lt;int&gt; arr = {1, 6, 2, 4, 1, 3, 2, 5, 6};
-    vector&lt;int&gt; res = Three(arr);
-    for(int i = 0; i &lt; 3; i++)
-        cout &lt;&lt; res[i] &lt;&lt; &quot; &quot;;
-    return 0;
-}
-
-</code></pre>
+<h3 id="C-代码"><a href="#C-代码" class="headerlink" title="C++代码"></a>C++代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">LSB</span><span class="params">(<span class="keyword">int</span> num)</span></span>&#123; <span class="comment">//取最低位的1，其他位均置为0</span></span><br><span class="line">    <span class="keyword">return</span> num &amp; (-num);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; Two(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; arr)&#123; <span class="comment">//寻找数组中两个只出现一次的数（其他数都出现两次）</span></span><br><span class="line">    <span class="keyword">int</span> a_xor_b = <span class="number">0</span>, a = <span class="number">0</span>, b = <span class="number">0</span>, lsb = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.size(); i++)</span><br><span class="line">        a_xor_b ^= arr[i];</span><br><span class="line">    lsb = LSB(a_xor_b);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.size(); i++)</span><br><span class="line">        <span class="keyword">if</span>(arr[i] &amp; lsb)</span><br><span class="line">            a ^= arr[i];</span><br><span class="line">    b = a_xor_b ^ a;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&#123;a, b&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">OneOfThree</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; arr)</span></span>&#123; <span class="comment">//寻找数组中三个只出现一次的数中的一个（其他数都出现两次）</span></span><br><span class="line">    <span class="keyword">int</span> a_xor_b_xor_c = <span class="number">0</span>, c = <span class="number">0</span>, lsb = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.size(); i++)</span><br><span class="line">        a_xor_b_xor_c ^= arr[i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.size(); i++)</span><br><span class="line">        lsb ^= LSB(a_xor_b_xor_c ^ arr[i]);</span><br><span class="line">    lsb = LSB(lsb);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.size(); i++)</span><br><span class="line">        <span class="keyword">if</span> (LSB(a_xor_b_xor_c ^ arr[i]) == lsb)</span><br><span class="line">            c ^= arr[i];</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; Three(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; arr)&#123; <span class="comment">//寻找数组中三个只出现一次的数（其他数都出现两次）</span></span><br><span class="line">	<span class="keyword">int</span> c = OneOfThree(arr);</span><br><span class="line">	arr.push_back(c);</span><br><span class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res = Two(arr);</span><br><span class="line">	res.push_back(c);</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; arr = &#123;<span class="number">1</span>, <span class="number">6</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">6</span>&#125;;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res = Three(arr);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">		<span class="built_in">cout</span> &lt;&lt; res[i] &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://lijinma.com/blog/2014/05/29/amazing-xor/" target="_blank" rel="noopener">http://lijinma.com/blog/2014/05/29/amazing-xor/</a></p>
 <p><a href="http://www.360doc.com/content/14/0728/12/14505022_397625773.shtml" target="_blank" rel="noopener">http://www.360doc.com/content/14/0728/12/14505022_397625773.shtml</a></p>
 

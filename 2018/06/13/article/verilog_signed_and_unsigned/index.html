@@ -15,13 +15,13 @@
 
 
 
-<meta name="description" content="Verilog中的有符号数与无符号数缘起 在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号   `assign SignExtented = {{16{IMM16[15]">
+<meta name="description" content="Verilog中的有符号数与无符号数缘起 在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号 `assign SignExtented = {{16{IMM16[15]}}">
 <meta name="keywords" content="Verilog">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Verilog中的有符号数与无符号数">
 <meta property="og:url" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/index.html">
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
-<meta property="og:description" content="Verilog中的有符号数与无符号数缘起 在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号   `assign SignExtented = {{16{IMM16[15]">
+<meta property="og:description" content="Verilog中的有符号数与无符号数缘起 在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号 `assign SignExtented = {{16{IMM16[15]}}">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic1.png">
 <meta property="og:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic2.png">
@@ -33,7 +33,7 @@
 <meta property="og:updated_time" content="2019-03-14T12:07:54.473Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Verilog中的有符号数与无符号数">
-<meta name="twitter:description" content="Verilog中的有符号数与无符号数缘起 在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号   `assign SignExtented = {{16{IMM16[15]">
+<meta name="twitter:description" content="Verilog中的有符号数与无符号数缘起 在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号 `assign SignExtented = {{16{IMM16[15]}}">
 <meta name="twitter:image" content="https://l-x.me/2018/06/13/article/verilog_signed_and_unsigned/alupic1.png">
 
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -315,22 +315,14 @@
           
         <h1 id="Verilog中的有符号数与无符号数"><a href="#Verilog中的有符号数与无符号数" class="headerlink" title="Verilog中的有符号数与无符号数"></a>Verilog中的有符号数与无符号数</h1><h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><ul>
 <li><p>在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号</p>
-<pre><code>  `assign SignExtented = {{16{IMM16[15]}},IMM16};`
+<pre><code>`assign SignExtented = {{16{IMM16[15]}},IMM16};`
 </code></pre><p>  这里相当于是手动按符号拓展。</p>
 </li>
 <li>那么，现在要实现的addu和add的区别在哪呢？还有溢出如何判断？</li>
 </ul>
 <h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><ul>
 <li><p>马上回想了下原码和补码的问题，但是这只是在有符号情况下对正负数表示的统一，现在的问题是Verilog中“+”这个运算符是认为操作数是有符号还是无符号呢？（当然，正数的情况没有区别）。马上测试了一下：<br> ​    </p>
-<pre><code class="verilog"> reg [3:0] a；
- reg [3:0] b；
- reg [3:0] out；
- initial begin
-     a = -1;
-     b = -2;
-     out = a + b;
- end
-</code></pre>
+ <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">reg</span> [<span class="number">3</span>:<span class="number">0</span>] a；</span><br><span class="line"><span class="keyword">reg</span> [<span class="number">3</span>:<span class="number">0</span>] b；</span><br><span class="line"><span class="keyword">reg</span> [<span class="number">3</span>:<span class="number">0</span>] out；</span><br><span class="line"><span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">	a = -<span class="number">1</span>;</span><br><span class="line">	b = -<span class="number">2</span>;</span><br><span class="line">	out = a + b;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <p> 结果out=-3，我以为“+”是计算有符号的情况的。<br> 以二进制查看了一下波形，是<code>a=4&#39;b1111,b=4&#39;1110,out=4&#39;b1101</code><br> 看来如果赋值为负数，是以补码的形式存储的</p>
 <p> 那么如果操作数是两个无符号数，且足够大，首位是1，不就也被“+”当成有符号负数了吗？这就不能实现无符号的加法了。</p>
 </li>
@@ -389,11 +381,7 @@
 <li><p>明白了上面的知识，slt的实现也就非常简单了，可以两种写法：</p>
 <ul>
 <li><p>一是无符号变量存储，自行判断符号</p>
-<pre><code class="verilog"> if(alu_a[31] == alu_b[31]) alu_out = (alu_a &lt; alu_b) ? 32&#39;b1 : 32&#39;b0;
-     //对于不加signed的变量类型，运算和比较视为无符号，但依然可以存储有符号数，这里相当于自行根据首位判断
-     //首位相等，即同号情况，直接比较，如果同正，后面31位大的，原数就大，如果同负，后面31位（补码）大的，依然是原数大
-     else alu_out = (alu_a[31] &lt; alu_b[31]) ? 32&#39;b0 : 32&#39;b1;//异号情况，直接比较符号
-</code></pre>
+ <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(alu_a[<span class="number">31</span>] == alu_b[<span class="number">31</span>]) alu_out = (alu_a &lt; alu_b) ? <span class="number">32'b1</span> : <span class="number">32'b0</span>;</span><br><span class="line">	<span class="comment">//对于不加signed的变量类型，运算和比较视为无符号，但依然可以存储有符号数，这里相当于自行根据首位判断</span></span><br><span class="line">	<span class="comment">//首位相等，即同号情况，直接比较，如果同正，后面31位大的，原数就大，如果同负，后面31位（补码）大的，依然是原数大</span></span><br><span class="line">	<span class="keyword">else</span> alu_out = (alu_a[<span class="number">31</span>] &lt; alu_b[<span class="number">31</span>]) ? <span class="number">32'b0</span> : <span class="number">32'b1</span>;<span class="comment">//异号情况，直接比较符号</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>二是转为有符号，直接用“&lt;”比较</p>
 <p> <code>alu_out = ($signed(alu_a) &lt; $signed(alu_b)) ? 32&#39;b1 : 32&#39;b0;</code></p>

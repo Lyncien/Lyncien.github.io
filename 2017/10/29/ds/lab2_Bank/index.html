@@ -340,72 +340,72 @@
 <h2 id="二、-概要设计"><a href="#二、-概要设计" class="headerlink" title="二、    概要设计"></a>二、    概要设计</h2><ol>
 <li><p>抽象数据类型客户队列定义如下：</p>
 <p>  ADT UserQueue{</p>
-<pre><code>  数据对象：D={User|User.id=1,2,...,n;n&gt;=0}
-  数据关系：无
-  基本操作：
-      InitQueue(&amp;q);
-          操作结果：创建客户队列q。
-      DestoryQueue(&amp;q);
-          初始条件：客户队列q存在。
-          操作结果：销毁客户队列q。
-      QueueLength(q);
-          初始条件：客户队列q存在。
-          操作结果：返回客户队列q的长度。
-      EnQueue(&amp;q,elem);
-          初始条件：客户队列q存在。
-          操作结果：将客户elem加入客户队列q的队尾。         
-      DeQueue(&amp;q,&amp;elem);
-          初始条件：客户队列q存在。
-          操作结果：将客户从客户队列q的队头删除，存放在elem中。   
-      PeekQueueByPos(&amp;q,i,&amp;elem);
-          初始条件：客户队列q存在。
-          操作结果：返回客户队列q的第i个元素但不出队。   
+<pre><code>数据对象：D={User|User.id=1,2,...,n;n&gt;=0}
+数据关系：无
+基本操作：
+    InitQueue(&amp;q);
+        操作结果：创建客户队列q。
+    DestoryQueue(&amp;q);
+        初始条件：客户队列q存在。
+        操作结果：销毁客户队列q。
+    QueueLength(q);
+        初始条件：客户队列q存在。
+        操作结果：返回客户队列q的长度。
+    EnQueue(&amp;q,elem);
+        初始条件：客户队列q存在。
+        操作结果：将客户elem加入客户队列q的队尾。         
+    DeQueue(&amp;q,&amp;elem);
+        初始条件：客户队列q存在。
+        操作结果：将客户从客户队列q的队头删除，存放在elem中。   
+    PeekQueueByPos(&amp;q,i,&amp;elem);
+        初始条件：客户队列q存在。
+        操作结果：返回客户队列q的第i个元素但不出队。   
 </code></pre><p>  }ADT UserQueue</p>
 </li>
 </ol>
 <ol start="2">
 <li><p>抽象数据类型事件链表定义如下：</p>
 <p>  ADT EventLinkList{</p>
-<pre><code>  数据对象：D={Event}
-  数据关系：无
-  基本操作：
-      MakeEventNode(occurtime,type);
-          操作结果：根据参数创建事件节点。
-      DestoryEventList(&amp;el);
-          初始条件：事件链表el存在。
-          操作结果：销毁事件链表el。
-      InitEventList(&amp;el);
-          初始条件：事件链表el存在。
-          操作结果：创建事件链表el。
-      InsertEventToListInOrder(el,&amp;ev);
-          初始条件：事件链表el存在。
-          操作结果：将事件ev按时间顺序插入事件链表el。
-      DeleteEventFromListByPos(el,pos,&amp;ev);
-          初始条件：事件链表el存在。
-          操作结果：删除事件链表el的第pos个事件，放在ev中。  
+<pre><code>数据对象：D={Event}
+数据关系：无
+基本操作：
+    MakeEventNode(occurtime,type);
+        操作结果：根据参数创建事件节点。
+    DestoryEventList(&amp;el);
+        初始条件：事件链表el存在。
+        操作结果：销毁事件链表el。
+    InitEventList(&amp;el);
+        初始条件：事件链表el存在。
+        操作结果：创建事件链表el。
+    InsertEventToListInOrder(el,&amp;ev);
+        初始条件：事件链表el存在。
+        操作结果：将事件ev按时间顺序插入事件链表el。
+    DeleteEventFromListByPos(el,pos,&amp;ev);
+        初始条件：事件链表el存在。
+        操作结果：删除事件链表el的第pos个事件，放在ev中。  
 </code></pre><p>  }ADT EventLinkList</p>
 </li>
 <li><p>主程序</p>
 <p>  void main(){</p>
-<pre><code>  用户输入参数;
-  初始化窗口及各数据类型;
-  while(营业未结束){
-      取下一个事件;
-      switch(该事件){
-          case 到来: 加入用户队列；
-              if(服务窗口空闲) 服务队列1的下一个客户;
-              break;
-          case 离开:
-              停留时间计算并加入统计时间;
-              银行资金改变;
-              if(该客户是存款) 检查队列2;
-              else (该客户是取款 &amp;&amp; 客户来自队列2) 继续检查队列2;
-              if(不是正在检查队列2) 服务队列1的下一个客户;
-              break;  
-          case 结束: 队列中所有客户离开； 
-      }
-  }
-  输出平均时间;
+<pre><code>用户输入参数;
+初始化窗口及各数据类型;
+while(营业未结束){
+    取下一个事件;
+    switch(该事件){
+        case 到来: 加入用户队列；
+            if(服务窗口空闲) 服务队列1的下一个客户;
+            break;
+        case 离开:
+            停留时间计算并加入统计时间;
+            银行资金改变;
+            if(该客户是存款) 检查队列2;
+            else (该客户是取款 &amp;&amp; 客户来自队列2) 继续检查队列2;
+            if(不是正在检查队列2) 服务队列1的下一个客户;
+            break;  
+        case 结束: 队列中所有客户离开； 
+    }
+}
+输出平均时间;
 </code></pre><p>  }</p>
 </li>
 <li><p>本程序含四个模块</p>
@@ -515,574 +515,13 @@ Status Check();
 </ul>
 <p>（1）    UserQueue.h<br>​<br>（2）    EventLinkList.h<br>​<br>（3）    MyUI.h<br>​<br>（4）    Bank.c</p>
 <p>UserQueue.h</p>
-<pre><code class="c">/*
-    Last Update time: 2017-10-17 
-    Version：1.0
-    Author：LinXiang (PB16020923) 
-    Description：
-        UserQueue.
-*/
-#include &lt;stdlib.h&gt;
-#define QMAXSIZE 100
-#define OK 1
-#define ERROR 0 
-typedef int Status;
-typedef struct _User{
-    int id; 
-    int arrtime;
-    int durtime;
-    int amount;
-}User;
-typedef struct _SqQueue{
-    User *base;
-    int front;
-    int rear;
-}SqQueue;
-Status InitQueue(SqQueue *q){//初始化队列 
-    q-&gt;base=(User *)malloc(QMAXSIZE*sizeof(User));
-    q-&gt;front=0;
-    q-&gt;rear=0;
-    return OK;
-} 
-Status DestoryQueue(SqQueue *q){//销毁队列 
-    if(!q-&gt;base) return ERROR; 
-    free(q-&gt;base);
-    q-&gt;front=0;
-    q-&gt;rear=0;
-    return OK;
-}
-int QueueLength(SqQueue q){//求队列长度 
-    return (q.rear-q.front+QMAXSIZE) % QMAXSIZE;
-}
-Status EnQueue(SqQueue *q,User elem){//入队 
-    if((q-&gt;rear+1) % QMAXSIZE==q-&gt;front) return ERROR;
-    q-&gt;base[q-&gt;rear]=elem;
-    q-&gt;rear=(q-&gt;rear+1) % QMAXSIZE;
-    return OK;
-}
-Status DeQueue(SqQueue *q,User *elem){//出队 
-    if(q-&gt;rear==q-&gt;front) return ERROR;
-    *elem=q-&gt;base[q-&gt;front];
-    q-&gt;front=(q-&gt;front+1) % QMAXSIZE;
-    return OK;
-}
-Status PeekQueue(SqQueue *q,User *elem){//查看队头但不出队 
-    if(q-&gt;rear==q-&gt;front) return ERROR;
-    *elem=q-&gt;base[q-&gt;front];
-    return OK;
-}
-Status PeekQueueByPos(SqQueue *q,int i,User *elem){//查看第i个元素但不出队 
-    if(i&gt;QueueLength(*q)) return ERROR;
-    *elem=q-&gt;base[(q-&gt;front+i-1) % QMAXSIZE];
-    return OK;
-}
-</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Last Update time: 2017-10-17 </span></span><br><span class="line"><span class="comment">    Version：1.0</span></span><br><span class="line"><span class="comment">    Author：LinXiang (PB16020923) </span></span><br><span class="line"><span class="comment">    Description：</span></span><br><span class="line"><span class="comment">        UserQueue.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> QMAXSIZE 100</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OK 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR 0 </span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> Status;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">User</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> id; </span><br><span class="line">    <span class="keyword">int</span> arrtime;</span><br><span class="line">    <span class="keyword">int</span> durtime;</span><br><span class="line">    <span class="keyword">int</span> amount;</span><br><span class="line">&#125;User;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">SqQueue</span>&#123;</span></span><br><span class="line">    User *base;</span><br><span class="line">    <span class="keyword">int</span> front;</span><br><span class="line">    <span class="keyword">int</span> rear;</span><br><span class="line">&#125;SqQueue;</span><br><span class="line"><span class="function">Status <span class="title">InitQueue</span><span class="params">(SqQueue *q)</span></span>&#123;<span class="comment">//初始化队列 </span></span><br><span class="line">    q-&gt;base=(User *)<span class="built_in">malloc</span>(QMAXSIZE*<span class="keyword">sizeof</span>(User));</span><br><span class="line">    q-&gt;front=<span class="number">0</span>;</span><br><span class="line">    q-&gt;rear=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125; </span><br><span class="line"><span class="function">Status <span class="title">DestoryQueue</span><span class="params">(SqQueue *q)</span></span>&#123;<span class="comment">//销毁队列 </span></span><br><span class="line">    <span class="keyword">if</span>(!q-&gt;base) <span class="keyword">return</span> ERROR; </span><br><span class="line">    <span class="built_in">free</span>(q-&gt;base);</span><br><span class="line">    q-&gt;front=<span class="number">0</span>;</span><br><span class="line">    q-&gt;rear=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">QueueLength</span><span class="params">(SqQueue q)</span></span>&#123;<span class="comment">//求队列长度 </span></span><br><span class="line">    <span class="keyword">return</span> (q.rear-q.front+QMAXSIZE) % QMAXSIZE;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">EnQueue</span><span class="params">(SqQueue *q,User elem)</span></span>&#123;<span class="comment">//入队 </span></span><br><span class="line">    <span class="keyword">if</span>((q-&gt;rear+<span class="number">1</span>) % QMAXSIZE==q-&gt;front) <span class="keyword">return</span> ERROR;</span><br><span class="line">    q-&gt;base[q-&gt;rear]=elem;</span><br><span class="line">    q-&gt;rear=(q-&gt;rear+<span class="number">1</span>) % QMAXSIZE;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">DeQueue</span><span class="params">(SqQueue *q,User *elem)</span></span>&#123;<span class="comment">//出队 </span></span><br><span class="line">    <span class="keyword">if</span>(q-&gt;rear==q-&gt;front) <span class="keyword">return</span> ERROR;</span><br><span class="line">    *elem=q-&gt;base[q-&gt;front];</span><br><span class="line">    q-&gt;front=(q-&gt;front+<span class="number">1</span>) % QMAXSIZE;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">PeekQueue</span><span class="params">(SqQueue *q,User *elem)</span></span>&#123;<span class="comment">//查看队头但不出队 </span></span><br><span class="line">    <span class="keyword">if</span>(q-&gt;rear==q-&gt;front) <span class="keyword">return</span> ERROR;</span><br><span class="line">    *elem=q-&gt;base[q-&gt;front];</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">PeekQueueByPos</span><span class="params">(SqQueue *q,<span class="keyword">int</span> i,User *elem)</span></span>&#123;<span class="comment">//查看第i个元素但不出队 </span></span><br><span class="line">    <span class="keyword">if</span>(i&gt;QueueLength(*q)) <span class="keyword">return</span> ERROR;</span><br><span class="line">    *elem=q-&gt;base[(q-&gt;front+i<span class="number">-1</span>) % QMAXSIZE];</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>EventLinkList.h</p>
-<pre><code class="c">/*
-    Last Update time: 2017-10-17 
-    Version：1.0
-    Author：LinXiang (PB16020923) 
-    Description：
-        EventLinkList.
-*/
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-#define OK 1
-#define ERROR 0 
-enum TYPE{HEADNODE,ARR,LEAVE,CLOSE};//枚举事件类型，其中HEADNODE为表示头节点
-typedef int Status;
-typedef struct _Event{
-    int occurtime;
-    enum TYPE type;
-    struct _Event *next;
-}Event,*EvList;
-Event* MakeEventNode(int occurtime,int type){//创建事件结点 
-    Event *p=(Event*)malloc(sizeof(Event));
-    p-&gt;type=(enum TYPE)type;
-    p-&gt;occurtime=occurtime;
-    p-&gt;next=NULL;
-    return p;
-}
-Status DestoryEventList(EvList *l){//销毁事件链表 
-    if(*l==NULL) return OK;
-    Event *p=(*l)-&gt;next,*q;
-    while(p!=NULL){
-        q=p-&gt;next;
-        free(p);
-        p=q;
-    } 
-    free(*l);
-    *l=NULL;
-    return OK;
-}
-Status InitEventList(EvList *l){//初始化事件链表 
-    if(*l!=NULL) DestoryEventList(l);
-    *l=MakeEventNode(-1,HEADNODE);
-    return OK;
-}
-Status InsertEventToListInOrder(EvList l,Event *ev){
-//按时间顺序插入事件，插入后该事件将成为事件列表的一部分
-    Event *q=l,*p;
-    while(q-&gt;next!=NULL &amp;&amp; q-&gt;next-&gt;occurtime&lt;ev-&gt;occurtime){
-        q=q-&gt;next;
-    }
-    ev-&gt;next=q-&gt;next;
-    q-&gt;next=ev;
-    return OK;
-}
-Status DeleteEventFromListByPos(EvList l,int pos,Event *ev){
-//删除指定位置的事件，pos=1...length,ev存放删除的事件 
-    if(pos&lt;1) return ERROR;
-    Event *q=l;
-    int i=1;
-    while(q-&gt;next!=NULL &amp;&amp; i++&lt;pos){
-        q=q-&gt;next;
-    }
-    if(q-&gt;next==NULL) return ERROR;
-    else{
-        Event *r=q-&gt;next;
-        memcpy(ev,r,sizeof(Event)); 
-        q-&gt;next=q-&gt;next-&gt;next;
-        free(r);
-    }
-    return OK;  
-}
-</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Last Update time: 2017-10-17 </span></span><br><span class="line"><span class="comment">    Version：1.0</span></span><br><span class="line"><span class="comment">    Author：LinXiang (PB16020923) </span></span><br><span class="line"><span class="comment">    Description：</span></span><br><span class="line"><span class="comment">        EventLinkList.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OK 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR 0 </span></span><br><span class="line"><span class="keyword">enum</span> TYPE&#123;HEADNODE,ARR,LEAVE,CLOSE&#125;;<span class="comment">//枚举事件类型，其中HEADNODE为表示头节点</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> Status;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">Event</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> occurtime;</span><br><span class="line">    <span class="keyword">enum</span> TYPE type;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">Event</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125;Event,*EvList;</span><br><span class="line"><span class="function">Event* <span class="title">MakeEventNode</span><span class="params">(<span class="keyword">int</span> occurtime,<span class="keyword">int</span> type)</span></span>&#123;<span class="comment">//创建事件结点 </span></span><br><span class="line">    Event *p=(Event*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Event));</span><br><span class="line">    p-&gt;type=(<span class="keyword">enum</span> TYPE)type;</span><br><span class="line">    p-&gt;occurtime=occurtime;</span><br><span class="line">    p-&gt;next=<span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">DestoryEventList</span><span class="params">(EvList *l)</span></span>&#123;<span class="comment">//销毁事件链表 </span></span><br><span class="line">    <span class="keyword">if</span>(*l==<span class="literal">NULL</span>) <span class="keyword">return</span> OK;</span><br><span class="line">    Event *p=(*l)-&gt;next,*q;</span><br><span class="line">    <span class="keyword">while</span>(p!=<span class="literal">NULL</span>)&#123;</span><br><span class="line">        q=p-&gt;next;</span><br><span class="line">        <span class="built_in">free</span>(p);</span><br><span class="line">        p=q;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="built_in">free</span>(*l);</span><br><span class="line">    *l=<span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">InitEventList</span><span class="params">(EvList *l)</span></span>&#123;<span class="comment">//初始化事件链表 </span></span><br><span class="line">    <span class="keyword">if</span>(*l!=<span class="literal">NULL</span>) DestoryEventList(l);</span><br><span class="line">    *l=MakeEventNode(<span class="number">-1</span>,HEADNODE);</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">InsertEventToListInOrder</span><span class="params">(EvList l,Event *ev)</span></span>&#123;</span><br><span class="line"><span class="comment">//按时间顺序插入事件，插入后该事件将成为事件列表的一部分</span></span><br><span class="line">    Event *q=l,*p;</span><br><span class="line">    <span class="keyword">while</span>(q-&gt;next!=<span class="literal">NULL</span> &amp;&amp; q-&gt;next-&gt;occurtime&lt;ev-&gt;occurtime)&#123;</span><br><span class="line">        q=q-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    ev-&gt;next=q-&gt;next;</span><br><span class="line">    q-&gt;next=ev;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">DeleteEventFromListByPos</span><span class="params">(EvList l,<span class="keyword">int</span> pos,Event *ev)</span></span>&#123;</span><br><span class="line"><span class="comment">//删除指定位置的事件，pos=1...length,ev存放删除的事件 </span></span><br><span class="line">    <span class="keyword">if</span>(pos&lt;<span class="number">1</span>) <span class="keyword">return</span> ERROR;</span><br><span class="line">    Event *q=l;</span><br><span class="line">    <span class="keyword">int</span> i=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(q-&gt;next!=<span class="literal">NULL</span> &amp;&amp; i++&lt;pos)&#123;</span><br><span class="line">        q=q-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(q-&gt;next==<span class="literal">NULL</span>) <span class="keyword">return</span> ERROR;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        Event *r=q-&gt;next;</span><br><span class="line">        <span class="built_in">memcpy</span>(ev,r,<span class="keyword">sizeof</span>(Event)); </span><br><span class="line">        q-&gt;next=q-&gt;next-&gt;next;</span><br><span class="line">        <span class="built_in">free</span>(r);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> OK;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>MyUI.h</p>
-<pre><code class="c">/*
-    Last Update time: 2017-10-22 
-    Version：1.0
-    Author：LinXiang (PB16020923) 
-    Description：
-        MyUI.c.
-*/
-#include &lt;windows.h&gt;
-#include &lt;stdio.h&gt;
-#define F_GRAY FOREGROUND_INTENSITY 
-#define F_CYAN FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
-#define F_ORANGE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY
-#define F_PURPLE FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY
-#define F_RED FOREGROUND_RED | FOREGROUND_INTENSITY
-#define F_GREEN FOREGROUND_GREEN | FOREGROUND_INTENSITY
-#define F_BLUE FOREGROUND_BLUE | FOREGROUND_INTENSITY
-#define F_WHITE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
-#define F_USUALWHITE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE //不加亮的白色为正常颜色 
-#define F_BLACK FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | COMMON_LVB_REVERSE_VIDEO
-#define B_GRAY BACKGROUND_INTENSITY 
-#define B_CYAN BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_INTENSITY
-#define B_ORANGE BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY
-#define B_PURPLE BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_INTENSITY
-#define B_BLUE BACKGROUND_BLUE | BACKGROUND_INTENSITY
-#define B_RED BACKGROUND_RED | BACKGROUND_INTENSITY
-#define B_GREEN BACKGROUND_GREEN | BACKGROUND_INTENSITY
-#define B_WHITE BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY
-#define B_USUALWHITE BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE //不加亮的白色为正常颜色 
-#define B_BLACK BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | COMMON_LVB_REVERSE_VIDEO
-SMALL_RECT UI_SetRect(int left,int top,int right,int bottom){
-//根据坐标取返回对应矩形区域数据 
-    SMALL_RECT rc={0,0,0,0};
-    rc.Left=left;
-    rc.Top=top;
-    rc.Right=right;
-    rc.Bottom=bottom;
-    return rc;
-}
-void UI_SetConsoleWindowSize(HANDLE hOut,int width,int height) {//设置窗口大小
-    SMALL_RECT rc;
-    rc=UI_SetRect(0,0,width-1,height-1);
-    SetConsoleWindowInfo(hOut,1,&amp;rc); // 重置窗口位置和大小
-}
-void UI_SetConsoleScreenBufferSize(HANDLE hOut,int width,int height) {
-//设置缓冲区大小
-    COORD size;
-    size.X=width;
-    size.Y=height;
-    SetConsoleScreenBufferSize(hOut,size); // 重新设置缓冲区大小
-}
-void UI_InitSTDHandle(HANDLE *hOut,CONSOLE_SCREEN_BUFFER_INFO *bInfo,int width,int height){//初始化 
-    *hOut=GetStdHandle(STD_OUTPUT_HANDLE);
-    GetConsoleScreenBufferInfo(*hOut, bInfo);
-    SetConsoleOutputCP(437);//设置代码页
-    UI_SetConsoleScreenBufferSize(*hOut,width,height);//必须先设置大的缓冲区 
-    UI_SetConsoleWindowSize(*hOut,width,height);//才能设置对应大小的窗口 
-}
-void UI_DrawText(HANDLE hOut,WORD attr,char *text,int len,int row,int left,int right){//在指定行左右位置之间居中输出一行文本
-    DWORD buf[128];//
-    COORD pos;
-    pos.Y=row;
-    pos.X=(right-left+1-len)/2+left;
-FillConsoleOutputAttribute(hOut, attr , len, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-WriteConsoleOutputCharacter(hOut, text, len, pos, (LPDWORD)buf);
-//在pos处输出长为len的text 
-}
-void UI_CleanText(HANDLE hOut,int row,int left,int right){
-//在指定行左右位置之间清除一行文本
-    DWORD buf[128];//
-    COORD pos;
-    pos.Y=row;
-    pos.X=left;
-    WORD attr=F_BLACK; 
-FillConsoleOutputAttribute(hOut, attr , right-left+1, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-FillConsoleOutputCharacter(hOut,&#39; &#39;, right-left+1, pos, (LPDWORD)buf);
-//在pos处重复输出多个某字符 
-}
-void UI_CleanTextRect(HANDLE hOut,int top,int bottom,int left,int right){
-//在指定区域之间清除文本
-    DWORD buf[128];
-    WORD attr=F_BLACK;
-    int i;
-    for(i=top;i&lt;=bottom;i++){
-        COORD pos;
-        pos.Y=i;
-        pos.X=left;
-        FillConsoleOutputAttribute(hOut, attr , right-left+1, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-        FillConsoleOutputCharacter(hOut,&#39; &#39;, right-left+1, pos, (LPDWORD)buf);
-//在pos处重复输出多个某字符    
-    }
-}
-void UI_DrawBox(HANDLE hOut,int bSingle,SMALL_RECT rc,WORD attr){//画方框 
-    char chBox[6];
-    DWORD buf[128];//存放最后一个参数：输出的字符数 
-    COORD pos;
-    if (bSingle) {
-        chBox[0] = (char)0xda; // 左上角点
-        chBox[1] = (char)0xbf; // 右上角点
-        chBox[2] = (char)0xc0; // 左下角点
-        chBox[3] = (char)0xd9; // 右下角点
-        chBox[4] = (char)0xc4; // 水平
-        chBox[5] = (char)0xb3; // 坚直
-    }
-    else{
-        chBox[0] = (char)0xc9; // 左上角点
-        chBox[1] = (char)0xbb; // 右上角点
-        chBox[2] = (char)0xc8; // 左下角点
-        chBox[3] = (char)0xbc; // 右下角点
-        chBox[4] = (char)0xcd; // 水平
-        chBox[5] = (char)0xba; // 坚直
-    }
-    pos.Y = rc.Top;
-    // 画左上角
-    pos.X = rc.Left;
-FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-    WriteConsoleOutputCharacter(hOut, &amp;chBox[0],1, pos, (LPDWORD)buf);
-    // 画右上角
-    pos.X = rc.Right;
-FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-    WriteConsoleOutputCharacter(hOut, &amp;chBox[1], 1, pos, (LPDWORD)buf);
-
-    pos.Y = rc.Bottom;
-    // 画左下角
-    pos.X = rc.Left;
-FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-    WriteConsoleOutputCharacter(hOut, &amp;chBox[2], 1, pos, (LPDWORD)buf);
-    // 画右下角
-    pos.X = rc.Right;
-FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-    WriteConsoleOutputCharacter(hOut, &amp;chBox[3], 1, pos, (LPDWORD)buf);
-
-    // 画边框的上 下边界
-    for(pos.X = rc.Left+1;pos.X&lt;rc.Right;pos.X++){  
-        pos.Y = rc.Top;
-        FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-        WriteConsoleOutputCharacter(hOut, &amp;chBox[4], 1, pos, (LPDWORD)buf);
-// 画上边界
-        pos.Y = rc.Bottom;
-        FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-        WriteConsoleOutputCharacter(hOut, &amp;chBox[4], 1, pos, (LPDWORD)buf);
-// 画下边界
-    }
-    // 画边框的左右边界
-    for (pos.Y = rc.Top+1; pos.Y&lt;rc.Bottom; pos.Y++){
-        pos.X = rc.Left;
-        FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-        WriteConsoleOutputCharacter(hOut, &amp;chBox[5], 1, pos, (LPDWORD)buf);
-// 画左边界
-        pos.X = rc.Right;
-        FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
-//给该坐标的字符上色 
-        WriteConsoleOutputCharacter(hOut, &amp;chBox[5], 1, pos, (LPDWORD)buf); 
-// 画右边界
-    }
-}
-</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Last Update time: 2017-10-22 </span></span><br><span class="line"><span class="comment">    Version：1.0</span></span><br><span class="line"><span class="comment">    Author：LinXiang (PB16020923) </span></span><br><span class="line"><span class="comment">    Description：</span></span><br><span class="line"><span class="comment">        MyUI.c.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> F_GRAY FOREGROUND_INTENSITY </span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> F_CYAN FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> F_ORANGE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> F_PURPLE FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> F_RED FOREGROUND_RED | FOREGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> F_GREEN FOREGROUND_GREEN | FOREGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> F_BLUE FOREGROUND_BLUE | FOREGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> F_WHITE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> F_USUALWHITE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE <span class="comment">//不加亮的白色为正常颜色 </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> F_BLACK FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | COMMON_LVB_REVERSE_VIDEO</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> B_GRAY BACKGROUND_INTENSITY </span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> B_CYAN BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> B_ORANGE BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> B_PURPLE BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> B_BLUE BACKGROUND_BLUE | BACKGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> B_RED BACKGROUND_RED | BACKGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> B_GREEN BACKGROUND_GREEN | BACKGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> B_WHITE BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> B_USUALWHITE BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE <span class="comment">//不加亮的白色为正常颜色 </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> B_BLACK BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | COMMON_LVB_REVERSE_VIDEO</span></span><br><span class="line"><span class="function">SMALL_RECT <span class="title">UI_SetRect</span><span class="params">(<span class="keyword">int</span> left,<span class="keyword">int</span> top,<span class="keyword">int</span> right,<span class="keyword">int</span> bottom)</span></span>&#123;</span><br><span class="line"><span class="comment">//根据坐标取返回对应矩形区域数据 </span></span><br><span class="line">    SMALL_RECT rc=&#123;<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>&#125;;</span><br><span class="line">    rc.Left=left;</span><br><span class="line">    rc.Top=top;</span><br><span class="line">    rc.Right=right;</span><br><span class="line">    rc.Bottom=bottom;</span><br><span class="line">    <span class="keyword">return</span> rc;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UI_SetConsoleWindowSize</span><span class="params">(HANDLE hOut,<span class="keyword">int</span> width,<span class="keyword">int</span> height)</span> </span>&#123;<span class="comment">//设置窗口大小</span></span><br><span class="line">    SMALL_RECT rc;</span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>,<span class="number">0</span>,width<span class="number">-1</span>,height<span class="number">-1</span>);</span><br><span class="line">    SetConsoleWindowInfo(hOut,<span class="number">1</span>,&amp;rc); <span class="comment">// 重置窗口位置和大小</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UI_SetConsoleScreenBufferSize</span><span class="params">(HANDLE hOut,<span class="keyword">int</span> width,<span class="keyword">int</span> height)</span> </span>&#123;</span><br><span class="line"><span class="comment">//设置缓冲区大小</span></span><br><span class="line">    COORD size;</span><br><span class="line">    size.X=width;</span><br><span class="line">    size.Y=height;</span><br><span class="line">    SetConsoleScreenBufferSize(hOut,size); <span class="comment">// 重新设置缓冲区大小</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UI_InitSTDHandle</span><span class="params">(HANDLE *hOut,CONSOLE_SCREEN_BUFFER_INFO *bInfo,<span class="keyword">int</span> width,<span class="keyword">int</span> height)</span></span>&#123;<span class="comment">//初始化 </span></span><br><span class="line">    *hOut=GetStdHandle(STD_OUTPUT_HANDLE);</span><br><span class="line">    GetConsoleScreenBufferInfo(*hOut, bInfo);</span><br><span class="line">    SetConsoleOutputCP(<span class="number">437</span>);<span class="comment">//设置代码页</span></span><br><span class="line">    UI_SetConsoleScreenBufferSize(*hOut,width,height);<span class="comment">//必须先设置大的缓冲区 </span></span><br><span class="line">    UI_SetConsoleWindowSize(*hOut,width,height);<span class="comment">//才能设置对应大小的窗口 </span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UI_DrawText</span><span class="params">(HANDLE hOut,WORD attr,<span class="keyword">char</span> *text,<span class="keyword">int</span> len,<span class="keyword">int</span> row,<span class="keyword">int</span> left,<span class="keyword">int</span> right)</span></span>&#123;<span class="comment">//在指定行左右位置之间居中输出一行文本</span></span><br><span class="line">    DWORD buf[<span class="number">128</span>];<span class="comment">//</span></span><br><span class="line">    COORD pos;</span><br><span class="line">    pos.Y=row;</span><br><span class="line">    pos.X=(right-left+<span class="number">1</span>-len)/<span class="number">2</span>+left;</span><br><span class="line">FillConsoleOutputAttribute(hOut, attr , len, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">WriteConsoleOutputCharacter(hOut, text, len, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//在pos处输出长为len的text </span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UI_CleanText</span><span class="params">(HANDLE hOut,<span class="keyword">int</span> row,<span class="keyword">int</span> left,<span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line"><span class="comment">//在指定行左右位置之间清除一行文本</span></span><br><span class="line">    DWORD buf[<span class="number">128</span>];<span class="comment">//</span></span><br><span class="line">    COORD pos;</span><br><span class="line">    pos.Y=row;</span><br><span class="line">    pos.X=left;</span><br><span class="line">    WORD attr=F_BLACK; </span><br><span class="line">FillConsoleOutputAttribute(hOut, attr , right-left+<span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">FillConsoleOutputCharacter(hOut,<span class="string">' '</span>, right-left+<span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//在pos处重复输出多个某字符 </span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UI_CleanTextRect</span><span class="params">(HANDLE hOut,<span class="keyword">int</span> top,<span class="keyword">int</span> bottom,<span class="keyword">int</span> left,<span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line"><span class="comment">//在指定区域之间清除文本</span></span><br><span class="line">    DWORD buf[<span class="number">128</span>];</span><br><span class="line">    WORD attr=F_BLACK;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span>(i=top;i&lt;=bottom;i++)&#123;</span><br><span class="line">        COORD pos;</span><br><span class="line">        pos.Y=i;</span><br><span class="line">        pos.X=left;</span><br><span class="line">        FillConsoleOutputAttribute(hOut, attr , right-left+<span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">        FillConsoleOutputCharacter(hOut,<span class="string">' '</span>, right-left+<span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//在pos处重复输出多个某字符    </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UI_DrawBox</span><span class="params">(HANDLE hOut,<span class="keyword">int</span> bSingle,SMALL_RECT rc,WORD attr)</span></span>&#123;<span class="comment">//画方框 </span></span><br><span class="line">    <span class="keyword">char</span> chBox[<span class="number">6</span>];</span><br><span class="line">    DWORD buf[<span class="number">128</span>];<span class="comment">//存放最后一个参数：输出的字符数 </span></span><br><span class="line">    COORD pos;</span><br><span class="line">    <span class="keyword">if</span> (bSingle) &#123;</span><br><span class="line">        chBox[<span class="number">0</span>] = (<span class="keyword">char</span>)<span class="number">0xda</span>; <span class="comment">// 左上角点</span></span><br><span class="line">        chBox[<span class="number">1</span>] = (<span class="keyword">char</span>)<span class="number">0xbf</span>; <span class="comment">// 右上角点</span></span><br><span class="line">        chBox[<span class="number">2</span>] = (<span class="keyword">char</span>)<span class="number">0xc0</span>; <span class="comment">// 左下角点</span></span><br><span class="line">        chBox[<span class="number">3</span>] = (<span class="keyword">char</span>)<span class="number">0xd9</span>; <span class="comment">// 右下角点</span></span><br><span class="line">        chBox[<span class="number">4</span>] = (<span class="keyword">char</span>)<span class="number">0xc4</span>; <span class="comment">// 水平</span></span><br><span class="line">        chBox[<span class="number">5</span>] = (<span class="keyword">char</span>)<span class="number">0xb3</span>; <span class="comment">// 坚直</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        chBox[<span class="number">0</span>] = (<span class="keyword">char</span>)<span class="number">0xc9</span>; <span class="comment">// 左上角点</span></span><br><span class="line">        chBox[<span class="number">1</span>] = (<span class="keyword">char</span>)<span class="number">0xbb</span>; <span class="comment">// 右上角点</span></span><br><span class="line">        chBox[<span class="number">2</span>] = (<span class="keyword">char</span>)<span class="number">0xc8</span>; <span class="comment">// 左下角点</span></span><br><span class="line">        chBox[<span class="number">3</span>] = (<span class="keyword">char</span>)<span class="number">0xbc</span>; <span class="comment">// 右下角点</span></span><br><span class="line">        chBox[<span class="number">4</span>] = (<span class="keyword">char</span>)<span class="number">0xcd</span>; <span class="comment">// 水平</span></span><br><span class="line">        chBox[<span class="number">5</span>] = (<span class="keyword">char</span>)<span class="number">0xba</span>; <span class="comment">// 坚直</span></span><br><span class="line">    &#125;</span><br><span class="line">    pos.Y = rc.Top;</span><br><span class="line">    <span class="comment">// 画左上角</span></span><br><span class="line">    pos.X = rc.Left;</span><br><span class="line">FillConsoleOutputAttribute(hOut, attr , <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">    WriteConsoleOutputCharacter(hOut, &amp;chBox[<span class="number">0</span>],<span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line">    <span class="comment">// 画右上角</span></span><br><span class="line">    pos.X = rc.Right;</span><br><span class="line">FillConsoleOutputAttribute(hOut, attr , <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">    WriteConsoleOutputCharacter(hOut, &amp;chBox[<span class="number">1</span>], <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line">    </span><br><span class="line">    pos.Y = rc.Bottom;</span><br><span class="line">    <span class="comment">// 画左下角</span></span><br><span class="line">    pos.X = rc.Left;</span><br><span class="line">FillConsoleOutputAttribute(hOut, attr , <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">    WriteConsoleOutputCharacter(hOut, &amp;chBox[<span class="number">2</span>], <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line">    <span class="comment">// 画右下角</span></span><br><span class="line">    pos.X = rc.Right;</span><br><span class="line">FillConsoleOutputAttribute(hOut, attr , <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">    WriteConsoleOutputCharacter(hOut, &amp;chBox[<span class="number">3</span>], <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 画边框的上 下边界</span></span><br><span class="line">    <span class="keyword">for</span>(pos.X = rc.Left+<span class="number">1</span>;pos.X&lt;rc.Right;pos.X++)&#123;  </span><br><span class="line">        pos.Y = rc.Top;</span><br><span class="line">        FillConsoleOutputAttribute(hOut, attr , <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">        WriteConsoleOutputCharacter(hOut, &amp;chBox[<span class="number">4</span>], <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">// 画上边界</span></span><br><span class="line">        pos.Y = rc.Bottom;</span><br><span class="line">        FillConsoleOutputAttribute(hOut, attr , <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">        WriteConsoleOutputCharacter(hOut, &amp;chBox[<span class="number">4</span>], <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">// 画下边界</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 画边框的左右边界</span></span><br><span class="line">    <span class="keyword">for</span> (pos.Y = rc.Top+<span class="number">1</span>; pos.Y&lt;rc.Bottom; pos.Y++)&#123;</span><br><span class="line">        pos.X = rc.Left;</span><br><span class="line">        FillConsoleOutputAttribute(hOut, attr , <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">        WriteConsoleOutputCharacter(hOut, &amp;chBox[<span class="number">5</span>], <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">// 画左边界</span></span><br><span class="line">        pos.X = rc.Right;</span><br><span class="line">        FillConsoleOutputAttribute(hOut, attr , <span class="number">1</span>, pos, (LPDWORD)buf);</span><br><span class="line"><span class="comment">//给该坐标的字符上色 </span></span><br><span class="line">        WriteConsoleOutputCharacter(hOut, &amp;chBox[<span class="number">5</span>], <span class="number">1</span>, pos, (LPDWORD)buf); </span><br><span class="line"><span class="comment">// 画右边界</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Bank.c</p>
-<pre><code class="c">/*
-    Last Update time: 2017-10-26 
-    Version：1.0
-    Author：LinXiang (PB16020923) 
-    Description：
-        Bank.c.
-*/
-#include &quot;UserQueue.h&quot;
-#include &quot;EventLinkList.h&quot;
-#include &quot;MyUI.h&quot; 
-#define DEBUG
-#define TRUE 1
-#define FALSE 0
-#define WIDTH 120 //窗口的宽和高 
-#define HEIGHT 50
-int ScreenHeight=HEIGHT;//屏幕缓冲区的时间高度，会随队列长度而变，初始等于窗口高度
-int CustomNum=0,BankMoney=10000,CloseTime=600,TotalTime=0,Time=0; 
-//客户数，银行资金，结束时间，客户停留累计时间，当前时间
-int NextCustomTime_LowerBound=1,NextCustomTime_UpperBound=10; //下一个客户到来的时间间隔上下限
-int CustomDurTime_LowerBound=1,CustomDurTime_UpperBound=20; //客户办理业务时间的上下想
-int CustomAmount_LowerBound=1,CustomAmount_UpperBound=9000; //客户服务的金额
-int moneybeforecheck=0; //在检查队列2之前的银行资金
-int MORE=0,checking=0;//继续营业，正在检查第二个队列 
-EvList el=NULL; //事件链表
-SqQueue q1,q2; //队列1，2
-User servingusr={0,0,0,0};//正在服务的客户
-HANDLE hout; //控制台句柄
-CONSOLE_SCREEN_BUFFER_INFO binfo;
-void ShowBox(){//绘制所有方框 
-    system(&quot;cls&quot;);
-    SMALL_RECT rc;
-    rc=UI_SetRect(0,0,WIDTH-1,2);
-    UI_DrawBox(hout,0,rc,F_CYAN); //画最上面的框
-
-    rc=UI_SetRect(0,3,WIDTH/2-1,5);
-    UI_DrawBox(hout,0,rc,F_GREEN);  //画第一个消息框
-    rc=UI_SetRect(WIDTH/2,3,WIDTH-1,5);
-    UI_DrawBox(hout,0,rc,F_GREEN);  //画第二个消息框
-
-    rc=UI_SetRect(0,6,WIDTH/2-1,8);
-    UI_DrawBox(hout,0,rc,F_ORANGE); //画队列1的框
-    rc=UI_SetRect(WIDTH/2,6,WIDTH-1,8);
-    UI_DrawBox(hout,0,rc,F_BLUE); //画队列2的框
-
-    rc=UI_SetRect(0,6,WIDTH/2-1,ScreenHeight-1);
-    UI_DrawBox(hout,0,rc,F_ORANGE); //画队列1的框
-    rc=UI_SetRect(WIDTH/2,6,WIDTH-1,ScreenHeight-1);
-    UI_DrawBox(hout,0,rc,F_BLUE); //画队列2的框
-} 
-void ShowBankandTimeText(){//绘制时间和银行资金的文本 
-    char t_bankmony[30];
-    sprintf(t_bankmony,&quot;BankMoney: %d YUAN&quot;,BankMoney);
-    UI_CleanText(hout,1,WIDTH/2+1,WIDTH-1-1);//清除原先的文本 
-    UI_DrawText(hout,F_CYAN,t_bankmony,strlen(t_bankmony),1,WIDTH/2+1,WIDTH-1-1);
-    char t_time[30];
-    sprintf(t_time,&quot;Time: %d minute&quot;,Time);
-    UI_CleanText(hout,1,0+1,WIDTH/2-1-1);   
-    UI_DrawText(hout,F_CYAN,t_time,strlen(t_time),1,0+1,WIDTH/2-1-1);   
-    char t_q1[30];
-    sprintf(t_q1,&quot;Queue 1: [%d] customers&quot;,QueueLength(q1));
-    UI_CleanText(hout,7,0+1,WIDTH/2-1-1);
-    UI_DrawText(hout,F_ORANGE,t_q1,strlen(t_q1),7,0+1,WIDTH/2-1-1);         
-    char t_q2[30];
-    sprintf(t_q2,&quot;Queue 2: [%d] customers&quot;,QueueLength(q2));
-    UI_CleanText(hout,7,WIDTH/2+1,WIDTH-1-1);
-    UI_DrawText(hout,F_BLUE,t_q2,strlen(t_q2),7,WIDTH/2+1,WIDTH-1-1);   
-}
-void ShowMessageText1(){//绘制信息文本1 
-    char t_message[100];
-    if(servingusr.id!=0)
-        sprintf(t_message,&quot;Serving for ID:%-3d(AMOUNT:%-6d ARRTIME:%-4d DURTIME:%-3d)&quot;\
-        ,servingusr.id,servingusr.amount,servingusr.arrtime,servingusr.durtime);
-    else
-        sprintf(t_message,&quot;Bank Info: Free.&quot;);
-    UI_CleanText(hout,4,0+1,WIDTH/2-1-1);
-    UI_DrawText(hout,F_GREEN,t_message,strlen(t_message),4,0+1,WIDTH/2-1-1);        
-}
-void ShowMessageText2(int id,int type){ //绘制信息文本2
-    char t_message[100];
-    switch(type){
-        case 1: sprintf(t_message,&quot;Bank Info: ID:%d arrive at the %d minute.&quot;,id,Time); break;
-        case 2: sprintf(t_message,&quot;Bank Info: ID:%d leave at the %d minute.&quot;,id,Time); break;
-    }
-    UI_CleanText(hout,4,WIDTH/2+1,WIDTH-1-1);
-    UI_DrawText(hout,F_GREEN,t_message,strlen(t_message),4,WIDTH/2+1,WIDTH-1-1);        
-}
-void ShowQueueText(){//绘制队列文本
-    User usr;
-    UI_CleanTextRect(hout,9,ScreenHeight-1-1,0+1,WIDTH/2-1-1);
-    UI_CleanTextRect(hout,9,ScreenHeight-1-1,WIDTH/2+1,WIDTH-1-1);
-    int l=QueueLength(q1),i;
-    if(l&gt;ScreenHeight-10){//超出缓冲区高度，重绘 
-        UI_SetConsoleScreenBufferSize(hout,WIDTH,++ScreenHeight);
-        ShowBox();
-        ShowBankandTimeText();
-    }
-    for(i=1;i&lt;=l;i++){//输出队列1
-        PeekQueueByPos(&amp;q1,i,&amp;usr);
-        char t_q1c[80];
-        sprintf(t_q1c,&quot;ID:%-3d (AMOUNT:%-6d ARRTIME:%-4d DURTIME:%-3d)&quot;,usr.id,usr.amount,usr.arrtime,usr.durtime);
-        UI_DrawText(hout,F_ORANGE,t_q1c,strlen(t_q1c),9+i-1,0+1,WIDTH/2-1-1);
-    }
-    l=QueueLength(q2);
-    if(l&gt;ScreenHeight-10){//超出缓冲区高度，重绘 
-        UI_SetConsoleScreenBufferSize(hout,WIDTH,++ScreenHeight);
-        ShowBox();
-        ShowBankandTimeText();
-    }
-    for(i=1;i&lt;=l;i++){//输出队列2
-        PeekQueueByPos(&amp;q2,i,&amp;usr);
-        char t_q2c[80];
-        sprintf(t_q2c,&quot;ID:%-3d (AMOUNT:%-6d ARRTIME:%-4d DURTIME:%-3d)&quot;,usr.id,usr.amount,usr.arrtime,usr.durtime);
-        UI_DrawText(hout,F_BLUE,t_q2c,strlen(t_q2c),9+i-1,WIDTH/2+1,WIDTH-1-1);
-    }
-}
-int Random(int low,int high){//随机数 
-    return(low+rand()%(high-low+1));
-}
-void RandNextCustomer() {//生成下一个客户到来事件 
-    int nexttime=Time+Random(NextCustomTime_LowerBound,NextCustomTime_UpperBound);
-    if(nexttime&lt;CloseTime){
-        Event *ev_arr=MakeEventNode(nexttime,ARR);
-        InsertEventToListInOrder(el,ev_arr);//加入下一个客户到来事件 
-    }
-}
-void Init(){//初始化 
-    UI_InitSTDHandle(&amp;hout,&amp;binfo,WIDTH,HEIGHT);
-    srand((unsigned int)time(NULL)); //置随机数种子
-    InitEventList(&amp;el); 
-    InitQueue(&amp;q1);
-    InitQueue(&amp;q2); 
-    Event *ev_cl=MakeEventNode(CloseTime,CLOSE);
-    InsertEventToListInOrder(el,ev_cl);//加入营业结束事件 
-    RandNextCustomer();//第一个客户 
-}
-Status ServeNextCustomerInQueue1(SqQueue *q_point){
-//服务队列1的下一个客户，如果不满足，则继续寻找下一个 
-//!!!此处传入q的地址是为了该函数内部使用了DeQueue，需要改变q 
-    if(QueueLength(*q_point)){ //队列不为空
-        DeQueue(q_point,&amp;servingusr); //取队头
-        if(servingusr.amount&lt;0 &amp;&amp; -servingusr.amount&gt;BankMoney){ //是取款但银行满足不了，加入队2
-            EnQueue(&amp;q2,servingusr);
-            return ServeNextCustomerInQueue1(q_point); //往后寻找
-        }
-        Event *ev_leave=MakeEventNode(Time+servingusr.durtime,LEAVE);
-        InsertEventToListInOrder(el,ev_leave);//加入该客户离开事件 
-    }
-    else{
-        servingusr.id=0;//表示当前没有客户正在服务 
-    }
-    return OK;
-}
-Status ServeNextCustomerInQueue2(SqQueue *q_point){//服务队列2的下一个客户
-    if(QueueLength(*q_point)){
-        DeQueue(q_point,&amp;servingusr);
-        Event *ev_leave=MakeEventNode(Time+servingusr.durtime,LEAVE);
-        InsertEventToListInOrder(el,ev_leave);//加入该客户离开事件 
-    }
-    else{
-        servingusr.id=0;//表示当前没有客户正在服务 
-    }
-    return OK;
-}
-Status Check(){//检查队列2 
-    if(BankMoney&lt;=moneybeforecheck){
-        checking=0;
-        return FALSE;
-    }
-    int l=QueueLength(q2),k=0;
-    while(k&lt;l){//尚未将队列2中的所有客户检查一遍 
-        User usr;
-        PeekQueue(&amp;q2,&amp;usr);
-        if(-usr.amount&gt;BankMoney){//银行的钱不能满足该客户 
-            k++; 
-            DeQueue(&amp;q2,&amp;usr);
-            EnQueue(&amp;q2,usr); //加入队尾
-        }
-        else{
-            checking=1;
-            ServeNextCustomerInQueue2(&amp;q2);
-            return FALSE;
-        }
-    }
-    //此时队列2已遍历一遍，无满足要求者 
-    checking=0;
-    return FALSE;   
-}
-int main(){
-    system(&quot;color 0B&quot;);
-    printf(&quot;Input the \n&lt;BankMoney&gt; &lt;CloseTime&gt; \n&lt;NextCustomTime_LowerBound&gt; &lt;NextCustomTime_UpperBound&gt;\n&quot;);
-    printf(&quot;&lt;CustomDurTime_LowerBound&gt; &lt;CustomDurTime_UpperBound&gt; \n&lt;CustomAmount_LowerBound&gt; &lt;CustomAmount_UpperBound&gt;:\n&quot;);//让用户输入起始参数
-    scanf(&quot;%d%d%d%d%d%d%d%d&quot;,&amp;BankMoney,&amp;CloseTime,&amp;NextCustomTime_LowerBound,&amp;NextCustomTime_UpperBound, \
-    &amp;CustomDurTime_LowerBound,&amp;CustomDurTime_UpperBound,&amp;CustomAmount_LowerBound,&amp;CustomAmount_UpperBound);
-    Init();
-    MORE=1;
-    ShowBox();
-    while(MORE){
-        Event ev;
-        DeleteEventFromListByPos(el,1,&amp;ev);
-
-        while(Time&lt;ev.occurtime){ //当前时间未到该时间发生的时间，则时间递增，体现时间连续性
-            Time++;
-            ShowBankandTimeText();
-            ShowMessageText1();
-            ShowQueueText();//更新各个文本
-            Sleep(200); //延迟200ms
-        }
-        User usr;
-        switch(ev.type){
-            case ARR: //到来事件
-                usr.id=++CustomNum;
-                usr.arrtime=ev.occurtime;
-usr.durtime=Random(CustomDurTime_LowerBound,CustomDurTime_UpperBound);
-                usr.amount=(Random(0,1)==0?1:-1)*Random(CustomAmount_LowerBound,CustomAmount_UpperBound);
-                EnQueue(&amp;q1,usr);
-                ShowMessageText2(usr.id,1);
-                RandNextCustomer();//随机生成下一个客户到来事件
-                if(servingusr.id==0) //当前没有客户正在办理，则办理下一个
-                //该情况出现在第一个客户或者之前队列以空但下一个客户未到来 
-                    ServeNextCustomerInQueue1(&amp;q1); 
-                break;
-            case LEAVE: //离开事件
-                ShowMessageText2(servingusr.id,2);
-                TotalTime+=ev.occurtime-servingusr.arrtime+1;
-                BankMoney+=servingusr.amount;
-                if(servingusr.amount&gt;0){ //该客户是第二种业务（存款） 
-                    moneybeforecheck=BankMoney-servingusr.amount;
-                    Check(); //检查队列2
-                }
-                else if(servingusr.amount&lt;0 || checking){//该客户是第一种业务（取款）但来自队列2 
-                    Check();//继续检查 
-                }
-                if(!checking) ServeNextCustomerInQueue1(&amp;q1);//不是正在检查队列2，则处理队列1下一个客户的办理 
-                break;
-            case CLOSE: //结束事件
-                MORE=0;
-                while(QueueLength(q1)){ //所有客户离开
-                    DeQueue(&amp;q1,&amp;usr);
-                    TotalTime+=Time-usr.arrtime;
-                }
-                while(QueueLength(q2)){
-                    DeQueue(&amp;q2,&amp;usr);
-                    TotalTime+=Time-usr.arrtime;
-                }
-                continue;
-        }       
-        Sleep(1000); //每个是事件延迟1s以便观看
-    }
-    ScreenHeight+=3;
-    UI_SetConsoleScreenBufferSize(hout,WIDTH,ScreenHeight);
-    UI_DrawBox(hout,1,UI_SetRect(0,ScreenHeight-1-2,WIDTH-1,ScreenHeight-1),F_RED);
-    char t_awt[50];
-    if(CustomNum)
-        sprintf(t_awt,&quot;Average stay time: %d&quot;,TotalTime/CustomNum);
-    else
-        sprintf(t_awt,&quot;No Customer&quot;);
-    UI_DrawText(hout,F_RED,t_awt,strlen(t_awt),ScreenHeight-1-1,1,WIDTH-1);
-    MessageBox(NULL,t_awt,&quot;Close&quot;,MB_OK | MB_ICONINFORMATION); //输出平均停留时间
-    ScreenHeight+=1;
-    UI_SetConsoleScreenBufferSize(hout,WIDTH,ScreenHeight);
-    COORD curpos;
-    curpos.X=0;
-    curpos.Y=ScreenHeight-1;
-    SetConsoleCursorPosition(hout,curpos); 
-    return 0;
-}
-</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    Last Update time: 2017-10-26 </span></span><br><span class="line"><span class="comment">    Version：1.0</span></span><br><span class="line"><span class="comment">    Author：LinXiang (PB16020923) </span></span><br><span class="line"><span class="comment">    Description：</span></span><br><span class="line"><span class="comment">        Bank.c.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"UserQueue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"EventLinkList.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"MyUI.h"</span> </span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DEBUG</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TRUE 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FALSE 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> WIDTH 120 <span class="comment">//窗口的宽和高 </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> HEIGHT 50</span></span><br><span class="line"><span class="keyword">int</span> ScreenHeight=HEIGHT;<span class="comment">//屏幕缓冲区的时间高度，会随队列长度而变，初始等于窗口高度</span></span><br><span class="line"><span class="keyword">int</span> CustomNum=<span class="number">0</span>,BankMoney=<span class="number">10000</span>,CloseTime=<span class="number">600</span>,TotalTime=<span class="number">0</span>,Time=<span class="number">0</span>; </span><br><span class="line"><span class="comment">//客户数，银行资金，结束时间，客户停留累计时间，当前时间</span></span><br><span class="line"><span class="keyword">int</span> NextCustomTime_LowerBound=<span class="number">1</span>,NextCustomTime_UpperBound=<span class="number">10</span>; <span class="comment">//下一个客户到来的时间间隔上下限</span></span><br><span class="line"><span class="keyword">int</span> CustomDurTime_LowerBound=<span class="number">1</span>,CustomDurTime_UpperBound=<span class="number">20</span>; <span class="comment">//客户办理业务时间的上下想</span></span><br><span class="line"><span class="keyword">int</span> CustomAmount_LowerBound=<span class="number">1</span>,CustomAmount_UpperBound=<span class="number">9000</span>; <span class="comment">//客户服务的金额</span></span><br><span class="line"><span class="keyword">int</span> moneybeforecheck=<span class="number">0</span>; <span class="comment">//在检查队列2之前的银行资金</span></span><br><span class="line"><span class="keyword">int</span> MORE=<span class="number">0</span>,checking=<span class="number">0</span>;<span class="comment">//继续营业，正在检查第二个队列 </span></span><br><span class="line">EvList el=<span class="literal">NULL</span>; <span class="comment">//事件链表</span></span><br><span class="line">SqQueue q1,q2; <span class="comment">//队列1，2</span></span><br><span class="line">User servingusr=&#123;<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>&#125;;<span class="comment">//正在服务的客户</span></span><br><span class="line">HANDLE hout; <span class="comment">//控制台句柄</span></span><br><span class="line">CONSOLE_SCREEN_BUFFER_INFO binfo;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ShowBox</span><span class="params">()</span></span>&#123;<span class="comment">//绘制所有方框 </span></span><br><span class="line">    system(<span class="string">"cls"</span>);</span><br><span class="line">    SMALL_RECT rc;</span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>,<span class="number">0</span>,WIDTH<span class="number">-1</span>,<span class="number">2</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">0</span>,rc,F_CYAN); <span class="comment">//画最上面的框</span></span><br><span class="line">    </span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>,<span class="number">3</span>,WIDTH/<span class="number">2</span><span class="number">-1</span>,<span class="number">5</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">0</span>,rc,F_GREEN);  <span class="comment">//画第一个消息框</span></span><br><span class="line">    rc=UI_SetRect(WIDTH/<span class="number">2</span>,<span class="number">3</span>,WIDTH<span class="number">-1</span>,<span class="number">5</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">0</span>,rc,F_GREEN);  <span class="comment">//画第二个消息框</span></span><br><span class="line"></span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>,<span class="number">6</span>,WIDTH/<span class="number">2</span><span class="number">-1</span>,<span class="number">8</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">0</span>,rc,F_ORANGE); <span class="comment">//画队列1的框</span></span><br><span class="line">    rc=UI_SetRect(WIDTH/<span class="number">2</span>,<span class="number">6</span>,WIDTH<span class="number">-1</span>,<span class="number">8</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">0</span>,rc,F_BLUE); <span class="comment">//画队列2的框</span></span><br><span class="line">    </span><br><span class="line">    rc=UI_SetRect(<span class="number">0</span>,<span class="number">6</span>,WIDTH/<span class="number">2</span><span class="number">-1</span>,ScreenHeight<span class="number">-1</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">0</span>,rc,F_ORANGE); <span class="comment">//画队列1的框</span></span><br><span class="line">    rc=UI_SetRect(WIDTH/<span class="number">2</span>,<span class="number">6</span>,WIDTH<span class="number">-1</span>,ScreenHeight<span class="number">-1</span>);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">0</span>,rc,F_BLUE); <span class="comment">//画队列2的框</span></span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ShowBankandTimeText</span><span class="params">()</span></span>&#123;<span class="comment">//绘制时间和银行资金的文本 </span></span><br><span class="line">    <span class="keyword">char</span> t_bankmony[<span class="number">30</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_bankmony,<span class="string">"BankMoney: %d YUAN"</span>,BankMoney);</span><br><span class="line">    UI_CleanText(hout,<span class="number">1</span>,WIDTH/<span class="number">2</span>+<span class="number">1</span>,WIDTH<span class="number">-1</span><span class="number">-1</span>);<span class="comment">//清除原先的文本 </span></span><br><span class="line">    UI_DrawText(hout,F_CYAN,t_bankmony,<span class="built_in">strlen</span>(t_bankmony),<span class="number">1</span>,WIDTH/<span class="number">2</span>+<span class="number">1</span>,WIDTH<span class="number">-1</span><span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">char</span> t_time[<span class="number">30</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_time,<span class="string">"Time: %d minute"</span>,Time);</span><br><span class="line">    UI_CleanText(hout,<span class="number">1</span>,<span class="number">0</span>+<span class="number">1</span>,WIDTH/<span class="number">2</span><span class="number">-1</span><span class="number">-1</span>);   </span><br><span class="line">    UI_DrawText(hout,F_CYAN,t_time,<span class="built_in">strlen</span>(t_time),<span class="number">1</span>,<span class="number">0</span>+<span class="number">1</span>,WIDTH/<span class="number">2</span><span class="number">-1</span><span class="number">-1</span>);   </span><br><span class="line">    <span class="keyword">char</span> t_q1[<span class="number">30</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_q1,<span class="string">"Queue 1: [%d] customers"</span>,QueueLength(q1));</span><br><span class="line">    UI_CleanText(hout,<span class="number">7</span>,<span class="number">0</span>+<span class="number">1</span>,WIDTH/<span class="number">2</span><span class="number">-1</span><span class="number">-1</span>);</span><br><span class="line">    UI_DrawText(hout,F_ORANGE,t_q1,<span class="built_in">strlen</span>(t_q1),<span class="number">7</span>,<span class="number">0</span>+<span class="number">1</span>,WIDTH/<span class="number">2</span><span class="number">-1</span><span class="number">-1</span>);         </span><br><span class="line">    <span class="keyword">char</span> t_q2[<span class="number">30</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(t_q2,<span class="string">"Queue 2: [%d] customers"</span>,QueueLength(q2));</span><br><span class="line">    UI_CleanText(hout,<span class="number">7</span>,WIDTH/<span class="number">2</span>+<span class="number">1</span>,WIDTH<span class="number">-1</span><span class="number">-1</span>);</span><br><span class="line">    UI_DrawText(hout,F_BLUE,t_q2,<span class="built_in">strlen</span>(t_q2),<span class="number">7</span>,WIDTH/<span class="number">2</span>+<span class="number">1</span>,WIDTH<span class="number">-1</span><span class="number">-1</span>);   </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ShowMessageText1</span><span class="params">()</span></span>&#123;<span class="comment">//绘制信息文本1 </span></span><br><span class="line">    <span class="keyword">char</span> t_message[<span class="number">100</span>];</span><br><span class="line">    <span class="keyword">if</span>(servingusr.id!=<span class="number">0</span>)</span><br><span class="line">        <span class="built_in">sprintf</span>(t_message,<span class="string">"Serving for ID:%-3d(AMOUNT:%-6d ARRTIME:%-4d DURTIME:%-3d)"</span>\</span><br><span class="line">        ,servingusr.id,servingusr.amount,servingusr.arrtime,servingusr.durtime);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">sprintf</span>(t_message,<span class="string">"Bank Info: Free."</span>);</span><br><span class="line">    UI_CleanText(hout,<span class="number">4</span>,<span class="number">0</span>+<span class="number">1</span>,WIDTH/<span class="number">2</span><span class="number">-1</span><span class="number">-1</span>);</span><br><span class="line">    UI_DrawText(hout,F_GREEN,t_message,<span class="built_in">strlen</span>(t_message),<span class="number">4</span>,<span class="number">0</span>+<span class="number">1</span>,WIDTH/<span class="number">2</span><span class="number">-1</span><span class="number">-1</span>);        </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ShowMessageText2</span><span class="params">(<span class="keyword">int</span> id,<span class="keyword">int</span> type)</span></span>&#123; <span class="comment">//绘制信息文本2</span></span><br><span class="line">    <span class="keyword">char</span> t_message[<span class="number">100</span>];</span><br><span class="line">    <span class="keyword">switch</span>(type)&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>: <span class="built_in">sprintf</span>(t_message,<span class="string">"Bank Info: ID:%d arrive at the %d minute."</span>,id,Time); <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>: <span class="built_in">sprintf</span>(t_message,<span class="string">"Bank Info: ID:%d leave at the %d minute."</span>,id,Time); <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    UI_CleanText(hout,<span class="number">4</span>,WIDTH/<span class="number">2</span>+<span class="number">1</span>,WIDTH<span class="number">-1</span><span class="number">-1</span>);</span><br><span class="line">    UI_DrawText(hout,F_GREEN,t_message,<span class="built_in">strlen</span>(t_message),<span class="number">4</span>,WIDTH/<span class="number">2</span>+<span class="number">1</span>,WIDTH<span class="number">-1</span><span class="number">-1</span>);        </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ShowQueueText</span><span class="params">()</span></span>&#123;<span class="comment">//绘制队列文本</span></span><br><span class="line">    User usr;</span><br><span class="line">    UI_CleanTextRect(hout,<span class="number">9</span>,ScreenHeight<span class="number">-1</span><span class="number">-1</span>,<span class="number">0</span>+<span class="number">1</span>,WIDTH/<span class="number">2</span><span class="number">-1</span><span class="number">-1</span>);</span><br><span class="line">    UI_CleanTextRect(hout,<span class="number">9</span>,ScreenHeight<span class="number">-1</span><span class="number">-1</span>,WIDTH/<span class="number">2</span>+<span class="number">1</span>,WIDTH<span class="number">-1</span><span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">int</span> l=QueueLength(q1),i;</span><br><span class="line">    <span class="keyword">if</span>(l&gt;ScreenHeight<span class="number">-10</span>)&#123;<span class="comment">//超出缓冲区高度，重绘 </span></span><br><span class="line">        UI_SetConsoleScreenBufferSize(hout,WIDTH,++ScreenHeight);</span><br><span class="line">        ShowBox();</span><br><span class="line">        ShowBankandTimeText();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=l;i++)&#123;<span class="comment">//输出队列1</span></span><br><span class="line">        PeekQueueByPos(&amp;q1,i,&amp;usr);</span><br><span class="line">        <span class="keyword">char</span> t_q1c[<span class="number">80</span>];</span><br><span class="line">        <span class="built_in">sprintf</span>(t_q1c,<span class="string">"ID:%-3d (AMOUNT:%-6d ARRTIME:%-4d DURTIME:%-3d)"</span>,usr.id,usr.amount,usr.arrtime,usr.durtime);</span><br><span class="line">        UI_DrawText(hout,F_ORANGE,t_q1c,<span class="built_in">strlen</span>(t_q1c),<span class="number">9</span>+i<span class="number">-1</span>,<span class="number">0</span>+<span class="number">1</span>,WIDTH/<span class="number">2</span><span class="number">-1</span><span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    l=QueueLength(q2);</span><br><span class="line">    <span class="keyword">if</span>(l&gt;ScreenHeight<span class="number">-10</span>)&#123;<span class="comment">//超出缓冲区高度，重绘 </span></span><br><span class="line">        UI_SetConsoleScreenBufferSize(hout,WIDTH,++ScreenHeight);</span><br><span class="line">        ShowBox();</span><br><span class="line">        ShowBankandTimeText();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=l;i++)&#123;<span class="comment">//输出队列2</span></span><br><span class="line">        PeekQueueByPos(&amp;q2,i,&amp;usr);</span><br><span class="line">        <span class="keyword">char</span> t_q2c[<span class="number">80</span>];</span><br><span class="line">        <span class="built_in">sprintf</span>(t_q2c,<span class="string">"ID:%-3d (AMOUNT:%-6d ARRTIME:%-4d DURTIME:%-3d)"</span>,usr.id,usr.amount,usr.arrtime,usr.durtime);</span><br><span class="line">        UI_DrawText(hout,F_BLUE,t_q2c,<span class="built_in">strlen</span>(t_q2c),<span class="number">9</span>+i<span class="number">-1</span>,WIDTH/<span class="number">2</span>+<span class="number">1</span>,WIDTH<span class="number">-1</span><span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Random</span><span class="params">(<span class="keyword">int</span> low,<span class="keyword">int</span> high)</span></span>&#123;<span class="comment">//随机数 </span></span><br><span class="line">    <span class="keyword">return</span>(low+rand()%(high-low+<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RandNextCustomer</span><span class="params">()</span> </span>&#123;<span class="comment">//生成下一个客户到来事件 </span></span><br><span class="line">    <span class="keyword">int</span> nexttime=Time+Random(NextCustomTime_LowerBound,NextCustomTime_UpperBound);</span><br><span class="line">    <span class="keyword">if</span>(nexttime&lt;CloseTime)&#123;</span><br><span class="line">        Event *ev_arr=MakeEventNode(nexttime,ARR);</span><br><span class="line">        InsertEventToListInOrder(el,ev_arr);<span class="comment">//加入下一个客户到来事件 </span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init</span><span class="params">()</span></span>&#123;<span class="comment">//初始化 </span></span><br><span class="line">    UI_InitSTDHandle(&amp;hout,&amp;binfo,WIDTH,HEIGHT);</span><br><span class="line">    srand((<span class="keyword">unsigned</span> <span class="keyword">int</span>)time(<span class="literal">NULL</span>)); <span class="comment">//置随机数种子</span></span><br><span class="line">    InitEventList(&amp;el); </span><br><span class="line">    InitQueue(&amp;q1);</span><br><span class="line">    InitQueue(&amp;q2); </span><br><span class="line">    Event *ev_cl=MakeEventNode(CloseTime,CLOSE);</span><br><span class="line">    InsertEventToListInOrder(el,ev_cl);<span class="comment">//加入营业结束事件 </span></span><br><span class="line">    RandNextCustomer();<span class="comment">//第一个客户 </span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">ServeNextCustomerInQueue1</span><span class="params">(SqQueue *q_point)</span></span>&#123;</span><br><span class="line"><span class="comment">//服务队列1的下一个客户，如果不满足，则继续寻找下一个 </span></span><br><span class="line"><span class="comment">//!!!此处传入q的地址是为了该函数内部使用了DeQueue，需要改变q </span></span><br><span class="line">    <span class="keyword">if</span>(QueueLength(*q_point))&#123; <span class="comment">//队列不为空</span></span><br><span class="line">        DeQueue(q_point,&amp;servingusr); <span class="comment">//取队头</span></span><br><span class="line">        <span class="keyword">if</span>(servingusr.amount&lt;<span class="number">0</span> &amp;&amp; -servingusr.amount&gt;BankMoney)&#123; <span class="comment">//是取款但银行满足不了，加入队2</span></span><br><span class="line">            EnQueue(&amp;q2,servingusr);</span><br><span class="line">            <span class="keyword">return</span> ServeNextCustomerInQueue1(q_point); <span class="comment">//往后寻找</span></span><br><span class="line">        &#125;</span><br><span class="line">        Event *ev_leave=MakeEventNode(Time+servingusr.durtime,LEAVE);</span><br><span class="line">        InsertEventToListInOrder(el,ev_leave);<span class="comment">//加入该客户离开事件 </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        servingusr.id=<span class="number">0</span>;<span class="comment">//表示当前没有客户正在服务 </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">ServeNextCustomerInQueue2</span><span class="params">(SqQueue *q_point)</span></span>&#123;<span class="comment">//服务队列2的下一个客户</span></span><br><span class="line">    <span class="keyword">if</span>(QueueLength(*q_point))&#123;</span><br><span class="line">        DeQueue(q_point,&amp;servingusr);</span><br><span class="line">        Event *ev_leave=MakeEventNode(Time+servingusr.durtime,LEAVE);</span><br><span class="line">        InsertEventToListInOrder(el,ev_leave);<span class="comment">//加入该客户离开事件 </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        servingusr.id=<span class="number">0</span>;<span class="comment">//表示当前没有客户正在服务 </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Status <span class="title">Check</span><span class="params">()</span></span>&#123;<span class="comment">//检查队列2 </span></span><br><span class="line">    <span class="keyword">if</span>(BankMoney&lt;=moneybeforecheck)&#123;</span><br><span class="line">        checking=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> l=QueueLength(q2),k=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(k&lt;l)&#123;<span class="comment">//尚未将队列2中的所有客户检查一遍 </span></span><br><span class="line">        User usr;</span><br><span class="line">        PeekQueue(&amp;q2,&amp;usr);</span><br><span class="line">        <span class="keyword">if</span>(-usr.amount&gt;BankMoney)&#123;<span class="comment">//银行的钱不能满足该客户 </span></span><br><span class="line">            k++; </span><br><span class="line">            DeQueue(&amp;q2,&amp;usr);</span><br><span class="line">            EnQueue(&amp;q2,usr); <span class="comment">//加入队尾</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            checking=<span class="number">1</span>;</span><br><span class="line">            ServeNextCustomerInQueue2(&amp;q2);</span><br><span class="line">            <span class="keyword">return</span> FALSE;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//此时队列2已遍历一遍，无满足要求者 </span></span><br><span class="line">    checking=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> FALSE;   </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    system(<span class="string">"color 0B"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Input the \n&lt;BankMoney&gt; &lt;CloseTime&gt; \n&lt;NextCustomTime_LowerBound&gt; &lt;NextCustomTime_UpperBound&gt;\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"&lt;CustomDurTime_LowerBound&gt; &lt;CustomDurTime_UpperBound&gt; \n&lt;CustomAmount_LowerBound&gt; &lt;CustomAmount_UpperBound&gt;:\n"</span>);<span class="comment">//让用户输入起始参数</span></span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d%d%d%d%d%d%d"</span>,&amp;BankMoney,&amp;CloseTime,&amp;NextCustomTime_LowerBound,&amp;NextCustomTime_UpperBound, \</span><br><span class="line">    &amp;CustomDurTime_LowerBound,&amp;CustomDurTime_UpperBound,&amp;CustomAmount_LowerBound,&amp;CustomAmount_UpperBound);</span><br><span class="line">    Init();</span><br><span class="line">    MORE=<span class="number">1</span>;</span><br><span class="line">    ShowBox();</span><br><span class="line">    <span class="keyword">while</span>(MORE)&#123;</span><br><span class="line">        Event ev;</span><br><span class="line">        DeleteEventFromListByPos(el,<span class="number">1</span>,&amp;ev);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span>(Time&lt;ev.occurtime)&#123; <span class="comment">//当前时间未到该时间发生的时间，则时间递增，体现时间连续性</span></span><br><span class="line">            Time++;</span><br><span class="line">            ShowBankandTimeText();</span><br><span class="line">            ShowMessageText1();</span><br><span class="line">            ShowQueueText();<span class="comment">//更新各个文本</span></span><br><span class="line">            Sleep(<span class="number">200</span>); <span class="comment">//延迟200ms</span></span><br><span class="line">        &#125;</span><br><span class="line">        User usr;</span><br><span class="line">        <span class="keyword">switch</span>(ev.type)&#123;</span><br><span class="line">            <span class="keyword">case</span> ARR: <span class="comment">//到来事件</span></span><br><span class="line">                usr.id=++CustomNum;</span><br><span class="line">                usr.arrtime=ev.occurtime;</span><br><span class="line">usr.durtime=Random(CustomDurTime_LowerBound,CustomDurTime_UpperBound);</span><br><span class="line">                usr.amount=(Random(<span class="number">0</span>,<span class="number">1</span>)==<span class="number">0</span>?<span class="number">1</span>:<span class="number">-1</span>)*Random(CustomAmount_LowerBound,CustomAmount_UpperBound);</span><br><span class="line">                EnQueue(&amp;q1,usr);</span><br><span class="line">                ShowMessageText2(usr.id,<span class="number">1</span>);</span><br><span class="line">                RandNextCustomer();<span class="comment">//随机生成下一个客户到来事件</span></span><br><span class="line">                <span class="keyword">if</span>(servingusr.id==<span class="number">0</span>) <span class="comment">//当前没有客户正在办理，则办理下一个</span></span><br><span class="line">                <span class="comment">//该情况出现在第一个客户或者之前队列以空但下一个客户未到来 </span></span><br><span class="line">                    ServeNextCustomerInQueue1(&amp;q1); </span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> LEAVE: <span class="comment">//离开事件</span></span><br><span class="line">                ShowMessageText2(servingusr.id,<span class="number">2</span>);</span><br><span class="line">                TotalTime+=ev.occurtime-servingusr.arrtime+<span class="number">1</span>;</span><br><span class="line">                BankMoney+=servingusr.amount;</span><br><span class="line">                <span class="keyword">if</span>(servingusr.amount&gt;<span class="number">0</span>)&#123; <span class="comment">//该客户是第二种业务（存款） </span></span><br><span class="line">                    moneybeforecheck=BankMoney-servingusr.amount;</span><br><span class="line">                    Check(); <span class="comment">//检查队列2</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span>(servingusr.amount&lt;<span class="number">0</span> || checking)&#123;<span class="comment">//该客户是第一种业务（取款）但来自队列2 </span></span><br><span class="line">                    Check();<span class="comment">//继续检查 </span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(!checking) ServeNextCustomerInQueue1(&amp;q1);<span class="comment">//不是正在检查队列2，则处理队列1下一个客户的办理 </span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> CLOSE: <span class="comment">//结束事件</span></span><br><span class="line">                MORE=<span class="number">0</span>;</span><br><span class="line">                <span class="keyword">while</span>(QueueLength(q1))&#123; <span class="comment">//所有客户离开</span></span><br><span class="line">                    DeQueue(&amp;q1,&amp;usr);</span><br><span class="line">                    TotalTime+=Time-usr.arrtime;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">while</span>(QueueLength(q2))&#123;</span><br><span class="line">                    DeQueue(&amp;q2,&amp;usr);</span><br><span class="line">                    TotalTime+=Time-usr.arrtime;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">        &#125;       </span><br><span class="line">        Sleep(<span class="number">1000</span>); <span class="comment">//每个是事件延迟1s以便观看</span></span><br><span class="line">    &#125;</span><br><span class="line">    ScreenHeight+=<span class="number">3</span>;</span><br><span class="line">    UI_SetConsoleScreenBufferSize(hout,WIDTH,ScreenHeight);</span><br><span class="line">    UI_DrawBox(hout,<span class="number">1</span>,UI_SetRect(<span class="number">0</span>,ScreenHeight<span class="number">-1</span><span class="number">-2</span>,WIDTH<span class="number">-1</span>,ScreenHeight<span class="number">-1</span>),F_RED);</span><br><span class="line">    <span class="keyword">char</span> t_awt[<span class="number">50</span>];</span><br><span class="line">    <span class="keyword">if</span>(CustomNum)</span><br><span class="line">        <span class="built_in">sprintf</span>(t_awt,<span class="string">"Average stay time: %d"</span>,TotalTime/CustomNum);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">sprintf</span>(t_awt,<span class="string">"No Customer"</span>);</span><br><span class="line">    UI_DrawText(hout,F_RED,t_awt,<span class="built_in">strlen</span>(t_awt),ScreenHeight<span class="number">-1</span><span class="number">-1</span>,<span class="number">1</span>,WIDTH<span class="number">-1</span>);</span><br><span class="line">    MessageBox(<span class="literal">NULL</span>,t_awt,<span class="string">"Close"</span>,MB_OK | MB_ICONINFORMATION); <span class="comment">//输出平均停留时间</span></span><br><span class="line">    ScreenHeight+=<span class="number">1</span>;</span><br><span class="line">    UI_SetConsoleScreenBufferSize(hout,WIDTH,ScreenHeight);</span><br><span class="line">    COORD curpos;</span><br><span class="line">    curpos.X=<span class="number">0</span>;</span><br><span class="line">    curpos.Y=ScreenHeight<span class="number">-1</span>;</span><br><span class="line">    SetConsoleCursorPosition(hout,curpos); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>

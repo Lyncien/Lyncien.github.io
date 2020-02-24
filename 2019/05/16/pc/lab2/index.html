@@ -322,46 +322,15 @@
 <p>(6)主元划分：每个进程pi按p - 1个主元将自己的有序子数组<code>A[(i*n/p..(i+1)*n/p - 1]</code>划分成p段（每段长度可能不同），此时，不需要新申请一个二维数组存放p段数据，只需要一个一维数组sizes记录每段的长度和一个一维数组记录每段的起始位置offsets（相对偏移，通过累加前面的段的长度得到）</p>
 <p>(7)全局交换：每个进程pi将自己的有序子数组中的每段按段号交换到对应id的进程中，可以利用MPI_Alltoallv函数实现全局交换，之前的长度数组sizes和偏移数组作为参数offsets，另外需要三个数组newsizes、newoffsets和newdatas用于接收数据。</p>
 <p>MPI_Alltoallv函数定义如下</p>
-<pre><code>int MPI_Alltoallv(const void *sendbuf,    发送缓冲区的起始地址
-                  const int *sendcounts,  数组：每个发送数据的长度
-                  const int *sdispls,  数组：每个发送数据相对于发送缓冲区起始地址的位移量
-                  MPI_Datatype sendtype,  发送的数据类型
-                  void *recvbuf,          接收缓冲区的起始地址
-                  const int *recvcounts,  数组：每个接收数据的长度
-                  const int *rdispls， 数组：每个接收数据相对于接收缓冲区起始地址的位移量
-                  MPI_Datatype recvtype,  接收的数据类型
-                  MPI_Comm comm)          通信域
-
-</code></pre><p>该函数实现各个进程向各个进程交换<strong>不定长</strong>的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int MPI_Alltoallv(const void *sendbuf,    发送缓冲区的起始地址</span><br><span class="line">                  const int *sendcounts,  数组：每个发送数据的长度</span><br><span class="line">                  const int *sdispls,  数组：每个发送数据相对于发送缓冲区起始地址的位移量</span><br><span class="line">                  MPI_Datatype sendtype,  发送的数据类型</span><br><span class="line">                  void *recvbuf,          接收缓冲区的起始地址</span><br><span class="line">                  const int *recvcounts,  数组：每个接收数据的长度</span><br><span class="line">                  const int *rdispls， 数组：每个接收数据相对于接收缓冲区起始地址的位移量</span><br><span class="line">                  MPI_Datatype recvtype,  接收的数据类型</span><br><span class="line">                  MPI_Comm comm)          通信域</span><br></pre></td></tr></table></figure>
+<p>该函数实现各个进程向各个进程交换<strong>不定长</strong>的数据</p>
 <p>该函数执行效果举例如下，每个数据的长度不定</p>
-<pre><code>交换前
-A0 A1 A2 A3 A4 A5    --进程0的sizes数组
-B0 B1 B2 B3 B4 B5    --进程1的sizes数组
-C0 C1 C2 C3 C4 C5    --进程2的sizes数组
-D0 D1 D2 D3 D4 D5    --进程3的sizes数组
-E0 E1 E2 E3 E4 E5    --进程4的sizes数组
-F0 F1 F2 F3 F4 F5    --进程5的sizes数组
-交换后
-A0 B0 C0 D0 E0 F0    --进程0的newsizes数组
-A1 B1 C1 D1 E1 F1    --进程1的newsizes数组
-A2 B2 C2 D2 E2 F2    --进程2的newsizes数组
-A3 B3 C3 D3 E3 F3    --进程3的newsizes数组
-A4 B4 C4 D4 E4 F4    --进程4的newsizes数组
-A5 B5 C5 D5 E5 F5    --进程5的newsizes数组
-
-</code></pre><p>(8)归并排序：每个进程pi对接收到的元素进行归并排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">交换前</span><br><span class="line">A0 A1 A2 A3 A4 A5	--进程0的sizes数组</span><br><span class="line">B0 B1 B2 B3 B4 B5	--进程1的sizes数组</span><br><span class="line">C0 C1 C2 C3 C4 C5	--进程2的sizes数组</span><br><span class="line">D0 D1 D2 D3 D4 D5	--进程3的sizes数组</span><br><span class="line">E0 E1 E2 E3 E4 E5	--进程4的sizes数组</span><br><span class="line">F0 F1 F2 F3 F4 F5	--进程5的sizes数组</span><br><span class="line">交换后</span><br><span class="line">A0 B0 C0 D0 E0 F0	--进程0的newsizes数组</span><br><span class="line">A1 B1 C1 D1 E1 F1	--进程1的newsizes数组</span><br><span class="line">A2 B2 C2 D2 E2 F2	--进程2的newsizes数组</span><br><span class="line">A3 B3 C3 D3 E3 F3	--进程3的newsizes数组</span><br><span class="line">A4 B4 C4 D4 E4 F4	--进程4的newsizes数组</span><br><span class="line">A5 B5 C5 D5 E5 F5	--进程5的newsizes数组</span><br></pre></td></tr></table></figure>
+<p>(8)归并排序：每个进程pi对接收到的元素进行归并排序</p>
 <p>(9)用主进程收集（MPI_Gatherv）各个进程的新数据，写回A，此时，原数组A已有序</p>
 <p>MPI_Gatherv函数定义如下</p>
-<pre><code>int MPI_Gatherv(void* sendbuf,            发送缓冲区的起始地址
-                int sendcount,            发送数据的长度
-                MPI_Datatype sendtype,    发送的数据类型
-                void* recvbuf,            接收缓冲区的起始地址
-                int *recvcounts,          数组：每个接收数据的长度
-                int *displs,            数组：每个接收数据相对于接收缓冲区起始地址的位移量
-                MPI_Datatype recvtype,    接收的数据类型
-                int root,                 根进程的id
-                MPI_Comm comm)            通信域
-</code></pre><p>该函数实现各个进程向根进程汇集不定长的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int MPI_Gatherv(void* sendbuf,            发送缓冲区的起始地址</span><br><span class="line">                int sendcount,            发送数据的长度</span><br><span class="line">                MPI_Datatype sendtype,    发送的数据类型</span><br><span class="line">                void* recvbuf,            接收缓冲区的起始地址</span><br><span class="line">                int *recvcounts,          数组：每个接收数据的长度</span><br><span class="line">                int *displs,            数组：每个接收数据相对于接收缓冲区起始地址的位移量</span><br><span class="line">                MPI_Datatype recvtype,    接收的数据类型</span><br><span class="line">                int root,                 根进程的id</span><br><span class="line">                MPI_Comm comm)            通信域</span><br></pre></td></tr></table></figure>
+<p>该函数实现各个进程向根进程汇集不定长的数据</p>
 <a id="more"></a>
 <h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><h4 id="π值的计算-1"><a href="#π值的计算-1" class="headerlink" title="π值的计算"></a>π值的计算</h4><p>设<em>n</em>为[0, 1]之间划分的区间数</p>
 <p>对于串行算法，时间复杂度为<em>O</em>(<em>n</em>)</p>
@@ -375,208 +344,10 @@ A5 B5 C5 D5 E5 F5    --进程5的newsizes数组
 <blockquote>
 <p>Theorem 1: In phase 3 of PSRS, each processor merges less than 2w elements.</p>
 </blockquote>
-<h3 id="算法源代码"><a href="#算法源代码" class="headerlink" title="算法源代码"></a>算法源代码</h3><h4 id="π值的计算-2"><a href="#π值的计算-2" class="headerlink" title="π值的计算"></a>π值的计算</h4><h5 id="基本的串行算法-1"><a href="#基本的串行算法-1" class="headerlink" title="基本的串行算法"></a>基本的串行算法</h5><pre><code class="C">#include &lt;stdio.h&gt;
-static long num_steps = 100000;//越大值越精确
-double step;
-void main(){
-    int i;
-    double x, pi, sum = 0.0;
-    step = 1.0 / (double)num_steps;
-    for(i = 1; i &lt;= num_steps; i++){
-        x = (i - 0.5) * step;
-        sum = sum + 4.0/(1.0 + x * x);
-    }
-    pi = step * sum;
-    printf(&quot;%lf\n&quot;, pi);
-}
-</code></pre>
-<h5 id="使用并行域并行化的程序"><a href="#使用并行域并行化的程序" class="headerlink" title="使用并行域并行化的程序"></a>使用并行域并行化的程序</h5><pre><code class="c">#include &quot;mpi.h&quot;
-#include &lt;stdio.h&gt;
-#include &lt;math.h&gt;
-static long num_steps = 100000;
-int main(int argc, char *argv[])
-{
-    int id, num_processes;
-    double local_pi, pi, local_sum = 0.0, x;
-    double step = 1.0 / (double)num_steps;
-    double t1, t2;
-    MPI_Init(&amp;argc, &amp;argv);  
-    MPI_Comm_size(MPI_COMM_WORLD, &amp;num_processes); 
-    MPI_Comm_rank(MPI_COMM_WORLD, &amp;id);  
-    if(id == 0) //主进程
-        t1 = MPI_Wtime();
-    for(int i = id + 1; i &lt;= num_steps; i += num_processes){  //各线程计算自己部分的面积local_pi
-        x = step * (i - 0.5);
-        local_sum = local_sum + 4.0 / (1.0 + x * x);
-    }
-    local_pi = local_sum * step;
-    MPI_Reduce(&amp;local_pi, &amp;pi, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);  //归约local_pi到pi
-    if(id == 0){
-        t2 = MPI_Wtime();
-        printf(&quot;time: %fs\n&quot;, t2 - t1);
-        printf(&quot;PI is approximately %.16f\n&quot;, pi);
-    }
-    MPI_Finalize();
-    return 0;
-}
-</code></pre>
+<h3 id="算法源代码"><a href="#算法源代码" class="headerlink" title="算法源代码"></a>算法源代码</h3><h4 id="π值的计算-2"><a href="#π值的计算-2" class="headerlink" title="π值的计算"></a>π值的计算</h4><h5 id="基本的串行算法-1"><a href="#基本的串行算法-1" class="headerlink" title="基本的串行算法"></a>基本的串行算法</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">long</span> num_steps = <span class="number">100000</span>;<span class="comment">//越大值越精确</span></span><br><span class="line"><span class="keyword">double</span> step;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">double</span> x, pi, sum = <span class="number">0.0</span>;</span><br><span class="line">    step = <span class="number">1.0</span> / (<span class="keyword">double</span>)num_steps;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt;= num_steps; i++)&#123;</span><br><span class="line">        x = (i - <span class="number">0.5</span>) * step;</span><br><span class="line">        sum = sum + <span class="number">4.0</span>/(<span class="number">1.0</span> + x * x);</span><br><span class="line">    &#125;</span><br><span class="line">    pi = step * sum;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lf\n"</span>, pi);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="使用并行域并行化的程序"><a href="#使用并行域并行化的程序" class="headerlink" title="使用并行域并行化的程序"></a>使用并行域并行化的程序</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mpi.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">long</span> num_steps = <span class="number">100000</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> id, num_processes;</span><br><span class="line">    <span class="keyword">double</span> local_pi, pi, local_sum = <span class="number">0.0</span>, x;</span><br><span class="line">    <span class="keyword">double</span> step = <span class="number">1.0</span> / (<span class="keyword">double</span>)num_steps;</span><br><span class="line">    <span class="keyword">double</span> t1, t2;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);  </span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;num_processes); </span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;id);  </span><br><span class="line">    <span class="keyword">if</span>(id == <span class="number">0</span>) <span class="comment">//主进程</span></span><br><span class="line">        t1 = MPI_Wtime();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = id + <span class="number">1</span>; i &lt;= num_steps; i += num_processes)&#123;  <span class="comment">//各线程计算自己部分的面积local_pi</span></span><br><span class="line">        x = step * (i - <span class="number">0.5</span>);</span><br><span class="line">        local_sum = local_sum + <span class="number">4.0</span> / (<span class="number">1.0</span> + x * x);</span><br><span class="line">    &#125;</span><br><span class="line">    local_pi = local_sum * step;</span><br><span class="line">    MPI_Reduce(&amp;local_pi, &amp;pi, <span class="number">1</span>, MPI_DOUBLE, MPI_SUM, <span class="number">0</span>, MPI_COMM_WORLD);  <span class="comment">//归约local_pi到pi</span></span><br><span class="line">    <span class="keyword">if</span>(id == <span class="number">0</span>)&#123;</span><br><span class="line">        t2 = MPI_Wtime();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"time: %fs\n"</span>, t2 - t1);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"PI is approximately %.16f\n"</span>, pi);</span><br><span class="line">    &#125;</span><br><span class="line">    MPI_Finalize();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>##### </p>
-<h4 id="PSRS排序-2"><a href="#PSRS排序-2" class="headerlink" title="PSRS排序"></a>PSRS排序</h4><pre><code class="C">#include &lt;stdlib.h&gt;
-#include &lt;stdio.h&gt;
-#include &quot;mpi.h&quot;
-
-#define INF 2147483647
-
-/**************************************************
-* 合并两个已排好序的子数组A[l : m], A[m + 1 : r], 写回A[l : r]
-***************************************************/
-void Merge(int *A, int l, int m, int r){
-    int i, j, k, n1 = m - l + 1, n2 = r - m;
-    int *L = (int *)malloc((n1 + 1) * sizeof(int));
-    int *R = (int *)malloc((n2 + 1) * sizeof(int));
-    for(i = 0; i &lt; n1; i++) L[i] = A[l + i];
-    for(j = 0; j &lt; n2; j++) R[j] = A[m + 1 + j];
-    L[i] = R[j] = INF;
-    i = j = 0;
-    for(k = l; k &lt;= r; k++) if(L[i] &lt;= R[j]) A[k] = L[i++]; else A[k] = R[j++];
-    free(L); free(R);
-} 
-
-/**************************************************
-* 对A[l : r]进行归并排序
-***************************************************/
-void MergeSort(int *A, int l, int r){
-    if(l &lt; r){
-        int m = (l + r) / 2;
-        MergeSort(A, l, m);
-        MergeSort(A, m + 1, r);
-        Merge(A, l, m, r);
-    }
-} 
-
-/**************************************************
-* 对A[0 : n - 1]进行PSRS排序
-***************************************************/
-void PSRS(int *A, int n, int id, int num_processes){ //每个进程都会执行这个函数，这里面的变量每个进程都有一份，因此都是局部的（对于当前进程而言）
-    int per; 
-    int *samples, *global_samples; //global表示这个变量是主进程会使用的，但事实上每个进程都声明了
-    int *pivots; 
-    int *sizes, *newsizes;
-    int *offsets, *newoffsets;
-    int *newdatas;
-    int newdatassize;
-    int *global_sizes;
-    int *global_offsets;
-    //-------------------------------------------------------------------------------------------------------------------
-
-    per = n / num_processes; //A的n个元素划分为num_processes段，每个进程处理per个元素
-    samples = (int *)malloc(num_processes * sizeof(int)); //当前进程的采样数组
-    pivots = (int *)malloc(num_processes * sizeof(int)); //num_processes - 1 个主元，最后一个设为INF，作为哨兵
-    if(id == 0){ //主进程申请全局采样数组
-        global_samples = (int *)malloc(num_processes * num_processes * sizeof(int)); //正则采样数为 num_processes * num_processes 
-    }
-    MPI_Barrier(MPI_COMM_WORLD);//设置路障，同步所有进程
-    //-------------------------------------------------------------------------------------------------------------------
-    //（1）均匀划分，当前进程对A中属于自己的部分进行串行归并排序
-    MergeSort(A, id * per, (id + 1) * per - 1); //这里没有把A中对应当前进程的数据复制到当前进程，而是直接对A部分排序
-    //（2）正则采样，当前进程选出 num_processes 个样本放在local_sample中
-    for(int k = 0; k &lt; num_processes; k++) 
-        samples[k] = A[id * per + k * per / num_processes];
-    //主进程的sample收集各进程的local_sample，共 num_processes * num_processes 个
-    MPI_Gather(samples, num_processes, MPI_INT, global_samples, num_processes, MPI_INT, 0, MPI_COMM_WORLD);
-    //-------------------------------------------------------------------------------------------------------------------
-    //（3）采样排序 （4）选择主元
-    if(id == 0){ //主进程
-        MergeSort(global_samples, 0, num_processes * num_processes - 1); //对采样的num_processes * num_processes个样本进行排序
-        for(int k = 0; k &lt; num_processes - 1; k++) //选出num_processes - 1个主元
-            pivots[k] = global_samples[(k + 1) * num_processes];
-        pivots[num_processes - 1] = INF; //哨兵
-    }
-    //主进程向各个进程广播，所有进程拥有一样的pivots数组
-    MPI_Bcast(pivots, num_processes, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
-    //-------------------------------------------------------------------------------------------------------------------
-    sizes = (int *)calloc(num_processes, sizeof(int)); //当前进程的per个元素根据主元划分之后的每段的长度，用calloc分配后自动初始化为0
-    offsets = (int *)calloc(num_processes, sizeof(int)); //当前进程的per个元素根据主元划分之后的每段的起始位置，用calloc分配后自动初始化为0
-    newsizes = (int *)calloc(num_processes, sizeof(int)); //当前进程在进行全局交换之后的每段的长度，用calloc分配后自动初始化为0
-    newoffsets = (int *)calloc(num_processes, sizeof(int)); //当前进程在进行全局交换之后的每段的起始位置，用calloc分配后自动初始化为0
-    //（5）主元划分
-    for(int k = 0, j = id * per; j &lt; id * per + per; j++){ //当前进程对自己的per个元素按主元划分为num_processes段，此处不处理数据，只计算每段大小
-        if(A[j] &lt; pivots[k]) //如果之前不用哨兵，最后一段要单独考虑
-            sizes[k]++;
-        else
-            sizes[++k]++;
-    }
-    //（6）全局交换
-    //多对多全局交换消息，首先每个进程向每个接收者发送接收者对应的【段的大小】
-    MPI_Alltoall(sizes, 1, MPI_INT, newsizes, 1, MPI_INT, MPI_COMM_WORLD);
-    //计算原来的段偏移数组，新的段偏移数组，新的数据大小
-    newdatassize = newsizes[0];
-    for(int k = 1; k &lt; num_processes; k++){
-        offsets[k] = offsets[k - 1] + sizes[k - 1];
-        newoffsets[k] = newoffsets[k - 1] + newsizes[k - 1];
-        newdatassize += newsizes[k];
-    }
-    //申请当前进程新的数据空间
-    newdatas = (int *)malloc(newdatassize * sizeof(int)); //当前进程在进行全局交换之后的数据，是由交换后的各段组合而成的
-    //多对多全局交换消息，每个进程向每个接收者发送接收者对应的【段】
-    MPI_Alltoallv(&amp;(A[id * per]), sizes, offsets, MPI_INT, newdatas, newsizes, newoffsets, MPI_INT, MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
-    //-------------------------------------------------------------------------------------------------------------------
-    //（7）当前进程归并排序自己的新数据
-    MergeSort(newdatas, 0, newdatassize - 1);
-    MPI_Barrier(MPI_COMM_WORLD);
-    //（8）主进程收集各个进程的数据，写回A
-    //首先收集各进程新数据的大小
-    if(id == 0)
-        global_sizes = (int *)calloc(num_processes, sizeof(int));
-    MPI_Gather(&amp;newdatassize, 1, MPI_INT, global_sizes, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    //主进程计算即将搜集的各进程数据的起始位置
-    if(id == 0){ 
-        global_offsets = (int *)calloc(num_processes, sizeof(int));
-        for(int k = 1; k &lt; num_processes; k++)
-            global_offsets[k] = global_offsets[k - 1] + global_sizes[k - 1];
-    }
-    //主进程收集各个进程的数据
-    MPI_Gatherv(newdatas, newdatassize, MPI_INT, A, global_sizes, global_offsets, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
-    //-------------------------------------------------------------------------------------------------------------------
-    //销毁动态数组
-    free(samples); samples = NULL;
-    free(pivots); pivots = NULL;
-    free(sizes); sizes = NULL;
-    free(offsets); offsets = NULL;
-    free(newdatas); newdatas = NULL;
-    free(newsizes); newsizes = NULL;
-    free(newoffsets); newoffsets = NULL;
-    if(id == 0){ 
-        free(global_samples); global_samples = NULL;
-        free(global_sizes); global_sizes = NULL;
-        free(global_offsets); global_offsets = NULL;
-    }
-}
-
-int main(int argc, char *argv[]){
-    int A[27] = {15, 46, 48, 93, 39, 6, 72, 91, 14, 36, 69, 40, 89, 61, 97, 12, 21, 54, 53, 97, 84, 58, 32, 27, 33, 72, 20};
-    double t1, t2;
-    int id, num_processes;
-    MPI_Init(&amp;argc, &amp;argv);
-    MPI_Comm_size(MPI_COMM_WORLD, &amp;num_processes); //获取进程数
-    MPI_Comm_rank(MPI_COMM_WORLD, &amp;id); //获取当前进程id
-    if(id == 0)
-        t1 = MPI_Wtime();
-    PSRS(A, 27, id, num_processes);
-    if(id == 0){
-        t2 = MPI_Wtime();
-        printf(&quot;time: %lfs\n&quot;, t2 - t1);
-        for(int i = 0; i &lt; 27; i++)
-            printf(&quot;%d &quot;, A[i]);
-        printf(&quot;\n&quot;);
-    }
-    MPI_Finalize();
-    return 0;
-}
-</code></pre>
+<h4 id="PSRS排序-2"><a href="#PSRS排序-2" class="headerlink" title="PSRS排序"></a>PSRS排序</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mpi.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> INF 2147483647</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 合并两个已排好序的子数组A[l : m], A[m + 1 : r], 写回A[l : r]</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Merge</span><span class="params">(<span class="keyword">int</span> *A, <span class="keyword">int</span> l, <span class="keyword">int</span> m, <span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, k, n1 = m - l + <span class="number">1</span>, n2 = r - m;</span><br><span class="line">    <span class="keyword">int</span> *L = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>((n1 + <span class="number">1</span>) * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="keyword">int</span> *R = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>((n2 + <span class="number">1</span>) * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; n1; i++) L[i] = A[l + i];</span><br><span class="line">    <span class="keyword">for</span>(j = <span class="number">0</span>; j &lt; n2; j++) R[j] = A[m + <span class="number">1</span> + j];</span><br><span class="line">    L[i] = R[j] = INF;</span><br><span class="line">    i = j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(k = l; k &lt;= r; k++) <span class="keyword">if</span>(L[i] &lt;= R[j]) A[k] = L[i++]; <span class="keyword">else</span> A[k] = R[j++];</span><br><span class="line">    <span class="built_in">free</span>(L); <span class="built_in">free</span>(R);</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 对A[l : r]进行归并排序</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MergeSort</span><span class="params">(<span class="keyword">int</span> *A, <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(l &lt; r)&#123;</span><br><span class="line">        <span class="keyword">int</span> m = (l + r) / <span class="number">2</span>;</span><br><span class="line">        MergeSort(A, l, m);</span><br><span class="line">        MergeSort(A, m + <span class="number">1</span>, r);</span><br><span class="line">        Merge(A, l, m, r);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">* 对A[0 : n - 1]进行PSRS排序</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PSRS</span><span class="params">(<span class="keyword">int</span> *A, <span class="keyword">int</span> n, <span class="keyword">int</span> id, <span class="keyword">int</span> num_processes)</span></span>&#123; <span class="comment">//每个进程都会执行这个函数，这里面的变量每个进程都有一份，因此都是局部的（对于当前进程而言）</span></span><br><span class="line">    <span class="keyword">int</span> per; </span><br><span class="line">    <span class="keyword">int</span> *samples, *global_samples; <span class="comment">//global表示这个变量是主进程会使用的，但事实上每个进程都声明了</span></span><br><span class="line">    <span class="keyword">int</span> *pivots; </span><br><span class="line">    <span class="keyword">int</span> *sizes, *newsizes;</span><br><span class="line">    <span class="keyword">int</span> *offsets, *newoffsets;</span><br><span class="line">    <span class="keyword">int</span> *newdatas;</span><br><span class="line">    <span class="keyword">int</span> newdatassize;</span><br><span class="line">    <span class="keyword">int</span> *global_sizes;</span><br><span class="line">    <span class="keyword">int</span> *global_offsets;</span><br><span class="line">    <span class="comment">//-------------------------------------------------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line">    per = n / num_processes; <span class="comment">//A的n个元素划分为num_processes段，每个进程处理per个元素</span></span><br><span class="line">    samples = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(num_processes * <span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">//当前进程的采样数组</span></span><br><span class="line">    pivots = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(num_processes * <span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">//num_processes - 1 个主元，最后一个设为INF，作为哨兵</span></span><br><span class="line">    <span class="keyword">if</span>(id == <span class="number">0</span>)&#123; <span class="comment">//主进程申请全局采样数组</span></span><br><span class="line">        global_samples = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(num_processes * num_processes * <span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">//正则采样数为 num_processes * num_processes </span></span><br><span class="line">    &#125;</span><br><span class="line">    MPI_Barrier(MPI_COMM_WORLD);<span class="comment">//设置路障，同步所有进程</span></span><br><span class="line">    <span class="comment">//-------------------------------------------------------------------------------------------------------------------</span></span><br><span class="line">    <span class="comment">//（1）均匀划分，当前进程对A中属于自己的部分进行串行归并排序</span></span><br><span class="line">    MergeSort(A, id * per, (id + <span class="number">1</span>) * per - <span class="number">1</span>); <span class="comment">//这里没有把A中对应当前进程的数据复制到当前进程，而是直接对A部分排序</span></span><br><span class="line">    <span class="comment">//（2）正则采样，当前进程选出 num_processes 个样本放在local_sample中</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; num_processes; k++) </span><br><span class="line">        samples[k] = A[id * per + k * per / num_processes];</span><br><span class="line">    <span class="comment">//主进程的sample收集各进程的local_sample，共 num_processes * num_processes 个</span></span><br><span class="line">    MPI_Gather(samples, num_processes, MPI_INT, global_samples, num_processes, MPI_INT, <span class="number">0</span>, MPI_COMM_WORLD);</span><br><span class="line">    <span class="comment">//-------------------------------------------------------------------------------------------------------------------</span></span><br><span class="line">    <span class="comment">//（3）采样排序 （4）选择主元</span></span><br><span class="line">    <span class="keyword">if</span>(id == <span class="number">0</span>)&#123; <span class="comment">//主进程</span></span><br><span class="line">        MergeSort(global_samples, <span class="number">0</span>, num_processes * num_processes - <span class="number">1</span>); <span class="comment">//对采样的num_processes * num_processes个样本进行排序</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; num_processes - <span class="number">1</span>; k++) <span class="comment">//选出num_processes - 1个主元</span></span><br><span class="line">            pivots[k] = global_samples[(k + <span class="number">1</span>) * num_processes];</span><br><span class="line">        pivots[num_processes - <span class="number">1</span>] = INF; <span class="comment">//哨兵</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//主进程向各个进程广播，所有进程拥有一样的pivots数组</span></span><br><span class="line">    MPI_Bcast(pivots, num_processes, MPI_INT, <span class="number">0</span>, MPI_COMM_WORLD);</span><br><span class="line">    MPI_Barrier(MPI_COMM_WORLD);</span><br><span class="line">    <span class="comment">//-------------------------------------------------------------------------------------------------------------------</span></span><br><span class="line">    sizes = (<span class="keyword">int</span> *)<span class="built_in">calloc</span>(num_processes, <span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">//当前进程的per个元素根据主元划分之后的每段的长度，用calloc分配后自动初始化为0</span></span><br><span class="line">    offsets = (<span class="keyword">int</span> *)<span class="built_in">calloc</span>(num_processes, <span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">//当前进程的per个元素根据主元划分之后的每段的起始位置，用calloc分配后自动初始化为0</span></span><br><span class="line">    newsizes = (<span class="keyword">int</span> *)<span class="built_in">calloc</span>(num_processes, <span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">//当前进程在进行全局交换之后的每段的长度，用calloc分配后自动初始化为0</span></span><br><span class="line">    newoffsets = (<span class="keyword">int</span> *)<span class="built_in">calloc</span>(num_processes, <span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">//当前进程在进行全局交换之后的每段的起始位置，用calloc分配后自动初始化为0</span></span><br><span class="line">    <span class="comment">//（5）主元划分</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>, j = id * per; j &lt; id * per + per; j++)&#123; <span class="comment">//当前进程对自己的per个元素按主元划分为num_processes段，此处不处理数据，只计算每段大小</span></span><br><span class="line">        <span class="keyword">if</span>(A[j] &lt; pivots[k]) <span class="comment">//如果之前不用哨兵，最后一段要单独考虑</span></span><br><span class="line">            sizes[k]++;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            sizes[++k]++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//（6）全局交换</span></span><br><span class="line">    <span class="comment">//多对多全局交换消息，首先每个进程向每个接收者发送接收者对应的【段的大小】</span></span><br><span class="line">    MPI_Alltoall(sizes, <span class="number">1</span>, MPI_INT, newsizes, <span class="number">1</span>, MPI_INT, MPI_COMM_WORLD);</span><br><span class="line">    <span class="comment">//计算原来的段偏移数组，新的段偏移数组，新的数据大小</span></span><br><span class="line">    newdatassize = newsizes[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">1</span>; k &lt; num_processes; k++)&#123;</span><br><span class="line">        offsets[k] = offsets[k - <span class="number">1</span>] + sizes[k - <span class="number">1</span>];</span><br><span class="line">        newoffsets[k] = newoffsets[k - <span class="number">1</span>] + newsizes[k - <span class="number">1</span>];</span><br><span class="line">        newdatassize += newsizes[k];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//申请当前进程新的数据空间</span></span><br><span class="line">    newdatas = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(newdatassize * <span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">//当前进程在进行全局交换之后的数据，是由交换后的各段组合而成的</span></span><br><span class="line">    <span class="comment">//多对多全局交换消息，每个进程向每个接收者发送接收者对应的【段】</span></span><br><span class="line">    MPI_Alltoallv(&amp;(A[id * per]), sizes, offsets, MPI_INT, newdatas, newsizes, newoffsets, MPI_INT, MPI_COMM_WORLD);</span><br><span class="line">    MPI_Barrier(MPI_COMM_WORLD);</span><br><span class="line">    <span class="comment">//-------------------------------------------------------------------------------------------------------------------</span></span><br><span class="line">    <span class="comment">//（7）当前进程归并排序自己的新数据</span></span><br><span class="line">    MergeSort(newdatas, <span class="number">0</span>, newdatassize - <span class="number">1</span>);</span><br><span class="line">    MPI_Barrier(MPI_COMM_WORLD);</span><br><span class="line">    <span class="comment">//（8）主进程收集各个进程的数据，写回A</span></span><br><span class="line">    <span class="comment">//首先收集各进程新数据的大小</span></span><br><span class="line">    <span class="keyword">if</span>(id == <span class="number">0</span>)</span><br><span class="line">        global_sizes = (<span class="keyword">int</span> *)<span class="built_in">calloc</span>(num_processes, <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    MPI_Gather(&amp;newdatassize, <span class="number">1</span>, MPI_INT, global_sizes, <span class="number">1</span>, MPI_INT, <span class="number">0</span>, MPI_COMM_WORLD);</span><br><span class="line">    <span class="comment">//主进程计算即将搜集的各进程数据的起始位置</span></span><br><span class="line">    <span class="keyword">if</span>(id == <span class="number">0</span>)&#123; </span><br><span class="line">        global_offsets = (<span class="keyword">int</span> *)<span class="built_in">calloc</span>(num_processes, <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">1</span>; k &lt; num_processes; k++)</span><br><span class="line">            global_offsets[k] = global_offsets[k - <span class="number">1</span>] + global_sizes[k - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//主进程收集各个进程的数据</span></span><br><span class="line">    MPI_Gatherv(newdatas, newdatassize, MPI_INT, A, global_sizes, global_offsets, MPI_INT, <span class="number">0</span>, MPI_COMM_WORLD);</span><br><span class="line">    MPI_Barrier(MPI_COMM_WORLD);</span><br><span class="line">    <span class="comment">//-------------------------------------------------------------------------------------------------------------------</span></span><br><span class="line">    <span class="comment">//销毁动态数组</span></span><br><span class="line">    <span class="built_in">free</span>(samples); samples = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">free</span>(pivots); pivots = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">free</span>(sizes); sizes = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">free</span>(offsets); offsets = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">free</span>(newdatas); newdatas = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">free</span>(newsizes); newsizes = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">free</span>(newoffsets); newoffsets = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span>(id == <span class="number">0</span>)&#123; </span><br><span class="line">        <span class="built_in">free</span>(global_samples); global_samples = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="built_in">free</span>(global_sizes); global_sizes = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="built_in">free</span>(global_offsets); global_offsets = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> A[<span class="number">27</span>] = &#123;<span class="number">15</span>, <span class="number">46</span>, <span class="number">48</span>, <span class="number">93</span>, <span class="number">39</span>, <span class="number">6</span>, <span class="number">72</span>, <span class="number">91</span>, <span class="number">14</span>, <span class="number">36</span>, <span class="number">69</span>, <span class="number">40</span>, <span class="number">89</span>, <span class="number">61</span>, <span class="number">97</span>, <span class="number">12</span>, <span class="number">21</span>, <span class="number">54</span>, <span class="number">53</span>, <span class="number">97</span>, <span class="number">84</span>, <span class="number">58</span>, <span class="number">32</span>, <span class="number">27</span>, <span class="number">33</span>, <span class="number">72</span>, <span class="number">20</span>&#125;;</span><br><span class="line">    <span class="keyword">double</span> t1, t2;</span><br><span class="line">    <span class="keyword">int</span> id, num_processes;</span><br><span class="line">    MPI_Init(&amp;argc, &amp;argv);</span><br><span class="line">    MPI_Comm_size(MPI_COMM_WORLD, &amp;num_processes); <span class="comment">//获取进程数</span></span><br><span class="line">    MPI_Comm_rank(MPI_COMM_WORLD, &amp;id); <span class="comment">//获取当前进程id</span></span><br><span class="line">    <span class="keyword">if</span>(id == <span class="number">0</span>)</span><br><span class="line">        t1 = MPI_Wtime();</span><br><span class="line">    PSRS(A, <span class="number">27</span>, id, num_processes);</span><br><span class="line">    <span class="keyword">if</span>(id == <span class="number">0</span>)&#123;</span><br><span class="line">        t2 = MPI_Wtime();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"time: %lfs\n"</span>, t2 - t1);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">27</span>; i++)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%d "</span>, A[i]);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    MPI_Finalize();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="//l-x.me/2019/05/16/pc/lab2/clip_image002.jpg" alt="img"><br><img src="//l-x.me/2019/05/16/pc/lab2/clip_image002-1570631864083.jpg" alt="img"></p>
 
       

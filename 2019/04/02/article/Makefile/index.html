@@ -313,11 +313,8 @@
 <p>本篇博客是基于 <a href="http://bbs.chinaunix.net/forum.php?mod=viewthread&amp;tid=408225" target="_blank" rel="noopener">{精华} 跟我一起写 Makefile</a> 而整理的, 有些删减, 追加了一些示例.</p>
 <p>非常感谢 gunguymadman_cu 提供如此详尽的Makefile介绍, 这正是我一直寻找的Makefile中文文档.</p>
 <h3 id="1-1-Makefile-主要的-5个部分-显示规则-隐晦规则-变量定义-文件指示-注释"><a href="#1-1-Makefile-主要的-5个部分-显示规则-隐晦规则-变量定义-文件指示-注释" class="headerlink" title="1.1 Makefile 主要的 5个部分 (显示规则, 隐晦规则, 变量定义, 文件指示, 注释)"></a><strong>1.1 Makefile 主要的 5个部分 (显示规则, 隐晦规则, 变量定义, 文件指示, 注释)</strong></h3><p>Makefile基本格式如下:</p>
-<pre><code>target ... : prerequisites ...
-    command
-    ...
-    ...
-</code></pre><p>其中,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">target ... : prerequisites ...</span><br><span class="line">    command</span><br><span class="line">    ...</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>其中,</p>
 <ul>
 <li>target        - 目标文件, 可以是 Object File, 也可以是可执行文件</li>
 <li>prerequisites - 生成 target 所需要的文件或者目标</li>
@@ -343,15 +340,9 @@
 </ol>
 <h2 id="2-Makefile-初级语法"><a href="#2-Makefile-初级语法" class="headerlink" title="2. Makefile 初级语法"></a><strong>2. Makefile 初级语法</strong></h2><h3 id="2-1-Makefile-规则"><a href="#2-1-Makefile-规则" class="headerlink" title="2.1 Makefile 规则"></a><strong>2.1 Makefile 规则</strong></h3><h4 id="2-1-1-规则语法"><a href="#2-1-1-规则语法" class="headerlink" title="2.1.1 规则语法"></a><strong>2.1.1 规则语法</strong></h4><p>规则主要有2部分: 依赖关系 和 生成目标的方法.</p>
 <p>语法有以下2种:</p>
-<pre><code class="makefile">target ... : prerequisites ...
-    command
-    ...
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">target ... : prerequisites ...</span><br><span class="line">    command</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
 <p>或者</p>
-<pre><code class="make">target ... : prerequisites ; command
-    command
-    ...
-</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">target ... : prerequisites ; command</span><br><span class="line">    command</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
 <p><strong>注:</strong> command太长, 可以用 “\” 作为换行符</p>
 <h4 id="2-1-2-规则中的通配符"><a href="#2-1-2-规则中的通配符" class="headerlink" title="2.1.2 规则中的通配符"></a><strong>2.1.2 规则中的通配符</strong></h4><ul>
 <li>*     :: 表示任意一个或多个字符</li>
@@ -369,73 +360,15 @@
 <li>vpath <pattern>                :: 清除符合<pattern>格式的文件搜索路径</pattern></pattern></li>
 <li>vpath                          :: 清除所有已经设置好的文件路径</li>
 </ul>
-<pre><code class="makefile"># 示例1 - 当前目录中找不到文件时, 按顺序从 src目录 ../parent-dir目录中查找文件
-VPATH src:../parent-dir   
-
-# 示例2 - .h结尾的文件都从 ./header 目录中查找
-VPATH %.h ./header
-
-# 示例3 - 清除示例2中设置的规则
-VPATH %.h
-
-# 示例4 - 清除所有VPATH的设置
-VPATH
-</code></pre>
-<h3 id="2-2-Makefile-中的变量"><a href="#2-2-Makefile-中的变量" class="headerlink" title="2.2 Makefile 中的变量"></a><strong>2.2 Makefile 中的变量</strong></h3><h4 id="2-2-1-变量定义-or"><a href="#2-2-1-变量定义-or" class="headerlink" title="2.2.1 变量定义 ( = or := )"></a><strong>2.2.1 变量定义 ( = or := )</strong></h4><pre><code class="makefile">OBJS = programA.o programB.o
-OBJS-ADD = $(OBJS) programC.o
-# 或者
-OBJS := programA.o programB.o
-OBJS-ADD := $(OBJS) programC.o
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例1 - 当前目录中找不到文件时, 按顺序从 src目录 ../parent-dir目录中查找文件</span></span><br><span class="line">VPATH src:../parent-dir   </span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例2 - .h结尾的文件都从 ./header 目录中查找</span></span><br><span class="line">VPATH %.h ./header</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例3 - 清除示例2中设置的规则</span></span><br><span class="line">VPATH %.h</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例4 - 清除所有VPATH的设置</span></span><br><span class="line">VPATH</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-Makefile-中的变量"><a href="#2-2-Makefile-中的变量" class="headerlink" title="2.2 Makefile 中的变量"></a><strong>2.2 Makefile 中的变量</strong></h3><h4 id="2-2-1-变量定义-or"><a href="#2-2-1-变量定义-or" class="headerlink" title="2.2.1 变量定义 ( = or := )"></a><strong>2.2.1 变量定义 ( = or := )</strong></h4><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">OBJS = programA.o programB.o</span><br><span class="line">OBJS-ADD = <span class="variable">$(OBJS)</span> programC.o</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">OBJS := programA.o programB.o</span><br><span class="line">OBJS-ADD := <span class="variable">$(OBJS)</span> programC.o</span><br></pre></td></tr></table></figure>
 <p>其中 = 和 := 的区别在于, := 只能使用前面定义好的变量, = 可以使用后面定义的变量</p>
 <p><strong>测试 =</strong></p>
-<pre><code class="makefile"># Makefile内容
-OBJS2 = $(OBJS1) programC.o
-OBJS1 = programA.o programB.o
-
-all:
-    @echo $(OBJS2)
-
-# bash中执行 make, 可以看出虽然 OBJS1 是在 OBJS2 之后定义的, 但在 OBJS2中可以提前使用
-$ make
-programA.o programB.o programC.o
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile内容</span></span><br><span class="line">OBJS2 = <span class="variable">$(OBJS1)</span> programC.o</span><br><span class="line">OBJS1 = programA.o programB.o</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(OBJS2)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中执行 make, 可以看出虽然 OBJS1 是在 OBJS2 之后定义的, 但在 OBJS2中可以提前使用</span></span><br><span class="line">$ make</span><br><span class="line">programA.o programB.o programC.o</span><br></pre></td></tr></table></figure>
 <p><strong>测试 :=</strong></p>
-<pre><code class="makefile"># Makefile内容
-OBJS2 := $(OBJS1) programC.o
-OBJS1 := programA.o programB.o
-
-all:
-    @echo $(OBJS2)
-
-# bash中执行 make, 可以看出 OBJS2 中的 $(OBJS1) 为空
-$ make
-programC.o
-</code></pre>
-<h4 id="2-2-2-变量替换"><a href="#2-2-2-变量替换" class="headerlink" title="2.2.2 变量替换"></a><strong>2.2.2 变量替换</strong></h4><pre><code class="makefile"># Makefile内容
-SRCS := programA.c programB.c programC.c
-OBJS := $(SRCS:%.c=%.o)
-
-all:
-    @echo &quot;SRCS: &quot; $(SRCS)
-    @echo &quot;OBJS: &quot; $(OBJS)
-
-# bash中运行make
-$ make
-SRCS:  programA.c programB.c programC.c
-OBJS:  programA.o programB.o programC.o
-</code></pre>
-<h4 id="2-2-3-变量追加值"><a href="#2-2-3-变量追加值" class="headerlink" title="2.2.3 变量追加值 +="></a><strong>2.2.3 变量追加值 +=</strong></h4><pre><code class="makefile"># Makefile内容
-SRCS := programA.c programB.c programC.c
-SRCS += programD.c
-
-all:
-    @echo &quot;SRCS: &quot; $(SRCS)
-
-# bash中运行make
-$ make
-SRCS:  programA.c programB.c programC.c programD.c
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile内容</span></span><br><span class="line">OBJS2 := <span class="variable">$(OBJS1)</span> programC.o</span><br><span class="line">OBJS1 := programA.o programB.o</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(OBJS2)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中执行 make, 可以看出 OBJS2 中的 $(OBJS1) 为空</span></span><br><span class="line">$ make</span><br><span class="line">programC.o</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-2-变量替换"><a href="#2-2-2-变量替换" class="headerlink" title="2.2.2 变量替换"></a><strong>2.2.2 变量替换</strong></h4><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile内容</span></span><br><span class="line">SRCS := programA.c programB.c programC.c</span><br><span class="line">OBJS := $(SRCS:%.c=%.o)</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="string">"SRCS: "</span> <span class="variable">$(SRCS)</span></span><br><span class="line">    @echo <span class="string">"OBJS: "</span> <span class="variable">$(OBJS)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中运行make</span></span><br><span class="line">$ make</span><br><span class="line"><span class="section">SRCS:  programA.c programB.c programC.c</span></span><br><span class="line"><span class="section">OBJS:  programA.o programB.o programC.o</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-2-3-变量追加值"><a href="#2-2-3-变量追加值" class="headerlink" title="2.2.3 变量追加值 +="></a><strong>2.2.3 变量追加值 +=</strong></h4><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile内容</span></span><br><span class="line">SRCS := programA.c programB.c programC.c</span><br><span class="line">SRCS += programD.c</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="string">"SRCS: "</span> <span class="variable">$(SRCS)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中运行make</span></span><br><span class="line">$ make</span><br><span class="line"><span class="section">SRCS:  programA.c programB.c programC.c programD.c</span></span><br></pre></td></tr></table></figure>
 <h4 id="2-2-4-变量覆盖-override"><a href="#2-2-4-变量覆盖-override" class="headerlink" title="2.2.4 变量覆盖 override"></a><strong>2.2.4 变量覆盖 override</strong></h4><p>作用是使 Makefile中定义的变量能够覆盖 make 命令参数中指定的变量</p>
 <p>语法:</p>
 <ul>
@@ -444,28 +377,7 @@ SRCS:  programA.c programB.c programC.c programD.c
 <li>override <variable> += <value></value></variable></li>
 </ul>
 <p>下面通过一个例子体会 override 的作用：</p>
-<pre><code class="makefile"># Makefile内容 (没有用override)
-SRCS := programA.c programB.c programC.c
-
-all:
-    @echo &quot;SRCS: &quot; $(SRCS)
-
-# bash中运行make
-$ make SRCS=nothing
-SRCS:  nothing
-
-#################################################
-
-# Makefile内容 (用override)
-override SRCS := programA.c programB.c programC.c
-
-all:
-    @echo &quot;SRCS: &quot; $(SRCS)
-
-# bash中运行make
-$ make SRCS=nothing
-SRCS:  programA.c programB.c programC.c
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile内容 (没有用override)</span></span><br><span class="line">SRCS := programA.c programB.c programC.c</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="string">"SRCS: "</span> <span class="variable">$(SRCS)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中运行make</span></span><br><span class="line">$ make SRCS=nothing</span><br><span class="line"><span class="section">SRCS:  nothing</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#################################################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Makefile内容 (用override)</span></span><br><span class="line"><span class="keyword">override</span> SRCS := programA.c programB.c programC.c</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="string">"SRCS: "</span> <span class="variable">$(SRCS)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中运行make</span></span><br><span class="line">$ make SRCS=nothing</span><br><span class="line"><span class="section">SRCS:  programA.c programB.c programC.c</span></span><br></pre></td></tr></table></figure>
 <h4 id="2-2-5-目标变量"><a href="#2-2-5-目标变量" class="headerlink" title="2.2.5 目标变量"></a><strong>2.2.5 目标变量</strong></h4><p>作用是使变量的作用域仅限于这个目标(target), 而不像之前例子中定义的变量, 对整个Makefile都有效.</p>
 <p>语法:</p>
 <ul>
@@ -473,27 +385,7 @@ SRCS:  programA.c programB.c programC.c
 <li><target ...=""> :: override <variable-assignment> (override作用参见 变量覆盖的介绍)</variable-assignment></target></li>
 </ul>
 <p>示例:</p>
-<pre><code class="makefile"># Makefile 内容
-SRCS := programA.c programB.c programC.c
-
-target1: TARGET1-SRCS := programD.c
-target1:
-    @echo &quot;SRCS: &quot; $(SRCS)
-    @echo &quot;SRCS: &quot; $(TARGET1-SRCS)
-
-target2:
-    @echo &quot;SRCS: &quot; $(SRCS)
-    @echo &quot;SRCS: &quot; $(TARGET1-SRCS)
-
-# bash中执行make
-$ make target1
-SRCS:  programA.c programB.c programC.c
-SRCS:  programD.c
-
-$ make target2     &lt;-- target2中显示不了 $(TARGET1-SRCS)
-SRCS:  programA.c programB.c programC.c
-SRCS:
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line">SRCS := programA.c programB.c programC.c</span><br><span class="line"></span><br><span class="line"><span class="section">target1: TARGET1-SRCS := programD.c</span></span><br><span class="line"><span class="section">target1:</span></span><br><span class="line">    @echo <span class="string">"SRCS: "</span> <span class="variable">$(SRCS)</span></span><br><span class="line">    @echo <span class="string">"SRCS: "</span> $(TARGET1-SRCS)</span><br><span class="line"></span><br><span class="line"><span class="section">target2:</span></span><br><span class="line">    @echo <span class="string">"SRCS: "</span> <span class="variable">$(SRCS)</span></span><br><span class="line">    @echo <span class="string">"SRCS: "</span> $(TARGET1-SRCS)</span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中执行make</span></span><br><span class="line">$ make target1</span><br><span class="line"><span class="section">SRCS:  programA.c programB.c programC.c</span></span><br><span class="line"><span class="section">SRCS:  programD.c</span></span><br><span class="line"></span><br><span class="line">$ make target2     &lt;-- target2中显示不了 $(TARGET1-SRCS)</span><br><span class="line"><span class="section">SRCS:  programA.c programB.c programC.c</span></span><br><span class="line"><span class="section">SRCS:</span></span><br></pre></td></tr></table></figure>
 <h3 id="2-3-Makefile-命令前缀"><a href="#2-3-Makefile-命令前缀" class="headerlink" title="2.3 Makefile 命令前缀"></a><strong>2.3 Makefile 命令前缀</strong></h3><p>Makefile 中书写shell命令时可以加2种前缀 @ 和 -, 或者不用前缀.</p>
 <p>3种格式的shell命令区别如下:</p>
 <ul>
@@ -502,98 +394,17 @@ SRCS:
 <li>前缀 -   :: 命令执行有错的话, 忽略错误, 继续执行</li>
 </ul>
 <p>示例:</p>
-<pre><code class="makefile"># Makefile 内容 (不用前缀)
-all:
-    echo &quot;没有前缀&quot;
-    cat this_file_not_exist
-    echo &quot;错误之后的命令&quot;       &lt;-- 这条命令不会被执行
-
-# bash中执行 make
-$ make
-echo &quot;没有前缀&quot;             &lt;-- 命令本身显示出来
-没有前缀                    &lt;-- 命令执行结果显示出来
-cat this_file_not_exist
-cat: this_file_not_exist: No such file or directory
-make: *** [all] Error 1
-
-###########################################################
-
-# Makefile 内容 (前缀 @)
-all:
-    @echo &quot;没有前缀&quot;
-    @cat this_file_not_exist
-    @echo &quot;错误之后的命令&quot;       &lt;-- 这条命令不会被执行
-
-# bash中执行 make
-$ make
-没有前缀                         &lt;-- 只有命令执行的结果, 不显示命令本身
-cat: this_file_not_exist: No such file or directory
-make: *** [all] Error 1
-
-###########################################################
-
-# Makefile 内容 (前缀 -)
-all:
-    -echo &quot;没有前缀&quot;
-    -cat this_file_not_exist
-    -echo &quot;错误之后的命令&quot;       &lt;-- 这条命令会被执行
-
-# bash中执行 make
-$ make
-echo &quot;没有前缀&quot;             &lt;-- 命令本身显示出来
-没有前缀                    &lt;-- 命令执行结果显示出来
-cat this_file_not_exist
-cat: this_file_not_exist: No such file or directory
-make: [all] Error 1 (ignored)
-echo &quot;错误之后的命令&quot;       &lt;-- 出错之后的命令也会显示
-错误之后的命令              &lt;-- 出错之后的命令也会执行
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容 (不用前缀)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    echo <span class="string">"没有前缀"</span></span><br><span class="line">    cat this_file_not_exist</span><br><span class="line">    echo <span class="string">"错误之后的命令"</span>       &lt;-- 这条命令不会被执行</span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">echo <span class="string">"没有前缀"</span>             &lt;-- 命令本身显示出来</span><br><span class="line">没有前缀                    &lt;-- 命令执行结果显示出来</span><br><span class="line">cat this_file_not_exist</span><br><span class="line"><span class="section">cat: this_file_not_exist: No such file or directory</span></span><br><span class="line"><span class="section">make: *** [all] Error 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">###########################################################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Makefile 内容 (前缀 @)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="string">"没有前缀"</span></span><br><span class="line">    @cat this_file_not_exist</span><br><span class="line">    @echo <span class="string">"错误之后的命令"</span>       &lt;-- 这条命令不会被执行</span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">没有前缀                         &lt;-- 只有命令执行的结果, 不显示命令本身</span><br><span class="line"><span class="section">cat: this_file_not_exist: No such file or directory</span></span><br><span class="line"><span class="section">make: *** [all] Error 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">###########################################################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Makefile 内容 (前缀 -)</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    -echo <span class="string">"没有前缀"</span></span><br><span class="line">    -cat this_file_not_exist</span><br><span class="line">    -echo <span class="string">"错误之后的命令"</span>       &lt;-- 这条命令会被执行</span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">echo <span class="string">"没有前缀"</span>             &lt;-- 命令本身显示出来</span><br><span class="line">没有前缀                    &lt;-- 命令执行结果显示出来</span><br><span class="line">cat this_file_not_exist</span><br><span class="line"><span class="section">cat: this_file_not_exist: No such file or directory</span></span><br><span class="line"><span class="section">make: [all] Error 1 (ignored)</span></span><br><span class="line">echo <span class="string">"错误之后的命令"</span>       &lt;-- 出错之后的命令也会显示</span><br><span class="line">错误之后的命令              &lt;-- 出错之后的命令也会执行</span><br></pre></td></tr></table></figure>
 <h3 id="2-4-伪目标"><a href="#2-4-伪目标" class="headerlink" title="2.4 伪目标"></a><strong>2.4 伪目标</strong></h3><p>伪目标并不是一个”目标(target)”, 不像真正的目标那样会生成一个目标文件.</p>
 <p>典型的伪目标是 Makefile 中用来清理编译过程中中间文件的 clean 伪目标, 一般格式如下:</p>
-<pre><code class="makefile">.PHONY: clean   &lt;-- 这句没有也行, 但是最好加上
-clean:
-    -rm -f *.o
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: clean   &lt;-- 这句没有也行, 但是最好加上</span></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    -rm -f *.o</span><br></pre></td></tr></table></figure>
 <h3 id="2-5-引用其他的-Makefile"><a href="#2-5-引用其他的-Makefile" class="headerlink" title="2.5 引用其他的 Makefile"></a><strong>2.5 引用其他的 Makefile</strong></h3><p>语法: include <filename>  (filename 可以包含通配符和路径)</filename></p>
 <p>示例:</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo &quot;主 Makefile begin&quot;
-    @make other-all
-    @echo &quot;主 Makefile end&quot;
-
-include ./other/Makefile
-
-# ./other/Makefile 内容
-other-all:
-    @echo &quot;other makefile begin&quot;
-    @echo &quot;other makefile end&quot;
-
-# bash中执行 make
-$ ll
-total 20K
--rw-r--r-- 1 wangyubin wangyubin  125 Sep 23 16:13 Makefile
--rw-r--r-- 1 wangyubin wangyubin  11K Sep 23 16:15 makefile.org   &lt;-- 这个文件不用管
-drwxr-xr-x 2 wangyubin wangyubin 4.0K Sep 23 16:11 other
-$ ll other/
-total 4.0K
--rw-r--r-- 1 wangyubin wangyubin 71 Sep 23 16:11 Makefile
-
-$ make
-主 Makefile begin
-make[1]: Entering directory `/path/to/test/makefile&#39;
-other makefile begin
-other makefile end
-make[1]: Leaving directory `/path/to/test/makefile&#39;
-主 Makefile end
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="string">"主 Makefile begin"</span></span><br><span class="line">    @make other-all</span><br><span class="line">    @echo <span class="string">"主 Makefile end"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> ./other/Makefile</span><br><span class="line"></span><br><span class="line"><span class="comment"># ./other/Makefile 内容</span></span><br><span class="line"><span class="section">other-all:</span></span><br><span class="line">    @echo <span class="string">"other makefile begin"</span></span><br><span class="line">    @echo <span class="string">"other makefile end"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中执行 make</span></span><br><span class="line">$ ll</span><br><span class="line">total 20K</span><br><span class="line">-rw-r--r-- 1 wangyubin wangyubin  125 Sep 23 16:13 Makefile</span><br><span class="line">-rw-r--r-- 1 wangyubin wangyubin  11K Sep 23 16:15 makefile.org   &lt;-- 这个文件不用管</span><br><span class="line">drwxr-xr-x 2 wangyubin wangyubin 4.0K Sep 23 16:11 other</span><br><span class="line">$ ll other/</span><br><span class="line">total 4.0K</span><br><span class="line">-rw-r--r-- 1 wangyubin wangyubin 71 Sep 23 16:11 Makefile</span><br><span class="line"></span><br><span class="line">$ make</span><br><span class="line">主 Makefile begin</span><br><span class="line"><span class="section">make[1]: Entering directory `/path/to/test/makefile'</span></span><br><span class="line">other makefile begin</span><br><span class="line">other makefile end</span><br><span class="line"><span class="section">make[1]: Leaving directory `/path/to/test/makefile'</span></span><br><span class="line">主 Makefile end</span><br></pre></td></tr></table></figure>
 <h3 id="2-6-查看C文件的依赖关系"><a href="#2-6-查看C文件的依赖关系" class="headerlink" title="2.6 查看C文件的依赖关系"></a><strong>2.6 查看C文件的依赖关系</strong></h3><p>写 Makefile 的时候, 需要确定每个目标的依赖关系.</p>
 <p>GNU提供一个机制可以查看C代码文件依赖那些文件, 这样我们在写 Makefile 目标的时候就不用打开C源码来看其依赖那些文件了.</p>
 <p>比如, 下面命令显示内核源码中 virt/kvm/kvm_main.c 中的依赖关系</p>
-<pre><code class="bash">$ cd virt/kvm/
-$ gcc -MM kvm_main.c 
-kvm_main.o: kvm_main.c iodev.h coalesced_mmio.h async_pf.h   &lt;-- 这句就可以加到 Makefile 中作为编译 kvm_main.o 的依赖关系
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> virt/kvm/</span><br><span class="line">$ gcc -MM kvm_main.c </span><br><span class="line">kvm_main.o: kvm_main.c iodev.h coalesced_mmio.h async_pf.h   &lt;-- 这句就可以加到 Makefile 中作为编译 kvm_main.o 的依赖关系</span><br></pre></td></tr></table></figure>
 <h3 id="2-7-make-退出码"><a href="#2-7-make-退出码" class="headerlink" title="2.7 make 退出码"></a><strong>2.7 make 退出码</strong></h3><p>Makefile的退出码有以下3种：</p>
 <ul>
 <li>0 :: 表示成功执行</li>
@@ -604,30 +415,7 @@ kvm_main.o: kvm_main.c iodev.h coalesced_mmio.h async_pf.h   &lt;-- 这句就可
 <p>找到对应文件之后, 就开始执行此文件中的第一个目标(target). 如果找不到这3个文件就报错.</p>
 <p>非默认情况下, 可以在 make 命令中指定特定的 Makefile 和特定的 目标.</p>
 <p>示例：</p>
-<pre><code class="makefile"># Makefile文件名改为 MyMake, 内容
-target1:
-    @echo &quot;target [1]  begin&quot;
-    @echo &quot;target [1]  end&quot;
-
-target2:
-    @echo &quot;target [2]  begin&quot;
-    @echo &quot;target [2]  end&quot;
-
-# bash 中执行 make
-$ ls
-Makefile
-$ mv Makefile MyMake
-$ ls
-MyMake
-$ make                     &lt;-- 找不到默认的 Makefile
-make: *** No targets specified and no makefile found.  Stop.
-$ make -f MyMake           &lt;-- 指定特定的Makefile
-target [1]  begin
-target [1]  end
-$ make -f MyMake target2   &lt;-- 指定特定的目标(target)
-target [2]  begin
-target [2]  end
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile文件名改为 MyMake, 内容</span></span><br><span class="line"><span class="section">target1:</span></span><br><span class="line">    @echo <span class="string">"target [1]  begin"</span></span><br><span class="line">    @echo <span class="string">"target [1]  end"</span></span><br><span class="line"></span><br><span class="line"><span class="section">target2:</span></span><br><span class="line">    @echo <span class="string">"target [2]  begin"</span></span><br><span class="line">    @echo <span class="string">"target [2]  end"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ ls</span><br><span class="line">Makefile</span><br><span class="line">$ mv Makefile MyMake</span><br><span class="line">$ ls</span><br><span class="line">MyMake</span><br><span class="line">$ make                     &lt;-- 找不到默认的 Makefile</span><br><span class="line"><span class="section">make: *** No targets specified and no makefile found.  Stop.</span></span><br><span class="line">$ make -f MyMake           &lt;-- 指定特定的Makefile</span><br><span class="line">target [1]  begin</span><br><span class="line">target [1]  end</span><br><span class="line">$ make -f MyMake target2   &lt;-- 指定特定的目标(target)</span><br><span class="line">target [2]  begin</span><br><span class="line">target [2]  end</span><br></pre></td></tr></table></figure>
 <h3 id="2-9-make-参数介绍"><a href="#2-9-make-参数介绍" class="headerlink" title="2.9 make 参数介绍"></a><strong>2.9 make 参数介绍</strong></h3><p>make 的参数有很多, 可以通过 make -h 去查看, 下面只介绍几个我认为比较有用的.</p>
 <table>
 <thead>
@@ -661,17 +449,7 @@ target [2]  end
 </table>
 <h3 id="2-10-Makefile-隐含规则"><a href="#2-10-Makefile-隐含规则" class="headerlink" title="2.10 Makefile 隐含规则"></a><strong>2.10 Makefile 隐含规则</strong></h3><p>这里只列一个和编译C相关的.</p>
 <p>编译C时，<n>.o 的目标会自动推导为 <n>.c</n></n></p>
-<pre><code class="makefile"># Makefile 中
-main : main.o
-    gcc -o main main.o
-
-#会自动变为:
-main : main.o
-    gcc -o main main.o
-
-main.o: main.c    &lt;-- main.o 这个目标是隐含生成的
-    gcc -c main.c
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 中</span></span><br><span class="line">main : main.o</span><br><span class="line">    gcc -o main main.o</span><br><span class="line"></span><br><span class="line"><span class="comment">#会自动变为:</span></span><br><span class="line">main : main.o</span><br><span class="line">    gcc -o main main.o</span><br><span class="line"></span><br><span class="line"><span class="section">main.o: main.c    &lt;-- main.o 这个目标是隐含生成的</span></span><br><span class="line">    gcc -c main.c</span><br></pre></td></tr></table></figure>
 <h3 id="2-11-隐含规则中的-命令变量-和-命令参数变量"><a href="#2-11-隐含规则中的-命令变量-和-命令参数变量" class="headerlink" title="2.11 隐含规则中的 命令变量 和 命令参数变量"></a><strong>2.11 隐含规则中的 命令变量 和 命令参数变量</strong></h3><h4 id="2-11-1-命令变量-书写Makefile可以直接写-shell时用这些变量"><a href="#2-11-1-命令变量-书写Makefile可以直接写-shell时用这些变量" class="headerlink" title="2.11.1 命令变量, 书写Makefile可以直接写 shell时用这些变量."></a><strong>2.11.1 命令变量, 书写Makefile可以直接写 shell时用这些变量.</strong></h4><p>下面只列出一些C相关的</p>
 <table>
 <thead>
@@ -700,20 +478,7 @@ main.o: main.c    &lt;-- main.o 这个目标是隐含生成的
 </tbody>
 </table>
 <p>示例:</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(RM)
-    @echo $(AR)
-    @echo $(CC)
-    @echo $(CXX)
-
-# bash 中执行make, 显示各个变量的值
-$ make
-rm -f
-ar
-cc
-g++
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(RM)</span></span><br><span class="line">    @echo <span class="variable">$(AR)</span></span><br><span class="line">    @echo <span class="variable">$(CC)</span></span><br><span class="line">    @echo <span class="variable">$(CXX)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行make, 显示各个变量的值</span></span><br><span class="line">$ make</span><br><span class="line">rm -f</span><br><span class="line">ar</span><br><span class="line">cc</span><br><span class="line">g++</span><br></pre></td></tr></table></figure>
 <h4 id="2-11-2-命令参数变量"><a href="#2-11-2-命令参数变量" class="headerlink" title="2.11.2 命令参数变量"></a><strong>2.11.2 命令参数变量</strong></h4><table>
 <thead>
 <tr>
@@ -737,36 +502,7 @@ g++
 </tbody>
 </table>
 <p>示例: 下面以 CFLAGS 为例演示</p>
-<pre><code class="makefile"># test.c 内容
-#include &lt;stdio.h&gt;
-
-int main(int argc, char *argv[])
-{
-    printf (&quot;Hello Makefile\n&quot;);
-    return 0;
-}
-
-# Makefile 内容
-test: test.o
-    $(CC) -o test test.o
-
-# bash 中用 make 来测试
-$ ll
-total 24K
--rw-r--r-- 1 wangyubin wangyubin  69 Sep 23 17:31 Makefile
--rw-r--r-- 1 wangyubin wangyubin 14K Sep 23 19:51 makefile.org   &lt;-- 请忽略这个文件
--rw-r--r-- 1 wangyubin wangyubin 392 Sep 23 17:31 test.c
-
-$ make
-cc    -c -o test.o test.c
-cc -o test test.o               &lt;-- 这个是自动推导的
-
-$ rm -f test test.o
-
-$ make CFLAGS=-Wall             &lt;-- 命令中加的编译器参数自动追加入下面的编译中了
-cc -Wall   -c -o test.o test.c
-cc -o test test.o
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># test.c 内容</span></span><br><span class="line"><span class="comment">#include &lt;stdio.h&gt;</span></span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    printf (<span class="string">"Hello Makefile\n"</span>);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">test: test.o</span></span><br><span class="line">    <span class="variable">$(CC)</span> -o test test.o</span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中用 make 来测试</span></span><br><span class="line">$ ll</span><br><span class="line">total 24K</span><br><span class="line">-rw-r--r-- 1 wangyubin wangyubin  69 Sep 23 17:31 Makefile</span><br><span class="line">-rw-r--r-- 1 wangyubin wangyubin 14K Sep 23 19:51 makefile.org   &lt;-- 请忽略这个文件</span><br><span class="line">-rw-r--r-- 1 wangyubin wangyubin 392 Sep 23 17:31 test.c</span><br><span class="line"></span><br><span class="line">$ make</span><br><span class="line">cc    -c -o test.o test.c</span><br><span class="line">cc -o test test.o               &lt;-- 这个是自动推导的</span><br><span class="line"></span><br><span class="line">$ rm -f test test.o</span><br><span class="line"></span><br><span class="line">$ make CFLAGS=-Wall             &lt;-- 命令中加的编译器参数自动追加入下面的编译中了</span><br><span class="line">cc -Wall   -c -o test.o test.c</span><br><span class="line">cc -o test test.o</span><br></pre></td></tr></table></figure>
 <h3 id="2-12-自动变量"><a href="#2-12-自动变量" class="headerlink" title="2.12 自动变量"></a><strong>2.12 自动变量</strong></h3><p>Makefile 中很多时候通过自动变量来简化书写, 各个自动变量的含义如下:</p>
 <table>
 <thead>
@@ -808,64 +544,9 @@ cc -o test test.o
 </table>
 <h2 id="3-Makefile-高级语法"><a href="#3-Makefile-高级语法" class="headerlink" title="3. Makefile 高级语法"></a><strong>3. Makefile 高级语法</strong></h2><h3 id="3-1-嵌套Makefile"><a href="#3-1-嵌套Makefile" class="headerlink" title="3.1 嵌套Makefile"></a><strong>3.1 嵌套Makefile</strong></h3><p>在 Makefile 初级语法中已经提到过引用其它 Makefile的方法. 这里有另一种写法, 并且可以向引用的其它 Makefile 传递参数.</p>
 <p>示例: (不传递参数, 只是调用子文件夹 other 中的Makefile)</p>
-<pre><code># Makefile 内容
-all:
-    @echo &quot;主 Makefile begin&quot;
-    @cd ./other &amp;&amp; make
-    @echo &quot;主 Makefile end&quot;
-
-
-# ./other/Makefile 内容
-other-all:
-    @echo &quot;other makefile begin&quot;
-    @echo &quot;other makefile end&quot;
-
-# bash中执行 make
-$ ll
-total 28K
--rw-r--r-- 1 wangyubin wangyubin  104 Sep 23 20:43 Makefile
--rw-r--r-- 1 wangyubin wangyubin  17K Sep 23 20:44 makefile.org   &lt;-- 这个文件不用管
-drwxr-xr-x 2 wangyubin wangyubin 4.0K Sep 23 20:42 other
-$ ll other/
-total 4.0K
--rw-r--r-- 1 wangyubin wangyubin 71 Sep 23 16:11 Makefile
-
-$ make
-主 Makefile begin
-make[1]: Entering directory `/path/to/test/makefile/other&#39;
-other makefile begin
-other makefile end
-make[1]: Leaving directory `/path/to/test/makefile/other&#39;
-主 Makefile end
-</code></pre><p>示例: (用export传递参数)</p>
-<pre><code class="makefile"># Makefile 内容
-export VALUE1 := export.c    &lt;-- 用了 export, 此变量能够传递到 ./other/Makefile 中
-VALUE2 := no-export.c        &lt;-- 此变量不能传递到 ./other/Makefile 中
-
-all:
-    @echo &quot;主 Makefile begin&quot;
-    @cd ./other &amp;&amp; make
-    @echo &quot;主 Makefile end&quot;
-
-
-# ./other/Makefile 内容
-other-all:
-    @echo &quot;other makefile begin&quot;
-    @echo &quot;VALUE1: &quot; $(VALUE1)
-    @echo &quot;VALUE2: &quot; $(VALUE2)
-    @echo &quot;other makefile end&quot;
-
-# bash中执行 make
-$ make
-主 Makefile begin
-make[1]: Entering directory `/path/to/test/makefile/other&#39;
-other makefile begin
-VALUE1:  export.c        &lt;-- VALUE1 传递成功
-VALUE2:                  &lt;-- VALUE2 传递失败
-other makefile end
-make[1]: Leaving directory `/path/to/test/makefile/other&#39;
-主 Makefile end
-</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"># Makefile 内容</span><br><span class="line">all:</span><br><span class="line">    @echo &quot;主 Makefile begin&quot;</span><br><span class="line">    @cd ./other &amp;&amp; make</span><br><span class="line">    @echo &quot;主 Makefile end&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># ./other/Makefile 内容</span><br><span class="line">other-all:</span><br><span class="line">    @echo &quot;other makefile begin&quot;</span><br><span class="line">    @echo &quot;other makefile end&quot;</span><br><span class="line"></span><br><span class="line"># bash中执行 make</span><br><span class="line">$ ll</span><br><span class="line">total 28K</span><br><span class="line">-rw-r--r-- 1 wangyubin wangyubin  104 Sep 23 20:43 Makefile</span><br><span class="line">-rw-r--r-- 1 wangyubin wangyubin  17K Sep 23 20:44 makefile.org   &lt;-- 这个文件不用管</span><br><span class="line">drwxr-xr-x 2 wangyubin wangyubin 4.0K Sep 23 20:42 other</span><br><span class="line">$ ll other/</span><br><span class="line">total 4.0K</span><br><span class="line">-rw-r--r-- 1 wangyubin wangyubin 71 Sep 23 16:11 Makefile</span><br><span class="line"></span><br><span class="line">$ make</span><br><span class="line">主 Makefile begin</span><br><span class="line">make[1]: Entering directory `/path/to/test/makefile/other&apos;</span><br><span class="line">other makefile begin</span><br><span class="line">other makefile end</span><br><span class="line">make[1]: Leaving directory `/path/to/test/makefile/other&apos;</span><br><span class="line">主 Makefile end</span><br></pre></td></tr></table></figure>
+<p>示例: (用export传递参数)</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="keyword">export</span> VALUE1 := <span class="keyword">export</span>.c    &lt;-- 用了 <span class="keyword">export</span>, 此变量能够传递到 ./other/Makefile 中</span><br><span class="line">VALUE2 := no-export.c        &lt;-- 此变量不能传递到 ./other/Makefile 中</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="string">"主 Makefile begin"</span></span><br><span class="line">    @cd ./other &amp;&amp; make</span><br><span class="line">    @echo <span class="string">"主 Makefile end"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># ./other/Makefile 内容</span></span><br><span class="line"><span class="section">other-all:</span></span><br><span class="line">    @echo <span class="string">"other makefile begin"</span></span><br><span class="line">    @echo <span class="string">"VALUE1: "</span> <span class="variable">$(VALUE1)</span></span><br><span class="line">    @echo <span class="string">"VALUE2: "</span> <span class="variable">$(VALUE2)</span></span><br><span class="line">    @echo <span class="string">"other makefile end"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">主 Makefile begin</span><br><span class="line"><span class="section">make[1]: Entering directory `/path/to/test/makefile/other'</span></span><br><span class="line">other makefile begin</span><br><span class="line"><span class="section">VALUE1:  export.c        &lt;-- VALUE1 传递成功</span></span><br><span class="line"><span class="section">VALUE2:                  &lt;-- VALUE2 传递失败</span></span><br><span class="line">other makefile end</span><br><span class="line"><span class="section">make[1]: Leaving directory `/path/to/test/makefile/other'</span></span><br><span class="line">主 Makefile end</span><br></pre></td></tr></table></figure>
 <p><strong>补充</strong> export 语法格式如下:</p>
 <ul>
 <li>export variable = value</li>
@@ -874,75 +555,19 @@ make[1]: Leaving directory `/path/to/test/makefile/other&#39;
 </ul>
 <h3 id="3-2-定义命令包"><a href="#3-2-定义命令包" class="headerlink" title="3.2 定义命令包"></a><strong>3.2 定义命令包</strong></h3><p>命令包有点像是个函数, 将连续的相同的命令合成一条, 减少 Makefile 中的代码量, 便于以后维护.</p>
 <p><strong>语法:</strong></p>
-<pre><code class="makefile">define &lt;command-name&gt;
-command
-...
-endef
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">define</span> &lt;command-name&gt;</span><br><span class="line">command</span><br><span class="line">...</span><br><span class="line"><span class="keyword">endef</span></span><br></pre></td></tr></table></figure>
 <p><strong>示例:</strong></p>
-<pre><code class="makefile"># Makefile 内容
-define run-hello-makefile
-@echo -n &quot;Hello&quot;
-@echo &quot; Makefile!&quot;
-@echo &quot;这里可以执行多条 Shell 命令!&quot;
-endef
-
-all:
-    $(run-hello-makefile)
-
-
-# bash 中运行make
-$ make
-Hello Makefile!
-这里可以执行多条 Shell 命令!
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="keyword">define</span> run-hello-makefile</span><br><span class="line">@echo -n <span class="string">"Hello"</span></span><br><span class="line">@echo <span class="string">" Makefile!"</span></span><br><span class="line">@echo <span class="string">"这里可以执行多条 Shell 命令!"</span></span><br><span class="line"><span class="keyword">endef</span></span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    $(run-hello-makefile)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中运行make</span></span><br><span class="line">$ make</span><br><span class="line">Hello Makefile!</span><br><span class="line">这里可以执行多条 Shell 命令!</span><br></pre></td></tr></table></figure>
 <h3 id="3-3-条件判断"><a href="#3-3-条件判断" class="headerlink" title="3.3 条件判断"></a><strong>3.3 条件判断</strong></h3><p>条件判断的关键字主要有 <strong>ifeq ifneq ifdef ifndef</strong></p>
 <p><strong>语法:</strong></p>
-<pre><code class="makefile">&lt;conditional-directive&gt;
-&lt;text-if-true&gt;
-endif
-
-# 或者
-&lt;conditional-directive&gt;
-&lt;text-if-true&gt;
-else
-&lt;text-if-false&gt;
-endif
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;conditional-directive&gt;</span><br><span class="line">&lt;text-if-true&gt;</span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">&lt;conditional-directive&gt;</span><br><span class="line">&lt;text-if-true&gt;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&lt;text-if-false&gt;</span><br><span class="line"><span class="keyword">endif</span></span><br></pre></td></tr></table></figure>
 <p><strong>示例:</strong> ifeq的例子, ifneq和ifeq的使用方法类似, 就是取反</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-ifeq (&quot;aa&quot;, &quot;bb&quot;)
-    @echo &quot;equal&quot;
-else
-    @echo &quot;not equal&quot;
-endif
-
-# bash 中执行 make
-$ make
-not equal
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line"><span class="keyword">ifeq</span> (<span class="string">"aa"</span>, <span class="string">"bb"</span>)</span><br><span class="line">    @echo <span class="string">"equal"</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    @echo <span class="string">"not equal"</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">not equal</span><br></pre></td></tr></table></figure>
 <p><strong>示例:</strong> ifdef的例子, ifndef和ifdef的使用方法类似, 就是取反</p>
-<pre><code class="makefile"># Makefile 内容
-SRCS := program.c
-
-all:
-ifdef SRCS
-    @echo $(SRCS)
-else
-    @echo &quot;no SRCS&quot;
-endif
-
-# bash 中执行 make
-$ make
-program.c
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line">SRCS := program.c</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line"><span class="keyword">ifdef</span> SRCS</span><br><span class="line">    @echo <span class="variable">$(SRCS)</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    @echo <span class="string">"no SRCS"</span></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">program.c</span><br></pre></td></tr></table></figure>
 <h3 id="3-4-Makefile-中的函数"><a href="#3-4-Makefile-中的函数" class="headerlink" title="3.4 Makefile 中的函数"></a><strong>3.4 Makefile 中的函数</strong></h3><p>Makefile 中自带了一些函数, 利用这些函数可以简化 Makefile 的编写.</p>
 <p>函数调用语法如下:</p>
-<pre><code class="makefile">$(&lt;function&gt; &lt;arguments&gt;)
-# 或者
-${&lt;function&gt; &lt;arguments&gt;}
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(&lt;function&gt; &lt;arguments&gt;)</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">$&#123;&lt;function&gt; &lt;arguments&gt;&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li><function> 是函数名</function></li>
 <li><arguments> 是函数参数</arguments></li>
@@ -950,281 +575,89 @@ ${&lt;function&gt; &lt;arguments&gt;}
 <h4 id="3-4-1-字符串函数"><a href="#3-4-1-字符串函数" class="headerlink" title="3.4.1 字符串函数"></a><strong>3.4.1 字符串函数</strong></h4><p><strong>字符串替换函数: $(subst <from>,<to>,<text>)</text></to></from></strong></p>
 <p>功能: 把字符串<text> 中的 <from> 替换为 <to></to></from></text></p>
 <p>返回: 替换过的字符串</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(subst t,e,maktfilt)  &lt;-- 将t替换为e
-
-# bash 中执行 make
-$ make
-makefile
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">subst</span> t,e,maktfilt)</span>  &lt;-- 将t替换为e</span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">makefile</span><br></pre></td></tr></table></figure>
 <p><strong>模式字符串替换函数: $(patsubst <pattern>,<replacement>,<text>)</text></replacement></pattern></strong></p>
 <p>功能: 查找<text>中的单词(单词以”空格”, “tab”, “换行”来分割) 是否符合 <pattern>, 符合的话, 用 <replacement> 替代.</replacement></pattern></text></p>
 <p>返回: 替换过的字符串</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(patsubst %.c,%.o,programA.c programB.c)
-
-# bash 中执行 make
-$ make
-programA.o programB.o
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">patsubst</span> %.c,%.o,programA.c programB.c)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">programA.o programB.o</span><br></pre></td></tr></table></figure>
 <p><strong>去空格函数: $(strip <string>)</string></strong></p>
 <p>功能: 去掉 <string> 字符串中开头和结尾的空字符</string></p>
 <p>返回: 被去掉空格的字符串值</p>
-<pre><code class="makefile"># Makefile 内容
-VAL := &quot;       aa  bb  cc &quot;
-
-all:
-    @echo &quot;去除空格前: &quot; $(VAL)
-    @echo &quot;去除空格后: &quot; $(strip $(VAL))
-
-# bash 中执行 make
-$ make
-去除空格前:         aa  bb  cc 
-去除空格后:   aa bb cc
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line">VAL := <span class="string">"       aa  bb  cc "</span></span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="string">"去除空格前: "</span> <span class="variable">$(VAL)</span></span><br><span class="line">    @echo <span class="string">"去除空格后: "</span> <span class="variable">$(<span class="built_in">strip</span> <span class="variable">$(VAL)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line"><span class="section">去除空格前:         aa  bb  cc </span></span><br><span class="line"><span class="section">去除空格后:   aa bb cc</span></span><br></pre></td></tr></table></figure>
 <p><strong>查找字符串函数: $(findstring <find>,<in>)</in></find></strong></p>
 <p>功能: 在字符串 <in> 中查找 <find> 字符串</find></in></p>
 <p>返回: 如果找到, 返回 <find> 字符串,  否则返回空字符串</find></p>
-<pre><code class="makefile"># Makefile 内容
-VAL := &quot;       aa  bb  cc &quot;
-
-all:
-    @echo $(findstring aa,$(VAL))
-    @echo $(findstring ab,$(VAL))
-
-# bash 中执行 make
-$ make
-aa
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line">VAL := <span class="string">"       aa  bb  cc "</span></span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">findstring</span> aa,<span class="variable">$(VAL)</span>)</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">findstring</span> ab,<span class="variable">$(VAL)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">aa</span><br></pre></td></tr></table></figure>
 <p><strong>过滤函数: $(filter &lt;pattern…&gt;,<text>)</text></strong></p>
 <p>功能: 以 <pattern> 模式过滤字符串 <text>, <em>保留</em> 符合模式 <pattern> 的单词, 可以有多个模式</pattern></text></pattern></p>
 <p>返回: 符合模式 <pattern> 的字符串</pattern></p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(filter %.o %.a,program.c program.o program.a)
-
-
-# bash 中执行 make
-$ make
-program.o program.a
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">filter</span> %.o %.a,program.c program.o program.a)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">program.o program.a</span><br></pre></td></tr></table></figure>
 <p><strong>反过滤函数: $(filter-out &lt;pattern…&gt;,<text>)</text></strong></p>
 <p>功能: 以 <pattern> 模式过滤字符串 <text>, <em>去除</em> 符合模式 <pattern> 的单词, 可以有多个模式</pattern></text></pattern></p>
 <p>返回: 不符合模式 <pattern> 的字符串</pattern></p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(filter-out %.o %.a,program.c program.o program.a)
-
-# bash 中执行 make
-$ make
-program.c
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">filter</span>-out %.o %.a,program.c program.o program.a)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">program.c</span><br></pre></td></tr></table></figure>
 <p><strong>排序函数: $(sort <list>)</list></strong></p>
 <p>功能: 给字符串 <list> 中的单词排序 (升序)</list></p>
 <p>返回: 排序后的字符串</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(sort bac abc acb cab)
-
-# bash 中执行 make
-$ make
-abc acb bac cab
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">sort</span> bac abc acb cab)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">abc acb bac cab</span><br></pre></td></tr></table></figure>
 <p><strong>取单词函数: $(word <n>,<text>)</text></n></strong></p>
 <p>功能: 取字符串 <text> 中的 第<n>个单词 (n从1开始)</n></text></p>
 <p>返回: <text> 中的第<n>个单词, 如果<n> 比 <text> 中单词个数要大, 则返回空字符串</text></n></n></text></p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(word 1,aa bb cc dd)
-    @echo $(word 5,aa bb cc dd)
-    @echo $(word 4,aa bb cc dd)
-
-# bash 中执行 make
-$ make
-aa
-
-dd
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">word</span> 1,aa bb cc dd)</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">word</span> 5,aa bb cc dd)</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">word</span> 4,aa bb cc dd)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">aa</span><br><span class="line"></span><br><span class="line">dd</span><br></pre></td></tr></table></figure>
 <p><strong>取单词串函数: $(wordlist <s>,<e>,<text>)</text></e></s></strong></p>
 <p>功能: 从字符串<text>中取从<s>开始到<e>的单词串. <s>和<e>是一个数字.</e></s></e></s></text></p>
 <p>返回: 从<s>到<e>的字符串</e></s></p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(wordlist 1,3,aa bb cc dd)
-    @echo $(word 5,6,aa bb cc dd)
-    @echo $(word 2,5,aa bb cc dd)
-
-
-# bash 中执行 make
-$ make
-aa bb cc
-
-bb
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">wordlist</span> 1,3,aa bb cc dd)</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">word</span> 5,6,aa bb cc dd)</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">word</span> 2,5,aa bb cc dd)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">aa bb cc</span><br><span class="line"></span><br><span class="line">bb</span><br></pre></td></tr></table></figure>
 <p><strong>单词个数统计函数: $(words <text>)</text></strong></p>
 <p>功能: 统计字符串 <text> 中单词的个数</text></p>
 <p>返回: 单词个数</p>
-<pre><code class="makefile"># Makefile 内容
-
-all:
-    @echo $(words aa bb cc dd)
-    @echo $(words aabbccdd)
-    @echo $(words )
-
-# bash 中执行 make
-$ make
-4
-1
-0
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(words aa bb cc dd)</span></span><br><span class="line">    @echo <span class="variable">$(words aabbccdd)</span></span><br><span class="line">    @echo <span class="variable">$(words )</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">4</span><br><span class="line">1</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
 <p><strong>首单词函数: $(firstword <text>)</text></strong></p>
 <p>功能: 取字符串 <text> 中的第一个单词</text></p>
 <p>返回: 字符串 <text> 中的第一个单词</text></p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(firstword aa bb cc dd)
-    @echo $(firstword aabbccdd)
-    @echo $(firstword )
-
-# bash 中执行 make
-$ make
-aa
-aabbccdd
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">firstword</span> aa bb cc dd)</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">firstword</span> aabbccdd)</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">firstword</span> )</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">aa</span><br><span class="line">aabbccdd</span><br></pre></td></tr></table></figure>
 <h4 id="3-4-2-文件名函数"><a href="#3-4-2-文件名函数" class="headerlink" title="3.4.2 文件名函数"></a><strong>3.4.2 文件名函数</strong></h4><p><strong>取目录函数: $(dir &lt;names…&gt;)</strong></p>
 <p>功能: 从文件名序列 <names> 中取出目录部分</names></p>
 <p>返回: 文件名序列 <names> 中的目录部分</names></p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(dir /home/a.c ./bb.c ../c.c d.c)
-
-
-# bash 中执行 make
-$ make
-/home/ ./ ../ ./
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">dir</span> /home/a.c ./bb.c ../c.c d.c)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">/home/ ./ ../ ./</span><br></pre></td></tr></table></figure>
 <p><strong>取文件函数: $(notdir &lt;names…&gt;)</strong></p>
 <p>功能: 从文件名序列 <names> 中取出非目录部分</names></p>
 <p>返回: 文件名序列 <names> 中的非目录部分</names></p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(notdir /home/a.c ./bb.c ../c.c d.c)
-
-# bash 中执行 make
-$ make
-a.c bb.c c.c d.c
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">notdir</span> /home/a.c ./bb.c ../c.c d.c)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">a.c bb.c c.c d.c</span><br></pre></td></tr></table></figure>
 <p><strong>取后缀函数: $(suffix &lt;names…&gt;)</strong></p>
 <p>功能: 从文件名序列 <names> 中取出各个文件名的后缀</names></p>
 <p>返回: 文件名序列 <names> 中各个文件名的后缀, 没有后缀则返回空字符串</names></p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(suffix /home/a.c ./b.o ../c.a d)
-
-# bash 中执行 make
-$ make
-.c .o .a
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">suffix</span> /home/a.c ./b.o ../c.a d)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">.c .o .a</span><br></pre></td></tr></table></figure>
 <p><strong>取前缀函数: $(basename &lt;names…&gt;)</strong></p>
 <p>功能: 从文件名序列 <names> 中取出各个文件名的前缀</names></p>
 <p>返回: 文件名序列 <names> 中各个文件名的前缀, 没有前缀则返回空字符串</names></p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(basename /home/a.c ./b.o ../c.a /home/.d .e)
-
-
-# bash 中执行 make
-$ make
-/home/a ./b ../c /home/
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">basename</span> /home/a.c ./b.o ../c.a /home/.d .e)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">/home/a ./b ../c /home/</span><br></pre></td></tr></table></figure>
 <p><strong>加后缀函数: $(addsuffix <suffix>,&lt;names…&gt;)</suffix></strong></p>
 <p>功能: 把后缀 <suffix> 加到 <names> 中的每个单词后面</names></suffix></p>
 <p>返回: 加过后缀的文件名序列</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(addsuffix .c,/home/a b ./c.o ../d.c)
-
-
-# bash 中执行 make
-$ make
-/home/a.c b.c ./c.o.c ../d.c.c
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">addsuffix</span> .c,/home/a b ./c.o ../d.c)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">/home/a.c b.c ./c.o.c ../d.c.c</span><br></pre></td></tr></table></figure>
 <p><strong>加前缀函数: $(addprefix <prefix>,&lt;names…&gt;)</prefix></strong></p>
 <p>功能: 把前缀 <prefix> 加到 <names> 中的每个单词前面</names></prefix></p>
 <p>返回: 加过前缀的文件名序列</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(addprefix test_,/home/a.c b.c ./d.c)
-
-# bash 中执行 make
-$ make
-test_/home/a.c test_b.c test_./d.c
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">addprefix</span> test_,/home/a.c b.c ./d.c)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">test_/home/a.c test_b.c test_./d.c</span><br></pre></td></tr></table></figure>
 <p><strong>连接函数: $(join <list1>,<list2>)</list2></list1></strong></p>
 <p>功能: <list2> 中对应的单词加到 <list1> 后面</list1></list2></p>
 <p>返回: 连接后的字符串</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    @echo $(join a b c d,1 2 3 4)
-    @echo $(join a b c d,1 2 3 4 5)
-    @echo $(join a b c d e,1 2 3 4)
-
-# bash 中执行 make
-$ make
-a1 b2 c3 d4
-a1 b2 c3 d4 5
-a1 b2 c3 d4 e
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">join</span> a b c d,1 2 3 4)</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">join</span> a b c d,1 2 3 4 5)</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">join</span> a b c d e,1 2 3 4)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">a1 b2 c3 d4</span><br><span class="line">a1 b2 c3 d4 5</span><br><span class="line">a1 b2 c3 d4 e</span><br></pre></td></tr></table></figure>
 <h4 id="3-4-3-foreach"><a href="#3-4-3-foreach" class="headerlink" title="3.4.3 foreach"></a><strong>3.4.3 foreach</strong></h4><p><strong>语法:</strong></p>
 <p>$(foreach <var>,<list>,<text>)</text></list></var></p>
 <p><strong>示例:</strong></p>
-<pre><code class="makefile"># Makefile 内容
-targets := a b c d
-objects := $(foreach i,$(targets),$(i).o)
-
-all:
-    @echo $(targets)
-    @echo $(objects)
-
-# bash 中执行 make
-$ make
-a b c d
-a.o b.o c.o d.o
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line">targets := a b c d</span><br><span class="line">objects := <span class="variable">$(<span class="built_in">foreach</span> i,<span class="variable">$(targets)</span>,<span class="variable">$(i)</span>.o)</span></span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(targets)</span></span><br><span class="line">    @echo <span class="variable">$(objects)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">a b c d</span><br><span class="line">a.o b.o c.o d.o</span><br></pre></td></tr></table></figure>
 <h4 id="3-4-4-if"><a href="#3-4-4-if" class="headerlink" title="3.4.4 if"></a><strong>3.4.4 if</strong></h4><p>这里的if是个函数, 和前面的条件判断不一样, 前面的条件判断属于Makefile的关键字</p>
 <p><strong>语法:</strong></p>
 <p>$(if <condition>,<then-part>)</then-part></condition></p>
 <p>$(if <condition>,<then-part>,<else-part>)</else-part></then-part></condition></p>
 <p><strong>示例:</strong></p>
-<pre><code class="makefile"># Makefile 内容
-val := a
-objects := $(if $(val),$(val).o,nothing)
-no-objects := $(if $(no-val),$(val).o,nothing)
-
-all:
-    @echo $(objects)
-    @echo $(no-objects)
-
-# bash 中执行 make
-$ make
-a.o
-nothing
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line">val := a</span><br><span class="line">objects := <span class="variable">$(<span class="built_in">if</span> <span class="variable">$(val)</span>,<span class="variable">$(val)</span>.o,nothing)</span></span><br><span class="line">no-objects := <span class="variable">$(<span class="built_in">if</span> $(no-val)</span>,<span class="variable">$(val)</span>.o,nothing)</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(objects)</span></span><br><span class="line">    @echo $(no-objects)</span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">a.o</span><br><span class="line">nothing</span><br></pre></td></tr></table></figure>
 <h4 id="3-4-5-call-创建新的参数化函数"><a href="#3-4-5-call-创建新的参数化函数" class="headerlink" title="3.4.5 call - 创建新的参数化函数"></a><strong>3.4.5 call - 创建新的参数化函数</strong></h4><p><strong>语法:</strong></p>
 <p>$(call <expression>,<parm1>,<parm2>,<parm3>…)</parm3></parm2></parm1></expression></p>
 <p><strong>示例</strong></p>
-<pre><code class="makefile"># Makefile 内容
-log = &quot;====debug====&quot; $(1) &quot;====end====&quot;
-
-all:
-    @echo $(call log,&quot;正在 Make&quot;)
-
-# bash 中执行 make
-$ make
-====debug==== 正在 Make ====end====
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line">log = <span class="string">"====debug===="</span> $(1) <span class="string">"====end===="</span></span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">call</span> log,"正在 Make")</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line">====debug==== 正在 Make ====end====</span><br></pre></td></tr></table></figure>
 <h4 id="3-4-6-origin-判断变量的来源"><a href="#3-4-6-origin-判断变量的来源" class="headerlink" title="3.4.6 origin - 判断变量的来源"></a><strong>3.4.6 origin - 判断变量的来源</strong></h4><p><strong>语法:</strong></p>
 <p>$(origin <variable>)</variable></p>
 <p>返回值有如下类型:</p>
@@ -1267,56 +700,17 @@ $ make
 </tbody>
 </table>
 <p><strong>示例:</strong></p>
-<pre><code class="makefile"># Makefile 内容
-val-in-file := test-file
-override val-override := test-override
-
-all:
-    @echo $(origin not-define)    # not-define 没有定义
-    @echo $(origin CC)            # CC 是Makefile默认定义的变量
-    @echo $(origin PATH)         # PATH 是 bash 环境变量
-    @echo $(origin val-in-file)    # 此Makefile中定义的变量
-    @echo $(origin val-in-cmd)    # 这个变量会加在 make 的参数中
-    @echo $(origin val-override) # 此Makefile中定义的override变量
-    @echo $(origin @)             # 自动变量, 具体前面的介绍
-
-# bash 中执行 make
-$ make val-in-cmd=val-cmd
-undefined
-default
-environment
-file
-command line
-override
-automatic
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line">val-in-file := test-file</span><br><span class="line"><span class="keyword">override</span> val-override := test-override</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">origin</span> not-define)</span>    <span class="comment"># not-define 没有定义</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">origin</span> CC)</span>            <span class="comment"># CC 是Makefile默认定义的变量</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">origin</span> PATH)</span>         <span class="comment"># PATH 是 bash 环境变量</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">origin</span> val-in-<span class="built_in">file</span>)</span>    <span class="comment"># 此Makefile中定义的变量</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">origin</span> val-in-cmd)</span>    <span class="comment"># 这个变量会加在 make 的参数中</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">origin</span> val-override)</span> <span class="comment"># 此Makefile中定义的override变量</span></span><br><span class="line">    @echo <span class="variable">$(<span class="built_in">origin</span> @)</span>             <span class="comment"># 自动变量, 具体前面的介绍</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make val-in-cmd=val-cmd</span><br><span class="line">undefined</span><br><span class="line">default</span><br><span class="line">environment</span><br><span class="line">file</span><br><span class="line">command line</span><br><span class="line"><span class="keyword">override</span></span><br><span class="line">automatic</span><br></pre></td></tr></table></figure>
 <h4 id="3-4-7-shell"><a href="#3-4-7-shell" class="headerlink" title="3.4.7 shell"></a><strong>3.4.7 shell</strong></h4><p><strong>语法:</strong></p>
 <p>$(shell <shell command="">)</shell></p>
 <p>它的作用就是执行一个shell命令, 并将shell命令的结果作为函数的返回.</p>
 <p>作用和 <code>&lt;shell command&gt;</code> 一样, <strong>`</strong> 是反引号</p>
 <h4 id="3-4-8-make-控制函数"><a href="#3-4-8-make-控制函数" class="headerlink" title="3.4.8 make 控制函数"></a><strong>3.4.8 make 控制函数</strong></h4><p><strong>产生一个致命错误: $(error <text ...="">)</text></strong></p>
 <p>功能: 输出错误信息, 停止Makefile的运行</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    $(error there is an error!)
-    @echo &quot;这里不会执行!&quot;
-
-# bash 中执行 make
-$ make
-Makefile:2: *** there is an error!.  Stop.
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    <span class="variable">$(<span class="built_in">error</span> there is an <span class="built_in">error</span>!)</span></span><br><span class="line">    @echo <span class="string">"这里不会执行!"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line"><span class="section">Makefile:2: *** there is an error!.  Stop.</span></span><br></pre></td></tr></table></figure>
 <p><strong>输出警告: $(warning <text ...="">)</text></strong></p>
 <p>功能: 输出警告信息, Makefile继续运行</p>
-<pre><code class="makefile"># Makefile 内容
-all:
-    $(warning there is an warning!)
-    @echo &quot;这里会执行!&quot;
-
-# bash 中执行 make
-$ make
-Makefile:2: there is an warning!
-这里会执行!
-</code></pre>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Makefile 内容</span></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">    <span class="variable">$(<span class="built_in">warning</span> there is an <span class="built_in">warning</span>!)</span></span><br><span class="line">    @echo <span class="string">"这里会执行!"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bash 中执行 make</span></span><br><span class="line">$ make</span><br><span class="line"><span class="section">Makefile:2: there is an warning!</span></span><br><span class="line">这里会执行!</span><br></pre></td></tr></table></figure>
 <h3 id="3-5-Makefile中一些GNU约定俗成的伪目标"><a href="#3-5-Makefile中一些GNU约定俗成的伪目标" class="headerlink" title="3.5 Makefile中一些GNU约定俗成的伪目标"></a><strong>3.5 Makefile中一些GNU约定俗成的伪目标</strong></h3><p>如果有过在Linux上, 从源码安装软件的经历的话, 就会对 make clean, make install 比较熟悉.</p>
 <p>像 clean, install 这些伪目标, 广为人知, 不用解释就大家知道是什么意思了.</p>
 <p>下面列举一些常用的伪目标, 如果在自己项目的Makefile合理使用这些伪目标的话, 可以让我们自己的Makefile看起来更专业, 呵呵 :)</p>

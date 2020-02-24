@@ -328,24 +328,8 @@
 <p>最佳调度问题可以用回溯法解决，并且是属于子集树回溯法。对于每个任务i，都可能分配到k台机器的任意一台上，解空间为<img src="//l-x.me/2018/12/02/alg/lab4/clip_image002.png" alt="img">，现在要求的是使得最长机器时间最短的解。</p>
 <a id="more"></a>
 <p>回溯算法伪代码如下：</p>
-<pre><code>BackTrack(int task,int spendtime){
-    if (task == n){ //分配完毕
-        if(spendtime &lt; besttime){
-            besttime = spendtime;
-            记下当前最优解的方案;
-        }
-        return ;
-    }
-    for(每台机器j){
-        将任务task分配给当前机器j;
-        机器j的时间 += 任务task的时间;
-        BackTrack(task + 1,max(spendtime,机器j的时间));
-        回溯，不将任务task分配给当前机器j，用0表示未分配;
-        机器j的时间 -= 任务task的时间;
-    }
-    return ;
-}
-</code></pre><p>初始时调用BackTrack(1,0);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">BackTrack(int task,int spendtime)&#123;</span><br><span class="line">	if (task == n)&#123; //分配完毕</span><br><span class="line">		if(spendtime &lt; besttime)&#123;</span><br><span class="line">			besttime = spendtime;</span><br><span class="line">			记下当前最优解的方案;</span><br><span class="line">        &#125;</span><br><span class="line">        return ;</span><br><span class="line">    &#125;</span><br><span class="line">    for(每台机器j)&#123;</span><br><span class="line">		将任务task分配给当前机器j;</span><br><span class="line">		机器j的时间 += 任务task的时间;</span><br><span class="line">		BackTrack(task + 1,max(spendtime,机器j的时间));</span><br><span class="line">		回溯，不将任务task分配给当前机器j，用0表示未分配;</span><br><span class="line">		机器j的时间 -= 任务task的时间;</span><br><span class="line">    &#125;</span><br><span class="line">    return ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>初始时调用BackTrack(1,0);</p>
 <p>如果只是简单的回溯，解空间随着n和k的增大呈指数级增长，时间复杂度达O(k^n)，为此，这里进行了几处优化：</p>
 <ul>
 <li><p>最优化剪枝——如果当前各个机器时间中的最长时间，即spendtime已经大于最佳方案的时间（besttime），则不再继续向下一层搜索。</p>
@@ -357,118 +341,7 @@
 <li><p>去除重复的搜索——由于机器之间是无差别的，而一台机器分配的任务也是无序的。对于某个方案，对所有机器进行重新排列，以及对一台机器的任务重新排列，得到的任意一个方案对于这个问题都是等价的（最佳调度时间相同）。因此，搜索时，只考虑按每台机器的最长的任务的时间降序排列的那种方案。由于任务分配前已按时间降序排列，故放入一台空机器的第一个任务就是该机器的最长时间的任务。如果当前要放入一台空机器的任务时间大于前一台机器的最长任务的时间就说明情况重复了，不用继续搜索。</p>
 <h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3></li>
 </ul>
-<pre><code class="c++">#include &lt;cstdio&gt;
-#include &lt;cstdlib&gt;
-#include &lt;algorithm&gt;
-#define MAXTASK 100           //最大任务数
-#define MAXMACHINE 100          //最大机器数
-using namespace std;
-int n,k;                    //n：任务数，k:机器数
-int times[MAXTASK];         //每个任务对应的时间
-int schedule[MAXTASK];      //当前调度方案，每个任务分配的机器号，取0表示还未分配
-int machinetime[MAXMACHINE] = {};    //每个机器工作的总时间,机器下标从1开始算
-int machinemaxtasktime[MAXMACHINE] = {};
-
-int besttime = 999999999;     //最优解，即完成全部任务最短时间，初始化为无穷大
-int bestschedule[MAXTASK];   //最优解的调度方案
-int max(int a,int b){
-    return a &gt; b ? a : b;
-}
-bool cmp(int a,int b) {
-    return a &gt; b;
-}
-int init(){//贪心地求出初始解
-    int tmpmachinetime[MAXMACHINE]={};
-    int minmachine,mintime = 999999999;
-    int spendtime = 0;
-    for(int i = 1;i &lt;= k;i++){
-        tmpmachinetime[i] = times[i];//前k个任务分配给k个机器
-    }
-    for(int i = k + 1;i &lt;= n;i++){
-        for(int j = 1;j &lt;= k;j++){
-            if(tmpmachinetime[j] &lt; mintime){
-                mintime = tmpmachinetime[j];
-                minmachine = j;
-            }
-        }
-        tmpmachinetime[minmachine] += times[i];
-        spendtime = max(spendtime,tmpmachinetime[minmachine]);
-    }
-    return spendtime;
-}
-void BackTrack(int task,int spendtime){ //子集树回溯法
-    if (task == n){ //分配完毕
-        if(spendtime &lt; besttime){           //可行解与当前最优解进行比较
-            besttime = spendtime;
-            for(int i = 0;i &lt; n;i++) //记下当前最优解的方案
-                bestschedule[i] = schedule[i];
-        }
-        return ;
-    }
-    for(int j = 1;j &lt;= k;j++){
-        if(max(spendtime,machinetime[j] + times[task]) &lt; besttime){
-        //剪枝，若当前最长机器时间已经超出最少时间，则不继续搜索
-            if(machinetime[j] == 0){//当前机器是空的
-                if(machinemaxtasktime[j - 1] &lt; times[task])
-                    break;
-                    //对于一个可行解对应的方案，把各个机器重新排序，是等价的
-                    //故我们只保留按每台机器最长任务的时间降序的方案
-                    //由于任务分配前按时间降序排列，放入一台空机器的第一个任务就是该机器的最长时间的任务
-                    //如果当前要放入一台空机器的任务时间大于前一个机器的最长任务的时间
-                    //说明情况重复了
-                machinemaxtasktime[j] = times[task];
-            }
-            schedule[task] = j;          //将任务t分配给当前机器j
-            machinetime[j] += times[task];
-            BackTrack(task + 1,max(spendtime,machinetime[j]));
-            schedule[task] = 0;         //回溯，不将任务t分配给当前机器j，0表示未分配
-            machinetime[j] -= times[task];
-            if(machinetime[j] == 0) //恢复
-                machinemaxtasktime[j] = 0;
-        }
-    }
-    return ;
-}
-int main(){
-    FILE *fp = fopen(&quot;in3.txt&quot;,&quot;r&quot;);
-    fscanf(fp,&quot;%d%d&quot;,&amp;n,&amp;k);
-    for(int i = 0;i &lt; n;i++){
-        fscanf(fp,&quot;%d&quot;,&amp;times[i]);
-    }
-    fclose(fp);
-
-    sort(times,times + n,cmp); //times按降序排序
-    besttime = init();
-    machinemaxtasktime[0] = 999999999;
-
-    printf(&quot;----------------------------Input----------------------------\n&quot;);
-    printf(&quot;Task Time\n&quot;);
-    for(int i = 0;i &lt; n;i++)
-        printf(&quot;%4d %4d\n&quot;,i,times[i]);
-
-    BackTrack(0,0);       //子集树回溯法
-
-    printf(&quot;----------------------------Output----------------------------\n&quot;);
-    printf(&quot;Best time: %d\n&quot;,besttime);
-    printf(&quot;Task Machine\n&quot;);  //按任务对应的机器输出
-    for(int i = 0;i &lt; n;i++)
-        printf(&quot;%4d %4d\n&quot;,i,bestschedule[i]);
-    printf(&quot;Machine  Task_list\n&quot;); //按机器对应的任务输出
-    int tmp[MAXMACHINE][MAXTASK]={}; //第一维为机器下标，第二维第0个为任务数，之后为任务下标列表
-    for(int i = 0;i &lt; n;i++){ //i为任务下标
-        int j = bestschedule[i]; //该任务对应的机器下标
-        int l = ++tmp[j][0]; //当前机器分配的任务数+1
-        tmp[j][l] = i;
-    }
-    for(int j = 1;j &lt;= k;j++){
-        printf(&quot;%4d    &quot;,j);
-        for(int i = 1;i &lt;= tmp[j][0];i++)
-            printf(&quot;%4d&quot;,tmp[j][i]);
-        printf(&quot;\n&quot;);
-    }
-    return 0;
-}
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXTASK 100           <span class="comment">//最大任务数</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXMACHINE 100          <span class="comment">//最大机器数</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">int</span> n,k;                    <span class="comment">//n：任务数，k:机器数</span></span><br><span class="line"><span class="keyword">int</span> times[MAXTASK];         <span class="comment">//每个任务对应的时间</span></span><br><span class="line"><span class="keyword">int</span> schedule[MAXTASK];      <span class="comment">//当前调度方案，每个任务分配的机器号，取0表示还未分配</span></span><br><span class="line"><span class="keyword">int</span> machinetime[MAXMACHINE] = &#123;&#125;;    <span class="comment">//每个机器工作的总时间,机器下标从1开始算</span></span><br><span class="line"><span class="keyword">int</span> machinemaxtasktime[MAXMACHINE] = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> besttime = <span class="number">999999999</span>;     <span class="comment">//最优解，即完成全部任务最短时间，初始化为无穷大</span></span><br><span class="line"><span class="keyword">int</span> bestschedule[MAXTASK];   <span class="comment">//最优解的调度方案</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a &gt; b ? a : b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a &gt; b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">init</span><span class="params">()</span></span>&#123;<span class="comment">//贪心地求出初始解</span></span><br><span class="line">    <span class="keyword">int</span> tmpmachinetime[MAXMACHINE]=&#123;&#125;;</span><br><span class="line">    <span class="keyword">int</span> minmachine,mintime = <span class="number">999999999</span>;</span><br><span class="line">    <span class="keyword">int</span> spendtime = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= k;i++)&#123;</span><br><span class="line">        tmpmachinetime[i] = times[i];<span class="comment">//前k个任务分配给k个机器</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = k + <span class="number">1</span>;i &lt;= n;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>;j &lt;= k;j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(tmpmachinetime[j] &lt; mintime)&#123;</span><br><span class="line">                mintime = tmpmachinetime[j];</span><br><span class="line">                minmachine = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        tmpmachinetime[minmachine] += times[i];</span><br><span class="line">        spendtime = max(spendtime,tmpmachinetime[minmachine]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> spendtime;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BackTrack</span><span class="params">(<span class="keyword">int</span> task,<span class="keyword">int</span> spendtime)</span></span>&#123; <span class="comment">//子集树回溯法</span></span><br><span class="line">    <span class="keyword">if</span> (task == n)&#123; <span class="comment">//分配完毕</span></span><br><span class="line">        <span class="keyword">if</span>(spendtime &lt; besttime)&#123;           <span class="comment">//可行解与当前最优解进行比较</span></span><br><span class="line">            besttime = spendtime;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n;i++) <span class="comment">//记下当前最优解的方案</span></span><br><span class="line">                bestschedule[i] = schedule[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>;j &lt;= k;j++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(max(spendtime,machinetime[j] + times[task]) &lt; besttime)&#123;</span><br><span class="line">        <span class="comment">//剪枝，若当前最长机器时间已经超出最少时间，则不继续搜索</span></span><br><span class="line">            <span class="keyword">if</span>(machinetime[j] == <span class="number">0</span>)&#123;<span class="comment">//当前机器是空的</span></span><br><span class="line">                <span class="keyword">if</span>(machinemaxtasktime[j - <span class="number">1</span>] &lt; times[task])</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                    <span class="comment">//对于一个可行解对应的方案，把各个机器重新排序，是等价的</span></span><br><span class="line">                    <span class="comment">//故我们只保留按每台机器最长任务的时间降序的方案</span></span><br><span class="line">                    <span class="comment">//由于任务分配前按时间降序排列，放入一台空机器的第一个任务就是该机器的最长时间的任务</span></span><br><span class="line">                    <span class="comment">//如果当前要放入一台空机器的任务时间大于前一个机器的最长任务的时间</span></span><br><span class="line">                    <span class="comment">//说明情况重复了</span></span><br><span class="line">                machinemaxtasktime[j] = times[task];</span><br><span class="line">            &#125;</span><br><span class="line">            schedule[task] = j;          <span class="comment">//将任务t分配给当前机器j</span></span><br><span class="line">            machinetime[j] += times[task];</span><br><span class="line">            BackTrack(task + <span class="number">1</span>,max(spendtime,machinetime[j]));</span><br><span class="line">            schedule[task] = <span class="number">0</span>;         <span class="comment">//回溯，不将任务t分配给当前机器j，0表示未分配</span></span><br><span class="line">            machinetime[j] -= times[task];</span><br><span class="line">            <span class="keyword">if</span>(machinetime[j] == <span class="number">0</span>) <span class="comment">//恢复</span></span><br><span class="line">                machinemaxtasktime[j] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    FILE *fp = fopen(<span class="string">"in3.txt"</span>,<span class="string">"r"</span>);</span><br><span class="line">    <span class="built_in">fscanf</span>(fp,<span class="string">"%d%d"</span>,&amp;n,&amp;k);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n;i++)&#123;</span><br><span class="line">        <span class="built_in">fscanf</span>(fp,<span class="string">"%d"</span>,&amp;times[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    fclose(fp);</span><br><span class="line"></span><br><span class="line">    sort(times,times + n,cmp); <span class="comment">//times按降序排序</span></span><br><span class="line">    besttime = init();</span><br><span class="line">    machinemaxtasktime[<span class="number">0</span>] = <span class="number">999999999</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"----------------------------Input----------------------------\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Task Time\n"</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n;i++)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%4d %4d\n"</span>,i,times[i]);</span><br><span class="line"></span><br><span class="line">    BackTrack(<span class="number">0</span>,<span class="number">0</span>);       <span class="comment">//子集树回溯法</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"----------------------------Output----------------------------\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Best time: %d\n"</span>,besttime);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Task Machine\n"</span>);  <span class="comment">//按任务对应的机器输出</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n;i++)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%4d %4d\n"</span>,i,bestschedule[i]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Machine  Task_list\n"</span>); <span class="comment">//按机器对应的任务输出</span></span><br><span class="line">    <span class="keyword">int</span> tmp[MAXMACHINE][MAXTASK]=&#123;&#125;; <span class="comment">//第一维为机器下标，第二维第0个为任务数，之后为任务下标列表</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; n;i++)&#123; <span class="comment">//i为任务下标</span></span><br><span class="line">        <span class="keyword">int</span> j = bestschedule[i]; <span class="comment">//该任务对应的机器下标</span></span><br><span class="line">        <span class="keyword">int</span> l = ++tmp[j][<span class="number">0</span>]; <span class="comment">//当前机器分配的任务数+1</span></span><br><span class="line">        tmp[j][l] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>;j &lt;= k;j++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%4d    "</span>,j);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= tmp[j][<span class="number">0</span>];i++)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%4d"</span>,tmp[j][i]);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>

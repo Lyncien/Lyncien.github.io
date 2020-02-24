@@ -312,14 +312,16 @@
 <p>小赵听到自己成为了信息安全大赛的创始人后感到非常吃惊：“我一个少院学生会的干事，怎么就成信息安全大赛的创始人了呢？”这也难怪，毕竟小赵后来成为了物理学院的学生。物理和信息安全，通常情况下可都是八杆子打不着的呢。</p>
 <p>当然了，小赵作为物理学院的学生，和其他物理学院的学生一样，身上的浮躁劲儿可一点都不少，常常因为一点小成就而沾沾自喜。这不，因为个人安全上的不重视，小赵的某个学弟小郑，很快从小赵暗恋的女孩子手里拿到了小赵和她交流的加密算法的程序。小赵在得知此事后反而没有尽可能地息事宁人，反而公开宣称，由于解密算法目前没有公开，所以拿到了加密算法也没有什么用。看来小赵对于现代密码学，根本没什么全面深入的了解啊。</p>
 <p>不过，即使小赵使用的是对称加密算法，分析出解密算法也并非易事——小赵对程序进行了混淆，而混淆的方法是使用 BrainFuck 虚拟机——这也正是小赵的底气所在。现在的任务是分析并读懂一段 BrainFuck 程序，从而将一段密文还原。小郑拿到的密文是：</p>
-<pre><code class="JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH">JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH
-</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
 <p>现在小郑将这一任务交给了跃跃欲试的你。快来挖掘小赵的黑历史吧！</p>
 <h4 id="FLAG-格式"><a href="#FLAG-格式" class="headerlink" title="FLAG 格式"></a>FLAG 格式</h4><p>以下是两条示例原文和密文：</p>
 <blockquote>
-<pre><code>QUICK_BROWN_FOXES_JUMP_OVER_THE_LAZY_DOG =&gt; aMRKoll07lcf49SIuPrNg8v5bMctTkfrQmchaEkF
-quick-brown-foxes-jump-over-the-lazy-dog =&gt; p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGNPVALq5l
-</code></pre></blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; QUICK_BROWN_FOXES_JUMP_OVER_THE_LAZY_DOG =&gt; aMRKoll07lcf49SIuPrNg8v5bMctTkfrQmchaEkF</span><br><span class="line">&gt;&gt; quick-brown-foxes-jump-over-the-lazy-dog =&gt; p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGNPVALq5l</span><br><span class="line">&gt;&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</blockquote>
+<blockquote>
 <ul>
 <li>假设密文是 <code>p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGNPVALq5l</code></li>
 <li>最后解得原文是 <code>quick-brown-foxes-jump-over-the-lazy-dog</code></li>
@@ -373,25 +375,8 @@ quick-brown-foxes-jump-over-the-lazy-dog =&gt; p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGN
 </blockquote>
 <a id="more"></a>
 <p>encrypt.bf的BrainFuck代码如下</p>
-<pre><code>/* author: @ustc_zzzz */ call(`,[-&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;+++&gt;&gt;++&gt;&gt;++++&gt;++++++&lt;&lt;+++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;
-++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++++++++&gt;&gt;++&gt;&gt;++++&lt;+++++++++&lt;&lt;++++&lt;&lt;++++&lt;&lt;++&lt;&lt;++&lt;]&lt;,[-&gt;&gt;++
-+++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++&gt;++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;&lt;+++&lt;&lt;+++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++++&gt;
-&gt;+++&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;+++++++++&lt;++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;]&lt;,[-&gt;&gt;++++++++&gt;&gt;+++++++&gt;&gt;
-++&gt;&gt;++&gt;&gt;+++++++++&gt;+++&lt;&lt;++++&lt;&lt;+++&lt;&lt;+++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;++
-+++&lt;++++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;++++&lt;]&lt;,[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;+++&lt;&lt;++++++++&lt;
-&lt;++++++&lt;&lt;+++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;+++++++&lt;++++++++&lt;&lt;++++++&lt;&lt;++
-+++&lt;&lt;+++&lt;&lt;+++++++&lt;]&lt;,[-&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++&gt;&gt;+++++++&gt;+++++++&lt;&lt;+++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++++++
-&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++++&gt;&gt;++++++&lt;++++&lt;&lt;+++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;+++++&lt;]&lt;,[-&gt;&gt;+++++&gt;&gt;++
-&gt;&gt;++++&gt;&gt;+++&gt;&gt;++++++&gt;++&lt;&lt;+++++++&lt;&lt;++++&lt;&lt;+++++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;+++++&gt;&gt;++++
-++++&gt;&gt;+++++++++&lt;+++++++&lt;&lt;++&lt;&lt;++++&lt;&lt;+++&lt;&lt;++&lt;]&lt;,[-&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++&gt;&gt;++++++&gt;&gt;++++++++&gt;++&lt;&lt;++++&lt;&lt;+
-++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++++++&lt;+++++&lt;&lt;++++&lt;&lt;++++++++&lt;&lt;++++
-&lt;&lt;+++++++&lt;]&lt;,[-&gt;&gt;+++++++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;++&lt;&lt;++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++&lt;&lt;++
-++++++&lt;]&gt;[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++&lt;+++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++&lt;&lt;++++++++&lt;]&lt;,[-&gt;&gt;++
-&gt;&gt;++++++++&gt;&gt;++&gt;&gt;++++++&gt;&gt;+++++&gt;++++&lt;&lt;++++&lt;&lt;+++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;+++++++&gt;&gt;++&gt;&gt;++
-++++++&gt;&gt;+++++++&gt;&gt;++++&lt;++&lt;&lt;+++&lt;&lt;+++++++&lt;&lt;+++++&lt;&lt;++&lt;]&lt;,[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;++++&gt;&gt;++&gt;+++++&lt;&lt;
-+++++&lt;&lt;++&lt;&lt;++&lt;&lt;+++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++&gt;&gt;+++++++++&lt;++++++++&lt;&lt;++++++++&lt;&lt;++++
-&lt;&lt;++++&lt;&lt;+++++++++&lt;]&gt;++.&gt;++++++.&gt;++++++++.&gt;++++++++.&gt;+++.&gt;+++++.&gt;+++++.&gt;+++++++.&gt;++++.&gt;+++++++++.`)
-</code></pre><h3 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h3><p>学习一下BrainFuck语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/* author: @ustc_zzzz */ call(`,[-&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;+++&gt;&gt;++&gt;&gt;++++&gt;++++++&lt;&lt;+++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;</span><br><span class="line">++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++++++++&gt;&gt;++&gt;&gt;++++&lt;+++++++++&lt;&lt;++++&lt;&lt;++++&lt;&lt;++&lt;&lt;++&lt;]&lt;,[-&gt;&gt;++</span><br><span class="line">+++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++&gt;++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;&lt;+++&lt;&lt;+++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++++&gt;</span><br><span class="line">&gt;+++&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;+++++++++&lt;++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;]&lt;,[-&gt;&gt;++++++++&gt;&gt;+++++++&gt;&gt;</span><br><span class="line">++&gt;&gt;++&gt;&gt;+++++++++&gt;+++&lt;&lt;++++&lt;&lt;+++&lt;&lt;+++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;++</span><br><span class="line">+++&lt;++++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;++++&lt;]&lt;,[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;+++&lt;&lt;++++++++&lt;</span><br><span class="line">&lt;++++++&lt;&lt;+++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;+++++++&lt;++++++++&lt;&lt;++++++&lt;&lt;++</span><br><span class="line">+++&lt;&lt;+++&lt;&lt;+++++++&lt;]&lt;,[-&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++&gt;&gt;+++++++&gt;+++++++&lt;&lt;+++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++++++</span><br><span class="line">&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++++&gt;&gt;++++++&lt;++++&lt;&lt;+++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;+++++&lt;]&lt;,[-&gt;&gt;+++++&gt;&gt;++</span><br><span class="line">&gt;&gt;++++&gt;&gt;+++&gt;&gt;++++++&gt;++&lt;&lt;+++++++&lt;&lt;++++&lt;&lt;+++++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;+++++&gt;&gt;++++</span><br><span class="line">++++&gt;&gt;+++++++++&lt;+++++++&lt;&lt;++&lt;&lt;++++&lt;&lt;+++&lt;&lt;++&lt;]&lt;,[-&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++&gt;&gt;++++++&gt;&gt;++++++++&gt;++&lt;&lt;++++&lt;&lt;+</span><br><span class="line">++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++++++&lt;+++++&lt;&lt;++++&lt;&lt;++++++++&lt;&lt;++++</span><br><span class="line">&lt;&lt;+++++++&lt;]&lt;,[-&gt;&gt;+++++++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;++&lt;&lt;++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++&lt;&lt;++</span><br><span class="line">++++++&lt;]&gt;[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++&lt;+++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++&lt;&lt;++++++++&lt;]&lt;,[-&gt;&gt;++</span><br><span class="line">&gt;&gt;++++++++&gt;&gt;++&gt;&gt;++++++&gt;&gt;+++++&gt;++++&lt;&lt;++++&lt;&lt;+++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;+++++++&gt;&gt;++&gt;&gt;++</span><br><span class="line">++++++&gt;&gt;+++++++&gt;&gt;++++&lt;++&lt;&lt;+++&lt;&lt;+++++++&lt;&lt;+++++&lt;&lt;++&lt;]&lt;,[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;++++&gt;&gt;++&gt;+++++&lt;&lt;</span><br><span class="line">+++++&lt;&lt;++&lt;&lt;++&lt;&lt;+++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++&gt;&gt;+++++++++&lt;++++++++&lt;&lt;++++++++&lt;&lt;++++</span><br><span class="line">&lt;&lt;++++&lt;&lt;+++++++++&lt;]&gt;++.&gt;++++++.&gt;++++++++.&gt;++++++++.&gt;+++.&gt;+++++.&gt;+++++.&gt;+++++++.&gt;++++.&gt;+++++++++.`)</span><br></pre></td></tr></table></figure>
+<h3 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h3><p>学习一下BrainFuck语法</p>
 <blockquote>
 <p>Brainfuck是一种极小化的计算机语言，它是由Urban Müller在1993年创建的。由于fuck在英语中是脏话，这种语言有时被称为brainf*ck或brainf**k，甚至被简称为BF。</p>
 </blockquote>
@@ -499,209 +484,33 @@ quick-brown-foxes-jump-over-the-lazy-dog =&gt; p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGN
 </blockquote>
 <p>观察原来的代码，发现是很多个循环</p>
 <p>分行一下比较清楚，对第一个循环注释一下</p>
-<pre><code class="C">, 
-//a[0]=k;
-[-&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;+++&gt;&gt;++&gt;&gt;++++&gt;++++++&lt;&lt;+++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;] 
-//a[0]--; a[2]=7; a[4]=5; a[6]=3; a[8]=2; a[10]=4; a[11]=6; a[9]=3; a[7]=9; a[5]=8; a[3]=6; a[1]=8;
-//a[0-11]*k
-&gt;
-[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++++++++&gt;&gt;++&gt;&gt;++++&lt;+++++++++&lt;&lt;++++&lt;&lt;++++&lt;&lt;++&lt;&lt;++&lt;]
-//a[1]--; 
-&lt;
-,
-[-&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++&gt;++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;&lt;+++&lt;&lt;+++&lt;&lt;++++++++&lt;]
-&gt;
-[-&gt;&gt;++++++++&gt;&gt;+++&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;+++++++++&lt;++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;]
-&lt;
-,
-[-&gt;&gt;++++++++&gt;&gt;+++++++&gt;&gt;++&gt;&gt;++&gt;&gt;+++++++++&gt;+++&lt;&lt;++++&lt;&lt;+++&lt;&lt;+++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]
-&gt;
-[-&gt;&gt;++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;+++++&lt;++++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;++++&lt;]
-&lt;
-,
-[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;+++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;+++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]
-&gt;
-[-&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;+++++++&lt;++++++++&lt;&lt;++++++&lt;&lt;+++++&lt;&lt;+++&lt;&lt;+++++++&lt;]
-&lt;
-,
-[-&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++&gt;&gt;+++++++&gt;+++++++&lt;&lt;+++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;]
-&gt;
-[-&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++++&gt;&gt;++++++&lt;++++&lt;&lt;+++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;+++++&lt;]
-&lt;
-,
-[-&gt;&gt;+++++&gt;&gt;++&gt;&gt;++++&gt;&gt;+++&gt;&gt;++++++&gt;++&lt;&lt;+++++++&lt;&lt;++++&lt;&lt;+++++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;]
-&gt;
-[-&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;+++++++++&lt;+++++++&lt;&lt;++&lt;&lt;++++&lt;&lt;+++&lt;&lt;++&lt;]
-&lt;
-,
-[-&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++&gt;&gt;++++++&gt;&gt;++++++++&gt;++&lt;&lt;++++&lt;&lt;+++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]
-&gt;
-[-&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++++++&lt;+++++&lt;&lt;++++&lt;&lt;++++++++&lt;&lt;++++&lt;&lt;+++++++&lt;]
-&lt;
-,
-[-&gt;&gt;+++++++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;++&lt;&lt;++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++&lt;&lt;++++++++&lt;]
-&gt;
-[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++&lt;+++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++&lt;&lt;++++++++&lt;]
-&lt;
-,
-[-&gt;&gt;++&gt;&gt;++++++++&gt;&gt;++&gt;&gt;++++++&gt;&gt;+++++&gt;++++&lt;&lt;++++&lt;&lt;+++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]
-&gt;
-[-&gt;&gt;+++++++&gt;&gt;++&gt;&gt;++++++++&gt;&gt;+++++++&gt;&gt;++++&lt;++&lt;&lt;+++&lt;&lt;+++++++&lt;&lt;+++++&lt;&lt;++&lt;]
-&lt;
-,
-[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;++++&gt;&gt;++&gt;+++++&lt;&lt;+++++&lt;&lt;++&lt;&lt;++&lt;&lt;+++++&lt;&lt;++++++++&lt;]
-&gt;
-[-&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++&gt;&gt;+++++++++&lt;++++++++&lt;&lt;++++++++&lt;&lt;++++&lt;&lt;++++&lt;&lt;+++++++++&lt;]
-&gt;
-++.&gt;++++++.&gt;++++++++.&gt;++++++++.&gt;+++.&gt;+++++.&gt;+++++.&gt;+++++++.&gt;++++.&gt;+++++++++.
-</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">, </span><br><span class="line"><span class="comment">//a[0]=k;</span></span><br><span class="line">[-&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;+++&gt;&gt;++&gt;&gt;++++&gt;++++++&lt;&lt;+++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;] </span><br><span class="line"><span class="comment">//a[0]--; a[2]=7; a[4]=5; a[6]=3; a[8]=2; a[10]=4; a[11]=6; a[9]=3; a[7]=9; a[5]=8; a[3]=6; a[1]=8;</span></span><br><span class="line"><span class="comment">//a[0-11]*k</span></span><br><span class="line">&gt;</span><br><span class="line">[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++++++++&gt;&gt;++&gt;&gt;++++&lt;+++++++++&lt;&lt;++++&lt;&lt;++++&lt;&lt;++&lt;&lt;++&lt;]</span><br><span class="line"><span class="comment">//a[1]--; </span></span><br><span class="line">&lt;</span><br><span class="line">,</span><br><span class="line">[-&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++&gt;++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;&lt;+++&lt;&lt;+++&lt;&lt;++++++++&lt;]</span><br><span class="line">&gt;</span><br><span class="line">[-&gt;&gt;++++++++&gt;&gt;+++&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;+++++++++&lt;++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;]</span><br><span class="line">&lt;</span><br><span class="line">,</span><br><span class="line">[-&gt;&gt;++++++++&gt;&gt;+++++++&gt;&gt;++&gt;&gt;++&gt;&gt;+++++++++&gt;+++&lt;&lt;++++&lt;&lt;+++&lt;&lt;+++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]</span><br><span class="line">&gt;</span><br><span class="line">[-&gt;&gt;++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;+++++&lt;++++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;++++&lt;]</span><br><span class="line">&lt;</span><br><span class="line">,</span><br><span class="line">[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;+++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;+++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]</span><br><span class="line">&gt;</span><br><span class="line">[-&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;+++++++&lt;++++++++&lt;&lt;++++++&lt;&lt;+++++&lt;&lt;+++&lt;&lt;+++++++&lt;]</span><br><span class="line">&lt;</span><br><span class="line">,</span><br><span class="line">[-&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++&gt;&gt;+++++++&gt;+++++++&lt;&lt;+++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;]</span><br><span class="line">&gt;</span><br><span class="line">[-&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++++&gt;&gt;++++++&lt;++++&lt;&lt;+++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;+++++&lt;]</span><br><span class="line">&lt;</span><br><span class="line">,</span><br><span class="line">[-&gt;&gt;+++++&gt;&gt;++&gt;&gt;++++&gt;&gt;+++&gt;&gt;++++++&gt;++&lt;&lt;+++++++&lt;&lt;++++&lt;&lt;+++++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;]</span><br><span class="line">&gt;</span><br><span class="line">[-&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;+++++++++&lt;+++++++&lt;&lt;++&lt;&lt;++++&lt;&lt;+++&lt;&lt;++&lt;]</span><br><span class="line">&lt;</span><br><span class="line">,</span><br><span class="line">[-&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++&gt;&gt;++++++&gt;&gt;++++++++&gt;++&lt;&lt;++++&lt;&lt;+++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]</span><br><span class="line">&gt;</span><br><span class="line">[-&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++++++&lt;+++++&lt;&lt;++++&lt;&lt;++++++++&lt;&lt;++++&lt;&lt;+++++++&lt;]</span><br><span class="line">&lt;</span><br><span class="line">,</span><br><span class="line">[-&gt;&gt;+++++++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;++&lt;&lt;++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++&lt;&lt;++++++++&lt;]</span><br><span class="line">&gt;</span><br><span class="line">[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++&lt;+++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++&lt;&lt;++++++++&lt;]</span><br><span class="line">&lt;</span><br><span class="line">,</span><br><span class="line">[-&gt;&gt;++&gt;&gt;++++++++&gt;&gt;++&gt;&gt;++++++&gt;&gt;+++++&gt;++++&lt;&lt;++++&lt;&lt;+++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]</span><br><span class="line">&gt;</span><br><span class="line">[-&gt;&gt;+++++++&gt;&gt;++&gt;&gt;++++++++&gt;&gt;+++++++&gt;&gt;++++&lt;++&lt;&lt;+++&lt;&lt;+++++++&lt;&lt;+++++&lt;&lt;++&lt;]</span><br><span class="line">&lt;</span><br><span class="line">,</span><br><span class="line">[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;++++&gt;&gt;++&gt;+++++&lt;&lt;+++++&lt;&lt;++&lt;&lt;++&lt;&lt;+++++&lt;&lt;++++++++&lt;]</span><br><span class="line">&gt;</span><br><span class="line">[-&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++&gt;&gt;+++++++++&lt;++++++++&lt;&lt;++++++++&lt;&lt;++++&lt;&lt;++++&lt;&lt;+++++++++&lt;]</span><br><span class="line">&gt;</span><br><span class="line">++.&gt;++++++.&gt;++++++++.&gt;++++++++.&gt;+++.&gt;+++++.&gt;+++++.&gt;+++++++.&gt;++++.&gt;+++++++++.</span><br></pre></td></tr></table></figure>
 <p>每组都是两个循环，先输入a[0]，</p>
 <p>进行a[0]次循环，每次循环给a[1-11]各加一个定值（等于加号个数），其中a[1]+=8，</p>
 <p>然后进行a[1]=8*a[0]次循环，每次循环给a[2-11]各加一个定值</p>
 <p>用C语言有针对性地把上面代码转为伪代码，并获得每个加号的个数</p>
-<pre><code class="c">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-int tmp1[10];
-
-void pflist(){
-    printf(&quot;{&quot;);
-    for(int i=0;i&lt;10;i++) printf(&quot;%d,&quot;,tmp1[i]);
-    printf(&quot;\b}\n&quot;);
-    memset(tmp1,0,sizeof(tmp1));
-}
-
-int main(){
-    FILE *fp=fopen(&quot;encrypt.bf&quot;,&quot;r&quot;);
-    char ch;
-    int p=0;
-    int a[20];
-    int in_while;
-    int in_add;
-    int add_times=0;
-    while((ch=fgetc(fp))!=EOF){
-        //printf(&quot;%c&quot;,ch);
-        if(ch!=&#39;+&#39; &amp;&amp; in_add){in_add=0;if(p&gt;=2){tmp1[p-2]+=add_times;};printf(&quot;%d\n&quot;,add_times);add_times=0;}
-        switch(ch){
-            case (int)&#39;&gt;&#39;: {p++;break;}
-            case (int)&#39;&lt;&#39;: {p--;break;}
-            case (int)&#39;[&#39;: {in_while=1;printf(&quot;while(a[%d]){\n&quot;,p);break;}
-            case (int)&#39;]&#39;: {in_while=0;pflist();printf(&quot;}\n&quot;);break;}
-            case (int)&#39;+&#39;: {if(!in_add){in_add=1;add_times++;printf(&quot;a[%d]+=&quot;,p);}else{add_times++;}break;}
-            case (int)&#39;,&#39;: {printf(&quot;a[%d]=in()\n&quot;,p);break;}
-            case (int)&#39;.&#39;: {printf(&quot;out(a[%d])\n&quot;,p);break;}
-            default: {break;}
-        }
-
-    }
-    return 0;
-}
-
-</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> tmp1[<span class="number">10</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">pflist</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"&#123;"</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++) <span class="built_in">printf</span>(<span class="string">"%d,"</span>,tmp1[i]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\b&#125;\n"</span>);</span><br><span class="line">    <span class="built_in">memset</span>(tmp1,<span class="number">0</span>,<span class="keyword">sizeof</span>(tmp1));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	FILE *fp=fopen(<span class="string">"encrypt.bf"</span>,<span class="string">"r"</span>);</span><br><span class="line">	<span class="keyword">char</span> ch;</span><br><span class="line">	<span class="keyword">int</span> p=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">20</span>];</span><br><span class="line">	<span class="keyword">int</span> in_while;</span><br><span class="line">	<span class="keyword">int</span> in_add;</span><br><span class="line">	<span class="keyword">int</span> add_times=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>((ch=fgetc(fp))!=EOF)&#123;</span><br><span class="line">		<span class="comment">//printf("%c",ch);</span></span><br><span class="line">		<span class="keyword">if</span>(ch!=<span class="string">'+'</span> &amp;&amp; in_add)&#123;in_add=<span class="number">0</span>;<span class="keyword">if</span>(p&gt;=<span class="number">2</span>)&#123;tmp1[p<span class="number">-2</span>]+=add_times;&#125;;<span class="built_in">printf</span>(<span class="string">"%d\n"</span>,add_times);add_times=<span class="number">0</span>;&#125;</span><br><span class="line">        <span class="keyword">switch</span>(ch)&#123;</span><br><span class="line">        	<span class="keyword">case</span> (<span class="keyword">int</span>)<span class="string">'&gt;'</span>: &#123;p++;<span class="keyword">break</span>;&#125;</span><br><span class="line">        	<span class="keyword">case</span> (<span class="keyword">int</span>)<span class="string">'&lt;'</span>: &#123;p--;<span class="keyword">break</span>;&#125;</span><br><span class="line">        	<span class="keyword">case</span> (<span class="keyword">int</span>)<span class="string">'['</span>: &#123;in_while=<span class="number">1</span>;<span class="built_in">printf</span>(<span class="string">"while(a[%d])&#123;\n"</span>,p);<span class="keyword">break</span>;&#125;</span><br><span class="line">        	<span class="keyword">case</span> (<span class="keyword">int</span>)<span class="string">']'</span>: &#123;in_while=<span class="number">0</span>;pflist();<span class="built_in">printf</span>(<span class="string">"&#125;\n"</span>);<span class="keyword">break</span>;&#125;</span><br><span class="line">			<span class="keyword">case</span> (<span class="keyword">int</span>)<span class="string">'+'</span>: &#123;<span class="keyword">if</span>(!in_add)&#123;in_add=<span class="number">1</span>;add_times++;<span class="built_in">printf</span>(<span class="string">"a[%d]+="</span>,p);&#125;<span class="keyword">else</span>&#123;add_times++;&#125;<span class="keyword">break</span>;&#125;</span><br><span class="line">			<span class="keyword">case</span> (<span class="keyword">int</span>)<span class="string">','</span>: &#123;<span class="built_in">printf</span>(<span class="string">"a[%d]=in()\n"</span>,p);<span class="keyword">break</span>;&#125;</span><br><span class="line">			<span class="keyword">case</span> (<span class="keyword">int</span>)<span class="string">'.'</span>: &#123;<span class="built_in">printf</span>(<span class="string">"out(a[%d])\n"</span>,p);<span class="keyword">break</span>;&#125;</span><br><span class="line">			<span class="keyword">default</span>: &#123;<span class="keyword">break</span>;&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>得到每个循环中的各个定值，原BrainFuck编写的加密程序可等效地转为如下C代码</p>
-<pre><code class="c">#include &lt;stdio.h&gt;
-int arr[10]={};
-int a[10][10]={{7,6,5,8,3,9,2,3,4,6},{5,3,8,3,6,8,7,6,7,6},{8,8,7,5,2,3,2,4,9,3},{5,6,9,5,3,6,4,8,4,3},{7,7,4,5,4,5,3,9,7,7},{5,7,2,9,4,4,3,7,6,2},{6,6,7,8,3,3,6,4,8,2},{9,3,8,5,6,5,7,8,9,2},{2,8,8,7,2,7,6,4,5,4},{9,5,7,2,5,2,4,5,2,5}};
-int b[10][10]={{2,5,2,9,4,9,4,2,9,4},{8,8,9,3,2,7,9,4,6,9},{4,4,7,8,8,6,9,6,4,5},{7,6,3,6,5,5,6,8,8,7},{5,3,7,4,8,4,3,5,4,6},{2,2,3,9,4,5,2,8,7,9},{7,6,4,2,8,9,4,4,5,6},{8,9,3,7,2,9,9,4,7,2},{2,7,5,2,7,8,3,7,2,4},{9,8,4,6,4,2,8,5,8,9}};
-int c[10]={2,6,8,8,3,5,5,7,4,9};
-int main(){
-    int t;
-    for(int i=0;i&lt;10;i++){
-        scanf(&quot;%d&quot;,&amp;t);
-        //printf(&quot;%d\n&quot;,t);
-        for(int j=0;j&lt;10;j++){
-            arr[j]+=(a[i][j]*t);
-            arr[j]+=(b[i][j]*8*t);
-        }
-    }
-    for(int j=0;j&lt;10;j++) printf(&quot;%d &quot;,(arr[j]+c[j])%256);
-    return 0;
-}
-</code></pre>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> arr[<span class="number">10</span>]=&#123;&#125;;</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">10</span>][<span class="number">10</span>]=&#123;&#123;<span class="number">7</span>,<span class="number">6</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">9</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">6</span>&#125;,&#123;<span class="number">5</span>,<span class="number">3</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">7</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">6</span>&#125;,&#123;<span class="number">8</span>,<span class="number">8</span>,<span class="number">7</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">9</span>,<span class="number">3</span>&#125;,&#123;<span class="number">5</span>,<span class="number">6</span>,<span class="number">9</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">4</span>,<span class="number">8</span>,<span class="number">4</span>,<span class="number">3</span>&#125;,&#123;<span class="number">7</span>,<span class="number">7</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">9</span>,<span class="number">7</span>,<span class="number">7</span>&#125;,&#123;<span class="number">5</span>,<span class="number">7</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">6</span>,<span class="number">2</span>&#125;,&#123;<span class="number">6</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">4</span>,<span class="number">8</span>,<span class="number">2</span>&#125;,&#123;<span class="number">9</span>,<span class="number">3</span>,<span class="number">8</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">2</span>&#125;,&#123;<span class="number">2</span>,<span class="number">8</span>,<span class="number">8</span>,<span class="number">7</span>,<span class="number">2</span>,<span class="number">7</span>,<span class="number">6</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">4</span>&#125;,&#123;<span class="number">9</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">2</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">5</span>&#125;&#125;;</span><br><span class="line"><span class="keyword">int</span> b[<span class="number">10</span>][<span class="number">10</span>]=&#123;&#123;<span class="number">2</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">4</span>&#125;,&#123;<span class="number">8</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">7</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">9</span>&#125;,&#123;<span class="number">4</span>,<span class="number">4</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">8</span>,<span class="number">6</span>,<span class="number">9</span>,<span class="number">6</span>,<span class="number">4</span>,<span class="number">5</span>&#125;,&#123;<span class="number">7</span>,<span class="number">6</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">5</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">8</span>,<span class="number">7</span>&#125;,&#123;<span class="number">5</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">4</span>,<span class="number">8</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">4</span>,<span class="number">6</span>&#125;,&#123;<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">8</span>,<span class="number">7</span>,<span class="number">9</span>&#125;,&#123;<span class="number">7</span>,<span class="number">6</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;,&#123;<span class="number">8</span>,<span class="number">9</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">7</span>,<span class="number">2</span>&#125;,&#123;<span class="number">2</span>,<span class="number">7</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">2</span>,<span class="number">4</span>&#125;,&#123;<span class="number">9</span>,<span class="number">8</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">8</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">9</span>&#125;&#125;;</span><br><span class="line"><span class="keyword">int</span> c[<span class="number">10</span>]=&#123;<span class="number">2</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">4</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> t;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;t);</span><br><span class="line">        <span class="comment">//printf("%d\n",t);</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">10</span>;j++)&#123;</span><br><span class="line">	        arr[j]+=(a[i][j]*t);</span><br><span class="line">			arr[j]+=(b[i][j]*<span class="number">8</span>*t);</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">10</span>;j++) <span class="built_in">printf</span>(<span class="string">"%d "</span>,(arr[j]+c[j])%<span class="number">256</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>题目给的是base64映射后的字符串<code>JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH</code></p>
 <p>写如下Python代码转换回去</p>
-<pre><code class="python">bmap=&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_&quot;
-def encode(l):
-    s=&quot;&quot;
-    for i in l:
-        s=s+bmap[i]
-    return s
-
-def decode(s):
-    l=[]
-    for ch in s:
-        for i in range(64):
-            if bmap[i]==ch:
-                l.append(i)
-    return l
-
-#print(decode(&quot;QUICK_BROWN_FOXES_JUMP_OVER_THE_LAZY_DOG&quot;))
-s=&quot;JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH&quot;
-print(decode(s))
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">bmap=<span class="string">"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encode</span><span class="params">(l)</span>:</span></span><br><span class="line">    s=<span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> l:</span><br><span class="line">        s=s+bmap[i]</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(s)</span>:</span></span><br><span class="line">    l=[]</span><br><span class="line">    <span class="keyword">for</span> ch <span class="keyword">in</span> s:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">64</span>):</span><br><span class="line">            <span class="keyword">if</span> bmap[i]==ch:</span><br><span class="line">                l.append(i)</span><br><span class="line">    <span class="keyword">return</span> l</span><br><span class="line"></span><br><span class="line"><span class="comment">#print(decode("QUICK_BROWN_FOXES_JUMP_OVER_THE_LAZY_DOG"))</span></span><br><span class="line">s=<span class="string">"JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH"</span></span><br><span class="line">print(decode(s))</span><br></pre></td></tr></table></figure>
 <p>输出如下</p>
-<pre><code>[9, 51, 17, 21, 15, 34, 21, 41, 42, 40, 56, 34, 3, 12, 60, 28, 30, 37, 50, 46, 30, 8, 44, 56, 31, 31, 56, 3, 10, 30, 6, 55, 4, 12, 10, 34, 33, 51, 46, 7]
-</code></pre><p>分为4组</p>
-<pre><code>[9, 51, 17, 21, 15, 34, 21, 41, 42, 40]
-[56, 34, 3, 12, 60, 28, 30, 37, 50, 46]
-[30, 8, 44, 56, 31, 31, 56, 3, 10, 30]
-[6, 55, 4, 12, 10, 34, 33, 51, 46, 7]
-</code></pre><p>这4组就是原4组数列经过加密程序所得到的，现在就是要求原来的数列，相当于解方程组，当然是在模64情况下（加密过程是模256的，但输出序列要进过base64之前又被模64了），</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[9, 51, 17, 21, 15, 34, 21, 41, 42, 40, 56, 34, 3, 12, 60, 28, 30, 37, 50, 46, 30, 8, 44, 56, 31, 31, 56, 3, 10, 30, 6, 55, 4, 12, 10, 34, 33, 51, 46, 7]</span><br></pre></td></tr></table></figure>
+<p>分为4组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[9, 51, 17, 21, 15, 34, 21, 41, 42, 40]</span><br><span class="line">[56, 34, 3, 12, 60, 28, 30, 37, 50, 46]</span><br><span class="line">[30, 8, 44, 56, 31, 31, 56, 3, 10, 30]</span><br><span class="line">[6, 55, 4, 12, 10, 34, 33, 51, 46, 7]</span><br></pre></td></tr></table></figure>
+<p>这4组就是原4组数列经过加密程序所得到的，现在就是要求原来的数列，相当于解方程组，当然是在模64情况下（加密过程是模256的，但输出序列要进过base64之前又被模64了），</p>
 <p>用Mathematica写如下代码</p>
-<pre><code>a={{7,6,5,8,3,9,2,3,4,6},{5,3,8,3,6,8,7,6,7,6},{8,8,7,5,2,3,2,4,9,3},{5,6,9,5,3,6,4,8,4,3},{7,7,4,5,4,5,3,9,7,7},{5,7,2,9,4,4,3,7,6,2},{6,6,7,8,3,3,6,4,8,2},{9,3,8,5,6,5,7,8,9,2},{2,8,8,7,2,7,6,4,5,4},{9,5,7,2,5,2,4,5,2,5}}
-b={{2,5,2,9,4,9,4,2,9,4},{8,8,9,3,2,7,9,4,6,9},{4,4,7,8,8,6,9,6,4,5},{7,6,3,6,5,5,6,8,8,7},{5,3,7,4,8,4,3,5,4,6},{2,2,3,9,4,5,2,8,7,9},{7,6,4,2,8,9,4,4,5,6},{8,9,3,7,2,9,9,4,7,2},{2,7,5,2,7,8,3,7,2,4},{9,8,4,6,4,2,8,5,8,9}}
-c={2,6,8,8,3,5,5,7,4,9}
-d=a+8*b
-
-
-s={9, 51, 17, 21, 15, 34, 21, 41, 42, 40}
-x={x1,x2,x3,x4,x5,x6,x7,x8,x9,x10}
-
-NSolve[Mod[Dot[x,d]+c,64]==s,x,Integers]
-</code></pre><p>对于第一组，可得</p>
-<pre><code>{{x1 -> ConditionalExpression[
-    33 + 64 C[1], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
-       C[8] | C[9] | C[10]) \[Element] Integers], 
-  x2 -> ConditionalExpression[
-    53 + 64 C[2], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
-       C[8] | C[9] | C[10]) \[Element] Integers], 
-  x3 -> ConditionalExpression[
-    37 + 64 C[3], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
-       C[8] | C[9] | C[10]) \[Element] Integers], 
-  x4 -> ConditionalExpression[
-    37 + 64 C[4], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
-       C[8] | C[9] | C[10]) \[Element] Integers], 
-  x5 -> ConditionalExpression[
-    62 + 64 C[5], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
-       C[8] | C[9] | C[10]) \[Element] Integers], 
-  x6 -> ConditionalExpression[
-    28 + 64 C[6], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
-       C[8] | C[9] | C[10]) \[Element] Integers], 
-  x7 -> ConditionalExpression[
-    53 + 64 C[7], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
-       C[8] | C[9] | C[10]) \[Element] Integers], 
-  x8 -> ConditionalExpression[
-    41 + 64 C[8], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
-       C[8] | C[9] | C[10]) \[Element] Integers], 
-  x9 -> ConditionalExpression[
-    33 + 64 C[9], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
-       C[8] | C[9] | C[10]) \[Element] Integers], 
-  x10 -> ConditionalExpression[
-    55 + 64 C[10], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
-       C[8] | C[9] | C[10]) \[Element] Integers]}}
-</code></pre><p>直接取</p>
-<pre><code>33,53,37,37,62,28,53,41,33,55
-</code></pre><p>类似地对其他3组用Mathematica求解，然后利用上面的Python代码进行base64映射</p>
-<pre><code>print(encode([33,53,37,37,62,28,53,41,33,55]))
-print(encode([43,62,48,53,45,33,62,53,52,49]))
-print(encode([53,52,62,43,55,47,55,43,44,53]))
-print(encode([27,37,55,62,38,26,45,43,53,49]))
-</code></pre><p>得</p>
-<pre><code>h1ll-c1ph3
-r-w1th-10x
-10-r3v3rs1
-bl3-matr1x
-</code></pre><p>则有<code>flag{h1ll-c1ph3r-w1th-10x10-r3v3rs1bl3-matr1x}</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a=&#123;&#123;7,6,5,8,3,9,2,3,4,6&#125;,&#123;5,3,8,3,6,8,7,6,7,6&#125;,&#123;8,8,7,5,2,3,2,4,9,3&#125;,&#123;5,6,9,5,3,6,4,8,4,3&#125;,&#123;7,7,4,5,4,5,3,9,7,7&#125;,&#123;5,7,2,9,4,4,3,7,6,2&#125;,&#123;6,6,7,8,3,3,6,4,8,2&#125;,&#123;9,3,8,5,6,5,7,8,9,2&#125;,&#123;2,8,8,7,2,7,6,4,5,4&#125;,&#123;9,5,7,2,5,2,4,5,2,5&#125;&#125;</span><br><span class="line">b=&#123;&#123;2,5,2,9,4,9,4,2,9,4&#125;,&#123;8,8,9,3,2,7,9,4,6,9&#125;,&#123;4,4,7,8,8,6,9,6,4,5&#125;,&#123;7,6,3,6,5,5,6,8,8,7&#125;,&#123;5,3,7,4,8,4,3,5,4,6&#125;,&#123;2,2,3,9,4,5,2,8,7,9&#125;,&#123;7,6,4,2,8,9,4,4,5,6&#125;,&#123;8,9,3,7,2,9,9,4,7,2&#125;,&#123;2,7,5,2,7,8,3,7,2,4&#125;,&#123;9,8,4,6,4,2,8,5,8,9&#125;&#125;</span><br><span class="line">c=&#123;2,6,8,8,3,5,5,7,4,9&#125;</span><br><span class="line">d=a+8*b</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">s=&#123;9, 51, 17, 21, 15, 34, 21, 41, 42, 40&#125;</span><br><span class="line">x=&#123;x1,x2,x3,x4,x5,x6,x7,x8,x9,x10&#125;</span><br><span class="line"></span><br><span class="line">NSolve[Mod[Dot[x,d]+c,64]==s,x,Integers]</span><br></pre></td></tr></table></figure>
+<p>对于第一组，可得</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;x1 -&gt; ConditionalExpression[</span><br><span class="line">    33 + 64 C[1], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | </span><br><span class="line">       C[8] | C[9] | C[10]) \[Element] Integers], </span><br><span class="line">  x2 -&gt; ConditionalExpression[</span><br><span class="line">    53 + 64 C[2], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | </span><br><span class="line">       C[8] | C[9] | C[10]) \[Element] Integers], </span><br><span class="line">  x3 -&gt; ConditionalExpression[</span><br><span class="line">    37 + 64 C[3], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | </span><br><span class="line">       C[8] | C[9] | C[10]) \[Element] Integers], </span><br><span class="line">  x4 -&gt; ConditionalExpression[</span><br><span class="line">    37 + 64 C[4], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | </span><br><span class="line">       C[8] | C[9] | C[10]) \[Element] Integers], </span><br><span class="line">  x5 -&gt; ConditionalExpression[</span><br><span class="line">    62 + 64 C[5], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | </span><br><span class="line">       C[8] | C[9] | C[10]) \[Element] Integers], </span><br><span class="line">  x6 -&gt; ConditionalExpression[</span><br><span class="line">    28 + 64 C[6], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | </span><br><span class="line">       C[8] | C[9] | C[10]) \[Element] Integers], </span><br><span class="line">  x7 -&gt; ConditionalExpression[</span><br><span class="line">    53 + 64 C[7], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | </span><br><span class="line">       C[8] | C[9] | C[10]) \[Element] Integers], </span><br><span class="line">  x8 -&gt; ConditionalExpression[</span><br><span class="line">    41 + 64 C[8], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | </span><br><span class="line">       C[8] | C[9] | C[10]) \[Element] Integers], </span><br><span class="line">  x9 -&gt; ConditionalExpression[</span><br><span class="line">    33 + 64 C[9], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | </span><br><span class="line">       C[8] | C[9] | C[10]) \[Element] Integers], </span><br><span class="line">  x10 -&gt; ConditionalExpression[</span><br><span class="line">    55 + 64 C[10], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | </span><br><span class="line">       C[8] | C[9] | C[10]) \[Element] Integers]&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>直接取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">33,53,37,37,62,28,53,41,33,55</span><br></pre></td></tr></table></figure>
+<p>类似地对其他3组用Mathematica求解，然后利用上面的Python代码进行base64映射</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(encode([33,53,37,37,62,28,53,41,33,55]))</span><br><span class="line">print(encode([43,62,48,53,45,33,62,53,52,49]))</span><br><span class="line">print(encode([53,52,62,43,55,47,55,43,44,53]))</span><br><span class="line">print(encode([27,37,55,62,38,26,45,43,53,49]))</span><br></pre></td></tr></table></figure>
+<p>得</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">h1ll-c1ph3</span><br><span class="line">r-w1th-10x</span><br><span class="line">10-r3v3rs1</span><br><span class="line">bl3-matr1x</span><br></pre></td></tr></table></figure>
+<p>则有<code>flag{h1ll-c1ph3r-w1th-10x10-r3v3rs1bl3-matr1x}</code></p>
 <p>答案正确！</p>
 <p><img src="//l-x.me/2018/10/15/article/USTC_Hackergame2018_18/BaiduShurufa_2018-10-15_20-19-38.png" alt="BaiduShurufa_2018-10-15_20-19-38"></p>
 

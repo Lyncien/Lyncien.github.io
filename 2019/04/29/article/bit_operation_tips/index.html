@@ -352,231 +352,50 @@
 <li>只能对整形数据运算</li>
 </ul>
 <p>一些基本的等式</p>
-<pre><code>~~n = n
--n = ~n + 1 = ~(n - 1)
--~n = n + 1
-~-n = n - 1
-</code></pre><a id="more"></a>
-<h4 id="二、位操作计算技巧"><a href="#二、位操作计算技巧" class="headerlink" title="二、位操作计算技巧"></a>二、位操作计算技巧</h4><h5 id="乘-除2的幂次"><a href="#乘-除2的幂次" class="headerlink" title="乘/除2的幂次"></a>乘/除2的幂次</h5><pre><code class="cpp">x &gt;&gt; 1; //等价于X / 2;
-</code></pre>
-<h5 id="判断奇偶"><a href="#判断奇偶" class="headerlink" title="判断奇偶"></a>判断奇偶</h5><pre><code class="cpp">bool isOdd(int a){
-    return a &amp; 1; // 等价于a % 2 == 0;
-}
-</code></pre>
-<h5 id="交换两数"><a href="#交换两数" class="headerlink" title="交换两数"></a>交换两数</h5><pre><code class="cpp">void swap(int &amp;a, int &amp;b){ //不使用第3个变量
-    a ^= b; //a = old_a ^ old_b
-    b ^= a; //b = old_b ^ (old_a ^ old_b) = old_a
-    a ^= b; //a = (old_a ^ old_b) ^ old_a = old_b
-}
-</code></pre>
-<h5 id="取相反数"><a href="#取相反数" class="headerlink" title="取相反数"></a>取相反数</h5><pre><code class="cpp">int signReverse(int a){  
-    return ~a + 1; //等价于 a = - a;
-} 
-</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~~n = n</span><br><span class="line">-n = ~n + 1 = ~(n - 1)</span><br><span class="line">-~n = n + 1</span><br><span class="line">~-n = n - 1</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h4 id="二、位操作计算技巧"><a href="#二、位操作计算技巧" class="headerlink" title="二、位操作计算技巧"></a>二、位操作计算技巧</h4><h5 id="乘-除2的幂次"><a href="#乘-除2的幂次" class="headerlink" title="乘/除2的幂次"></a>乘/除2的幂次</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x &gt;&gt; <span class="number">1</span>; <span class="comment">//等价于X / 2;</span></span><br></pre></td></tr></table></figure>
+<h5 id="判断奇偶"><a href="#判断奇偶" class="headerlink" title="判断奇偶"></a>判断奇偶</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isOdd</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a &amp; <span class="number">1</span>; <span class="comment">// 等价于a % 2 == 0;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="交换两数"><a href="#交换两数" class="headerlink" title="交换两数"></a>交换两数</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)</span></span>&#123; <span class="comment">//不使用第3个变量</span></span><br><span class="line">    a ^= b; <span class="comment">//a = old_a ^ old_b</span></span><br><span class="line">    b ^= a; <span class="comment">//b = old_b ^ (old_a ^ old_b) = old_a</span></span><br><span class="line">    a ^= b; <span class="comment">//a = (old_a ^ old_b) ^ old_a = old_b</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="取相反数"><a href="#取相反数" class="headerlink" title="取相反数"></a>取相反数</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">signReverse</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> ~a + <span class="number">1</span>; <span class="comment">//等价于 a = - a;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h5 id="取符号"><a href="#取符号" class="headerlink" title="取符号"></a>取符号</h5><p>当a&gt;0时候返回1，a&lt;0时返回-1，a=0时返回0</p>
-<pre><code class="cpp">int sign(int a){  
-    return !!a - (((unsigned)a &gt;&gt; 31) &lt;&lt; 1); 
-} 
-</code></pre>
-<h5 id="是否同号"><a href="#是否同号" class="headerlink" title="是否同号"></a>是否同号</h5><pre><code class="cpp">boolean isSameSign(int x, int y){ //有0的情况例外
-    return (x ^ y) &gt;= 0; 
-}
-</code></pre>
-<h5 id="取绝对值"><a href="#取绝对值" class="headerlink" title="取绝对值"></a>取绝对值</h5><pre><code class="cpp">int abs1(int a){  
-    return (a &gt;&gt; 31) == 0 ? a : (~a + 1);  
-}
-/* n&gt;&gt;31 取得n的符号，若n为正数，n&gt;&gt;31等于0，若n为负数，n&gt;&gt;31等于-1
-若n为正数 n^0=0,数不变，若n为负数有n^-1 需要计算n和-1的补码，然后进行异或运算，
-结果n变号并且为n的绝对值减1，再减去-1就是绝对值 */
-
-</code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sign</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> !!a - (((<span class="keyword">unsigned</span>)a &gt;&gt; <span class="number">31</span>) &lt;&lt; <span class="number">1</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="是否同号"><a href="#是否同号" class="headerlink" title="是否同号"></a>是否同号</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">boolean <span class="title">isSameSign</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123; <span class="comment">//有0的情况例外</span></span><br><span class="line">	<span class="keyword">return</span> (x ^ y) &gt;= <span class="number">0</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="取绝对值"><a href="#取绝对值" class="headerlink" title="取绝对值"></a>取绝对值</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">abs1</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> (a &gt;&gt; <span class="number">31</span>) == <span class="number">0</span> ? a : (~a + <span class="number">1</span>);  </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* n&gt;&gt;31 取得n的符号，若n为正数，n&gt;&gt;31等于0，若n为负数，n&gt;&gt;31等于-1</span></span><br><span class="line"><span class="comment">若n为正数 n^0=0,数不变，若n为负数有n^-1 需要计算n和-1的补码，然后进行异或运算，</span></span><br><span class="line"><span class="comment">结果n变号并且为n的绝对值减1，再减去-1就是绝对值 */</span></span><br></pre></td></tr></table></figure>
 <p>若右移是算术右移，也可写为</p>
-<pre><code class="cpp">int abs2(int a){  
-    int s = a &gt;&gt; 31; //0 或 -1
-    return (a ^ s) - s; //s = 0, a ^ 0 - 0 = a, s = 1, a
-} 
-</code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">abs2</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;  </span><br><span class="line">    <span class="keyword">int</span> s = a &gt;&gt; <span class="number">31</span>; <span class="comment">//0 或 -1</span></span><br><span class="line">    <span class="keyword">return</span> (a ^ s) - s; <span class="comment">//s = 0, a ^ 0 - 0 = a, s = 1, a</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h5 id="取最大值"><a href="#取最大值" class="headerlink" title="取最大值"></a>取最大值</h5><p>方法1</p>
-<pre><code class="cpp">int max(int a, int b){
-    return b &amp; ((a - b) &gt;&gt; 31) | a &amp; (~(a-b) &gt;&gt; 31);
-    /*如果a&gt;=b,(a-b)&gt;&gt;31为0，否则为-1*/
-}
-</code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> b &amp; ((a - b) &gt;&gt; <span class="number">31</span>) | a &amp; (~(a-b) &gt;&gt; <span class="number">31</span>);</span><br><span class="line">	<span class="comment">/*如果a&gt;=b,(a-b)&gt;&gt;31为0，否则为-1*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>方法2</p>
-<pre><code class="cpp">int max(int x, int y){
-    return x ^ ((x ^ y) &amp; -(x &lt; y));
-    /*如果x&lt;y,x&lt;y返回1，否则返回0，与0做与运算结果为0，与-1做与运算结果不变*/
-}
-</code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> x ^ ((x ^ y) &amp; -(x &lt; y));</span><br><span class="line">	<span class="comment">/*如果x&lt;y,x&lt;y返回1，否则返回0，与0做与运算结果为0，与-1做与运算结果不变*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h5 id="取最小值"><a href="#取最小值" class="headerlink" title="取最小值"></a>取最小值</h5><p>方法1</p>
-<pre><code class="cpp">int min(int a, int b){
-    return a &amp; ((a - b) &gt;&gt; 31) | b &amp; (~(a - b) &gt;&gt; 31);
-    /*如果a&gt;=b,(a-b)&gt;&gt;31为0，否则为-1*/
-}
-</code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a &amp; ((a - b) &gt;&gt; <span class="number">31</span>) | b &amp; (~(a - b) &gt;&gt; <span class="number">31</span>);</span><br><span class="line">	<span class="comment">/*如果a&gt;=b,(a-b)&gt;&gt;31为0，否则为-1*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>方法2</p>
-<pre><code class="cpp">int min(int x, int y){
-    return y ^ ((x ^ y) &amp; -(x &lt; y));
-    /*如果x&lt;y,x&lt;y返回1，否则返回0，与0做与运算结果为0，与-1做与运算结果不变*/
-}
-</code></pre>
-<h5 id="置二进制第-n-位为-1"><a href="#置二进制第-n-位为-1" class="headerlink" title="置二进制第 n 位为 1"></a>置二进制第 n 位为 1</h5><pre><code class="cpp">int setnbit1(int a){
-    a = a | (1 &lt;&lt; n);
-}
-</code></pre>
-<h5 id="置二进制第-n-位为-0"><a href="#置二进制第-n-位为-0" class="headerlink" title="置二进制第 n 位为 0"></a>置二进制第 n 位为 0</h5><pre><code class="cpp">int setnbit0(int a){
-    a = a &amp; ~(1 &lt;&lt; n);
-}
-</code></pre>
-<h5 id="将二进制第-n-位取反"><a href="#将二进制第-n-位取反" class="headerlink" title="将二进制第 n 位取反"></a>将二进制第 n 位取反</h5><pre><code class="cpp">int reversenbit(int a){
-    a = a ^ (1 &lt;&lt; n);
-}
-</code></pre>
-<h5 id="取二进制最低一位1"><a href="#取二进制最低一位1" class="headerlink" title="取二进制最低一位1"></a>取二进制最低一位1</h5><pre><code class="cpp">int getlow1(int a){
-    return a &amp; (-a); //-a = ~a + 1 = ~(a - 1), eg: a = 01010100 =&gt; 00000100
-}
-</code></pre>
-<h5 id="取二进制最低一位0"><a href="#取二进制最低一位0" class="headerlink" title="取二进制最低一位0"></a>取二进制最低一位0</h5><pre><code class="cpp">int getlow1(int a){
-    return ~a &amp; (a+1); //eg: a = 01010101 =&gt; 00000010
-}
-</code></pre>
-<h5 id="取二进制最高一位1"><a href="#取二进制最高一位1" class="headerlink" title="取二进制最高一位1"></a>取二进制最高一位1</h5><pre><code class="cpp">int gethigh1(unsigned int a){//注意是无符号数
-    a = a | (a &gt;&gt; 1);
-    a = a | (a &gt;&gt; 2);
-    a = a | (a &gt;&gt; 4);
-    a = a | (a &gt;&gt; 8);
-    a = a | (a &gt;&gt; 16);
-    return (a + 1) &gt;&gt; 1; //eg: a = 01010101 =&gt; 01000000
-}
-</code></pre>
-<h5 id="置二进制最低一位1为0"><a href="#置二进制最低一位1为0" class="headerlink" title="置二进制最低一位1为0"></a>置二进制最低一位1为0</h5><pre><code class="cpp">int setlow1to0(int a){
-    a = a &amp; (a - 1); //eg: a = 01010100 =&gt; 01010000
-}
-</code></pre>
-<h5 id="置二进制最低一位0为1"><a href="#置二进制最低一位0为1" class="headerlink" title="置二进制最低一位0为1"></a>置二进制最低一位0为1</h5><pre><code class="cpp">int setlow0to1(int a){
-    a = a | (a + 1); //eg: a = 01010101 =&gt; 01010111
-}
-</code></pre>
-<h5 id="置二进制低位连续的0为1"><a href="#置二进制低位连续的0为1" class="headerlink" title="置二进制低位连续的0为1"></a>置二进制低位连续的0为1</h5><pre><code class="cpp">int setlow1to0(int a){
-    a = a | (a - 1); //eg: a = 01010100 =&gt; 01010111
-}
-</code></pre>
-<h5 id="获得32位int的最大值"><a href="#获得32位int的最大值" class="headerlink" title="获得32位int的最大值"></a>获得32位int的最大值</h5><pre><code class="cpp">int getintmax(){
-    return (1 &lt;&lt; 31) - 1;//2147483647
-}
-</code></pre>
-<h5 id="获得32位int的最小值"><a href="#获得32位int的最小值" class="headerlink" title="获得32位int的最小值"></a>获得32位int的最小值</h5><pre><code class="cpp">int getintmin(){
-    return (1 &lt;&lt; 31); //-2147483648
-}
-</code></pre>
-<h5 id="高16位与低16位交换"><a href="#高16位与低16位交换" class="headerlink" title="高16位与低16位交换"></a>高16位与低16位交换</h5><pre><code class="cpp">int exchangehighlow16(int a){
-    a = (a &gt;&gt; 16) | (a &lt;&lt; 16);
-}
-</code></pre>
-<h5 id="取二进制中1的个数"><a href="#取二进制中1的个数" class="headerlink" title="取二进制中1的个数"></a>取二进制中1的个数</h5><pre><code class="cpp">int count1(unsigned int a){
-    a = (a &amp; 0x55555555) + ((a &gt;&gt; 1) &amp; 0x55555555); 
-    a = (a &amp; 0x33333333) + ((a &gt;&gt; 2) &amp; 0x33333333); 
-    a = (a &amp; 0x0F0F0F0F) + ((a &gt;&gt; 4) &amp; 0x0F0F0F0F); 
-    a = (a &amp; 0x00FF00FF) + ((a &gt;&gt; 8) &amp; 0x00FF00FF); 
-    a = (a &amp; 0x0000FFFF) + ((a &gt;&gt; 16) &amp; 0x0000FFFF);
-    return a
-}
-</code></pre>
-<h5 id="取二进制中前导0的个数"><a href="#取二进制中前导0的个数" class="headerlink" title="取二进制中前导0的个数"></a>取二进制中前导0的个数</h5><pre><code class="cpp">int countpre0(unsigned int a){
-    if (a == 0) return 32;
-    int n = 1;
-    if((a &gt;&gt; 16) == 0) {n += 16; a = a &lt;&lt;16;}
-    if((a &gt;&gt; 24) == 0) {n += 8; a = a &lt;&lt; 8;}
-    if((a &gt;&gt; 28) == 0) {n += 4; a = a &lt;&lt; 4;}
-    if((a &gt;&gt; 30) == 0) {n += 2; a = a &lt;&lt; 2;}
-    n -= (a &gt;&gt; 31);
-    return n;
-}
-</code></pre>
-<h5 id="取二进制最低一位1的位数"><a href="#取二进制最低一位1的位数" class="headerlink" title="取二进制最低一位1的位数"></a>取二进制最低一位1的位数</h5><pre><code class="cpp">int Lsb32(unsigned int a){ //LSB = Least Significant Bit
-    int n = 31;
-    if (a &amp; 0x0000ffff) {n -= 16; a &amp;= 0x0000ffff;}
-    if (a &amp; 0x00ff00ff) {n -= 8; a &amp;= 0x00ff00ff;}
-    if (a &amp; 0x0f0f0f0f) {n -= 4; a &amp;= 0x0f0f0f0f;}
-    if (a &amp; 0x33333333) {n -= 2; a &amp;= 0x33333333;}
-    if (a &amp; 0x55555555) n -=1;
-    return n;
-}
-</code></pre>
-<h5 id="取二进制最高一位1的位数"><a href="#取二进制最高一位1的位数" class="headerlink" title="取二进制最高一位1的位数"></a>取二进制最高一位1的位数</h5><pre><code class="cpp">int Msb32(unsigned int a){ //MSB = Most Significant Bit
-    int n = 0;
-    if (a &amp; 0xffff0000) {n += 16; a &amp;= 0xffff0000;}
-    if (a &amp; 0xff00ff00) {n += 8; a &amp;= 0xff00ff00;}
-    if (a &amp; 0xf0f0f0f0) {n += 4; a &amp;= 0xf0f0f0f0;}
-    if (a &amp; 0xcccccccc) {n += 2; a &amp;= 0xcccccccc;}
-    if (a &amp; 0xaaaaaaaa) n += 1;
-    return n;
-}
-</code></pre>
-<h5 id="实现加法"><a href="#实现加法" class="headerlink" title="实现加法"></a>实现加法</h5><pre><code class="cpp">int add(int a, int b) {
-    int carry, add;
-    do{
-        add = a ^ b;
-        carry = (a &amp; b) &lt;&lt; 1;
-        a = add;
-        b = carry;
-    }while(carry);
-    return add;
-}
-</code></pre>
-<h5 id="实现减法"><a href="#实现减法" class="headerlink" title="实现减法"></a>实现减法</h5><pre><code class="cpp">int subtract(int a, int b) {
-    return add(a, add(~b, 1));
-}
-</code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> y ^ ((x ^ y) &amp; -(x &lt; y));</span><br><span class="line">    <span class="comment">/*如果x&lt;y,x&lt;y返回1，否则返回0，与0做与运算结果为0，与-1做与运算结果不变*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="置二进制第-n-位为-1"><a href="#置二进制第-n-位为-1" class="headerlink" title="置二进制第 n 位为 1"></a>置二进制第 n 位为 1</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setnbit1</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">    a = a | (<span class="number">1</span> &lt;&lt; n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="置二进制第-n-位为-0"><a href="#置二进制第-n-位为-0" class="headerlink" title="置二进制第 n 位为 0"></a>置二进制第 n 位为 0</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setnbit0</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">    a = a &amp; ~(<span class="number">1</span> &lt;&lt; n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="将二进制第-n-位取反"><a href="#将二进制第-n-位取反" class="headerlink" title="将二进制第 n 位取反"></a>将二进制第 n 位取反</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">reversenbit</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">    a = a ^ (<span class="number">1</span> &lt;&lt; n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="取二进制最低一位1"><a href="#取二进制最低一位1" class="headerlink" title="取二进制最低一位1"></a>取二进制最低一位1</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getlow1</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a &amp; (-a); <span class="comment">//-a = ~a + 1 = ~(a - 1), eg: a = 01010100 =&gt; 00000100</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="取二进制最低一位0"><a href="#取二进制最低一位0" class="headerlink" title="取二进制最低一位0"></a>取二进制最低一位0</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getlow1</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> ~a &amp; (a+<span class="number">1</span>); <span class="comment">//eg: a = 01010101 =&gt; 00000010</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="取二进制最高一位1"><a href="#取二进制最高一位1" class="headerlink" title="取二进制最高一位1"></a>取二进制最高一位1</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">gethigh1</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> a)</span></span>&#123;<span class="comment">//注意是无符号数</span></span><br><span class="line">    a = a | (a &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    a = a | (a &gt;&gt; <span class="number">2</span>);</span><br><span class="line">    a = a | (a &gt;&gt; <span class="number">4</span>);</span><br><span class="line">    a = a | (a &gt;&gt; <span class="number">8</span>);</span><br><span class="line">    a = a | (a &gt;&gt; <span class="number">16</span>);</span><br><span class="line">    <span class="keyword">return</span> (a + <span class="number">1</span>) &gt;&gt; <span class="number">1</span>; <span class="comment">//eg: a = 01010101 =&gt; 01000000</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="置二进制最低一位1为0"><a href="#置二进制最低一位1为0" class="headerlink" title="置二进制最低一位1为0"></a>置二进制最低一位1为0</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setlow1to0</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">	a = a &amp; (a - <span class="number">1</span>); <span class="comment">//eg: a = 01010100 =&gt; 01010000</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="置二进制最低一位0为1"><a href="#置二进制最低一位0为1" class="headerlink" title="置二进制最低一位0为1"></a>置二进制最低一位0为1</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setlow0to1</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">	a = a | (a + <span class="number">1</span>); <span class="comment">//eg: a = 01010101 =&gt; 01010111</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="置二进制低位连续的0为1"><a href="#置二进制低位连续的0为1" class="headerlink" title="置二进制低位连续的0为1"></a>置二进制低位连续的0为1</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setlow1to0</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">	a = a | (a - <span class="number">1</span>); <span class="comment">//eg: a = 01010100 =&gt; 01010111</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="获得32位int的最大值"><a href="#获得32位int的最大值" class="headerlink" title="获得32位int的最大值"></a>获得32位int的最大值</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getintmax</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="number">1</span> &lt;&lt; <span class="number">31</span>) - <span class="number">1</span>;<span class="comment">//2147483647</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="获得32位int的最小值"><a href="#获得32位int的最小值" class="headerlink" title="获得32位int的最小值"></a>获得32位int的最小值</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getintmin</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="number">1</span> &lt;&lt; <span class="number">31</span>); <span class="comment">//-2147483648</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="高16位与低16位交换"><a href="#高16位与低16位交换" class="headerlink" title="高16位与低16位交换"></a>高16位与低16位交换</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">exchangehighlow16</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">    a = (a &gt;&gt; <span class="number">16</span>) | (a &lt;&lt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="取二进制中1的个数"><a href="#取二进制中1的个数" class="headerlink" title="取二进制中1的个数"></a>取二进制中1的个数</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">count1</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">    a = (a &amp; <span class="number">0x55555555</span>) + ((a &gt;&gt; <span class="number">1</span>) &amp; <span class="number">0x55555555</span>); </span><br><span class="line">    a = (a &amp; <span class="number">0x33333333</span>) + ((a &gt;&gt; <span class="number">2</span>) &amp; <span class="number">0x33333333</span>); </span><br><span class="line">    a = (a &amp; <span class="number">0x0F0F0F0F</span>) + ((a &gt;&gt; <span class="number">4</span>) &amp; <span class="number">0x0F0F0F0F</span>); </span><br><span class="line">    a = (a &amp; <span class="number">0x00FF00FF</span>) + ((a &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0x00FF00FF</span>); </span><br><span class="line">    a = (a &amp; <span class="number">0x0000FFFF</span>) + ((a &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0x0000FFFF</span>);</span><br><span class="line">    <span class="keyword">return</span> a</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="取二进制中前导0的个数"><a href="#取二进制中前导0的个数" class="headerlink" title="取二进制中前导0的个数"></a>取二进制中前导0的个数</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">countpre0</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (a == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">32</span>;</span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>((a &gt;&gt; <span class="number">16</span>) == <span class="number">0</span>) &#123;n += <span class="number">16</span>; a = a &lt;&lt;<span class="number">16</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span>((a &gt;&gt; <span class="number">24</span>) == <span class="number">0</span>) &#123;n += <span class="number">8</span>; a = a &lt;&lt; <span class="number">8</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span>((a &gt;&gt; <span class="number">28</span>) == <span class="number">0</span>) &#123;n += <span class="number">4</span>; a = a &lt;&lt; <span class="number">4</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span>((a &gt;&gt; <span class="number">30</span>) == <span class="number">0</span>) &#123;n += <span class="number">2</span>; a = a &lt;&lt; <span class="number">2</span>;&#125;</span><br><span class="line">    n -= (a &gt;&gt; <span class="number">31</span>);</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="取二进制最低一位1的位数"><a href="#取二进制最低一位1的位数" class="headerlink" title="取二进制最低一位1的位数"></a>取二进制最低一位1的位数</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Lsb32</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> a)</span></span>&#123; <span class="comment">//LSB = Least Significant Bit</span></span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">31</span>;</span><br><span class="line">    <span class="keyword">if</span> (a &amp; <span class="number">0x0000ffff</span>) &#123;n -= <span class="number">16</span>; a &amp;= <span class="number">0x0000ffff</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span> (a &amp; <span class="number">0x00ff00ff</span>) &#123;n -= <span class="number">8</span>; a &amp;= <span class="number">0x00ff00ff</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span> (a &amp; <span class="number">0x0f0f0f0f</span>) &#123;n -= <span class="number">4</span>; a &amp;= <span class="number">0x0f0f0f0f</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span> (a &amp; <span class="number">0x33333333</span>) &#123;n -= <span class="number">2</span>; a &amp;= <span class="number">0x33333333</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span> (a &amp; <span class="number">0x55555555</span>) n -=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="取二进制最高一位1的位数"><a href="#取二进制最高一位1的位数" class="headerlink" title="取二进制最高一位1的位数"></a>取二进制最高一位1的位数</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Msb32</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> a)</span></span>&#123; <span class="comment">//MSB = Most Significant Bit</span></span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (a &amp; <span class="number">0xffff0000</span>) &#123;n += <span class="number">16</span>; a &amp;= <span class="number">0xffff0000</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span> (a &amp; <span class="number">0xff00ff00</span>) &#123;n += <span class="number">8</span>; a &amp;= <span class="number">0xff00ff00</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span> (a &amp; <span class="number">0xf0f0f0f0</span>) &#123;n += <span class="number">4</span>; a &amp;= <span class="number">0xf0f0f0f0</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span> (a &amp; <span class="number">0xcccccccc</span>) &#123;n += <span class="number">2</span>; a &amp;= <span class="number">0xcccccccc</span>;&#125;</span><br><span class="line">    <span class="keyword">if</span> (a &amp; <span class="number">0xaaaaaaaa</span>) n += <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="实现加法"><a href="#实现加法" class="headerlink" title="实现加法"></a>实现加法</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> carry, add;</span><br><span class="line">	<span class="keyword">do</span>&#123;</span><br><span class="line">        add = a ^ b;</span><br><span class="line">        carry = (a &amp; b) &lt;&lt; <span class="number">1</span>;</span><br><span class="line">        a = add;</span><br><span class="line">        b = carry;</span><br><span class="line">	&#125;<span class="keyword">while</span>(carry);</span><br><span class="line">	<span class="keyword">return</span> add;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="实现减法"><a href="#实现减法" class="headerlink" title="实现减法"></a>实现减法</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">subtract</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> add(a, add(~b, <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h5 id="实现乘法"><a href="#实现乘法" class="headerlink" title="实现乘法"></a>实现乘法</h5><p>乘法可以通过系列移位和加法完成。最后一个1可通过b&amp;~(b-1)求得，可通过b&amp; (b-1)去掉，\</p>
 <p>C++写法：可提前计算一个map，高效地得到左移的位数</p>
-<pre><code class="cpp">int multiply(int a, int b) {
-    bool neg = (b &lt; 0);
-    if(neg) b = -b;
-    int sum = 0;
-    map&lt;int, int=&quot;&quot;&gt; bit_map;
-    for(int i = 0; i &lt; 32; i++)
-        bit_map.insert(pair&lt;int, int=&quot;&quot;&gt;(1 &lt;&lt; i, i));
-    while(b &gt; 0){
-        int last_bit = bit_map[b &amp; ~(b - 1)];//最低一位1的位数
-        sum += (a &lt;&lt; last_bit);
-        b &amp;= b - 1;//置最低一位1为0
-    }
-    return neg ? -sum : sum;
-}
-</code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">multiply</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">bool</span> neg = (b &lt; <span class="number">0</span>);</span><br><span class="line">	<span class="keyword">if</span>(neg) b = -b;</span><br><span class="line">	<span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>=""&gt; bit_map;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++)</span><br><span class="line">		bit_map.insert(pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>=<span class="string">""</span>&gt;(<span class="number">1</span> &lt;&lt; i, i));</span><br><span class="line">	<span class="keyword">while</span>(b &gt; <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">int</span> last_bit = bit_map[b &amp; ~(b - <span class="number">1</span>)];<span class="comment">//最低一位1的位数</span></span><br><span class="line">		sum += (a &lt;&lt; last_bit);</span><br><span class="line">		b &amp;= b - <span class="number">1</span>;<span class="comment">//置最低一位1为0</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> neg ? -sum : sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>C语言写法，调用之前的Lsb32函数</p>
-<pre><code class="cpp">int multiply(int a, int b) {
-    int neg = (b &lt; 0);
-    if(neg) b = -b;
-    int sum = 0;
-    while(b &gt; 0){
-        int last_bit = Lsb32(b);//最低一位1的位数
-        sum += (a &lt;&lt; last_bit);
-        b &amp;= b - 1;//置最低一位1为0
-    }
-    return neg ? -sum : sum;
-}
-</code></pre>
-<h5 id="实现除法"><a href="#实现除法" class="headerlink" title="实现除法"></a>实现除法</h5><pre><code class="cpp">int divide(int a, int b) {
-    bool neg = (a &gt; 0) ^ (b &gt; 0);
-    if(a &lt; 0) a = -a;
-    if(b &lt; 0) b = -b;
-    if(a &lt; b) return 0;
-    int msb = 0;
-    for(msb = 0; msb &lt; 32; msb++) //也可调用之前的Msb32函数
-        if((b &lt;&lt; msb) &gt;= a)
-            break;
-    int q = 0;
-    for(int i = msb; i &gt;= 0; i--){
-        if((b &lt;&lt; i) &gt; a)
-            continue;
-        q |= (1 &lt;&lt; i);
-        a -= (b &lt;&lt; i);
-    }
-    return neg ? -q : q;
-}
-</code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">multiply</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> neg = (b &lt; <span class="number">0</span>);</span><br><span class="line">	<span class="keyword">if</span>(neg) b = -b;</span><br><span class="line">	<span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(b &gt; <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">int</span> last_bit = Lsb32(b);<span class="comment">//最低一位1的位数</span></span><br><span class="line">		sum += (a &lt;&lt; last_bit);</span><br><span class="line">		b &amp;= b - <span class="number">1</span>;<span class="comment">//置最低一位1为0</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> neg ? -sum : sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="实现除法"><a href="#实现除法" class="headerlink" title="实现除法"></a>实现除法</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">divide</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">bool</span> neg = (a &gt; <span class="number">0</span>) ^ (b &gt; <span class="number">0</span>);</span><br><span class="line">	<span class="keyword">if</span>(a &lt; <span class="number">0</span>) a = -a;</span><br><span class="line">	<span class="keyword">if</span>(b &lt; <span class="number">0</span>) b = -b;</span><br><span class="line">	<span class="keyword">if</span>(a &lt; b) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> msb = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(msb = <span class="number">0</span>; msb &lt; <span class="number">32</span>; msb++) <span class="comment">//也可调用之前的Msb32函数</span></span><br><span class="line">		<span class="keyword">if</span>((b &lt;&lt; msb) &gt;= a)</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">int</span> q = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = msb; i &gt;= <span class="number">0</span>; i--)&#123;</span><br><span class="line">		<span class="keyword">if</span>((b &lt;&lt; i) &gt; a)</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		q |= (<span class="number">1</span> &lt;&lt; i);</span><br><span class="line">		a -= (b &lt;&lt; i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> neg ? -q : q;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="三、位运算压缩数据-作为集合"><a href="#三、位运算压缩数据-作为集合" class="headerlink" title="三、位运算压缩数据/作为集合"></a>三、位运算压缩数据/作为集合</h4><p>待更新</p>
 <h4 id="四、参考"><a href="#四、参考" class="headerlink" title="四、参考"></a>四、参考</h4><p><a href="http://graphics.stanford.edu/~seander/bithacks.html#OperationCounting" target="_blank" rel="noopener">http://graphics.stanford.edu/~seander/bithacks.html#OperationCounting</a></p>
 <p><a href="https://blog.whezh.com/bit-hacks/" target="_blank" rel="noopener">https://blog.whezh.com/bit-hacks/</a></p>

@@ -478,14 +478,16 @@
 <p>小赵听到自己成为了信息安全大赛的创始人后感到非常吃惊：“我一个少院学生会的干事，怎么就成信息安全大赛的创始人了呢？”这也难怪，毕竟小赵后来成为了物理学院的学生。物理和信息安全，通常情况下可都是八杆子打不着的呢。</p>
 <p>当然了，小赵作为物理学院的学生，和其他物理学院的学生一样，身上的浮躁劲儿可一点都不少，常常因为一点小成就而沾沾自喜。这不，因为个人安全上的不重视，小赵的某个学弟小郑，很快从小赵暗恋的女孩子手里拿到了小赵和她交流的加密算法的程序。小赵在得知此事后反而没有尽可能地息事宁人，反而公开宣称，由于解密算法目前没有公开，所以拿到了加密算法也没有什么用。看来小赵对于现代密码学，根本没什么全面深入的了解啊。</p>
 <p>不过，即使小赵使用的是对称加密算法，分析出解密算法也并非易事——小赵对程序进行了混淆，而混淆的方法是使用 BrainFuck 虚拟机——这也正是小赵的底气所在。现在的任务是分析并读懂一段 BrainFuck 程序，从而将一段密文还原。小郑拿到的密文是：</p>
-<pre><code class="JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH">JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH
-</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
 <p>现在小郑将这一任务交给了跃跃欲试的你。快来挖掘小赵的黑历史吧！</p>
 <h4 id="FLAG-格式"><a href="#FLAG-格式" class="headerlink" title="FLAG 格式"></a>FLAG 格式</h4><p>以下是两条示例原文和密文：</p>
 <blockquote>
-<pre><code>QUICK_BROWN_FOXES_JUMP_OVER_THE_LAZY_DOG =&gt; aMRKoll07lcf49SIuPrNg8v5bMctTkfrQmchaEkF
-quick-brown-foxes-jump-over-the-lazy-dog =&gt; p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGNPVALq5l
-</code></pre></blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt; QUICK_BROWN_FOXES_JUMP_OVER_THE_LAZY_DOG =&gt; aMRKoll07lcf49SIuPrNg8v5bMctTkfrQmchaEkF</span><br><span class="line">&gt;&gt; quick-brown-foxes-jump-over-the-lazy-dog =&gt; p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGNPVALq5l</span><br><span class="line">&gt;&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</blockquote>
+<blockquote>
 <ul>
 <li>假设密文是 <code>p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGNPVALq5l</code></li>
 <li>最后解得原文是 <code>quick-brown-foxes-jump-over-the-lazy-dog</code></li>
@@ -754,22 +756,14 @@ d)    实现下载
           
               <h1 id="Verilog中的有符号数与无符号数"><a href="#Verilog中的有符号数与无符号数" class="headerlink" title="Verilog中的有符号数与无符号数"></a>Verilog中的有符号数与无符号数</h1><h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><ul>
 <li><p>在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号</p>
-<pre><code>  `assign SignExtented = {{16{IMM16[15]}},IMM16};`
+<pre><code>`assign SignExtented = {{16{IMM16[15]}},IMM16};`
 </code></pre><p>  这里相当于是手动按符号拓展。</p>
 </li>
 <li>那么，现在要实现的addu和add的区别在哪呢？还有溢出如何判断？</li>
 </ul>
 <h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><ul>
 <li><p>马上回想了下原码和补码的问题，但是这只是在有符号情况下对正负数表示的统一，现在的问题是Verilog中“+”这个运算符是认为操作数是有符号还是无符号呢？（当然，正数的情况没有区别）。马上测试了一下：<br> ​    </p>
-<pre><code class="verilog"> reg [3:0] a；
- reg [3:0] b；
- reg [3:0] out；
- initial begin
-     a = -1;
-     b = -2;
-     out = a + b;
- end
-</code></pre>
+ <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">reg</span> [<span class="number">3</span>:<span class="number">0</span>] a；</span><br><span class="line"><span class="keyword">reg</span> [<span class="number">3</span>:<span class="number">0</span>] b；</span><br><span class="line"><span class="keyword">reg</span> [<span class="number">3</span>:<span class="number">0</span>] out；</span><br><span class="line"><span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">	a = -<span class="number">1</span>;</span><br><span class="line">	b = -<span class="number">2</span>;</span><br><span class="line">	out = a + b;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <p> 结果out=-3，我以为“+”是计算有符号的情况的。<br> 以二进制查看了一下波形，是<code>a=4&#39;b1111,b=4&#39;1110,out=4&#39;b1101</code><br> 看来如果赋值为负数，是以补码的形式存储的</p>
 <p> 那么如果操作数是两个无符号数，且足够大，首位是1，不就也被“+”当成有符号负数了吗？这就不能实现无符号的加法了。</p>
 </li>
@@ -958,11 +952,11 @@ d)    实现下载
 </li>
 <li><p>bgtz的实现：bgtz是伪指令（类似地有la和li），不是MIPS指令集的指令，编译时会进行处理，转换为几条指令实现。</p>
 <p> 这里我用以下三条指令</p>
-<pre><code> slt $t6,$zero,$t1     # if $t1 &gt; 0, that $t6 = 1, else $t6 = 0
- addi $t7,$zero,1      # set $t7 = 1
- beq $t6,$t7,loop      # jump if $t6 = 1, that is to say, $t1 &gt; 0
+<pre><code>slt $t6,$zero,$t1     # if $t1 &gt; 0, that $t6 = 1, else $t6 = 0
+addi $t7,$zero,1      # set $t7 = 1
+beq $t6,$t7,loop      # jump if $t6 = 1, that is to say, $t1 &gt; 0
 </code></pre><p> 实现</p>
-<pre><code> bgtz $t1, loop        # repeat if not finished yet.
+<pre><code>bgtz $t1, loop        # repeat if not finished yet.
 </code></pre></li>
 </ol>
           
@@ -1058,75 +1052,16 @@ d)    实现下载
 </li>
 <li><p>bgtz的实现：bgtz是伪指令（类似地有la和li），不是MIPS指令集的指令，编译时会进行处理，转换为几条指令实现。</p>
 <p>这里我用以下三条指令</p>
-<pre><code class="assembly">slt $t6,$zero,$t1 # if $t1 &gt; 0, that $t6 = 1, else $t6 = 0
-
-addi $t7,$zero,1 # set $t7 = 1
-
-beq $t6,$t7,loop # jump if $t6 = 1, that is to say, $t1 &gt; 0
-</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">slt $t6,$zero,$t1 # if $t1 &gt; 0, that $t6 = 1, else $t6 = 0</span><br><span class="line">  </span><br><span class="line">addi $t7,$zero,1 # set $t7 = 1</span><br><span class="line">  </span><br><span class="line">beq $t6,$t7,loop # jump if $t6 = 1, that is to say, $t1 &gt; 0</span><br></pre></td></tr></table></figure>
 <p>实现</p>
-<pre><code class="assembly">bgtz $t1, loop # repeat if not finished yet.
-</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bgtz $t1, loop # repeat if not finished yet.</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<ol start="9">
 <li><p>完整的数据通路</p>
 <p> <img src="//l-x.me/2018/05/04/cod/lab5_SingleCycleCPU/20180527111736051-1.png" alt=""></p>
 </li>
 </ol>
 <p>10、分析结果</p>
-<pre><code class="assembly">.data
-
-fibs: .word 0 : 20 # &quot;array&quot; of 20 words to contain fib values
-
-size: .word 20 # size of &quot;array&quot;
-
-temp: .word 3  3
-
-.text
-
-   la $t0, fibs # load address of array
-
-   la $t5, size # load address of size variable
-
-   lw $t5, 0($t5) # load array size
-
-   la $t3, temp # load
-
-   lw $t3, 0($t3)
-
-   la $t4, temp
-
-   lw $t4, 4($t4)
-
-   sw $t3, 0($t0) # F[0] = $t3
-
-   sw $t4, 4($t0) # F[1] = $t4
-
-   addi $t1, $t5,  -2 # Counter for loop, will execute (size-2) times
-
-loop: lw $t3, 0($t0) # Get value from array F[n]
-
-   lw $t4, 4($t0) # Get value from array F[n+1]
-
-   add $t2, $t3, $t4 # $t2 = F[n] + F[n+1]
-
-   sw $t2, 8($t0) # Store F[n+2] = F[n] + F[n+1] in array
-
-   addi $t0, $t0,  4 # increment address of Fib. number source
-
-   addi $t1, $t1,  -1 # decrement loop counter
-
-   slt $t6,$zero,$t1 # if $t1 &gt; 0, that $t6 = 1, else $t6 = 0
-
-   addi $t7,$zero,1 # set $t7 = 1
-
-   beq $t6,$t7,loop # jump if $t6 = 1, that is to say, $t1 &gt; 0
-
-out: 
-
-   j out
-</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">.data</span><br><span class="line"></span><br><span class="line">fibs: .word 0 : 20 # &quot;array&quot; of 20 words to contain fib values</span><br><span class="line"></span><br><span class="line">size: .word 20 # size of &quot;array&quot;</span><br><span class="line"></span><br><span class="line">temp: .word 3  3</span><br><span class="line"></span><br><span class="line">.text</span><br><span class="line"></span><br><span class="line">   la $t0, fibs # load address of array</span><br><span class="line"></span><br><span class="line">   la $t5, size # load address of size variable</span><br><span class="line"></span><br><span class="line">   lw $t5, 0($t5) # load array size</span><br><span class="line"></span><br><span class="line">   la $t3, temp # load</span><br><span class="line"></span><br><span class="line">   lw $t3, 0($t3)</span><br><span class="line"></span><br><span class="line">   la $t4, temp</span><br><span class="line"></span><br><span class="line">   lw $t4, 4($t4)</span><br><span class="line"></span><br><span class="line">   sw $t3, 0($t0) # F[0] = $t3</span><br><span class="line"></span><br><span class="line">   sw $t4, 4($t0) # F[1] = $t4</span><br><span class="line"></span><br><span class="line">   addi $t1, $t5,  -2 # Counter for loop, will execute (size-2) times</span><br><span class="line"></span><br><span class="line">loop: lw $t3, 0($t0) # Get value from array F[n]</span><br><span class="line"></span><br><span class="line">   lw $t4, 4($t0) # Get value from array F[n+1]</span><br><span class="line"></span><br><span class="line">   add $t2, $t3, $t4 # $t2 = F[n] + F[n+1]</span><br><span class="line"></span><br><span class="line">   sw $t2, 8($t0) # Store F[n+2] = F[n] + F[n+1] in array</span><br><span class="line"></span><br><span class="line">   addi $t0, $t0,  4 # increment address of Fib. number source</span><br><span class="line"></span><br><span class="line">   addi $t1, $t1,  -1 # decrement loop counter</span><br><span class="line"></span><br><span class="line">   slt $t6,$zero,$t1 # if $t1 &gt; 0, that $t6 = 1, else $t6 = 0</span><br><span class="line"></span><br><span class="line">   addi $t7,$zero,1 # set $t7 = 1</span><br><span class="line"></span><br><span class="line">   beq $t6,$t7,loop # jump if $t6 = 1, that is to say, $t1 &gt; 0</span><br><span class="line"></span><br><span class="line">out: </span><br><span class="line"></span><br><span class="line">   j out</span><br></pre></td></tr></table></figure>
 <ul>
 <li><p>完整汇编代码如上，可知程序先向内存数据段读取数组首地址和大小（循环次数），读取并写入f[0]=3, f[1]=3，然后循环18次，执行f[i]=f[i-1]+f[i-2]计算斐波那契数列。</p>
 </li>
