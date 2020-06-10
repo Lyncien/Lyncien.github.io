@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="C/C++ 位运算总结一、基本的位操作运算符   符号 描述 运算规则     &amp;amp; 与 两个位都为1时，结果才为1   ｜ 或 两个位都为0时，结果才为0   ^ 异或 两个位相同为0，相异为1   ~ 取反 0变1，1变0   &amp;lt;&amp;lt; 左移 各二进位全部左移若干位，高位丢弃，低位补0   &amp;gt;&amp;gt; 右移 各二进位全部右移若干位，对无符号数，高位补0，有符号数，各编译器处">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-03T13:12:20.653Z">
+<meta property="og:updated_time" content="2020-06-10T11:00:32.689Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C&#x2F;C++ 位运算总结">
 <meta name="twitter:description" content="C/C++ 位运算总结一、基本的位操作运算符   符号 描述 运算规则     &amp;amp; 与 两个位都为1时，结果才为1   ｜ 或 两个位都为0时，结果才为0   ^ 异或 两个位相同为0，相异为1   ~ 取反 0变1，1变0   &amp;lt;&amp;lt; 左移 各二进位全部左移若干位，高位丢弃，低位补0   &amp;gt;&amp;gt; 右移 各二进位全部右移若干位，对无符号数，高位补0，有符号数，各编译器处">
@@ -352,14 +352,15 @@
 <li>只能对整形数据运算</li>
 </ul>
 <p>一些基本的等式</p>
-<pre><code>~~n = n
+<pre><code class="C">~~n = n
 -n = ~n + 1 = ~(n - 1)
 -~n = n + 1
 ~-n = n - 1
-</code></pre><a id="more"></a>
-<h4 id="二、位操作计算技巧"><a href="#二、位操作计算技巧" class="headerlink" title="二、位操作计算技巧"></a>二、位操作计算技巧</h4><h5 id="乘-除2的幂次"><a href="#乘-除2的幂次" class="headerlink" title="乘/除2的幂次"></a>乘/除2的幂次</h5><pre><code class="cpp">x &gt;&gt; 1; //等价于X / 2;
 </code></pre>
-<h5 id="判断奇偶"><a href="#判断奇偶" class="headerlink" title="判断奇偶"></a>判断奇偶</h5><pre><code class="cpp">bool isOdd(int a){
+<a id="more"></a>
+<h4 id="二、位操作计算技巧"><a href="#二、位操作计算技巧" class="headerlink" title="二、位操作计算技巧"></a>二、位操作计算技巧</h4><h5 id="乘-除2的幂次"><a href="#乘-除2的幂次" class="headerlink" title="乘/除2的幂次"></a>乘/除2的幂次</h5><pre><code class="cpp">x &gt;&gt; n; //等价于X / 2^n;
+</code></pre>
+<h5 id="判断奇偶"><a href="#判断奇偶" class="headerlink" title="判断奇偶"></a>判断奇偶</h5><pre><code class="cpp">bool is_odd(int a){
     return a &amp; 1; // 等价于a % 2 == 0;
 }
 </code></pre>
@@ -369,7 +370,7 @@
     a ^= b; //a = (old_a ^ old_b) ^ old_a = old_b
 }
 </code></pre>
-<h5 id="取相反数"><a href="#取相反数" class="headerlink" title="取相反数"></a>取相反数</h5><pre><code class="cpp">int signReverse(int a){  
+<h5 id="取相反数"><a href="#取相反数" class="headerlink" title="取相反数"></a>取相反数</h5><pre><code class="cpp">int sign_reverse(int a){  
     return ~a + 1; //等价于 a = - a;
 } 
 </code></pre>
@@ -378,7 +379,7 @@
     return !!a - (((unsigned)a &gt;&gt; 31) &lt;&lt; 1); 
 } 
 </code></pre>
-<h5 id="是否同号"><a href="#是否同号" class="headerlink" title="是否同号"></a>是否同号</h5><pre><code class="cpp">boolean isSameSign(int x, int y){ //有0的情况例外
+<h5 id="是否同号"><a href="#是否同号" class="headerlink" title="是否同号"></a>是否同号</h5><pre><code class="cpp">boolean is_same_sign(int x, int y){ //有0的情况例外
     return (x ^ y) &gt;= 0; 
 }
 </code></pre>
@@ -420,27 +421,27 @@
     /*如果x&lt;y,x&lt;y返回1，否则返回0，与0做与运算结果为0，与-1做与运算结果不变*/
 }
 </code></pre>
-<h5 id="置二进制第-n-位为-1"><a href="#置二进制第-n-位为-1" class="headerlink" title="置二进制第 n 位为 1"></a>置二进制第 n 位为 1</h5><pre><code class="cpp">int setnbit1(int a){
+<h5 id="置二进制第-n-位为-1"><a href="#置二进制第-n-位为-1" class="headerlink" title="置二进制第 n 位为 1"></a>置二进制第 n 位为 1</h5><pre><code class="cpp">int set_nth_bit_to_1(int a){
     a = a | (1 &lt;&lt; n);
 }
 </code></pre>
-<h5 id="置二进制第-n-位为-0"><a href="#置二进制第-n-位为-0" class="headerlink" title="置二进制第 n 位为 0"></a>置二进制第 n 位为 0</h5><pre><code class="cpp">int setnbit0(int a){
+<h5 id="置二进制第-n-位为-0"><a href="#置二进制第-n-位为-0" class="headerlink" title="置二进制第 n 位为 0"></a>置二进制第 n 位为 0</h5><pre><code class="cpp">int set_nth_bit_to_0(int a){
     a = a &amp; ~(1 &lt;&lt; n);
 }
 </code></pre>
-<h5 id="将二进制第-n-位取反"><a href="#将二进制第-n-位取反" class="headerlink" title="将二进制第 n 位取反"></a>将二进制第 n 位取反</h5><pre><code class="cpp">int reversenbit(int a){
+<h5 id="将二进制第-n-位取反"><a href="#将二进制第-n-位取反" class="headerlink" title="将二进制第 n 位取反"></a>将二进制第 n 位取反</h5><pre><code class="cpp">int reverse_nth_bit(int a){
     a = a ^ (1 &lt;&lt; n);
 }
 </code></pre>
-<h5 id="取二进制最低一位1"><a href="#取二进制最低一位1" class="headerlink" title="取二进制最低一位1"></a>取二进制最低一位1</h5><pre><code class="cpp">int getlow1(int a){
+<h5 id="取二进制最低一位1"><a href="#取二进制最低一位1" class="headerlink" title="取二进制最低一位1"></a>取二进制最低一位1</h5><pre><code class="cpp">int get_low_1(int a){
     return a &amp; (-a); //-a = ~a + 1 = ~(a - 1), eg: a = 01010100 =&gt; 00000100
 }
 </code></pre>
-<h5 id="取二进制最低一位0"><a href="#取二进制最低一位0" class="headerlink" title="取二进制最低一位0"></a>取二进制最低一位0</h5><pre><code class="cpp">int getlow1(int a){
+<h5 id="取二进制最低一位0"><a href="#取二进制最低一位0" class="headerlink" title="取二进制最低一位0"></a>取二进制最低一位0</h5><pre><code class="cpp">int get_low_0(int a){
     return ~a &amp; (a+1); //eg: a = 01010101 =&gt; 00000010
 }
 </code></pre>
-<h5 id="取二进制最高一位1"><a href="#取二进制最高一位1" class="headerlink" title="取二进制最高一位1"></a>取二进制最高一位1</h5><pre><code class="cpp">int gethigh1(unsigned int a){//注意是无符号数
+<h5 id="取二进制最高一位1"><a href="#取二进制最高一位1" class="headerlink" title="取二进制最高一位1"></a>取二进制最高一位1</h5><pre><code class="cpp">int get_high_1(unsigned int a){//注意是无符号数
     a = a | (a &gt;&gt; 1);
     a = a | (a &gt;&gt; 2);
     a = a | (a &gt;&gt; 4);
@@ -449,31 +450,31 @@
     return (a + 1) &gt;&gt; 1; //eg: a = 01010101 =&gt; 01000000
 }
 </code></pre>
-<h5 id="置二进制最低一位1为0"><a href="#置二进制最低一位1为0" class="headerlink" title="置二进制最低一位1为0"></a>置二进制最低一位1为0</h5><pre><code class="cpp">int setlow1to0(int a){
+<h5 id="置二进制最低一位1为0"><a href="#置二进制最低一位1为0" class="headerlink" title="置二进制最低一位1为0"></a>置二进制最低一位1为0</h5><pre><code class="cpp">int set_low_1_to_0(int a){
     a = a &amp; (a - 1); //eg: a = 01010100 =&gt; 01010000
 }
 </code></pre>
-<h5 id="置二进制最低一位0为1"><a href="#置二进制最低一位0为1" class="headerlink" title="置二进制最低一位0为1"></a>置二进制最低一位0为1</h5><pre><code class="cpp">int setlow0to1(int a){
+<h5 id="置二进制最低一位0为1"><a href="#置二进制最低一位0为1" class="headerlink" title="置二进制最低一位0为1"></a>置二进制最低一位0为1</h5><pre><code class="cpp">int set_low_0_to_1(int a){
     a = a | (a + 1); //eg: a = 01010101 =&gt; 01010111
 }
 </code></pre>
-<h5 id="置二进制低位连续的0为1"><a href="#置二进制低位连续的0为1" class="headerlink" title="置二进制低位连续的0为1"></a>置二进制低位连续的0为1</h5><pre><code class="cpp">int setlow1to0(int a){
+<h5 id="置二进制低位连续的0为1"><a href="#置二进制低位连续的0为1" class="headerlink" title="置二进制低位连续的0为1"></a>置二进制低位连续的0为1</h5><pre><code class="cpp">int set_low_1_to_0(int a){
     a = a | (a - 1); //eg: a = 01010100 =&gt; 01010111
 }
 </code></pre>
-<h5 id="获得32位int的最大值"><a href="#获得32位int的最大值" class="headerlink" title="获得32位int的最大值"></a>获得32位int的最大值</h5><pre><code class="cpp">int getintmax(){
+<h5 id="获得32位int的最大值"><a href="#获得32位int的最大值" class="headerlink" title="获得32位int的最大值"></a>获得32位int的最大值</h5><pre><code class="cpp">int get_int_max(){
     return (1 &lt;&lt; 31) - 1;//2147483647
 }
 </code></pre>
-<h5 id="获得32位int的最小值"><a href="#获得32位int的最小值" class="headerlink" title="获得32位int的最小值"></a>获得32位int的最小值</h5><pre><code class="cpp">int getintmin(){
+<h5 id="获得32位int的最小值"><a href="#获得32位int的最小值" class="headerlink" title="获得32位int的最小值"></a>获得32位int的最小值</h5><pre><code class="cpp">int get_int_min(){
     return (1 &lt;&lt; 31); //-2147483648
 }
 </code></pre>
-<h5 id="高16位与低16位交换"><a href="#高16位与低16位交换" class="headerlink" title="高16位与低16位交换"></a>高16位与低16位交换</h5><pre><code class="cpp">int exchangehighlow16(int a){
+<h5 id="高16位与低16位交换"><a href="#高16位与低16位交换" class="headerlink" title="高16位与低16位交换"></a>高16位与低16位交换</h5><pre><code class="cpp">int exchange_high_low_16(int a){
     a = (a &gt;&gt; 16) | (a &lt;&lt; 16);
 }
 </code></pre>
-<h5 id="取二进制中1的个数"><a href="#取二进制中1的个数" class="headerlink" title="取二进制中1的个数"></a>取二进制中1的个数</h5><pre><code class="cpp">int count1(unsigned int a){
+<h5 id="取二进制中1的个数"><a href="#取二进制中1的个数" class="headerlink" title="取二进制中1的个数"></a>取二进制中1的个数</h5><pre><code class="cpp">int count_1(unsigned int a){
     a = (a &amp; 0x55555555) + ((a &gt;&gt; 1) &amp; 0x55555555); 
     a = (a &amp; 0x33333333) + ((a &gt;&gt; 2) &amp; 0x33333333); 
     a = (a &amp; 0x0F0F0F0F) + ((a &gt;&gt; 4) &amp; 0x0F0F0F0F); 
@@ -482,7 +483,7 @@
     return a
 }
 </code></pre>
-<h5 id="取二进制中前导0的个数"><a href="#取二进制中前导0的个数" class="headerlink" title="取二进制中前导0的个数"></a>取二进制中前导0的个数</h5><pre><code class="cpp">int countpre0(unsigned int a){
+<h5 id="取二进制中前导0的个数"><a href="#取二进制中前导0的个数" class="headerlink" title="取二进制中前导0的个数"></a>取二进制中前导0的个数</h5><pre><code class="cpp">int count_pre_0(unsigned int a){
     if (a == 0) return 32;
     int n = 1;
     if((a &gt;&gt; 16) == 0) {n += 16; a = a &lt;&lt;16;}
@@ -511,6 +512,24 @@
     if (a &amp; 0xcccccccc) {n += 2; a &amp;= 0xcccccccc;}
     if (a &amp; 0xaaaaaaaa) n += 1;
     return n;
+}
+</code></pre>
+<h5 id="裁剪为0-小于0则返回0"><a href="#裁剪为0-小于0则返回0" class="headerlink" title="裁剪为0(小于0则返回0)"></a>裁剪为0(小于0则返回0)</h5><pre><code class="C">int clamp_to_0(int x){
+    return ((-x) &gt;&gt; 31) &amp; x; //利用带符号的右移
+}
+</code></pre>
+<h5 id="裁剪为-2-n-1-大于-2-n-1-则返回-2-n-1"><a href="#裁剪为-2-n-1-大于-2-n-1-则返回-2-n-1" class="headerlink" title="裁剪为$2^n-1$(大于$2^n-1$则返回$2^n-1$)"></a>裁剪为$2^n-1$(大于$2^n-1$则返回$2^n-1$)</h5><pre><code class="C">int clamp_to_255(int x){
+    return (((255 - x) &gt;&gt; 31) | x) &amp; 255;
+}
+</code></pre>
+<h5 id="下一个大于x的-2-n"><a href="#下一个大于x的-2-n" class="headerlink" title="下一个大于x的$2^n$"></a>下一个大于x的$2^n$</h5><pre><code class="C">unsigned int next_power_of_2(unsigned int x){
+    --x;
+    x |= x &gt;&gt; 1;
+    x |= x &gt;&gt; 2;
+    x |= x &gt;&gt; 4;
+    x |= x &gt;&gt; 8;
+    x |= x &gt;&gt; 16;
+    return ++x;
 }
 </code></pre>
 <h5 id="实现加法"><a href="#实现加法" class="headerlink" title="实现加法"></a>实现加法</h5><pre><code class="cpp">int add(int a, int b) {
@@ -597,7 +616,7 @@
         <p><span>本文标题:</span><a href="/2019/04/29/article/bit_operation_tips/">C/C++ 位运算总结</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
         <p><span>发布时间:</span>2019-04-29, 00:00:00</p>
-        <p><span>最后更新:</span>2019-05-03, 21:12:20</p>
+        <p><span>最后更新:</span>2020-06-10, 19:00:32</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/04/29/article/bit_operation_tips/" title="C/C++ 位运算总结">https://l-x.me/2019/04/29/article/bit_operation_tips/</a>
             <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2019/04/29/article/bit_operation_tips/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -633,7 +652,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#C-C-位运算总结"><span class="toc-text">C/C++ 位运算总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一、基本的位操作运算符"><span class="toc-text">一、基本的位操作运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、位操作计算技巧"><span class="toc-text">二、位操作计算技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#乘-除2的幂次"><span class="toc-text">乘/除2的幂次</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#判断奇偶"><span class="toc-text">判断奇偶</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#交换两数"><span class="toc-text">交换两数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取相反数"><span class="toc-text">取相反数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取符号"><span class="toc-text">取符号</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#是否同号"><span class="toc-text">是否同号</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取绝对值"><span class="toc-text">取绝对值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取最大值"><span class="toc-text">取最大值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取最小值"><span class="toc-text">取最小值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#置二进制第-n-位为-1"><span class="toc-text">置二进制第 n 位为 1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#置二进制第-n-位为-0"><span class="toc-text">置二进制第 n 位为 0</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#将二进制第-n-位取反"><span class="toc-text">将二进制第 n 位取反</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制最低一位1"><span class="toc-text">取二进制最低一位1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制最低一位0"><span class="toc-text">取二进制最低一位0</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制最高一位1"><span class="toc-text">取二进制最高一位1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#置二进制最低一位1为0"><span class="toc-text">置二进制最低一位1为0</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#置二进制最低一位0为1"><span class="toc-text">置二进制最低一位0为1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#置二进制低位连续的0为1"><span class="toc-text">置二进制低位连续的0为1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#获得32位int的最大值"><span class="toc-text">获得32位int的最大值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#获得32位int的最小值"><span class="toc-text">获得32位int的最小值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#高16位与低16位交换"><span class="toc-text">高16位与低16位交换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制中1的个数"><span class="toc-text">取二进制中1的个数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制中前导0的个数"><span class="toc-text">取二进制中前导0的个数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制最低一位1的位数"><span class="toc-text">取二进制最低一位1的位数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制最高一位1的位数"><span class="toc-text">取二进制最高一位1的位数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现加法"><span class="toc-text">实现加法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现减法"><span class="toc-text">实现减法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现乘法"><span class="toc-text">实现乘法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现除法"><span class="toc-text">实现除法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、位运算压缩数据-作为集合"><span class="toc-text">三、位运算压缩数据/作为集合</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、参考"><span class="toc-text">四、参考</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#C-C-位运算总结"><span class="toc-text">C/C++ 位运算总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一、基本的位操作运算符"><span class="toc-text">一、基本的位操作运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、位操作计算技巧"><span class="toc-text">二、位操作计算技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#乘-除2的幂次"><span class="toc-text">乘/除2的幂次</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#判断奇偶"><span class="toc-text">判断奇偶</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#交换两数"><span class="toc-text">交换两数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取相反数"><span class="toc-text">取相反数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取符号"><span class="toc-text">取符号</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#是否同号"><span class="toc-text">是否同号</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取绝对值"><span class="toc-text">取绝对值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取最大值"><span class="toc-text">取最大值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取最小值"><span class="toc-text">取最小值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#置二进制第-n-位为-1"><span class="toc-text">置二进制第 n 位为 1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#置二进制第-n-位为-0"><span class="toc-text">置二进制第 n 位为 0</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#将二进制第-n-位取反"><span class="toc-text">将二进制第 n 位取反</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制最低一位1"><span class="toc-text">取二进制最低一位1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制最低一位0"><span class="toc-text">取二进制最低一位0</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制最高一位1"><span class="toc-text">取二进制最高一位1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#置二进制最低一位1为0"><span class="toc-text">置二进制最低一位1为0</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#置二进制最低一位0为1"><span class="toc-text">置二进制最低一位0为1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#置二进制低位连续的0为1"><span class="toc-text">置二进制低位连续的0为1</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#获得32位int的最大值"><span class="toc-text">获得32位int的最大值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#获得32位int的最小值"><span class="toc-text">获得32位int的最小值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#高16位与低16位交换"><span class="toc-text">高16位与低16位交换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制中1的个数"><span class="toc-text">取二进制中1的个数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制中前导0的个数"><span class="toc-text">取二进制中前导0的个数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制最低一位1的位数"><span class="toc-text">取二进制最低一位1的位数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#取二进制最高一位1的位数"><span class="toc-text">取二进制最高一位1的位数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#裁剪为0-小于0则返回0"><span class="toc-text">裁剪为0(小于0则返回0)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#裁剪为-2-n-1-大于-2-n-1-则返回-2-n-1"><span class="toc-text">裁剪为$2^n-1$(大于$2^n-1$则返回$2^n-1$)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#下一个大于x的-2-n"><span class="toc-text">下一个大于x的$2^n$</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现加法"><span class="toc-text">实现加法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现减法"><span class="toc-text">实现减法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现乘法"><span class="toc-text">实现乘法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#实现除法"><span class="toc-text">实现除法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、位运算压缩数据-作为集合"><span class="toc-text">三、位运算压缩数据/作为集合</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、参考"><span class="toc-text">四、参考</span></a></li></ol></li></ol>
         
     </div>
     <style>
