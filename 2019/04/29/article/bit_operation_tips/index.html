@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="C/C++ 位运算总结一、基本的位操作运算符   符号 描述 运算规则     &amp;amp; 与 两个位都为1时，结果才为1   ｜ 或 两个位都为0时，结果才为0   ^ 异或 两个位相同为0，相异为1   ~ 取反 0变1，1变0   &amp;lt;&amp;lt; 左移 各二进位全部左移若干位，高位丢弃，低位补0   &amp;gt;&amp;gt; 右移 各二进位全部右移若干位，对无符号数，高位补0，有符号数，各编译器处">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-14T03:54:42.817Z">
+<meta property="og:updated_time" content="2020-06-14T04:02:19.688Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C&#x2F;C++ 位运算总结">
 <meta name="twitter:description" content="C/C++ 位运算总结一、基本的位操作运算符   符号 描述 运算规则     &amp;amp; 与 两个位都为1时，结果才为1   ｜ 或 两个位都为0时，结果才为0   ^ 异或 两个位相同为0，相异为1   ~ 取反 0变1，1变0   &amp;lt;&amp;lt; 左移 各二进位全部左移若干位，高位丢弃，低位补0   &amp;gt;&amp;gt; 右移 各二进位全部右移若干位，对无符号数，高位补0，有符号数，各编译器处">
@@ -640,7 +640,7 @@ foo|bar; // 0111
 foo^bar; // 0101
 </code></pre>
 <p>对于C，可以利用整数</p>
-<pre><code class="C">typedef long long set;
+<pre><code class="C">typedef long long set; //char, short, int/long, __int64/long long
 //添加
 set add(set s, int i){
     s |= 1;
@@ -652,7 +652,7 @@ set delete(set s, int i){
     return s;
 }
 //在集合内
-int in_set(set s, int i){
+int in(set s, int i){
     return s &amp; (1 &gt;&gt; i);
 }
 //并集
@@ -664,7 +664,7 @@ set intersect(set s1, set s2){
     return s1 &amp; s2;
 }
 //差集,s1 - s2
-set (set s1, set s2){
+set except(set s1, set s2){
     return s1 &amp; ~s2;
 }
 </code></pre>
@@ -688,7 +688,7 @@ set (set s1, set s2){
         <p><span>本文标题:</span><a href="/2019/04/29/article/bit_operation_tips/">C/C++ 位运算总结</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
         <p><span>发布时间:</span>2019-04-29, 00:00:00</p>
-        <p><span>最后更新:</span>2020-06-14, 11:54:42</p>
+        <p><span>最后更新:</span>2020-06-14, 12:02:19</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/04/29/article/bit_operation_tips/" title="C/C++ 位运算总结">https://l-x.me/2019/04/29/article/bit_operation_tips/</a>
             <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2019/04/29/article/bit_operation_tips/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
