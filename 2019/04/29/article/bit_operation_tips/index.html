@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="Lyncien&#39;s homepage">
 <meta property="og:description" content="C/C++ 位运算总结一、基本的位操作运算符   符号 描述 运算规则     &amp;amp; 与 两个位都为1时，结果才为1   ｜ 或 两个位都为0时，结果才为0   ^ 异或 两个位相同为0，相异为1   ~ 取反 0变1，1变0   &amp;lt;&amp;lt; 左移 各二进位全部左移若干位，高位丢弃，低位补0   &amp;gt;&amp;gt; 右移 各二进位全部右移若干位，对无符号数，高位补0，有符号数，各编译器处">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-10T11:00:32.689Z">
+<meta property="og:updated_time" content="2020-06-14T03:54:42.817Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C&#x2F;C++ 位运算总结">
 <meta name="twitter:description" content="C/C++ 位运算总结一、基本的位操作运算符   符号 描述 运算规则     &amp;amp; 与 两个位都为1时，结果才为1   ｜ 或 两个位都为0时，结果才为0   ^ 异或 两个位相同为0，相异为1   ~ 取反 0变1，1变0   &amp;lt;&amp;lt; 左移 各二进位全部左移若干位，高位丢弃，低位补0   &amp;gt;&amp;gt; 右移 各二进位全部右移若干位，对无符号数，高位补0，有符号数，各编译器处">
@@ -374,7 +374,7 @@
     a ^= b; //a = (old_a ^ old_b) ^ old_a = old_b
 }
 </code></pre>
-<h5 id="取相反数"><a href="#取相反数" class="headerlink" title="取相反数"></a>取相反数</h5><pre><code class="cpp">int sign_reverse(int a){  
+<h5 id="取相反数"><a href="#取相反数" class="headerlink" title="取相反数"></a>取相反数</h5><pre><code class="cpp">int opposite(int a){  
     return ~a + 1; //等价于 a = - a;
 } 
 </code></pre>
@@ -393,7 +393,6 @@
 /* n&gt;&gt;31 取得n的符号，若n为正数，n&gt;&gt;31等于0，若n为负数，n&gt;&gt;31等于-1
 若n为正数 n^0=0,数不变，若n为负数有n^-1 需要计算n和-1的补码，然后进行异或运算，
 结果n变号并且为n的绝对值减1，再减去-1就是绝对值 */
-
 </code></pre>
 <p>若右移是算术右移，也可写为</p>
 <pre><code class="cpp">int abs2(int a){  
@@ -600,8 +599,77 @@
     return neg ? -q : q;
 }
 </code></pre>
-<h4 id="三、位运算压缩数据-作为集合"><a href="#三、位运算压缩数据-作为集合" class="headerlink" title="三、位运算压缩数据/作为集合"></a>三、位运算压缩数据/作为集合</h4><p>待更新</p>
-<h4 id="四、参考"><a href="#四、参考" class="headerlink" title="四、参考"></a>四、参考</h4><p><a href="http://graphics.stanford.edu/~seander/bithacks.html#OperationCounting" target="_blank" rel="noopener">http://graphics.stanford.edu/~seander/bithacks.html#OperationCounting</a></p>
+<h4 id="三、位运算压缩数据-作为集合"><a href="#三、位运算压缩数据-作为集合" class="headerlink" title="三、位运算压缩数据/作为集合"></a>三、位运算压缩数据/作为集合</h4><p>对于C++，STL提供的bitset类就是位的集合</p>
+<pre><code class="c++">//初始化
+std::bitset&lt;4&gt; foo; //foo: 0000
+std::bitset&lt;16&gt; bar (0xfa2); //用整数初始化，bar: 0000111110100010
+std::bitset&lt;16&gt; baz (std::string(&quot;0101111001&quot;)); 
+//用字符串初始化，不够长前面补0，baz: 0000000101111001
+//添加和删除元素就是位的赋值
+foo[1]=1; // foo: 0010
+foo[2]=foo[1]; // foo: 0110
+foo.set(); // foo: 1111
+foo.set(2,0); // foo: 1011
+foo.set(2); // foo: 1111
+foo.reset(1); // foo: 1101
+foo.reset(); // foo: 0000
+foo.flip(2); // foo: 0100
+foo.flip(); // foo: 1011
+//一些统计和判断函数
+foo.count(); //Count bits set
+foo.size(); //Return size
+foo.test(); //Return bit value
+foo.any(); //Test if any bit is set
+foo.none(); //Test if no bit is set
+foo.all(); //Test if all bits are set
+//集合操作就位运算
+std::bitset&lt;4&gt; foo (std::string(&quot;1001&quot;));
+std::bitset&lt;4&gt; bar (std::string(&quot;0011&quot;));
+foo^=bar; // 1010 (XOR,assign)
+foo&amp;=bar; // 0010 (AND,assign)
+foo|=bar; // 0011 (OR,assign)
+foo&lt;&lt;=2; // 1100 (SHL,assign)
+foo&gt;&gt;=1; // 0110 (SHR,assign)
+~bar; // 1100 (NOT)
+bar&lt;&lt;1; // 0110 (SHL)
+bar&gt;&gt;1; // 0001 (SHR)
+foo==bar; // false (0110==0011)
+foo!=bar; // true (0110!=0011)
+foo&amp;bar; // 0010
+foo|bar; // 0111
+foo^bar; // 0101
+</code></pre>
+<p>对于C，可以利用整数</p>
+<pre><code class="C">typedef long long set;
+//添加
+set add(set s, int i){
+    s |= 1;
+    return s;
+}
+//删除
+set delete(set s, int i){
+    s &amp;= 0;
+    return s;
+}
+//在集合内
+int in_set(set s, int i){
+    return s &amp; (1 &gt;&gt; i);
+}
+//并集
+set union(set s1, set s2){
+    return s1 | s2;
+}
+//交集
+set intersect(set s1, set s2){
+    return s1 &amp; s2;
+}
+//差集,s1 - s2
+set (set s1, set s2){
+    return s1 &amp; ~s2;
+}
+</code></pre>
+<h4 id="四、参考"><a href="#四、参考" class="headerlink" title="四、参考"></a>四、参考</h4><p><a href="http://www.cplusplus.com/reference/bitset/bitset/" target="_blank" rel="noopener">http://www.cplusplus.com/reference/bitset/bitset/</a></p>
+<p><a href="http://graphics.stanford.edu/~seander/bithacks.html#OperationCounting" target="_blank" rel="noopener">http://graphics.stanford.edu/~seander/bithacks.html#OperationCounting</a></p>
 <p><a href="https://blog.whezh.com/bit-hacks/" target="_blank" rel="noopener">https://blog.whezh.com/bit-hacks/</a></p>
 <p><a href="http://www.matrix67.com/blog/archives/263" target="_blank" rel="noopener">http://www.matrix67.com/blog/archives/263</a></p>
 <p><a href="https://www.clarkok.com/blog/2015/06/13/%E5%8F%96%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%9C%80%E9%AB%98%E4%BD%8D%E7%9A%84%E4%B8%80/" target="_blank" rel="noopener">https://www.clarkok.com/blog/2015/06/13/%E5%8F%96%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%9C%80%E9%AB%98%E4%BD%8D%E7%9A%84%E4%B8%80/</a></p>
@@ -620,7 +688,7 @@
         <p><span>本文标题:</span><a href="/2019/04/29/article/bit_operation_tips/">C/C++ 位运算总结</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
         <p><span>发布时间:</span>2019-04-29, 00:00:00</p>
-        <p><span>最后更新:</span>2020-06-10, 19:00:32</p>
+        <p><span>最后更新:</span>2020-06-14, 11:54:42</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/04/29/article/bit_operation_tips/" title="C/C++ 位运算总结">https://l-x.me/2019/04/29/article/bit_operation_tips/</a>
             <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2019/04/29/article/bit_operation_tips/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
