@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">并行计算上机实验一 OpenMP实现π值的计算和PSRS排序</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2019-05-02</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 27661 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 92 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>OpenMP实现π值的计算和PSRS排序</p>
+<h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><h4 id="π值的计算"><a href="#π值的计算" class="headerlink" title="π值的计算"></a>π值的计算</h4><h5 id="基本的串行算法"><a href="#基本的串行算法" class="headerlink" title="基本的串行算法"></a>基本的串行算法</h5><p><img src="/s/p/a37xc0/clip_image002.jpg" alt="http://img.blog.csdn.net/20150416160118625"></p>
+<p>利用公式arctan(1)=π/4以及(arctan(x))’=1/(1+x^2)，在[0, 1]上对f(x)= 4/(1+x^2)求积分，使用积分的定义离散化近似求解。将[0, 1]分成大量的小区间，使用for循环在每个小区间上计算y_i的值，最后求和。</p>
+<h5 id="使用并行域并行化的程序"><a href="#使用并行域并行化的程序" class="headerlink" title="使用并行域并行化的程序"></a>使用并行域并行化的程序</h5><p>在基本的串行算法上，用编译制导语句#pragma omp parallel将y_i的计算并行化（注意将使用到的变量私有化，每个线程各自拥有），显式地分配for循环，将紧挨着的p个区间的y_i的值分配给p个处理器分别计算（而不是将全部区间直接划分给p个处理器，这样可能导致各线程负载不均衡）。退出并行域之后，主线程对p个处理器各自的局部和sum进行求和。</p>
+<h5 id="使用共享任务结构并行化的程序"><a href="#使用共享任务结构并行化的程序" class="headerlink" title="使用共享任务结构并行化的程序"></a>使用共享任务结构并行化的程序</h5><p>在基本的串行算法上，用编译制导语句#pragma omp parallel将y_i的计算并行化，但是并不显式地分配for循环，直接在for循环前面加上编译制导语句#pragma omp for，系统将for循环自动分配给p个处理器。退出并行域之后，主线程对p个处理器各自的局部和进行求和。</p>
+<h5 id="使用private子句和critical部分并行化的程序"><a href="#使用private子句和critical部分并行化的程序" class="headerlink" title="使用private子句和critical部分并行化的程序"></a>使用private子句和critical部分并行化的程序</h5><p>在基本的串行算法上，用编译制导语句#pragma omp parallel将y_i的计算并行化（注意将使用到的变量私有化，每个线程各自拥有），显式地分配for循环，将紧挨着的p个区间的y_i的值分配给p个处理器分别计算（而不是将全部区间直接划分给p个处理器，这样可能导致各线程负载不均衡）。随后，直接在并行域内对上面的结果求和，但必须加上编译制导语句#pragma omp critical，表示指定代码段在同一时刻只能由一个线程进行执行。</p>
+<h5 id="使用并行规约的并行程序"><a href="#使用并行规约的并行程序" class="headerlink" title="使用并行规约的并行程序"></a>使用并行规约的并行程序</h5><p>在基本的串行算法上，用编译制导语句#pragma omp parallel for reduction(+:sum) 将y_i的计算并行化（注意将使用到的变量私有化，每个线程各自拥有），显式地分配for循环，将紧挨着的p个区间的y_i的值分配给p个处理器分别计算（而不是将全部区间直接划分给p个处理器，这样可能导致各线程负载不均衡）。sum存储了各个处理器的局部和，最后无需主进程显式地对局部和求和，系统将使用指定的算法(+)，对各个局部的sum自动归约。</p>
+<h4 id="PSRS排序"><a href="#PSRS排序" class="headerlink" title="PSRS排序"></a>PSRS排序</h4><p>给定n个元素的数组<code>A[0..n - 1]</code>，执行以下步骤</p>
+<p>(1)均匀划分：将<code>A[0..n - 1]</code>均匀划分成p段，每个处理器pi处理<code>A[(i*n/p..(i+1)*n/p - 1]</code></p>
+<p>(2)局部排序：每个处理器pi调用串行排序算法对<code>A[(i*n/p..(i+1)*n/p - 1]</code>排序</p>
+<p>(3)选取样本：每个处理器pi从自己的有序子数组<code>A[(i*n/p..(i+1)*n/p - 1]</code>中等间距选取p个样本元素</p>
+<p>(4)样本排序：用一台处理器对p2个样本元素进行串行排序</p>
+<p>(5)选择主元：用一台处理器从排好序的样本序列中选取p - 1个主元，并播送给其他pi</p>
+<p>(6)主元划分：每个处理器pi按p - 1个主元将自己的有序子数组<code>A[(i*n/p..(i+1)*n/p - 1]</code>划分成p段，此时，新申请一个数组存放p段数据（每段长度可能不同）</p>
+<p>(7)全局交换：每个处理器pi将自己的有序子数组中的每段按段号交换到对应id的处理器中。</p>
+<p>(8)归并排序：每个处理器pi对接收到的元素进行归并排序</p>
+<p>(9)将各处理器的新数据写回A，此时，原数组A已有序</p>
+<span id="more"></span>
+
+<h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><h4 id="π值的计算-1"><a href="#π值的计算-1" class="headerlink" title="π值的计算"></a>π值的计算</h4><p>设<em>n</em>为[0, 1]之间划分的区间数</p>
+<p>对于串行算法，时间复杂度为<em>O</em>(<em>n</em>)</p>
+<p>对于4种并行算法，时间复杂度为<em>O</em>(<em>n</em>/<em>p</em>)<em>，</em>其中<em>p</em>为处理器数</p>
+<h4 id="PSRS排序-1"><a href="#PSRS排序-1" class="headerlink" title="PSRS排序"></a>PSRS排序</h4><p>(参考文献 Hanmao Shi , Jonathan Schaeffer. Parallel Sorting by Regular Sampling.)</p>
+<p>设<em>n</em>为A的元素个数，<em>p</em>为处理器数，<em>w</em> = <em>n</em>/<em>p</em></p>
+<p>则时间复杂度为各阶段时间复杂度之和</p>
+<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="37.294ex" height="3.176ex" style="vertical-align: -0.838ex;" viewBox="0 -1006.6 16057.1 1367.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">O(wlogw+wlogp+plogw+p^2 logp^2)</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-4F" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-77" d="M580 385Q580 406 599 424T641 443Q659 443 674 425T690 368Q690 339 671 253Q656 197 644 161T609 80T554 12T482 -11Q438 -11 404 5T355 48Q354 47 352 44Q311 -11 252 -11Q226 -11 202 -5T155 14T118 53T104 116Q104 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Q21 293 29 315T52 366T96 418T161 441Q204 441 227 416T250 358Q250 340 217 250T184 111Q184 65 205 46T258 26Q301 26 334 87L339 96V119Q339 122 339 128T340 136T341 143T342 152T345 165T348 182T354 206T362 238T373 281Q402 395 406 404Q419 431 449 431Q468 431 475 421T483 402Q483 389 454 274T422 142Q420 131 420 107V100Q420 85 423 71T442 42T487 26Q558 26 600 148Q609 171 620 213T632 273Q632 306 619 325T593 357T580 385Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6C" d="M117 59Q117 26 142 26Q179 26 205 131Q211 151 215 152Q217 153 225 153H229Q238 153 241 153T246 151T248 144Q247 138 245 128T234 90T214 43T183 6T137 -11Q101 -11 70 11T38 85Q38 97 39 102L104 360Q167 615 167 623Q167 626 166 628T162 632T157 634T149 635T141 636T132 637T122 637Q112 637 109 637T101 638T95 641T94 647Q94 649 96 661Q101 680 107 682T179 688Q194 689 213 690T243 693T254 694Q266 694 266 686Q266 675 193 386T118 83Q118 81 118 75T117 65V59Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6F" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-67" d="M311 43Q296 30 267 15T206 0Q143 0 105 45T66 160Q66 265 143 353T314 442Q361 442 401 394L404 398Q406 401 409 404T418 412T431 419T447 422Q461 422 470 413T480 394Q480 379 423 152T363 -80Q345 -134 286 -169T151 -205Q10 -205 10 -137Q10 -111 28 -91T74 -71Q89 -71 102 -80T116 -111Q116 -121 114 -130T107 -144T99 -154T92 -162L90 -164H91Q101 -167 151 -167Q189 -167 211 -155Q234 -144 254 -122T282 -75Q288 -56 298 -13Q311 35 311 43ZM384 328L380 339Q377 350 375 354T369 368T359 382T346 393T328 402T306 405Q262 405 221 352Q191 313 171 233T151 117Q151 38 213 38Q269 38 323 108L331 118L384 328Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-70" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-4F" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-28" x="763" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-77" x="1153" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6C" x="1869" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6F" x="2168" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-67" x="2653" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-77" x="3134" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2B" x="4072" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-77" x="5073" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6C" x="5789" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6F" x="6088" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-67" x="6573" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-70" x="7054" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2B" x="7780" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-70" x="8780" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6C" x="9284" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6F" x="9582" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-67" x="10068" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-77" x="10548" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2B" x="11487" y="0"></use>
+<g transform="translate(12488,0)">
+ <use xlink:href="#E1-MJMATHI-70" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-32" x="712" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMATHI-6C" x="13445" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6F" x="13744" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-67" x="14229" y="0"></use>
+<g transform="translate(14710,0)">
+ <use xlink:href="#E1-MJMATHI-70" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-32" x="712" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-29" x="15667" y="0"></use>
+</g>
+</svg></div>
+
+<p>若<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="6.717ex" height="3.009ex" style="vertical-align: -0.671ex;" viewBox="0 -1006.6 2892 1295.7" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">n &gt;p^3</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3E" d="M84 520Q84 528 88 533T96 539L99 540Q106 540 253 471T544 334L687 265Q694 260 694 250T687 235Q685 233 395 96L107 -40H101Q83 -38 83 -20Q83 -19 83 -17Q82 -10 98 -1Q117 9 248 71Q326 108 378 132L626 250L378 368Q90 504 86 509Q84 513 84 520Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-70" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-33" d="M127 463Q100 463 85 480T69 524Q69 579 117 622T233 665Q268 665 277 664Q351 652 390 611T430 522Q430 470 396 421T302 350L299 348Q299 347 308 345T337 336T375 315Q457 262 457 175Q457 96 395 37T238 -22Q158 -22 100 21T42 130Q42 158 60 175T105 193Q133 193 151 175T169 130Q169 119 166 110T159 94T148 82T136 74T126 70T118 67L114 66Q165 21 238 21Q293 21 321 74Q338 107 338 175V195Q338 290 274 322Q259 328 213 329L171 330L168 332Q166 335 166 348Q166 366 174 366Q202 366 232 371Q266 376 294 413T322 525V533Q322 590 287 612Q265 626 240 626Q208 626 181 615T143 592T132 580H135Q138 579 143 578T153 573T165 566T175 555T183 540T186 520Q186 498 172 481T127 463Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-6E" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-3E" x="878" y="0"></use>
+<g transform="translate(1934,0)">
+ <use xlink:href="#E1-MJMATHI-70" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-33" x="712" y="583"></use>
+</g>
+</g>
+</svg></div>, 近似为 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="10.145ex" height="5.176ex" style="vertical-align: -2.338ex;" viewBox="0 -1221.9 4368 2228.5" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">O(\frac{n}{p}logn)</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-4F" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-70" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6C" d="M117 59Q117 26 142 26Q179 26 205 131Q211 151 215 152Q217 153 225 153H229Q238 153 241 153T246 151T248 144Q247 138 245 128T234 90T214 43T183 6T137 -11Q101 -11 70 11T38 85Q38 97 39 102L104 360Q167 615 167 623Q167 626 166 628T162 632T157 634T149 635T141 636T132 637T122 637Q112 637 109 637T101 638T95 641T94 647Q94 649 96 661Q101 680 107 682T179 688Q194 689 213 690T243 693T254 694Q266 694 266 686Q266 675 193 386T118 83Q118 81 118 75T117 65V59Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6F" d="M201 -11Q126 -11 80 38T34 156Q34 221 64 279T146 380Q222 441 301 441Q333 441 341 440Q354 437 367 433T402 417T438 387T464 338T476 268Q476 161 390 75T201 -11ZM121 120Q121 70 147 48T206 26Q250 26 289 58T351 142Q360 163 374 216T388 308Q388 352 370 375Q346 405 306 405Q243 405 195 347Q158 303 140 230T121 120Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-67" d="M311 43Q296 30 267 15T206 0Q143 0 105 45T66 160Q66 265 143 353T314 442Q361 442 401 394L404 398Q406 401 409 404T418 412T431 419T447 422Q461 422 470 413T480 394Q480 379 423 152T363 -80Q345 -134 286 -169T151 -205Q10 -205 10 -137Q10 -111 28 -91T74 -71Q89 -71 102 -80T116 -111Q116 -121 114 -130T107 -144T99 -154T92 -162L90 -164H91Q101 -167 151 -167Q189 -167 211 -155Q234 -144 254 -122T282 -75Q288 -56 298 -13Q311 35 311 43ZM384 328L380 339Q377 350 375 354T369 368T359 382T346 393T328 402T306 405Q262 405 221 352Q191 313 171 233T151 117Q151 38 213 38Q269 38 323 108L331 118L384 328Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-4F" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-28" x="763" y="0"></use>
+<g transform="translate(1153,0)">
+<g transform="translate(120,0)">
+<rect stroke="none" width="720" height="60" x="0" y="220"></rect>
+ <use xlink:href="#E1-MJMATHI-6E" x="60" y="676"></use>
+ <use xlink:href="#E1-MJMATHI-70" x="108" y="-686"></use>
+</g>
+</g>
+ <use xlink:href="#E1-MJMATHI-6C" x="2113" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6F" x="2412" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-67" x="2897" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6E" x="3378" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-29" x="3978" y="0"></use>
+</g>
+</svg></div>
+
+<p>另外，算法第六步每个处理器的w个数据根据p – 1个主元划分，每段的长度可能不相等，因此数组低维的长度不等，无法实现确定，但文献中证明了每段的长度最长不超过2w个元素。</p>
+<blockquote>
+<p>Theorem 1: In phase 3 of PSRS, each processor merges less than 2w elements.</p>
+</blockquote>
+<h3 id="算法源代码"><a href="#算法源代码" class="headerlink" title="算法源代码"></a>算法源代码</h3><h4 id="π值的计算-2"><a href="#π值的计算-2" class="headerlink" title="π值的计算"></a>π值的计算</h4><h5 id="基本的串行算法-1"><a href="#基本的串行算法-1" class="headerlink" title="基本的串行算法"></a>基本的串行算法</h5><pre><code class="C">#include &lt;stdio.h&gt;
+static long num_steps = 100000;//越大值越精确
+double step;
+void main()&#123;
+    int i;
+    double x, pi, sum = 0.0;
+    step = 1.0 / (double)num_steps;
+    for(i = 1; i &lt;= num_steps; i++)&#123;
+        x = (i - 0.5) * step;
+        sum = sum + 4.0/(1.0 + x * x);
+    &#125;
+    pi = step * sum;
+    printf(&quot;%lf\n&quot;, pi);
+&#125;
+</code></pre>
+<h5 id="使用并行域并行化的程序-1"><a href="#使用并行域并行化的程序-1" class="headerlink" title="使用并行域并行化的程序"></a>使用并行域并行化的程序</h5><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;omp.h&gt;
+#define NUM_THREADS 2
+static long num_steps = 100000;
+double step;
+void main ()
+&#123; 
+    int i;
+    double x, pi, sum[NUM_THREADS];
+    step = 1.0 / (double)num_steps;
+    omp_set_num_threads(NUM_THREADS);  //设置2线程
+#pragma omp parallel private(i)  //并行域开始，每个线程(0和1)都会执行该代码
+&#123;
+    double x;
+    int id;
+    id = omp_get_thread_num();
+    for(i = id, sum[id] = 0.0; i &lt; num_steps; i = i + NUM_THREADS)&#123;
+        x = (i + 0.5) * step;
+        sum[id] += 4.0 / (1.0 + x * x);
+    &#125;
+&#125;
+    for(i = 0, pi = 0.0; i &lt; NUM_THREADS; i++)
+        pi += sum[i] * step;
+    printf(&quot;%lf\n&quot;, pi);
+&#125;   
+//共2个线程参加计算，其中线程0进行迭代步0,2,4,...线程1进行迭代步1,3,5,....
+</code></pre>
+<h5 id="使用共享任务结构并行化的程序-1"><a href="#使用共享任务结构并行化的程序-1" class="headerlink" title="使用共享任务结构并行化的程序"></a>使用共享任务结构并行化的程序</h5><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;omp.h&gt;
+#define NUM_THREADS 2
+static long num_steps = 100000;
+double step;
+void main ()
+&#123; 
+    int i;
+    double x, pi, sum[NUM_THREADS];
+    step = 1.0 / (double)num_steps;
+    omp_set_num_threads(NUM_THREADS);  //设置2线程
+#pragma omp parallel  //并行域开始，每个线程(0和1)都会执行该代码
+&#123;
+    double x;
+    int id;
+    id = omp_get_thread_num();
+    sum[id] = 0;
+    #pragma omp for  //未指定chunk，迭代平均分配给各线程（0和1），连续划分
+    for(i = 0; i &lt; num_steps; i++)&#123;
+        x = (i + 0.5) * step;
+        sum[id] += 4.0 / (1.0 + x * x);
+    &#125;
+&#125;
+    for(i = 0, pi = 0.0; i &lt; NUM_THREADS; i++)
+        pi += sum[i] * step;
+    printf(&quot;%lf\n&quot;, pi);
+&#125;//共2个线程参加计算，其中线程0进行迭代步0~49999，线程1进行迭代步50000~99999.
+</code></pre>
+<h5 id="使用private子句和critical部分并行化的程序-1"><a href="#使用private子句和critical部分并行化的程序-1" class="headerlink" title="使用private子句和critical部分并行化的程序"></a>使用private子句和critical部分并行化的程序</h5><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;omp.h&gt;
+#define NUM_THREADS 2
+static long num_steps = 100000;
+double step;
+void main ()
+&#123; 
+    int i;
+    double pi = 0.0, sum = 0.0, x = 0.0;
+    step = 1.0 / (double)num_steps;
+    omp_set_num_threads(NUM_THREADS);  //设置2线程
+#pragma omp parallel private(x, sum, i) //该子句表示x,sum,i变量对于每个线程是私有的
+&#123;
+    int id; //不用定义为私有，因为id是在并行域内定义的
+    id = omp_get_thread_num();
+    for(i = id, sum = 0.0; i &lt; num_steps; i = i + NUM_THREADS)&#123;
+        x = (i + 0.5) * step;
+        sum += 4.0 / (1.0 + x * x);
+    &#125;
+    #pragma omp critical  //指定代码段在同一时刻只能由一个线程进行执行
+    pi += sum * step;
+&#125;
+    printf(&quot;%lf\n&quot;, pi);
+&#125;
+//共2个线程参加计算，其中线程0进行迭代步0,2,4,...线程1进行迭代步1,3,5,....
+//当被指定为critical的代码段正在被0线程执行时，1线程的执行也到达该代码段，则它将被阻塞知道0线程退出临界区。
+</code></pre>
+<h5 id="使用并行规约的并行程序-1"><a href="#使用并行规约的并行程序-1" class="headerlink" title="使用并行规约的并行程序"></a>使用并行规约的并行程序</h5><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;omp.h&gt;
+#define NUM_THREADS 2
+static long num_steps = 100000;
+double step;
+void main ()
+&#123; 
+    int i;
+    double pi = 0.0, sum = 0.0, x = 0.0;
+    step = 1.0 / (double)num_steps;
+    omp_set_num_threads(NUM_THREADS);  //设置2线程
+    #pragma omp parallel for reduction(+:sum) private(x) //每个线程保留一份私有拷贝sum，x为线程私有，最后对线程中所以sum进行+规约，并更新sum的全局值
+    for(i = 1; i &lt;= num_steps; i++)&#123;
+        x = (i - 0.5) * step;
+        sum += 4.0 / (1.0 + x * x);
+    &#125;
+    pi = sum * step;
+    printf(&quot;%lf\n&quot;,pi);
+&#125;   //共2个线程参加计算，其中线程0进行迭代步0~49999，线程1进行迭代步50000~99999.
+</code></pre>
+<h4 id="PSRS排序-2"><a href="#PSRS排序-2" class="headerlink" title="PSRS排序"></a>PSRS排序</h4><pre><code class="C">#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;omp.h&gt;
+
+#define INF 2147483647
+#define NUM_THREADS 3
+
+/**************************************************
+* 合并两个已排好序的子数组A[l : m], A[m + 1 : r], 写回A[l : r]
+***************************************************/
+void Merge(int *A, int l, int m, int r)&#123;
+    int i, j, k, n1 = m - l + 1, n2 = r - m;
+    int *L = (int *)malloc((n1 + 1) * sizeof(int));
+    int *R = (int *)malloc((n2 + 1) * sizeof(int));
+    for(i = 0; i &lt; n1; i++) L[i] = A[l + i];
+    for(j = 0; j &lt; n2; j++) R[j] = A[m + 1 + j];
+    L[i] = R[j] = INF;
+    i = j = 0;
+    for(k = l; k &lt;= r; k++) if(L[i] &lt;= R[j]) A[k] = L[i++]; else A[k] = R[j++];
+    free(L); free(R);
+&#125; 
+
+/**************************************************
+* 对A[l : r]进行归并排序
+***************************************************/
+void MergeSort(int *A, int l, int r)&#123;
+    if(l &lt; r)&#123;
+        int m = (l + r) / 2;
+        MergeSort(A, l, m);
+        MergeSort(A, m + 1, r);
+        Merge(A, l, m, r);
+    &#125;
+&#125; 
+
+/**************************************************
+* 对A[0 : n - 1]进行PSRS排序
+***************************************************/
+void PSRS(int *A, int n)&#123;
+    int id;
+    int per = n / NUM_THREADS; //A的n个元素划分为NUM_THREADS段，每个处理器处理per个元素
+    int sample[NUM_THREADS * NUM_THREADS]; //正则采样数为 NUM_THREADS * NUM_THREADS 
+    int pivot[NUM_THREADS]; //NUM_THREADS - 1 个主元，最后一个设为INF，作为哨兵
+    int *A2[NUM_THREADS][NUM_THREADS] = &#123;NULL&#125;; //数组，NUM_THREADS处理器把自己的per个元素划分为NUM_THREADS段
+    int A2len[NUM_THREADS][NUM_THREADS] = &#123;0&#125;; //上面数组的实际存储长度，每个处理器的每个段的元素个数
+    
+    omp_set_num_threads(NUM_THREADS);
+    #pragma omp parallel private(id) shared(per, A, A2, n, sample, pivot, A2len) //NUM_THREADS 个处理器同时执行，共用代码
+    &#123;
+        id = omp_get_thread_num(); //当前处理器的id
+        //（1）均匀划分 （2）每个处理器进行局部串行归并排序
+        MergeSort(A, id * per, (id + 1) * per - 1); 
+        
+        //（2）正则采样，每个处理器分别选出 NUM_THREADS 个样本，共 NUM_THREADS * NUM_THREADS 个
+        for(int k = 0; k &lt; NUM_THREADS; k++) 
+            sample[id * NUM_THREADS + k] = A[id * per + k * per / NUM_THREADS];
+        #pragma omp barrier //设置路障，同步所有线程
+        
+        //（3）采样排序 （4）选择主元
+        #pragma omp master //主线程执行，其他线程不执行
+        &#123;
+            MergeSort(sample, 0, NUM_THREADS * NUM_THREADS - 1); //对采样的NUM_THREADS * NUM_THREADS个样本进行排序
+            for(int k = 0; k &lt; NUM_THREADS - 1; k++) //选出NUM_THREADS - 1个主元
+                pivot[k] = sample[(k + 1) * NUM_THREADS];
+            pivot[NUM_THREADS - 1] = INF; //哨兵
+        &#125;
+        #pragma omp barrier
+        
+        //（5）主元划分
+        for(int k = 0; k &lt; NUM_THREADS; k++)
+            A2[id][k] = (int *)malloc(sizeof(int) * per * 2); //每个处理器的每个段的数组申请空间，最长不会超过 2 * per 个
+        for(int k = 0, j = id * per; j &lt; id * per + per; j++)&#123; //每个处理器对自己的per个元素按主元划分为NUM_THREADS段
+            if(A[j] &lt; pivot[k])&#123; //这里如果不用哨兵，最后一段要单独考虑
+                A2[id][k][A2len[id][k]++] = A[j];
+            &#125;
+            else&#123;
+                k++;
+                A2[id][k][A2len[id][k]++] = A[j];
+            &#125;
+        &#125;
+        #pragma omp barrier //这里必须有路障，否则部分处理器先划分结束后就开始全局交换，但此时数据还没有准备好
+
+        //（6）全局交换
+        //每个处理器把自己的per个元素划分成的NUM_THREADS个段“发送”给对应的NUM_THREADS个处理器(除了对应自己的那段)
+        //实际上是每个处理器主动去其他处理器的per里取来自己的那段
+        for(int k = 0; k &lt; NUM_THREADS; k++)&#123;
+            if(k != id)&#123; //A2[id][id]是每个处理器对应自己的那段
+                memcpy(A2[id][id] + A2len[id][id], A2[k][id], sizeof(int) * A2len[k][id]);//从其他处理器那里获取自己的那段直接接在后面
+                A2len[id][id] += A2len[k][id];
+            &#125;
+        &#125;
+        
+        //（7）每个处理器归并排序
+        MergeSort(A2[id][id], 0, A2len[id][id] - 1);
+        
+        #pragma omp barrier
+        //（8）A2写回A
+        #pragma omp master //主线程执行，其他线程不执行
+        &#123;
+            for(int j = 0, k = 0; k &lt; NUM_THREADS; k++)&#123;
+                memcpy(A + j, A2[k][k], sizeof(int) * A2len[k][k]);
+                j += A2len[k][k];
+            &#125;
+        &#125;
+        #pragma omp barrier
+        
+        //销毁A2动态申请的空间
+        for(int k = 0; k &lt; NUM_THREADS; k++)
+            free(A2[id][k]);
+    &#125;
+&#125;
+
+int main()&#123;
+    int A[27] = &#123;15, 46, 48, 93, 39, 6, 72, 91, 14, 36, 69, 40, 89, 61, 97, 12, 21, 54, 53, 97, 84, 58, 32, 27, 33, 72, 20&#125;;
+    double t1, t2;
+    t1 = omp_get_wtime();
+    PSRS(A, 27);
+    t2 = omp_get_wtime();
+    printf(&quot;time: %lfs\n&quot;, t2 - t1);
+    for(int i = 0; i &lt; 27; i++)
+        printf(&quot;%d &quot;, A[i]);
+    printf(&quot;\n&quot;);
+    return 0;
+&#125;
+</code></pre>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="/s/p/a37xc0/clip_image002-1570631920818.jpg" alt="img"></p>
+<p><img src="/s/p/a37xc0/clip_image002-1570631936971.jpg" alt="img"></p>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/a3bmo0/" class="prev">LeetCode题目改编——只出现一次的数字IV</a>
+		 
+
+		 
+			<a href="/s/p/a32dc0/" class="next">C/C++ 位运算总结</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/a37xc0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

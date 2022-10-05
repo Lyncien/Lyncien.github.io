@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">程序设计II上机实验9A：算24</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2017-07-11</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 4640 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 15 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h1 id="算24"><a href="#算24" class="headerlink" title="算24"></a>算24</h1><h4 id="Time-limit-1000-ms"><a href="#Time-limit-1000-ms" class="headerlink" title="Time limit: 1000 ms"></a>Time limit: 1000 ms</h4><h4 id="Memory-limit-256-MB"><a href="#Memory-limit-256-MB" class="headerlink" title="Memory limit: 256 MB"></a>Memory limit: 256 MB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>给出4个小于10的正整数，你可以使用加减乘除4种运算以及括号把这4个数连接起来得到一个表达式。现在的问题是，是否存在一种方式使得得到的表达式的结果等于24。</p>
+<p>这里加减乘除以及括号的运算结果和运算的优先级跟我们平常的定义一致（这里的除法定义是实数除法）。</p>
+<p>比如，对于5，5，5，1，我们知道5 * (5 – 1 / 5) = 24，因此可以得到24。又比如，对于1，1，4，2，我们怎么都不能得到24。</p>
+<h2 id="Input-Description"><a href="#Input-Description" class="headerlink" title="Input Description"></a>Input Description</h2><p>输入数据包括多行，每行给出一组测试数据，包括4个小于10的正整数（用空格分开）。最后一组测试数据中包括4个0，表示输入的结束，这组数据不用处理。</p>
+<h2 id="Output-Description"><a href="#Output-Description" class="headerlink" title="Output Description"></a>Output Description</h2><p>对于每一组测试数据，输出一行，如果可以得到24，输出“YES”；否则，输出“NO”。</p>
+<span id="more"></span>
+
+<h2 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h2><h3 id="INPUT"><a href="#INPUT" class="headerlink" title="INPUT"></a>INPUT</h3><pre><code>5 5 5 1
+1 1 4 2
+0 0 0 0
+</code></pre>
+<h3 id="OUTPUT"><a href="#OUTPUT" class="headerlink" title="OUTPUT"></a>OUTPUT</h3><pre><code>YES
+NO
+</code></pre>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#define P 10e-4
+#define INF 99999
+int IsEqual(double a,double b)
+&#123;
+    if(fabs(a-b)&lt;=P) return 1;
+    else return 0;
+&#125;
+double Cal(double a,char op,double b)
+&#123;
+    switch(op)
+    &#123;
+        case &#39;+&#39;: return a+b;
+        case &#39;-&#39;: return a-b;
+        case &#39;*&#39;: return a*b;
+        case &#39;/&#39;: if(b==0) return INF; else return a/b;
+    &#125;
+&#125;
+int Game24(double n[])
+&#123;
+    char op[]=&#123;&#39;+&#39;,&#39;-&#39;,&#39;*&#39;,&#39;/&#39;&#125;;
+    double res[5];
+    int i1,i2,i3,i4,j1,j2,j3,k,count=0;
+    for(i1=0;i1&lt;4;i1++)
+    &#123;
+        for(i2=0;i2&lt;4;i2++)
+        &#123;
+            if(i2!=i1)
+            &#123;
+                for(i3=0;i3&lt;4;i3++)
+                &#123;
+                    if(i3!=i2 &amp;&amp; i3!=i1)
+                    &#123;
+                        for(i4=0;i4&lt;4;i4++)
+                        &#123;
+                            if(i4!=i3 &amp;&amp; i4!=i2 &amp;&amp; i4!=i1)
+                            &#123;
+                                for(j1=0;j1&lt;4;j1++)
+                                &#123;
+                                    for(j2=0;j2&lt;4;j2++)
+                                    &#123;
+                                        for(j3=0;j3&lt;4;j3++)
+                                        &#123;
+                                            res[0]=Cal(Cal(Cal(n[i1],op[j1],n[i2]),op[j2],n[i3]),op[j3],n[i4]);
+                                            res[1]=Cal(Cal(n[i1],op[j1],n[i2]),op[j2],Cal(n[i3],op[j3],n[i4]));
+                                            res[2]=Cal(Cal(n[i1],op[j1],Cal(n[i2],op[j2],n[i3])),op[j3],n[i4]);
+                                            res[3]=Cal(n[i1],op[j1],Cal(Cal(n[i2],op[j2],n[i3]),op[j3],n[i4]));
+                                            res[4]=Cal(n[i1],op[j1],Cal(n[i2],op[j2],Cal(n[i3],op[j3],n[i4])));
+                                            for(k=0;k&lt;5;k++)
+                                            &#123;
+                                                if(IsEqual(24,res[k]))
+                                                &#123;
+                                                    return 1;    
+                                                &#125;
+                                            &#125;
+                                        &#125;    
+                                    &#125;    
+                                &#125;
+                            &#125;
+                        &#125;                
+                    &#125;            
+                &#125;                
+            &#125;
+        &#125;
+    &#125;
+    return 0;
+&#125;
+int main()
+&#123;
+    double n[4];
+    while(1)
+    &#123;
+        scanf(&quot;%lf%lf%lf%lf&quot;,&amp;n[0],&amp;n[1],&amp;n[2],&amp;n[3]);
+        if(!n[0] &amp;&amp; !n[1] &amp;&amp; !n[2] &amp;&amp; !n[3]) break;
+        if(Game24(n)) printf(&quot;YES\n&quot;); else printf(&quot;NO\n&quot;);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/95bk00/" class="prev">程序设计II上机实验9B：八数码问题</a>
+		 
+
+		 
+			<a href="javascript:alert('没有下一篇啦!');" class="next">没有下一篇啦!</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/959pc0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">数据结构上机题4 最短路径</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2017-12-09</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 16989 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 57 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h1 id="最短路"><a href="#最短路" class="headerlink" title="最短路"></a>最短路</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><ul>
+<li><p>ddl：12月9日。</p>
+</li>
+<li><p>实验题目：</p>
+<ul>
+<li>给定图的边和边权值（非负数），求给定两顶点间的最短路径。边和边权值（格式为边的兩顶点和权值，勿直接输入邻接矩阵）、两顶点由窗口（文件也可以）输入。输出路径和路径总权值。</li>
+</ul>
+</li>
+<li><p>基本要求（8分）：</p>
+<ul>
+<li>无向图、顶点以自然数命名</li>
+</ul>
+</li>
+<li><p>扩展：</p>
+<ul>
+<li>有向图；</li>
+<li>路径除起终顶点外，过另外几个给定顶点；</li>
+<li>顶点支持隨意命名；</li>
+<li>图形界面；</li>
+<li>等等….</li>
+</ul>
+</li>
+</ul>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>1.打开ShortestPaths.exe，选择有向图模式或无向图模式</p>
+<p>2.点击帮助按钮查看如何操作</p>
+<p>3.点击导入文件可导入事先建好的图，.udg为无向图文件，.dg为有向图文件，只能导入运行程序目录下的文件，只输入文件名（不用输入后缀名，会根据当前模式读取对应文件）</p>
+<p>4.导入后，左键单击某个顶，呈选中状态（绿色），然后按住SHIFT，再左键单击另一个顶，将求出最短路径，路径高亮加粗显示（黄色）。</p>
+<p>5.ShortestPaths文件夹内为工程源代码，在VS2010下创建，ShortestPaths.cpp绘制界面和处理键鼠操作，graph.h为图数据结构声明和基本操作</p>
+<span id="more"></span>
+
+<h2 id="截图"><a href="#截图" class="headerlink" title="截图"></a>截图</h2><p><img src="/s/p/9d1c00/1.png"></p>
+<p><img src="/s/p/9d1c00/1.png"></p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>注：需要easyx图形库</p>
+<p>graph.h</p>
+<pre><code class="c">#include &lt;string.h&gt;
+#define INF 99999999
+#define MAX_VERTEX_NUM 100
+#define MAX_NAME 10
+#define TRUE 1
+#define FALSE 0
+#define OK 1
+#define ERROR 0
+#define Status int
+typedef enum &#123;DG,DN,UDG,UDN&#125;GraphType;
+typedef struct ArcCell&#123;
+    int w;//边的权值,0为不连通
+&#125;GArc,ArcArray[MAX_VERTEX_NUM][MAX_VERTEX_NUM];
+typedef struct Vertex&#123;
+    TCHAR name[MAX_NAME];//顶的名称
+    int x,y;//用于绘制该顶时的位置
+    int l;//dijkstra算法需要
+    int state;//=0正常，=1选中
+&#125;GVex,VexArray[MAX_VERTEX_NUM];
+typedef struct Graph&#123;
+    ArcArray arcs;
+    VexArray vexs;
+    int arcnum,vexnum;
+    GraphType type;
+&#125;MGraph;
+typedef struct DijkstraResult&#123;
+    int vexbegin;//表示这个结果是从该顶到其他顶的最短距离
+    int prev[MAX_VERTEX_NUM];//最短路径上每个顶的前一个顶
+    int dist[MAX_VERTEX_NUM];//每个顶到vexbegin的最短距离
+&#125;DijRes;
+Status CreateGraph(MGraph* g)&#123;
+    g-&gt;arcnum=0;
+    g-&gt;vexnum=0;
+    memset(g-&gt;vexs,0,sizeof(GVex)*MAX_VERTEX_NUM);
+    memset(g-&gt;arcs,0,sizeof(GArc)*MAX_VERTEX_NUM*MAX_VERTEX_NUM);
+    return OK;
+&#125;
+Status DestoryGraph(MGraph *g)&#123;
+    g-&gt;arcnum=0;
+    g-&gt;vexnum=0;
+    memset(g-&gt;vexs,0,sizeof(GVex)*MAX_VERTEX_NUM);
+    memset(g-&gt;arcs,0,sizeof(GArc)*MAX_VERTEX_NUM*MAX_VERTEX_NUM);
+    return OK;
+&#125;
+int LocateVex(MGraph g,TCHAR vexname[])&#123;//获取顶在图中的位置，即在顶数组中的下标,未找到返回-1 
+    int i;
+    for(i=0;i&lt;g.vexnum;i++)&#123;
+        if(!_tcscmp(g.vexs[i].name,vexname)) return i;
+    &#125;
+    return -1;
+&#125;
+Status InsertVex(MGraph *g,TCHAR vexname[],int x,int y)&#123;//添加一个顶，不允许为空，不允许重名 
+    _tcscpy_s(g-&gt;vexs[g-&gt;vexnum].name,vexname);
+    g-&gt;vexs[g-&gt;vexnum].x=x;
+    g-&gt;vexs[g-&gt;vexnum].y=y;
+    g-&gt;vexs[g-&gt;vexnum].l=0;
+    g-&gt;vexnum++;
+    return OK; 
+&#125;
+Status DeleteVex(MGraph *g,TCHAR vexname[])&#123;
+    int i=LocateVex(*g,vexname),j;
+    if(i==-1) return ERROR;
+    _tcscpy_s(g-&gt;vexs[i].name,g-&gt;vexs[g-&gt;vexnum-1].name);//最后一个顶覆盖要删除的顶 
+    _tcscpy_s(g-&gt;vexs[g-&gt;vexnum-1].name,_T(&quot;&quot;));
+    for(j=0;j&lt;MAX_VERTEX_NUM;j++)&#123;
+        g-&gt;arcs[i][j].w=g-&gt;arcs[g-&gt;vexnum-1][j].w;
+        g-&gt;arcs[g-&gt;vexnum-1][j].w=0;
+    &#125;
+    return OK; 
+&#125;
+
+DijRes Dijkstra(MGraph g,int v)&#123;//求其他各顶到顶v的最短路径
+    DijRes r=&#123;&#125;;
+    int flag[MAX_VERTEX_NUM]=&#123;0&#125;;//标志是否已找到最短路径
+    int i,j,mindist,minu;
+    for(i=0;i&lt;g.vexnum;i++)&#123;//初始化每个顶到v的距离
+        if(g.arcs[v][i].w)&#123;//连通则初始距离为边权
+            r.dist[i]=g.arcs[v][i].w;
+            r.prev[i]=v;
+        &#125;
+        else&#123;//不连通为无穷
+            r.dist[i]=INF;
+            r.prev[i]=-1;
+        &#125;
+    &#125;
+    r.dist[v]=0;//v到v为0
+    flag[v]=1;//v标志为已找到
+    for(i=1;i&lt;g.vexnum;i++)&#123;//遍历vexnum-1次,每次找出一个顶点的最短路径
+        mindist=INF+1;
+        minu=-1;
+        for (j=0;j&lt;g.vexnum;j++)&#123;//求出未标记的顶中到v最短的
+            if(flag[j]==0 &amp;&amp; r.dist[j]&lt;mindist)&#123;
+                mindist=r.dist[j];
+                minu=j;
+            &#125;
+        &#125;
+        flag[minu]=1;
+        for (j=0;j&lt;g.vexnum;j++)&#123;//根据新找到的顶u更新其他各顶最短距离
+            int sum=mindist+(g.arcs[minu][j].w==0?INF:g.arcs[minu][j].w); // 边权为0不连通，以无穷计算
+            if (flag[j]==0 &amp;&amp; (sum&lt;r.dist[j]))&#123;
+                r.dist[j]=sum;
+                r.prev[j]=minu;
+            &#125;
+        &#125;
+
+    &#125;
+
+    return r;
+&#125;
+</code></pre>
+<p>ShortestPaths.cpp</p>
+<pre><code class="c">    // MinRoad.cpp : 定义控制台应用程序的入口点。
+    #define SPACE 20 //按钮间隔大小
+    #define HEIGHT 480
+    #define WIDTH 800
+    #define BUTTONHEIGHT 40 //按钮大小
+    #define BUTTONWIDTH 150 //按钮大小
+    #define CONTROLWIDTH BUTTONWIDTH+2*SPACE //控制区大小
+    #define VEXRADIUS 20 //顶半径
+    #define ARROWLEN 10 //箭头斜边的长
+    #define PI 3.1415926
+    #define HPI 1.5707963
+    
+    #include &lt;graphics.h&gt;//easyx图形库头文件
+    #include &lt;windows.h&gt;
+    #include &lt;stdio.h&gt;
+    #include &lt;math.h&gt;
+    #include &quot;graph.h&quot;//图
+    TCHAR runpath[256];//运行路径
+    int MODE=0;//0为无向图，1为有向图
+    int vsel=-1;//当前选中顶
+    int vmov=-1;//当前移动顶
+    MGraph g;//定义一个图
+    void DrawButton(int left,int top,LPCTSTR text)&#123;
+    
+        setbkmode(TRANSPARENT);//设置字体背景透明
+        setfillcolor(RGB(136,247,104));//设置填充颜色
+        setlinestyle(PS_SOLID,4);//设置线型线宽
+        setlinecolor(RGB(249,102,102));//设置线颜色
+        settextstyle(25, 0, _T(&quot;宋体&quot;),0,0,FW_BOLD,0,0,0);//设置字体，大小，粗细
+        settextcolor(RGB(0,0,255));//设置字体颜色
+    
+        RECT r;
+        r.left=left; r.top=top; r.right=left+BUTTONWIDTH; r.bottom=top+BUTTONHEIGHT;
+        fillroundrect(left,top,left+BUTTONWIDTH,top+BUTTONHEIGHT,5,5);//带边框填充
+        drawtext(text,&amp;r,DT_CENTER|DT_VCENTER|DT_SINGLELINE);//输出字
+    &#125;
+    void InitUI()&#123;
+        initgraph(WIDTH, HEIGHT);   // 创建绘图窗口
+        int t=SPACE;
+        DrawButton(SPACE,t,(LPCTSTR)L&quot;帮  助&quot;);
+        t+=SPACE+BUTTONHEIGHT;
+        DrawButton(SPACE,t,(LPCTSTR)L&quot;导出文件&quot;);
+        t+=SPACE+BUTTONHEIGHT;
+        DrawButton(SPACE,t,(LPCTSTR)L&quot;导入文件&quot;);
+        t+=SPACE+BUTTONHEIGHT;
+        DrawButton(SPACE,t,(LPCTSTR)L&quot;关  于&quot;);
+        line(CONTROLWIDTH,0,CONTROLWIDTH,HEIGHT);
+        HRGN rgn = CreateRectRgn(CONTROLWIDTH,0,WIDTH,HEIGHT);
+        setcliprgn(rgn);//之后的绘图区域只在该矩形内有效
+        DeleteObject(rgn);    
+
+    &#125;
+    void DrawVex(int i)&#123;
+        setbkmode(TRANSPARENT);//设置字体背景透明
+        setfillcolor(RGB(255,188,121));//设置填充颜色
+        setlinestyle(PS_SOLID,4);//设置线型线宽
+    
+        if(g.vexs[i].state==0)
+            setlinecolor(RGB(129,29,228));//设置线颜色
+        else
+            setlinecolor(RGB(92,185,0));//设置线颜色(选中状态)
+        settextstyle(30, 0, _T(&quot;Arial&quot;),0,0,FW_BOLD+100,0,0,0);//设置字体，大小，粗细
+        settextcolor(RGB(255,0,0));//设置字体颜色
+    
+        RECT r;
+        r.left=g.vexs[i].x-VEXRADIUS; r.top=g.vexs[i].y-VEXRADIUS; 
+        r.right=g.vexs[i].x+VEXRADIUS; r.bottom=g.vexs[i].y+VEXRADIUS;
+        fillcircle(g.vexs[i].x,g.vexs[i].y,VEXRADIUS);
+        drawtext((LPCTSTR)(g.vexs[i].name),&amp;r,DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+    &#125;
+    double GetAngle(int x1,int y1,int x2,int y2)&#123;//从(x1,y1)到(x2,y2)的向量的方位角，以x轴为0度，顺时针，弧度值
+        double a=atan(((double)(y2-y1))/(x2-x1));//得到-pi/2~pi/2的弧度值
+        if(x2&gt;x1) return a;
+        else if(x2==x1) return (y2&gt;=y1)?HPI:-HPI;//pi/2和-pi/2,两点重合这里会返回pi/2
+        else return (y2&gt;=y1)?a+PI:a-PI;
+    &#125;
+    void DrawArc(int i,int j,int mode,int inroad)&#123;//画边;mode=0,无向;mode=1,有向,i到j;inroad=1则换一种颜色画边
+        if(!inroad)&#123;
+            setlinestyle(PS_SOLID,3);//设置线型线宽
+            setlinecolor(RGB(0,196,166));//设置线颜色
+        &#125;
+        else&#123;
+            setlinestyle(PS_SOLID,4);//设置线型线宽
+            setlinecolor(RGB(255,250,28));//设置线颜色
+        &#125;
+        settextstyle(23, 0, _T(&quot;Arial&quot;),0,0,FW_BOLD,0,0,0);//设置字体，大小，粗细
+        TCHAR tw[10]=&#123;&#125;;
+    
+        _stprintf_s(tw,_T(&quot;%d&quot;),g.arcs[i][j].w);//即使对于无向图也通用，因为arcs[i][j]和arcs[j][i]一样
+
+        if(!mode)&#123;//无向图，直接连线
+            line(g.vexs[i].x,g.vexs[i].y,g.vexs[j].x,g.vexs[j].y);
+            outtextxy((g.vexs[i].x+g.vexs[j].x)/2,(g.vexs[i].y+g.vexs[j].y)/2,tw);
+        &#125;
+        else&#123;//有向图，画边时两个方向的线需要错开，不重叠，并且带箭头
+            double a=GetAngle(g.vexs[i].x,g.vexs[i].y,g.vexs[j].x,g.vexs[j].y);//从顶i到j的向量的方位角
+            double da=30.0/180.0*PI;//30度角对应的弧度,
+            int x1=g.vexs[i].x+cos(a-da)*VEXRADIUS,y1=g.vexs[i].y+sin(a-da)*VEXRADIUS;
+            int x2=g.vexs[j].x+cos(a+da-PI)*VEXRADIUS,y2=g.vexs[j].y+sin(a+da-PI)*VEXRADIUS;
+            line(x1,y1,x2,y2);//画i到j的边的直线,下面画箭头
+
+            double len1_2=sqrt(pow((long double)(g.vexs[i].x-g.vexs[j].x),2)+pow((long double)(g.vexs[i].y-g.vexs[j].y),2))/2;//该边1/2长
+            int arrx=x1+len1_2*cos(a),arry=y1+len1_2*sin(a);//箭头端点所在坐标
+            double db=2.617994;//150度角对应的弧度
+            line(arrx,arry,arrx+cos(a-db)*ARROWLEN,arry+sin(a-db)*ARROWLEN);//箭头一侧边
+            line(arrx,arry,arrx+cos(a+db)*ARROWLEN,arry+sin(a+db)*ARROWLEN);//箭头一侧边
+        outtextxy((x1+x2)/2,(y1+y2)/2,tw);
+    &#125;
+&#125;
+void DrawMGraph()&#123;
+    clearcliprgn();//清空绘图区
+    int i,j;
+
+    for(i=0;i&lt;g.vexnum;i++)&#123;//先画边，再画顶不然边会部分叠在顶上
+        for(j=0;j&lt;g.vexnum;j++)&#123;
+            if(g.arcs[i][j].w) DrawArc(i,j,MODE,0);
+        &#125;
+    &#125;
+    for(i=0;i&lt;g.vexnum;i++)&#123;
+        DrawVex(i);
+    &#125;
+&#125;
+
+void OnButtonClick(int i)&#123;
+    FILE* fp;
+    TCHAR filename[32]=_T(&quot;test&quot;);
+    TCHAR filepath[256];
+    switch(i)&#123;
+        case 1:    MessageBox(GetHWnd(),_T(\
+&quot;1.点击空白处添加新顶.\n2.在某顶上按住右键可移动该顶.\n3.左键单击某个顶可以选中.\n4.选中某顶后,ctrl+左键单击另一顶可添加边.\n5.选中某顶后,shift+左键单击另一顶可求最短路径.&quot;\
+),_T(&quot;Help&quot;),MB_OK|MB_ICONINFORMATION);
+                break;
+
+        case 2:    if(InputBox(filename,32,_T(&quot;文件将保存在当前运行目录下，无向图后缀名为.udg，有向图后缀名为.dg\n请输入文件名(不带后缀名):&quot;),_T(&quot;保存文件&quot;),(LPCTSTR)filename,0,0,0))&#123;
+                    _stprintf_s(filepath,_T(&quot;%s%s%s&quot;),runpath,filename,MODE?_T(&quot;.dg&quot;):_T(&quot;.udg&quot;));//生成保存路径
+                    
+                    if(!_tfopen_s(&amp;fp,filepath,_T(&quot;wb+&quot;)))&#123;
+                        fwrite(&amp;g,sizeof(g),1,fp);
+                        fclose(fp);
+                        MessageBox(GetHWnd(),_T(&quot;导出成功！&quot;),_T(&quot;提示&quot;),MB_OK|MB_ICONINFORMATION);
+                    &#125;
+                    else&#123;
+                        MessageBox(GetHWnd(),_T(&quot;文件不存在！！&quot;),_T(&quot;错误&quot;),MB_OK|MB_ICONWARNING);
+                    &#125;
+                &#125;
+                break;
+        case 3:    if(InputBox(filename,32,_T(&quot;将打开当前运行目录下的文件，无向图后缀名为.udg，有向图后缀名为.dg\n请输入文件名(不带后缀名):&quot;),_T(&quot;打开文件&quot;),(LPCTSTR)filename,0,0,0))&#123;
+                    _stprintf_s(filepath,_T(&quot;%s%s%s&quot;),runpath,filename,MODE?_T(&quot;.dg&quot;):_T(&quot;.udg&quot;));//生成保存路径
+                    //MessageBox(GetHWnd(),filepath,_T(&quot;aaa&quot;),MB_OK|MB_ICONINFORMATION);
+                    if(!_tfopen_s(&amp;fp,filepath,_T(&quot;rb+&quot;)))&#123;
+                        fread(&amp;g,sizeof(g),1,fp);
+                        fclose(fp);
+                        DrawMGraph();
+                    &#125;
+                    else&#123;
+                        MessageBox(GetHWnd(),_T(&quot;文件不存在！！&quot;),_T(&quot;错误&quot;),MB_OK|MB_ICONWARNING);
+                    &#125;
+                &#125;
+                break;
+        case 4:    MessageBox(GetHWnd(),_T(&quot;ShortestPaths V1.0\nCode by LinXiang(PB16020923)&quot;),_T(&quot;About&quot;),MB_OK|MB_ICONINFORMATION);
+                break;
+    &#125;
+&#125;
+int IsInRange(int a,int up,int down)&#123;
+    return a&lt;=up &amp;&amp; a&gt;=down;
+&#125;
+int GetPosInVex(int x,int y)&#123;//获取当前坐标下的顶下标，没有返回-1
+    int i,xu=x+VEXRADIUS,xd=x-VEXRADIUS,yu=y+VEXRADIUS,yd=y-VEXRADIUS;
+    //反过来判断某个顶在不在x,y范围内，这样节省计算，不用算每个顶边界
+    for(i=0;i&lt;g.vexnum;i++)&#123;
+        if(IsInRange(g.vexs[i].x,xu,xd) &amp;&amp; IsInRange(g.vexs[i].y,yu,yd)) return i;
+    &#125;
+    return -1;
+&#125;
+void SetVexSelected(int i)&#123;
+    g.vexs[i].state=1;
+    DrawVex(i);//更新为选中状态
+    vsel=i;//记下当前选中顶
+&#125;
+void SetVexNoSelected()&#123;
+    g.vexs[vsel].state=0;
+    DrawVex(vsel);//更新为正常选中状态
+    vsel=-1;//
+&#125;
+void GetRunPath(TCHAR *text,TCHAR *path)&#123;//获取当前运行路径
+    int pos;//最后一个\的位置 
+    int i=0;
+    while(*(text+i))&#123;
+        if(*(text+i)==&#39;\\&#39;) pos=i;
+        i++;
+    &#125;
+    _tcscpy_s(path,256,text);
+    path[pos+1]=0;
+&#125;
+int _tmain(int argc,TCHAR *argv[])
+&#123;
+    GetRunPath(argv[0],runpath);
+
+    if(IDYES==MessageBox(GetHWnd(),_T(&quot;选择‘是’为进入 有向图 模式，\n选择‘否’为进入 无向图 模式。&quot;),_T(&quot;选择模式&quot;),MB_YESNO|MB_ICONQUESTION))
+        MODE=1;
+    else MODE=0;
+    InitUI();
+    CreateGraph(&amp;g);
+    while(true)&#123;
+        MOUSEMSG m = GetMouseMsg();// 获取一条鼠标消息
+        switch(m.uMsg)&#123;
+            int vi;
+            case WM_MOUSEMOVE://移动
+                if(vmov!=-1)&#123;
+                    g.vexs[vmov].x=m.x;
+                    g.vexs[vmov].y=m.y;
+                    DrawMGraph();//重绘全部
+                &#125;
+                break;
+            case WM_RBUTTONDOWN://右键按下，开始移动 
+                vi=GetPosInVex(m.x,m.y);
+                if(vi!=-1)
+                    vmov=vi;
+                break;
+            case WM_RBUTTONUP://右键弹起，结束移动 
+                if(vmov!=-1)
+                    vmov=-1;
+                break;
+            case WM_LBUTTONDOWN://按下左键
+                if(m.mkCtrl)&#123;//同时按下CTRL
+                    vi=GetPosInVex(m.x,m.y);
+                    if(vi!=-1 &amp;&amp; vsel!=-1 &amp;&amp; vi!=vsel)&#123;//按下ctrl选择了一顶，并且之前已经选中一顶，而且两顶不同，则添新边
+                        TCHAR tn[10]=_T(&quot;1&quot;);
+                        if(InputBox(tn,128,_T(&quot;Input a arc weight&quot;),_T(&quot;Add a arc&quot;),(LPCTSTR)tn,0,0,0))&#123;//输入了权
+
+                            if(!MODE)&#123;//无向图
+                                g.arcs[vi][vsel].w=g.arcs[vsel][vi].w=_ttoi(tn);
+                                DrawArc(vsel,vi,MODE,0);
+                            &#125;
+                            else&#123;//有向图
+                                g.arcs[vsel][vi].w=_ttoi(tn);
+                                DrawArc(vsel,vi,MODE,0);
+                            &#125;
+
+                        &#125;
+                    &#125;
+                &#125;
+                else if(m.mkShift)&#123;//同时按下SHIFT
+                    vi=GetPosInVex(m.x,m.y);
+                    if(vi!=-1 &amp;&amp; vsel!=-1 &amp;&amp; vi!=vsel)&#123;//按下ctrl选择了一顶，并且之前已经选中一顶，而且两顶不同，则求最短路径
+                        DrawMGraph();//重绘全部,避免图中有画过其他路径
+                        DijRes r=Dijkstra(g,vsel);//求出vel到各顶最短路径
+                        int tmp=vi;//倒推路径，先画边
+                        while(r.prev[tmp]!=-1)&#123;
+                            DrawArc(r.prev[tmp],tmp,MODE,1);
+                            tmp=r.prev[tmp];
+                        &#125;
+                        tmp=vi;//倒推路径，再画顶
+                        while(tmp!=-1)&#123;
+                            DrawVex(tmp);
+                            tmp=r.prev[tmp];
+                        &#125;
+                    &#125;
+                &#125;
+                else&#123;//仅仅按下左键
+                    if(m.x&lt;CONTROLWIDTH)&#123;//控制区
+                        if(m.y%(SPACE+BUTTONHEIGHT)&gt;SPACE)
+                            OnButtonClick(m.y/(SPACE+BUTTONHEIGHT)+1);
+                    &#125;
+                    else&#123;//绘图区
+                        int vi=GetPosInVex(m.x,m.y);
+                        if(vi!=-1)&#123;//按下了某个顶
+                            if(vsel!=-1) //如果有选中的，先取消选中状态
+                                SetVexNoSelected();
+                            SetVexSelected(vi);
+                        &#125;
+                        else&#123;//按下了空白区域
+                            if(vsel!=-1)&#123;//如果有选中的，取消选中状态
+                            SetVexNoSelected();
+                            break;
+                        &#125;
+                        
+                        //以下添加新顶
+                                //TCHAR根据是否有UNICODE宏分别对应char和wchar_t
+                                //tn相当于TCHAR* 也就是LPTSTR
+                        TCHAR tn[MAX_NAME]=_T(&quot;0&quot;);
+                        tn[0]+=g.vexnum;
+                        if(InputBox(tn,128,_T(&quot;Input a name:&quot;),_T(&quot;Add a vex&quot;),(LPCTSTR)tn,0,0,0))&#123;
+                                //_T将字符串常量转为unicode版本，(LPCTSTR)把字符串变量转为常量
+                            InsertVex(&amp;g,tn,m.x,m.y);
+                            DrawVex(g.vexnum-1);
+                        &#125;
+                    &#125;
+                &#125;
+            &#125;
+            break;
+        &#125;
+    &#125;
+    closegraph();// 关闭绘图窗口
+    return 0;
+&#125;
+</code></pre>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9hrpc0/" class="prev">操作系统阅读报告：操作系统概述</a>
+		 
+
+		 
+			<a href="/s/p/9blhc0/" class="next">数据结构上机题3 哈夫曼压缩</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9d1c00/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

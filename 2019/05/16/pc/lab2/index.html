@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Lyncien">
+
+
+
+<meta name="description" content="题目MPI实现π值的计算和PSRS排序 算法设计π值的计算基本的串行算法 利用公式arctan(1)=π/4以及(arctan(x))’=1/(1+x^2)，在[0, 1]上对f(x)= 4/(1+x^2)求积分，使用积分的定义离散化近似求解。将[0, 1]分成大量的小区间，使用for循环在每个小区间上计算y_i的值，最后求和。 MPI并行算法在基本的串行算法上，main函数中开始时用MPI_In">
+<meta name="keywords" content="parallel computing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并行计算上机实验二 MPI实现π值的计算和PSRS排序">
+<meta property="og:url" content="https://l-x.me/2019/05/16/pc/lab2/index.html">
+<meta property="og:site_name" content="Lyncien&#39;s homepage">
+<meta property="og:description" content="题目MPI实现π值的计算和PSRS排序 算法设计π值的计算基本的串行算法 利用公式arctan(1)=π/4以及(arctan(x))’=1/(1+x^2)，在[0, 1]上对f(x)= 4/(1+x^2)求积分，使用积分的定义离散化近似求解。将[0, 1]分成大量的小区间，使用for循环在每个小区间上计算y_i的值，最后求和。 MPI并行算法在基本的串行算法上，main函数中开始时用MPI_In">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://l-x.me/2019/05/16/pc/lab2/clip_image003.jpg">
+<meta property="og:image" content="https://l-x.me/2019/05/16/pc/lab2/clip_image002.jpg">
+<meta property="og:image" content="https://l-x.me/2019/05/16/pc/lab2/clip_image002-1570631864083.jpg">
+<meta property="og:updated_time" content="2020-02-24T12:58:20.610Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="并行计算上机实验二 MPI实现π值的计算和PSRS排序">
+<meta name="twitter:description" content="题目MPI实现π值的计算和PSRS排序 算法设计π值的计算基本的串行算法 利用公式arctan(1)=π/4以及(arctan(x))’=1/(1+x^2)，在[0, 1]上对f(x)= 4/(1+x^2)求积分，使用积分的定义离散化近似求解。将[0, 1]分成大量的小区间，使用for循环在每个小区间上计算y_i的值，最后求和。 MPI并行算法在基本的串行算法上，main函数中开始时用MPI_In">
+<meta name="twitter:image" content="https://l-x.me/2019/05/16/pc/lab2/clip_image003.jpg">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Lyncien&#39;s homepage" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/old_resources/css/style.css">
+
+
+
+<link href="//cdn.bootcdn.net/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>并行计算上机实验二 MPI实现π值的计算和PSRS排序 | Lyncien&#39;s homepage</title>
+
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcdn.net/ajax/libs/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<script id="jump-to-new" src="/old_resources/js/redirect.js" async></script>
+</head>
+<script src="/old_resources/js/head-pic.js" ></script> <!-- head-pic-flash by Lyncien -->
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic" id="head-pic"> <!-- head-pic-flash by Lyncien -->
+            <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Lyncien</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">林深见鹿</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Lyncien</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic" id="head-pic-mobile"> <!-- head-pic-flash by Lyncien -->
+                <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Lyncien</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" target="_blank" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" target="_blank" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" target="_blank" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-pc/lab2" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/05/16/pc/lab2/" class="article-date">
+      <time datetime="2019-05-15T16:00:00.000Z" itemprop="datePublished">2019-05-16</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      并行计算上机实验二 MPI实现π值的计算和PSRS排序
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>MPI实现π值的计算和PSRS排序</p>
+<h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><h4 id="π值的计算"><a href="#π值的计算" class="headerlink" title="π值的计算"></a>π值的计算</h4><h5 id="基本的串行算法"><a href="#基本的串行算法" class="headerlink" title="基本的串行算法"></a>基本的串行算法</h5><p><img src="//l-x.me/2019/05/16/pc/lab2/clip_image003.jpg" alt="http://img.blog.csdn.net/20150416160118625"></p>
+<p>利用公式arctan(1)=π/4以及(arctan(x))’=1/(1+x^2)，在[0, 1]上对f(x)= 4/(1+x^2)求积分，使用积分的定义离散化近似求解。将[0, 1]分成大量的小区间，使用for循环在每个小区间上计算y_i的值，最后求和。</p>
+<h5 id="MPI并行算法"><a href="#MPI并行算法" class="headerlink" title="MPI并行算法"></a>MPI并行算法</h5><p>在基本的串行算法上，main函数中开始时用MPI_Init初始化，则所有进程都将执行接下来的代码。用MPI_Comm_size获取总进程数，用MPI_Comm_rank获取当前进程id。将y_i的计算并行化，显式地分配for循环，将紧挨着的p个区间的y_i的值分配给p个进程分别计算（而不是将全部区间直接划分给p个处理器，这样可能导致各线程负载不均衡），换言之，当前进程只计算每连续p个区间中的1个。最后用MPI_Reduce将每个进程计算的局部值归约求和，结果在主进程（0号进程）上。</p>
+<h4 id="PSRS排序"><a href="#PSRS排序" class="headerlink" title="PSRS排序"></a>PSRS排序</h4><p>给定n个元素的数组<code>A[0..n - 1]</code>，执行以下步骤</p>
+<p>(1)均匀划分：将<code>A[0..n - 1]</code>均匀划分成p段，每个进程pi处理<code>A[(i*n/p..(i+1)*n/p - 1]</code></p>
+<p>(2)局部排序：每个进程pi调用串行排序算法对<code>A[(i*n/p..(i+1)*n/p - 1]</code>排序</p>
+<p>(3)选取样本：每个进程pi从自己的有序子数组<code>A[(i*n/p..(i+1)*n/p - 1]</code>中等间距选取p个样本元素，存放在samples数组中</p>
+<p>(4)样本排序：用主进程global_samples数组收集（MPI_Gather）各个进程的samples数组，对总共的p2个样本元素进行串行排序</p>
+<p>(5)选择主元：用主进程从排好序的p2个样本中选取p - 1个主元，并广播（MPI_Bcast）给其他pi</p>
+<p>(6)主元划分：每个进程pi按p - 1个主元将自己的有序子数组<code>A[(i*n/p..(i+1)*n/p - 1]</code>划分成p段（每段长度可能不同），此时，不需要新申请一个二维数组存放p段数据，只需要一个一维数组sizes记录每段的长度和一个一维数组记录每段的起始位置offsets（相对偏移，通过累加前面的段的长度得到）</p>
+<p>(7)全局交换：每个进程pi将自己的有序子数组中的每段按段号交换到对应id的进程中，可以利用MPI_Alltoallv函数实现全局交换，之前的长度数组sizes和偏移数组作为参数offsets，另外需要三个数组newsizes、newoffsets和newdatas用于接收数据。</p>
+<p>MPI_Alltoallv函数定义如下</p>
+<pre><code>int MPI_Alltoallv(const void *sendbuf,    发送缓冲区的起始地址
+                  const int *sendcounts,  数组：每个发送数据的长度
+                  const int *sdispls,  数组：每个发送数据相对于发送缓冲区起始地址的位移量
+                  MPI_Datatype sendtype,  发送的数据类型
+                  void *recvbuf,          接收缓冲区的起始地址
+                  const int *recvcounts,  数组：每个接收数据的长度
+                  const int *rdispls， 数组：每个接收数据相对于接收缓冲区起始地址的位移量
+                  MPI_Datatype recvtype,  接收的数据类型
+                  MPI_Comm comm)          通信域
+
+</code></pre><p>该函数实现各个进程向各个进程交换<strong>不定长</strong>的数据</p>
+<p>该函数执行效果举例如下，每个数据的长度不定</p>
+<pre><code>交换前
+A0 A1 A2 A3 A4 A5    --进程0的sizes数组
+B0 B1 B2 B3 B4 B5    --进程1的sizes数组
+C0 C1 C2 C3 C4 C5    --进程2的sizes数组
+D0 D1 D2 D3 D4 D5    --进程3的sizes数组
+E0 E1 E2 E3 E4 E5    --进程4的sizes数组
+F0 F1 F2 F3 F4 F5    --进程5的sizes数组
+交换后
+A0 B0 C0 D0 E0 F0    --进程0的newsizes数组
+A1 B1 C1 D1 E1 F1    --进程1的newsizes数组
+A2 B2 C2 D2 E2 F2    --进程2的newsizes数组
+A3 B3 C3 D3 E3 F3    --进程3的newsizes数组
+A4 B4 C4 D4 E4 F4    --进程4的newsizes数组
+A5 B5 C5 D5 E5 F5    --进程5的newsizes数组
+
+</code></pre><p>(8)归并排序：每个进程pi对接收到的元素进行归并排序</p>
+<p>(9)用主进程收集（MPI_Gatherv）各个进程的新数据，写回A，此时，原数组A已有序</p>
+<p>MPI_Gatherv函数定义如下</p>
+<pre><code>int MPI_Gatherv(void* sendbuf,            发送缓冲区的起始地址
+                int sendcount,            发送数据的长度
+                MPI_Datatype sendtype,    发送的数据类型
+                void* recvbuf,            接收缓冲区的起始地址
+                int *recvcounts,          数组：每个接收数据的长度
+                int *displs,            数组：每个接收数据相对于接收缓冲区起始地址的位移量
+                MPI_Datatype recvtype,    接收的数据类型
+                int root,                 根进程的id
+                MPI_Comm comm)            通信域
+</code></pre><p>该函数实现各个进程向根进程汇集不定长的数据</p>
+<a id="more"></a>
+<h3 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h3><h4 id="π值的计算-1"><a href="#π值的计算-1" class="headerlink" title="π值的计算"></a>π值的计算</h4><p>设<em>n</em>为[0, 1]之间划分的区间数</p>
+<p>对于串行算法，时间复杂度为<em>O</em>(<em>n</em>)</p>
+<p>对于4种并行算法，时间复杂度为<em>O</em>(<em>n</em>/<em>p</em>)<em>，</em>其中<em>p</em>为处理器数</p>
+<h4 id="PSRS排序-1"><a href="#PSRS排序-1" class="headerlink" title="PSRS排序"></a>PSRS排序</h4><p>(参考文献 Hanmao Shi , Jonathan Schaeffer. Parallel Sorting by Regular Sampling.)</p>
+<p>设<em>n</em>为A的元素个数，<em>p</em>为处理器数，<em>w</em> = <em>n</em>/<em>p</em></p>
+<p>则时间复杂度为各阶段时间复杂度之和</p>
+<p>$O(wlogw+wlogp+plogw+p^2 logp^2)$</p>
+<p>若$n &gt;p^3 $, 近似为 $O(\frac{n}{p}logn)$</p>
+<p>另外，算法第六步每个处理器的w个数据根据p – 1个主元划分，每段的长度可能不相等，因此数组低维的长度不等，无法实现确定，但文献中证明了每段的长度最长不超过2w个元素。</p>
+<blockquote>
+<p>Theorem 1: In phase 3 of PSRS, each processor merges less than 2w elements.</p>
+</blockquote>
+<h3 id="算法源代码"><a href="#算法源代码" class="headerlink" title="算法源代码"></a>算法源代码</h3><h4 id="π值的计算-2"><a href="#π值的计算-2" class="headerlink" title="π值的计算"></a>π值的计算</h4><h5 id="基本的串行算法-1"><a href="#基本的串行算法-1" class="headerlink" title="基本的串行算法"></a>基本的串行算法</h5><pre><code class="C">#include &lt;stdio.h&gt;
+static long num_steps = 100000;//越大值越精确
+double step;
+void main(){
+    int i;
+    double x, pi, sum = 0.0;
+    step = 1.0 / (double)num_steps;
+    for(i = 1; i &lt;= num_steps; i++){
+        x = (i - 0.5) * step;
+        sum = sum + 4.0/(1.0 + x * x);
+    }
+    pi = step * sum;
+    printf(&quot;%lf\n&quot;, pi);
+}
+</code></pre>
+<h5 id="使用并行域并行化的程序"><a href="#使用并行域并行化的程序" class="headerlink" title="使用并行域并行化的程序"></a>使用并行域并行化的程序</h5><pre><code class="c">#include &quot;mpi.h&quot;
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+static long num_steps = 100000;
+int main(int argc, char *argv[])
+{
+    int id, num_processes;
+    double local_pi, pi, local_sum = 0.0, x;
+    double step = 1.0 / (double)num_steps;
+    double t1, t2;
+    MPI_Init(&amp;argc, &amp;argv);  
+    MPI_Comm_size(MPI_COMM_WORLD, &amp;num_processes); 
+    MPI_Comm_rank(MPI_COMM_WORLD, &amp;id);  
+    if(id == 0) //主进程
+        t1 = MPI_Wtime();
+    for(int i = id + 1; i &lt;= num_steps; i += num_processes){  //各线程计算自己部分的面积local_pi
+        x = step * (i - 0.5);
+        local_sum = local_sum + 4.0 / (1.0 + x * x);
+    }
+    local_pi = local_sum * step;
+    MPI_Reduce(&amp;local_pi, &amp;pi, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);  //归约local_pi到pi
+    if(id == 0){
+        t2 = MPI_Wtime();
+        printf(&quot;time: %fs\n&quot;, t2 - t1);
+        printf(&quot;PI is approximately %.16f\n&quot;, pi);
+    }
+    MPI_Finalize();
+    return 0;
+}
+</code></pre>
+<p>##### </p>
+<h4 id="PSRS排序-2"><a href="#PSRS排序-2" class="headerlink" title="PSRS排序"></a>PSRS排序</h4><pre><code class="C">#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &quot;mpi.h&quot;
+
+#define INF 2147483647
+
+/**************************************************
+* 合并两个已排好序的子数组A[l : m], A[m + 1 : r], 写回A[l : r]
+***************************************************/
+void Merge(int *A, int l, int m, int r){
+    int i, j, k, n1 = m - l + 1, n2 = r - m;
+    int *L = (int *)malloc((n1 + 1) * sizeof(int));
+    int *R = (int *)malloc((n2 + 1) * sizeof(int));
+    for(i = 0; i &lt; n1; i++) L[i] = A[l + i];
+    for(j = 0; j &lt; n2; j++) R[j] = A[m + 1 + j];
+    L[i] = R[j] = INF;
+    i = j = 0;
+    for(k = l; k &lt;= r; k++) if(L[i] &lt;= R[j]) A[k] = L[i++]; else A[k] = R[j++];
+    free(L); free(R);
+} 
+
+/**************************************************
+* 对A[l : r]进行归并排序
+***************************************************/
+void MergeSort(int *A, int l, int r){
+    if(l &lt; r){
+        int m = (l + r) / 2;
+        MergeSort(A, l, m);
+        MergeSort(A, m + 1, r);
+        Merge(A, l, m, r);
+    }
+} 
+
+/**************************************************
+* 对A[0 : n - 1]进行PSRS排序
+***************************************************/
+void PSRS(int *A, int n, int id, int num_processes){ //每个进程都会执行这个函数，这里面的变量每个进程都有一份，因此都是局部的（对于当前进程而言）
+    int per; 
+    int *samples, *global_samples; //global表示这个变量是主进程会使用的，但事实上每个进程都声明了
+    int *pivots; 
+    int *sizes, *newsizes;
+    int *offsets, *newoffsets;
+    int *newdatas;
+    int newdatassize;
+    int *global_sizes;
+    int *global_offsets;
+    //-------------------------------------------------------------------------------------------------------------------
+
+    per = n / num_processes; //A的n个元素划分为num_processes段，每个进程处理per个元素
+    samples = (int *)malloc(num_processes * sizeof(int)); //当前进程的采样数组
+    pivots = (int *)malloc(num_processes * sizeof(int)); //num_processes - 1 个主元，最后一个设为INF，作为哨兵
+    if(id == 0){ //主进程申请全局采样数组
+        global_samples = (int *)malloc(num_processes * num_processes * sizeof(int)); //正则采样数为 num_processes * num_processes 
+    }
+    MPI_Barrier(MPI_COMM_WORLD);//设置路障，同步所有进程
+    //-------------------------------------------------------------------------------------------------------------------
+    //（1）均匀划分，当前进程对A中属于自己的部分进行串行归并排序
+    MergeSort(A, id * per, (id + 1) * per - 1); //这里没有把A中对应当前进程的数据复制到当前进程，而是直接对A部分排序
+    //（2）正则采样，当前进程选出 num_processes 个样本放在local_sample中
+    for(int k = 0; k &lt; num_processes; k++) 
+        samples[k] = A[id * per + k * per / num_processes];
+    //主进程的sample收集各进程的local_sample，共 num_processes * num_processes 个
+    MPI_Gather(samples, num_processes, MPI_INT, global_samples, num_processes, MPI_INT, 0, MPI_COMM_WORLD);
+    //-------------------------------------------------------------------------------------------------------------------
+    //（3）采样排序 （4）选择主元
+    if(id == 0){ //主进程
+        MergeSort(global_samples, 0, num_processes * num_processes - 1); //对采样的num_processes * num_processes个样本进行排序
+        for(int k = 0; k &lt; num_processes - 1; k++) //选出num_processes - 1个主元
+            pivots[k] = global_samples[(k + 1) * num_processes];
+        pivots[num_processes - 1] = INF; //哨兵
+    }
+    //主进程向各个进程广播，所有进程拥有一样的pivots数组
+    MPI_Bcast(pivots, num_processes, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
+    //-------------------------------------------------------------------------------------------------------------------
+    sizes = (int *)calloc(num_processes, sizeof(int)); //当前进程的per个元素根据主元划分之后的每段的长度，用calloc分配后自动初始化为0
+    offsets = (int *)calloc(num_processes, sizeof(int)); //当前进程的per个元素根据主元划分之后的每段的起始位置，用calloc分配后自动初始化为0
+    newsizes = (int *)calloc(num_processes, sizeof(int)); //当前进程在进行全局交换之后的每段的长度，用calloc分配后自动初始化为0
+    newoffsets = (int *)calloc(num_processes, sizeof(int)); //当前进程在进行全局交换之后的每段的起始位置，用calloc分配后自动初始化为0
+    //（5）主元划分
+    for(int k = 0, j = id * per; j &lt; id * per + per; j++){ //当前进程对自己的per个元素按主元划分为num_processes段，此处不处理数据，只计算每段大小
+        if(A[j] &lt; pivots[k]) //如果之前不用哨兵，最后一段要单独考虑
+            sizes[k]++;
+        else
+            sizes[++k]++;
+    }
+    //（6）全局交换
+    //多对多全局交换消息，首先每个进程向每个接收者发送接收者对应的【段的大小】
+    MPI_Alltoall(sizes, 1, MPI_INT, newsizes, 1, MPI_INT, MPI_COMM_WORLD);
+    //计算原来的段偏移数组，新的段偏移数组，新的数据大小
+    newdatassize = newsizes[0];
+    for(int k = 1; k &lt; num_processes; k++){
+        offsets[k] = offsets[k - 1] + sizes[k - 1];
+        newoffsets[k] = newoffsets[k - 1] + newsizes[k - 1];
+        newdatassize += newsizes[k];
+    }
+    //申请当前进程新的数据空间
+    newdatas = (int *)malloc(newdatassize * sizeof(int)); //当前进程在进行全局交换之后的数据，是由交换后的各段组合而成的
+    //多对多全局交换消息，每个进程向每个接收者发送接收者对应的【段】
+    MPI_Alltoallv(&amp;(A[id * per]), sizes, offsets, MPI_INT, newdatas, newsizes, newoffsets, MPI_INT, MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
+    //-------------------------------------------------------------------------------------------------------------------
+    //（7）当前进程归并排序自己的新数据
+    MergeSort(newdatas, 0, newdatassize - 1);
+    MPI_Barrier(MPI_COMM_WORLD);
+    //（8）主进程收集各个进程的数据，写回A
+    //首先收集各进程新数据的大小
+    if(id == 0)
+        global_sizes = (int *)calloc(num_processes, sizeof(int));
+    MPI_Gather(&amp;newdatassize, 1, MPI_INT, global_sizes, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    //主进程计算即将搜集的各进程数据的起始位置
+    if(id == 0){ 
+        global_offsets = (int *)calloc(num_processes, sizeof(int));
+        for(int k = 1; k &lt; num_processes; k++)
+            global_offsets[k] = global_offsets[k - 1] + global_sizes[k - 1];
+    }
+    //主进程收集各个进程的数据
+    MPI_Gatherv(newdatas, newdatassize, MPI_INT, A, global_sizes, global_offsets, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
+    //-------------------------------------------------------------------------------------------------------------------
+    //销毁动态数组
+    free(samples); samples = NULL;
+    free(pivots); pivots = NULL;
+    free(sizes); sizes = NULL;
+    free(offsets); offsets = NULL;
+    free(newdatas); newdatas = NULL;
+    free(newsizes); newsizes = NULL;
+    free(newoffsets); newoffsets = NULL;
+    if(id == 0){ 
+        free(global_samples); global_samples = NULL;
+        free(global_sizes); global_sizes = NULL;
+        free(global_offsets); global_offsets = NULL;
+    }
+}
+
+int main(int argc, char *argv[]){
+    int A[27] = {15, 46, 48, 93, 39, 6, 72, 91, 14, 36, 69, 40, 89, 61, 97, 12, 21, 54, 53, 97, 84, 58, 32, 27, 33, 72, 20};
+    double t1, t2;
+    int id, num_processes;
+    MPI_Init(&amp;argc, &amp;argv);
+    MPI_Comm_size(MPI_COMM_WORLD, &amp;num_processes); //获取进程数
+    MPI_Comm_rank(MPI_COMM_WORLD, &amp;id); //获取当前进程id
+    if(id == 0)
+        t1 = MPI_Wtime();
+    PSRS(A, 27, id, num_processes);
+    if(id == 0){
+        t2 = MPI_Wtime();
+        printf(&quot;time: %lfs\n&quot;, t2 - t1);
+        for(int i = 0; i &lt; 27; i++)
+            printf(&quot;%d &quot;, A[i]);
+        printf(&quot;\n&quot;);
+    }
+    MPI_Finalize();
+    return 0;
+}
+</code></pre>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="//l-x.me/2019/05/16/pc/lab2/clip_image002.jpg" alt="img"><br><img src="//l-x.me/2019/05/16/pc/lab2/clip_image002-1570631864083.jpg" alt="img"></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/05/16/pc/lab2/">并行计算上机实验二 MPI实现π值的计算和PSRS排序</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
+        <p><span>发布时间:</span>2019-05-16, 00:00:00</p>
+        <p><span>最后更新:</span>2020-02-24, 20:58:20</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/05/16/pc/lab2/" title="并行计算上机实验二 MPI实现π值的计算和PSRS排序">https://l-x.me/2019/05/16/pc/lab2/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2019/05/16/pc/lab2/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/06/01/pc/lab3/">
+                    并行计算上机实验三 CUDA实现向量加法和矩阵乘法
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2019/05/04/leetcode/single-number-iv/">
+                    LeetCode题目改编——只出现一次的数字IV
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目"><span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#算法设计"><span class="toc-text">算法设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#π值的计算"><span class="toc-text">π值的计算</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#基本的串行算法"><span class="toc-text">基本的串行算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MPI并行算法"><span class="toc-text">MPI并行算法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PSRS排序"><span class="toc-text">PSRS排序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#算法分析"><span class="toc-text">算法分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#π值的计算-1"><span class="toc-text">π值的计算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PSRS排序-1"><span class="toc-text">PSRS排序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#算法源代码"><span class="toc-text">算法源代码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#π值的计算-2"><span class="toc-text">π值的计算</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#基本的串行算法-1"><span class="toc-text">基本的串行算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用并行域并行化的程序"><span class="toc-text">使用并行域并行化的程序</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PSRS排序-2"><span class="toc-text">PSRS排序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结果"><span class="toc-text">结果</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"并行计算上机实验二 MPI实现π值的计算和PSRS排序　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/06/01/pc/lab3/" title="上一篇: 并行计算上机实验三 CUDA实现向量加法和矩阵乘法">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2019/05/04/leetcode/single-number-iv/" title="下一篇: LeetCode题目改编——只出现一次的数字IV">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/9999/01/01/article/my_blog/">博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/pc/lab3/">并行计算上机实验三 CUDA实现向量加法和矩阵乘法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/16/pc/lab2/">并行计算上机实验二 MPI实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/leetcode/single-number-iv/">LeetCode题目改编——只出现一次的数字IV</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/pc/lab1/">并行计算上机实验一 OpenMP实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/29/article/bit_operation_tips/">C/C++ 位运算总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/article/Makefile/">Makefile 使用总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/21/article/dp_1-5/">动态规划入门（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/article/tea_and_health/">茶与健康</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/05/mcps/lab_res/">汇编上机资源</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/mcps/lab4/">汇编上机题4</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/26/mcps/lab3/">汇编上机题3</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/25/alg/lab3/">算法基础上机实验三 最长公共子序列问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/19/mcps/lab2/">汇编上机题2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/18/alg/lab2/">算法基础上机实验二 红黑树维护算法及其区间树应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/mcps/lab1/">汇编上机题1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/12/article/USTC_Hackergame2018_8/">USTCHackergame2018之"我是谁"</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/13/article/verilog_signed_and_unsigned/">Verilog中的有符号数与无符号数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/10/cod/lab6_Multi-CycleCPU/">计算机组成原理上机实验6 多周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/04/cod/lab5_SingleCycleCPU/">计算机组成原理上机实验5 单周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/">操作系统阅读报告：进程通信与同步、进程调度</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/18/os/System_Call/System Call/">操作系统阅读报告：系统调用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/11/os/OS_Summary/OS Summary/">操作系统阅读报告：操作系统概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/09/ds/lab4_ShortestPaths/">数据结构上机题4 最短路径</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/ds/lab1_Polynome/">数据结构上机题1 一元稀疏多项式计算</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/article/expression_evaluation/">C语言表达式计算器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B："完美阴阳矩阵"</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/11/clp/lab9a/">程序设计II上机实验9A：算24</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2020 Lyncien
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+		
+		
+			<!-- Highlight.js -->
+			<!-- "//cdn.bootcdn.net/ajax/libs/highlight.js/9.2.0/styles/github.min.css" -->
+			<!-- "http://apps.bdimg.com/libs/highlight.js/9.1.0/styles/default.min.css" -->
+			<link rel="stylesheet" href="/old_resources/js/highlight/styles/vs2015.css">
+			<script src="/old_resources/js/highlight/highlight.pack.js"></script>
+			<script>
+					hljs.initHighlightingOnLoad();
+			</script>
+		
+		
+		
+			<a href="https://clustrmaps.com/site/1b46r" title="Visit tracker"><img width="0" heght="0" src="//www.clustrmaps.com/map_v2.png?d=i8Jh6LoQOmC5xU8sSnCrTkWgsRpkxH4HkQy9AZ7_Q0E&cl=ffffff"></a>
+		
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/old_resources/js/main.js" src="//cdn.bootcdn.net/ajax/libs/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcdn.net/ajax/libs/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

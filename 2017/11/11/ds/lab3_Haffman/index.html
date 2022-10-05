@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Lyncien">
+
+
+
+<meta name="description" content="哈夫曼压缩题目实验三: 此次实验限定语言C/C++，允许使用stl。 ddl：下下周六（11月19日）。 实验要求：实现任意二进制文件压缩解压。将哈夫曼树或者词频率表保存到文件，压缩后解压所需信息全部从你自己压缩得到的文件中拿到。检查:对于一般txt文档实现效果明显的压缩结果并正确解压7分，大文件（几十兆以上）非文本文件正确压缩解压。（9分）报告1分。本周六实验一和二未检查完的来检查，下周六实验三">
+<meta name="keywords" content="DS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构上机题3 哈夫曼压缩">
+<meta property="og:url" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/index.html">
+<meta property="og:site_name" content="Lyncien&#39;s homepage">
+<meta property="og:description" content="哈夫曼压缩题目实验三: 此次实验限定语言C/C++，允许使用stl。 ddl：下下周六（11月19日）。 实验要求：实现任意二进制文件压缩解压。将哈夫曼树或者词频率表保存到文件，压缩后解压所需信息全部从你自己压缩得到的文件中拿到。检查:对于一般txt文档实现效果明显的压缩结果并正确解压7分，大文件（几十兆以上）非文本文件正确压缩解压。（9分）报告1分。本周六实验一和二未检查完的来检查，下周六实验三">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/1.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/2.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/3.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/4.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/5.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/6.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/7.png">
+<meta property="og:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/8.png">
+<meta property="og:updated_time" content="2019-03-14T12:16:19.808Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构上机题3 哈夫曼压缩">
+<meta name="twitter:description" content="哈夫曼压缩题目实验三: 此次实验限定语言C/C++，允许使用stl。 ddl：下下周六（11月19日）。 实验要求：实现任意二进制文件压缩解压。将哈夫曼树或者词频率表保存到文件，压缩后解压所需信息全部从你自己压缩得到的文件中拿到。检查:对于一般txt文档实现效果明显的压缩结果并正确解压7分，大文件（几十兆以上）非文本文件正确压缩解压。（9分）报告1分。本周六实验一和二未检查完的来检查，下周六实验三">
+<meta name="twitter:image" content="https://l-x.me/2017/11/11/ds/lab3_Haffman/1.png">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Lyncien&#39;s homepage" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/old_resources/css/style.css">
+
+
+
+<link href="//cdn.bootcdn.net/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>数据结构上机题3 哈夫曼压缩 | Lyncien&#39;s homepage</title>
+
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcdn.net/ajax/libs/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<script id="jump-to-new" src="/old_resources/js/redirect.js" async></script>
+</head>
+<script src="/old_resources/js/head-pic.js" ></script> <!-- head-pic-flash by Lyncien -->
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic" id="head-pic"> <!-- head-pic-flash by Lyncien -->
+            <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Lyncien</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">林深见鹿</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Lyncien</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic" id="head-pic-mobile"> <!-- head-pic-flash by Lyncien -->
+                <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Lyncien</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" target="_blank" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" target="_blank" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" target="_blank" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-ds/lab3_Haffman" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/11/11/ds/lab3_Haffman/" class="article-date">
+      <time datetime="2017-11-10T16:00:00.000Z" itemprop="datePublished">2017-11-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      数据结构上机题3 哈夫曼压缩
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DS/">DS</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="哈夫曼压缩"><a href="#哈夫曼压缩" class="headerlink" title="哈夫曼压缩"></a>哈夫曼压缩</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>实验三: 此次实验限定语言C/C++，允许使用stl。</p>
+<p>ddl：下下周六（11月19日）。</p>
+<p>实验要求：实现任意二进制文件压缩解压。将哈夫曼树或者词频率表保存到文件，压缩后解压所需信息全部从你自己压缩得到的文件中拿到。检查:对于一般txt文档实现效果明显的压缩结果并正确解压7分，大文件（几十兆以上）非文本文件正确压缩解压。（9分）报告1分。本周六实验一和二未检查完的来检查，下周六实验三写好的可以提前来检查。下下周六ddl</p>
+<h2 id="一、-需求分析"><a href="#一、-需求分析" class="headerlink" title="一、    需求分析"></a>一、    需求分析</h2><ol>
+<li><p>实现功能：</p>
+<p>（1）    利用Haffman编码压缩文件。打开文件后扫描文件读入数据，以二进制方式读取，每次处理8位（1个字节），八位二进制码有256种组合，对应ascii码中0-255的字符，读取结束后，统计出字符频率表并降序排序，根据字符频率表创建Haffman树，导出Haffman编码，之后再次扫描文件，将每个字符对应的Haffman编码依次写入目标文件，完成压缩。</p>
+<p>（2）    解压本程序创建的压缩文件。打开文件后扫描文件读入数据，以二进制方式读取，首先读取创建压缩文件是存储在文件头的字符频率表或者Haffman树，然后读取压缩数据，设置一个缓存空间buf，每次处理1位的数据，查找Haffman编码对应的字符，输出至目标文件，完成解压。</p>
+<p>（3）    通过修改Windows注册表设置右键菜单快捷方式来打开本程序，以便传入要处理的文件路径。</p>
+</li>
+<li><p>模块化设计，创建词频表和Haffman树两种数据结构。</p>
+</li>
+<li><p>采用main函数的参数传入要压缩或者解压的文件路径，然后处理文件并显示处理界面。如果没有传入任何文件路径，则显示设置界面。</p>
+</li>
+<li><p>处理界面上显示当前处理过程（解压/压缩）、处理的文件名、文件大小，实时输出处理的进度、已花时间和剩余时间。</p>
+</li>
+<li><p>测试数据：选取几种代表性的文件：</p>
+<p>（1）    文本文件，实现较明显的压缩。</p>
+<p>（2）    可执行文件和较大的二进制文件，实现正确的解压缩，解压缩前后文件一致，能正确打开执行或访问。</p>
+</li>
+</ol>
+<a id="more"></a>
+<h2 id="二、-概要设计"><a href="#二、-概要设计" class="headerlink" title="二、    概要设计"></a>二、    概要设计</h2><ol>
+<li><p>抽象数据类型词频表定义如下：</p>
+<pre><code>ADT FrequencyList{
+    数据对象：Frequency={ch,f|0&lt;=ch&lt;=255,f&gt;=0}
+              FrequencyList={Frequency}
+    数据关系：无
+    基本操作：    
+        CreateFrequencyListFromFile(&amp;file,&amp;fl);
+            初始条件：文件file存在且被打开。
+            操作结果：从文件数据创建词频表fl。
+        SaveFrequencyListToFile(&amp;file,fl);
+            初始条件：词频表fl存在，文件file存在且被打开。
+            操作结果：保存词频表fl到文件file中。
+        LoadFrequencyListFromFile(&amp;file,&amp;fl);
+            初始条件：文件file存在且被打开，文件file是按
+CreateFrequencyListFromFile方法创建的文件。
+            操作结果：从文件数据载入存储的词频表fl。 
+}ADT FrequencyList
+</code></pre></li>
+<li><p>抽象数据类型哈夫曼树定义如下：</p>
+<pre><code>ADT HaffmanTree{
+    数据对象：HaffmanTreeNode={lchild,rchild,parent,ch,f}
+              HaffmanTree={HaffmanTreeNode}
+    数据关系：每个节点指向左右两个孩子节点（如果有的话）
+    基本操作：
+        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);
+            初始条件：词频表fl存在。
+            操作结果：从词频表fl创建哈夫曼树ht。
+        CreateHaffmanCode(ht,&amp;haffmancode);
+            初始条件：Haffman树ht存在。
+            操作结果：根据哈夫曼树ht生成哈夫曼编码haffmancode。  
+}ADT HaffmanTree
+</code></pre></li>
+<li><p>主函数，压缩函数，解压函数的实现框架</p>
+<p><code>`</code><br>//以下代码是实现框架，不保证细节完备，详情请看后附源代码<br>int main(int argc,char *argv[]){</p>
+<pre><code>界面初始化;
+if(argc&gt;1){
+    根据argv[1]的文件路径获取文件名FILENAME;
+    获取文件大小FILESIZE;
+    判断文件类型FILETYPE;
+</code></pre></li>
+</ol>
+<p>   ​<code>`</code><br>       绘制文件处理界面;</p>
+<pre><code>   计时开始，记录time_begin; 
+   if(FILETYPE==0){
+       HaffmanCompress压缩;
+   }
+   else{
+       HaffmanDecompress解压;
+   }
+</code></pre><p>   }<br>   else{<br>       绘制设置界面;<br>       for(;;){<br>           读取鼠标信息;<br>           if (鼠标点击){<br>               设置右键;<br>           }<br>       }<br>   }<br>   输出完成信息;<br>   ​<code>`</code></p>
+<p>   }<br>   Status HaffmanCompress(当前文件,目标文件,哈夫曼编码表,当前文件总长度){//压缩<br>       while(读取文件每次n字节 &amp;&amp; 文件没有结束){//<br>           for(i=0;i&lt;n;i++){<br>               获取该字节对应的哈夫曼编码;<br>               while(哈夫曼编码指针){<br>                   缓存左移一位;<br>                   缓存最低位存哈夫曼编码的当前位;<br>                   哈夫曼编码指针++;<br>                   缓存长度++;<br>                   if(缓存达到输出长度){<br>                       缓存长度=0;<br>                       把缓存写到文件;<br>                   }<br>               }<br>               进度++;<br>               刷新显示进度;<br>           }<br>       }<br>       while(缓存长度不足指定长度){<br>           文件尾补足长度;<br>       }<br>       把缓存写到文件;<br>       return OK;<br>   }<br>   Status HaffmanDecompress(当前文件,目标文件,哈夫曼树){//解压<br>       读取目标文件总长度bytenum;<br>       htn=哈夫曼树根结点;<br>       while(k&lt;总长度){<br>           读取一定长度数据写入缓存inbuf;<br>           do{<br>               取缓存inbuf最高位b;<br>               缓存inbuf左移一位;<br>               if(b==0){<br>                   htn=htn-&gt;lchild;<br>               }<br>               else{<br>                   htn=htn-&gt;rchild;<br>               }<br>               if(htn左孩子和右孩子都是空){//到达叶结点<br>                   输出叶上的字符到缓存outbuf;<br>                   if(outbuf到一定长度){<br>                       写出缓存outbuf到目标文件;<br>                   }<br>                   计数k++;<br>                   if(k==bytenum) break;<br>                   回根结点;<br>               }<br>           }while(缓存inbuf还没处理完);<br>           刷新显示进度;<br>       }<br>       return OK;<br>   }</p>
+<pre><code>
+4. 本程序含四个模块
+
+   (1)    主模块
+   (2)    词频表模块
+   (3)    哈夫曼树、编码和解压缩模块
+   (4)    图形界面模块
+
+![](lab3_Haffman/0.png)
+
+
+
+
+
+## 三、    详细设计
+1．    词频结点类型
+
+```c
+typedef struct Frequency{//一个字符(8位)及其出现频次 
+    unsigned char ch;//0&lt;=ch&lt;=255
+    unsigned int f;
+}fre,*pfre;
+</code></pre><p>2．    词频表类型</p>
+<pre><code>typedef struct FrequencyList{//频度表，所有出现的字符及频次
+    int num;//1&lt;=num&lt;=256
+    pfre list; //频度表数组，动态申请 
+}frelist,*pfrelist;
+</code></pre><p>3．    哈夫曼树类型</p>
+<pre><code class="c">typedef struct HaffmanTreeNode{
+    struct HaffmanTreeNode *lchild,*rchild,*parent;
+    unsigned int f;
+    unsigned char ch;
+}htreenode,*htree;
+</code></pre>
+<p>4．    词频表操作</p>
+<pre><code class="c">Status CreateFrequencyListFromFile(FILE *fp,pfrelist *fl);
+    //从任意文件中创建频度表 
+Status SaveFrequencyListToFile(FILE *fp,pfrelist fl);
+    //保存频度表到压缩文件中 
+Status LoadFrequencyListFromFile(FILE *fp,pfrelist *fl);
+//从压缩文件中读取频度表
+</code></pre>
+<p>5．    哈夫曼树操作及解压缩</p>
+<pre><code class="c">Status CreateHaffmanTreeFromFrequencyList(pfrelist fl,htree* ht){
+//从频度表创建哈夫曼数，频度表保证至少两种字符 
+Status PreOrderTraverse(htree ht,int child,int i,char code[],char haffmancode[256][256]){
+//先序遍历，child=0表示当前是左孩子，child=1表示当前是右孩子
+//i为当前层次,code为当前遍历路径已存编码，haffmancode是编码表 
+Status CreateHaffmanCode(htree ht,char haffmancode[256][256]){
+//创建编码表haffmancode[256][256],牺牲一些空间以便快速索引
+Status HaffmanCompress(FILE *fp1,FILE *fp2,char haffmancode[256][256],unsigned int bytenum){
+//压缩,bytenum为总长度 
+Status HaffmanDecompress(FILE *fp1,FILE *fp2,htree ht){
+//解压,解压时直接用哈夫曼树搜索对应字符 
+</code></pre>
+<p>6．    图形界面操作</p>
+<pre><code>SMALL_RECT UI_SetRect(int left,int top,int right,int bottom);
+//根据坐标取返回对应矩形区域数据 
+void UI_SetConsoleWindowSize(HANDLE hOut,int width,int height);
+//设置窗口大小
+void UI_SetConsoleScreenBufferSize(HANDLE hOut,int width,int height);
+//设置缓冲区大小
+void UI_InitSTDHandle(HANDLE *hOut,CONSOLE_SCREEN_BUFFER_INFO *bInfo,int width,int height);
+//初始化 
+void UI_DrawText(HANDLE hOut,WORD attr,char *text,int len,int row,int left,int right);
+//在指定行左右位置之间居中输出一行文本
+void UI_CleanText(HANDLE hOut,int row,int left,int right);
+//在指定行左右位置之间清除一行文本
+void UI_CleanTextRect(HANDLE hOut,int top,int bottom,int left,int right);
+//在指定区域之间清除文本
+void UI_DrawBox(HANDLE hOut,int bSingle,SMALL_RECT rc,WORD attr);
+//画方框 
+void ClearScreen(HANDLE hOut,DWORD att){
+//清屏，且设置样式
+</code></pre><p>7．    其他函数</p>
+<pre><code>void GetCompressedFilePath(char *FPath,char *CFPath);
+//从传入的路径求得对应压缩文件路径 
+void GetDecompressedFilePath(char *FPath,char *DFPath);
+//从传入的压缩文路径求得对应解压文件路径 
+void GetFileNameFromPath(char *FPath,char *FName);
+//从路径中提取文件名
+long GetFileSizeFromPath(char *FPath);
+//获取文件大小 
+int GetFileTypeFromPath(char *FPath);
+//判断文件类型是解压(1)还是压缩(0)
+void UIInit();
+//UI初始化 
+void DrawAllBox();
+//绘制所有方框 
+void DrawInfoText(char *filename,int type,int size);
+//显示文件名，类型是解压(1)还是压缩(0)
+void UpdateTimeText(double progress);
+//根据进度(0-1)更新剩余时间 
+void DrawSelect(int select);
+//没有文件传入时显示配置界面,select=1表示已选中，即当前已创建右键菜单
+int CheckKey();
+//检查右键菜单注册表是否已设置 
+void SetKey(char *exepath);
+//设置或取消右键菜单注册表 
+int Compress(char *fpath);
+//预处理及压缩 
+int Decompress(char *fpath);
+//预处理及解压 
+</code></pre><p>8．    具体的函数实现见附录，均有详细注释，此处不再赘述。</p>
+<h2 id="四、-调试分析"><a href="#四、-调试分析" class="headerlink" title="四、    调试分析"></a>四、    调试分析</h2><p>1．    本程序的难点在于哈夫曼树的创建、存储、读取、匹配。<br>2．    本程序选择存储词频表而不是哈夫曼树，在解压时读取词频表重新创建哈夫曼树，文件结构如下图。</p>
+<p><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/1.png" alt="">   </p>
+<p>FileTypeMark位于文件头，标记了“#HAFFMANCOMPRESSFILE#”，以供解压时识别为压缩文件。之后的一段数据FrequencyList 存放了字符频率表，表头记录出现了字符类型总数，之后为各个字符及其频度。最后的部分存放了经过哈夫曼编码后的原文件数据，头部记录了原文件的长度。</p>
+<p>3．    在文件的读取和存储上，设置一个读写缓存，每次读入一定的字节数，然后进行处理，而不是每次读入一个字节，这样效率太低，写出时同理。</p>
+<p>4．    解压时重建哈夫曼树后，不要再次导出哈夫曼编码，每次读取一位二进制数据，直接搜索哈夫曼树，是0则跳转左孩子，是1则跳转右孩子。</p>
+<p>5．    空文件和只有一种字符时应该单独考虑，哈夫曼树不能处理。</p>
+<p>6．    之前在压缩时每次存入4个字节（32位），若文件尾不是整字节，补足为整字节（8位的倍数），看似没有问题，但是在读取时仍按4字节读取存入unsigned int，末尾的数据若非刚好为4个字节（低位为空），则读入时有效数据会被存入unsigned int的低位（int存储时先存入了低8-1位，再存16-9位…以此类推），造成错误。</p>
+<p>7．    关于fread，若不考虑返回值，fread(buf,size,count,fp)，size和count的值可互换，只要size*count是需要读取的字节数即可。但是如果想知道实际读取了多少字节，比如一次读入1024字节，应该写为fread(buf,1,1024,fp)，当剩余数据不足1024时，会返回实际读取的count数，在这里就是字节数。若写为fread(buf,1024,1,fp)，当剩余数据超过1024时，返回1024，当剩余数据不足1024时，将返回0(虽然buf中会存有实际读取的数据)。</p>
+<p>8．    还是fread的问题，传统情况下为了避免最后一个字节使用了两次，采用while(fread(buf,1,1,fp) &amp;&amp; !feof(fp)) 因为fread读完最后一个字节后，feof仍然不变，再次fread才触发feof。这里一次读取一个字节，fread(buf,1,1,fp)的返回值只会是0和1，即使读取最后一个字节也为1，再次读取才0，因此while中用&amp;&amp;没有问题，两个条件只会同为0或同为1。如果一次读取多个字节（比如1024），在文件总长度为1024的倍数时，和上述情况没有区别，若非1024倍数，最后一次读取fread将返回实际读取数量(&lt;1024)，但是此时已经触发feof（因为最后一次读取是没有满足fread的请求的，这里的逻辑很微妙）,故while中&amp;&amp;应该改用||。</p>
+<p>9．    在界面更新问题上，编写了一个更新显示进度函数，直接在压缩/解压函数中调用。</p>
+<h2 id="五、-用户手册"><a href="#五、-用户手册" class="headerlink" title="五、    用户手册"></a>五、    用户手册</h2><p><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/2.png" alt=""></p>
+<p><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/3.png" alt=""></p>
+<h2 id="六、-测试结果"><a href="#六、-测试结果" class="headerlink" title="六、    测试结果"></a>六、    测试结果</h2><ol>
+<li>一个文本文件“四大名著.txt”（原大小 6,321,865字节，压缩后4,827,905字节，压缩率75%），一个可执行文件（压缩率77%），实现明显的压缩。</li>
+<li>和一份pdf文档实现正确解压缩，但压缩效果不明显（压缩率99%），解压缩前后md5值不变。</li>
+<li>解压缩时间在可接受的范围内，约16MB/s.</li>
+</ol>
+<p><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/4.png" alt=""><br><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/5.png" alt=""><br><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/6.png" alt=""><br><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/7.png" alt=""><br><img src="//l-x.me/2017/11/11/ds/lab3_Haffman/8.png" alt="">   </p>
+<h2 id="七、-附录"><a href="#七、-附录" class="headerlink" title="七、    附录"></a>七、    附录</h2><p>源程序文件清单：</p>
+<p>（1）    FrequencyList.h</p>
+<p>（2）    HaffmanTree.h</p>
+<p>（3）    MyUI.h</p>
+<p>（4）    Hzip.c</p>
+<p>FrequencyList.h</p>
+<pre><code>/*
+    Last Update time: 2017-11-01 
+    Version：1.0
+    Author：LinXiang (PB16020923) 
+    Description：
+        FrequencyList.
+*/
+#ifndef FREQUENCYLIST_H
+#define FREQUENCYLIST_H
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#define OK 1
+#define ERROR 0
+typedef int Status;  
+typedef struct Frequency{//一个字符(8位)及其出现频次 
+    unsigned char ch;//0&lt;=ch&lt;=255
+    unsigned int f;
+}fre,*pfre;
+typedef struct FrequencyList{//频度表，所有出现的字符及频次
+    int num;//1&lt;=num&lt;=256
+    pfre list; //频度表数组，动态申请 
+}frelist,*pfrelist;
+int frecmp(const void *a,const void *b){
+    pfre aa=(pfre)a;
+    pfre bb=(pfre)b;
+    return (int)(bb-&gt;f-aa-&gt;f);//b-a这样才能让qsort降序排列 
+}
+void UpdateTimeText(double progress);//声明以便下面函数调用更新进度 
+Status CreateFrequencyListFromFile(FILE *fp,pfrelist *fl){//从任意文件中创建频度表 
+    fre arr[256]={};//临时存放所有字符，直接按下标存入更方便，不用插入或遍历 
+    unsigned char buf[1048576]={};//当前读入缓存 
+    int i,n; //n表示实际读入的字符数，仅在文件尾时不是1024 
+    while((n=fread(buf,1,1048576,fp)) || !feof(fp)){//读取文件每次1024字节，
+    //注意size=1,count=1024,才能知道实际成功读入字节数(fread返回值),不要反过来,反过来的话一旦不满1024，fread返回值将为0 
+        for(i=0;i&lt;n;i++){
+            arr[buf[i]].ch=buf[i];
+            arr[buf[i]].f++;
+        }
+    }
+    qsort(arr,256,sizeof(fre),&amp;frecmp);//排序，不出现的字符会被排至尾部 
+    *fl=(pfrelist)malloc(sizeof(frelist));//让fl存放指向frelist的指针 
+    for(i=0;i&lt;256;i++){//统计出现的字符数量 
+        if(arr[i].f==0) break; 
+    }
+    (*fl)-&gt;num=i;
+    (*fl)-&gt;list=(pfre)malloc(sizeof(fre)*((*fl)-&gt;num));//申请频度表的数组空间 
+    for(i=0;i&lt;(*fl)-&gt;num;i++){
+        (*fl)-&gt;list[i].ch=arr[i].ch; 
+        (*fl)-&gt;list[i].f=arr[i].f;
+    }
+    return OK;
+}
+Status SaveFrequencyListToFile(FILE *fp,pfrelist fl){//保存频度表到压缩文件中 
+    fwrite(&amp;(fl-&gt;num),4,1,fp);
+    int i;  
+    for(i=0;i&lt;fl-&gt;num;i++){
+        fwrite(&amp;(fl-&gt;list[i].ch),1,1,fp);
+        fwrite(&amp;(fl-&gt;list[i].f),4,1,fp);
+    }
+    return OK; 
+}
+Status LoadFrequencyListFromFile(FILE *fp,pfrelist *fl){//从压缩文件中读取频度表
+    *fl=(pfrelist)malloc(sizeof(frelist));//让fl存放指向frelist的指针 
+    fread(&amp;((*fl)-&gt;num),4,1,fp);
+    (*fl)-&gt;list=(pfre)malloc(sizeof(fre)*((*fl)-&gt;num));//申请频度表的数组空间 
+    int i;  
+    for(i=0;i&lt;(*fl)-&gt;num;i++){
+        fread(&amp;((*fl)-&gt;list[i].ch),1,1,fp);
+        fread(&amp;((*fl)-&gt;list[i].f),4,1,fp);
+    }
+    return OK; 
+}
+#endif
+</code></pre><p>HaffmanTree.h</p>
+<pre><code class="c">/*
+    Last Update time: 2017-11-01 
+    Version：1.0
+    Author：LinXiang (PB16020923) 
+    Description：
+        HaffmanTree.
+*/
+#ifndef HAFFMANTREE_H
+#define HAFFMANTREE_H
+#define OK 1
+#define ERROR 0
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &quot;FrequencyList.h&quot;
+typedef int Status; 
+typedef struct HaffmanTreeNode{
+    struct HaffmanTreeNode *lchild,*rchild,*parent;
+    unsigned int f;
+    unsigned char ch;
+}htreenode,*htree;
+void UpdateTimeText(double progress);//声明以便下面函数调用更新进度 
+Status CreateHaffmanTreeFromFrequencyList(pfrelist fl,htree* ht){
+//从频度表创建哈夫曼数，频度表保证至少两种字符 
+    int hfn=fl-&gt;num*2-1;//haffmantreenode个数
+    htreenode *arr=(htreenode *)malloc(sizeof(htreenode)*hfn);
+    int i,t;
+    for(i=0;i&lt;fl-&gt;num;i++){//前 fl-&gt;num 个放叶结点 
+        t=fl-&gt;num-i-1;//使升序排列 
+        arr[t].ch=fl-&gt;list[i].ch;
+        arr[t].f=fl-&gt;list[i].f;
+        arr[t].lchild=NULL;
+        arr[t].rchild=NULL;
+        arr[t].parent=NULL;
+    }
+    int j,k;
+    for(j=i,k=0;i&lt;hfn;i++){
+        arr[i].f=0;//权值初始为0 
+        //先选择最小的一个做左孩子 
+        if(i-j&gt;=1 &amp;&amp; fl-&gt;num-k&gt;=1){//叶结点和非叶结点都至少有一个可选 
+            if(arr[k].f&lt;=arr[j].f){
+                arr[i].lchild=&amp;arr[k];
+                arr[k].parent=&amp;arr[i];
+                arr[i].f+=arr[k].f; 
+                k++;
+            }
+            else{
+                arr[i].lchild=&amp;arr[j];
+                arr[j].parent=&amp;arr[i];
+                arr[i].f+=arr[j].f; 
+                j++;
+            }
+        }
+        else if(fl-&gt;num-k&gt;=1){//只有叶结点可选 
+            arr[i].lchild=&amp;arr[k];
+            arr[k].parent=&amp;arr[i];
+            arr[i].f+=arr[k].f; 
+            k++;
+        }
+        else{//只有非叶结点可选 
+            arr[i].lchild=&amp;arr[j];
+            arr[j].parent=&amp;arr[i];
+            arr[i].f+=arr[j].f; 
+            j++;
+        } 
+
+        //再选择最小的一个做右孩子 
+        if(i-j&gt;=1 &amp;&amp; fl-&gt;num-k&gt;=1){//叶结点和非叶结点都至少有一个可选 
+            if(arr[k].f&lt;=arr[j].f){
+                arr[i].rchild=&amp;arr[k];
+                arr[k].parent=&amp;arr[i];
+                arr[i].f+=arr[k].f;
+                k++;
+            }
+            else{
+                arr[i].rchild=&amp;arr[j];
+                arr[j].parent=&amp;arr[i];
+                arr[i].f+=arr[j].f;
+                j++;
+            }
+        }
+        else if(fl-&gt;num-k&gt;=1){//只有叶结点可选 
+            arr[i].rchild=&amp;arr[k];
+            arr[k].parent=&amp;arr[i];
+            arr[i].f+=arr[k].f;
+            k++;
+        }
+        else{//只有非叶结点可选 
+            arr[i].rchild=&amp;arr[j];
+            arr[j].parent=&amp;arr[i];
+            arr[i].f+=arr[j].f;
+            j++;
+        }
+    }
+    *ht=&amp;arr[hfn-1];//指向根 
+    return OK; 
+}
+Status PreOrderTraverse(htree ht,int child,int i,char code[],char haffmancode[256][256]){
+//先序遍历，child=0表示当前是左孩子，child=1表示当前是右孩子,i为当前层次,code为当前遍历路径已存编码，haffmancode是编码表 
+    if(ht==NULL) return ERROR;
+    code[i]=child+&#39;0&#39;;
+    if(ht-&gt;lchild==NULL &amp;&amp; ht-&gt;rchild==NULL){//这是个叶结点  
+        strcpy(haffmancode[ht-&gt;ch],code);//把当前编码保存到编码表里 
+    }
+    else{
+        PreOrderTraverse(ht-&gt;lchild,0,i+1,code,haffmancode);
+        PreOrderTraverse(ht-&gt;rchild,1,i+1,code,haffmancode);
+    }
+    code[i]=0;//恢复
+    return OK; 
+} 
+Status CreateHaffmanCode(htree ht,char haffmancode[256][256]){
+//编码表haffmancode[256][256]牺牲一些空间以便快速索引
+    char code[256]={};//临时存放编码 
+    PreOrderTraverse(ht-&gt;lchild,0,0,code,haffmancode);
+    PreOrderTraverse(ht-&gt;rchild,1,0,code,haffmancode);
+    return OK;
+}
+Status HaffmanCompress(FILE *fp1,FILE *fp2,char haffmancode[256][256],unsigned int bytenum){
+//压缩,bytenum为总长度 
+    unsigned char inbuf[262144]={};//当前读入 
+    unsigned int outbuf=0;//操作的缓存，满32位(4字节)才写入outbuf2，这个缓存主要用于位操作 
+    unsigned int outbuf2[262144]={};//输出的缓存1024*4字节 
+    fwrite(&amp;bytenum,4,1,fp2);//记下总长度 
+    int up=bytenum/100;//设置界面更新间隔
+    if(up==0) up=1; //文件过小，界面更新间隔为0，置1 
+    int cnt=0;//循环计数器，缓存输出用的 
+    unsigned int k=0;//计数器，更新界面用的
+    int cnt2=0; //循环计数器，缓存输出用的
+    int i,n=0;
+    while((n=fread(inbuf,1,262144,fp1)) || !feof(fp1)){//读取文件每次262144字节
+        for(i=0;i&lt;n;i++){   
+            char *p=haffmancode[inbuf[i]];
+            while(*p){
+                outbuf&lt;&lt;=1;//左移一位 
+                outbuf | = (*p-&#39;0&#39;);//最低位存p
+                p++;
+                cnt++;
+                if(cnt%32==0){//满8位输出 
+                    cnt=0;
+                    outbuf2[cnt2++]=outbuf;
+                    outbuf=0;
+                    if(cnt2==262144){
+                        cnt2=0;
+                        fwrite(outbuf2,4,262144,fp2);
+                        memset(outbuf2,0,262144*4);
+                    }
+                } 
+            }
+            k++;
+            if(k%up==0) UpdateTimeText((double)k/(double)bytenum);
+        }
+    }
+    while(cnt%32!=0){//文件尾补足为32位的整数倍 
+        outbuf&lt;&lt;=1;
+        cnt++;
+    }
+    outbuf2[cnt2++]=outbuf;
+    fwrite(outbuf2,4,cnt2,fp2);
+    return OK;
+}
+Status HaffmanDecompress(FILE *fp1,FILE *fp2,htree ht){//解压,解压时直接用哈夫曼数搜索对应字符 
+    unsigned int inbuf=0;//输入的缓存，每次读取32位(4字节)
+    unsigned char outbuf=0;//输出缓存（1字节） 
+    unsigned char outbuf2[1048576]={};//输出缓存2（1048576字节） 
+    unsigned int bytenum;//总字节数 
+    unsigned int k=0; 
+    int cnt=0;
+    int b;
+    htreenode* htn=ht;
+    fread(&amp;bytenum,4,1,fp1);//读取总长度 
+    int up=bytenum/100;//设置界面更新间隔
+    if(up==0) up=1; //文件过小，界面更新间隔为0，置1 
+    int cnt2=0;
+    while(k&lt;bytenum){
+        fread(&amp;inbuf,1,4,fp1);//size=1,count=4
+        do{
+            b=inbuf &amp; 0x80000000;//取最高位 
+            inbuf&lt;&lt;=1;//左移一位 
+            cnt++;
+            if(b==0){
+                htn=htn-&gt;lchild;
+            }
+            else{
+                htn=htn-&gt;rchild;
+            }
+            if(htn-&gt;lchild==NULL &amp;&amp; htn-&gt;rchild==NULL){//到达叶结点 
+                outbuf=htn-&gt;ch;
+                outbuf2[cnt2++]=outbuf;
+                outbuf=0;
+                if(cnt2==1048576){
+                    cnt2=0;
+                    fwrite(outbuf2,1,1048576,fp2);
+                    memset(outbuf2,0,1048576);
+                }   
+                k++;//计数加一 
+                if(k==bytenum) break;
+                htn=ht;//回根结点 
+            }
+        }while(cnt%32!=0);
+        cnt=0;
+        if(k%up==0) UpdateTimeText((double)k/(double)bytenum);
+    }
+    fwrite(outbuf2,1,cnt2,fp2);
+    return OK;
+}
+#endif
+</code></pre>
+<p>Hzip.c</p>
+<pre><code class="c">/*
+    Last Update time: 2017-11-11     
+    Version：1.1
+    Author：LinXiang (PB16020923) 
+    Description：
+        Hzip.c.
+*/
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt; 
+#include &lt;time.h&gt;
+#include &quot;MyUI.h&quot;
+#include &quot;FrequencyList.h&quot;
+#include &quot;HaffmanTree.h&quot;
+#define WIDTH 50 //窗口的宽和高 
+#define HEIGHT 15
+HANDLE hout;
+HANDLE hin;
+time_t time_begin;
+time_t time_now;
+long FILESIZE;//记录文件长度，用于读取文件时计算进度
+int FILETYPE;// 
+char FILENAME[30]; 
+void GetCompressedFilePath(char *FPath,char *CFPath){//从传入的路径求得对应压缩文件路径 
+    strcpy(CFPath,FPath);
+    strcat(CFPath,&quot;.hzip&quot;);
+}
+void GetDecompressedFilePath(char *FPath,char *DFPath){//从传入的压缩文路径求得对应解压文件路径 
+    strcpy(DFPath,FPath);
+    DFPath[strlen(DFPath)-5]=0;//去除尾部&quot;.hzip&quot; 
+}
+void GetFileNameFromPath(char *FPath,char *FName){//从路径中提取文件名
+    char *pos;//最后一个\的位置 
+    char *p=FPath;
+    while(*p){
+        if(*p==&#39;\\&#39;) pos=p;
+        p++;
+    }
+    while(*pos){
+        *FName++=*(++pos);//此法即可跳过‘\’本身，又可复制字符串结束符到FName中 
+    }
+}
+long GetFileSizeFromPath(char *FPath){ //获取文件大小 
+    FILE *fp=fopen(FPath,&quot;r&quot;);  
+    if(!fp) return -1;  
+    fseek(fp,0L,SEEK_END);  
+    long size=ftell(fp);  
+    fclose(fp);  
+    return size;  
+} 
+int GetFileTypeFromPath(char *FPath){//判断是解压(1)还是压缩(0)
+    FILE *fp=fopen(FPath,&quot;rb+&quot;);
+    char MARK[22];
+    int type;
+    if(!fread(MARK,21,1,fp)){
+        type=0;
+    }
+    else{
+        MARK[21]=0;//字符串结尾 
+        if(strcmp(&quot;#HAFFMANCOMPRESSFILE#&quot;,MARK)) type=0;
+        else type=1;    
+    }
+    fclose(fp);
+    return type;
+}
+void UIInit(){//UI初始化 
+    UI_InitSTDHandle(&amp;hout,&amp;hin,WIDTH,HEIGHT);
+    UI_SetConsoleScreenBufferSize(hout,WIDTH,HEIGHT);//设置缓冲区大小
+    UI_SetConsoleWindowSize(hout,WIDTH,HEIGHT);//设置窗口大小 
+    //system(&quot;color F0&quot;);此句与鼠标操作冲突！！！！！不要用system() 
+    ClearScreen(hout,B_WHITE); //清屏并设置前景背景色，不要用上句 
+
+    COORD curpos;
+    curpos.X=5;
+    curpos.Y=HEIGHT-2;
+    SetConsoleCursorPosition(hout,curpos);//设置光标位置 
+    CONSOLE_CURSOR_INFO cursor_info={1,0}; 
+    SetConsoleCursorInfo(hout,&amp;cursor_info);//隐藏光标 
+}
+void DrawAllBox(){//绘制所有方框 
+    SMALL_RECT rc;
+    rc=UI_SetRect(0,0,WIDTH-1,3);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_RED);
+    rc=UI_SetRect(0,4,WIDTH-1,7);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_BLUE);
+    rc=UI_SetRect(0,8,WIDTH-1,11);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_BLUE); 
+    rc=UI_SetRect(0,12,WIDTH-1,14);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_CYAN); 
+}
+void DrawInfoText(char *filename,int type,int size){//文件名，类型是解压(1)还是压缩(0)
+    char t_title[30];
+    sprintf(t_title,&quot;Hzip V1.1&quot;);
+    UI_DrawText(hout,B_WHITE | F_RED,t_title,strlen(t_title),1,0+2,WIDTH-1-2);
+    sprintf(t_title,&quot;Code by PB16020923&quot;);
+    UI_DrawText(hout,B_WHITE | F_RED,t_title,strlen(t_title),2,0+2,WIDTH-1-2);
+    //窗口标题显示当前操作
+    char t_info[38];
+    sprintf(t_info,&quot;Hzip V1.1 - %s&quot;,type==0?&quot;Compressing...&quot;:&quot;Decompressing...&quot;);
+    SetConsoleTitle(t_info);
+    //文件名
+    char t_filename[38];
+    sprintf(t_filename,&quot;FileName: %s&quot;,filename);    
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_filename,strlen(t_filename),5,0+2,WIDTH-1-2);
+    //文件大小 
+    char t_size[38];
+    sprintf(t_size,&quot;Size: %0.2f KB&quot;,(double)size/1024);
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_size,strlen(t_size),6,0+2,WIDTH-1-2);   
+}
+void UpdateTimeText(double progress){//根据进度(0-1)更新剩余时间 
+    time(&amp;time_now); 
+    //已花时间 
+    char t_spenttime[40];
+    sprintf(t_spenttime,&quot;Spent Time: %d s&quot;,time_now-time_begin);
+    UI_CleanText(hout,9,0+2,WIDTH-1-2);
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_spenttime,strlen(t_spenttime),9,0+2,WIDTH-1-2);
+    //剩余时间 
+    char t_remainedtime[40];
+    sprintf(t_remainedtime,&quot;Remained Time: %d s&quot;,(int)((time_now-time_begin)*(1-progress)/progress));
+    UI_CleanText(hout,10,0+2,WIDTH-1-2);
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_remainedtime,strlen(t_remainedtime),10,0+2,WIDTH-1-2);
+    //画进度条 
+    int k=47*progress,i;
+    for(i=2;i&lt;=k;i++){
+        //UI_DrawText(hout,B_BLUE,&quot; &quot;,1,12,i,i);
+        UI_DrawText(hout,B_CYAN,&quot; &quot;,1,13,i,i);
+    }
+}
+void DrawSelect(int select){//没有文件传入时显示配置界面,select=1表示已选中，即当前已创建右键菜单
+    ClearScreen(hout,B_WHITE); 
+    SMALL_RECT rc;
+    rc=UI_SetRect(0,0,WIDTH-1,4);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_RED);      
+    char t_title[38];
+    sprintf(t_title,&quot;Hzip V1.1 - Setting&quot;);
+    UI_DrawText(hout,B_WHITE | F_RED,t_title,strlen(t_title),2,0+2,WIDTH-1-2);
+
+    int dx=10,dy=5;
+    rc=UI_SetRect(0+dx,0+dy,5+dx,2+dy);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_BLUE);
+    UI_DrawText(hout,B_WHITE | F_BLUE,select==1?&quot;√&quot;:&quot;  &quot;,2,1+dy,2+dx,3+dx);   
+    char t_cj[30]=&quot;Create right-click menu&quot;;
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_cj,strlen(t_cj),1+dy,7+dx,7+dx+strlen(t_cj));
+}
+int CheckKey(){//检查右键菜单注册表是否已设置 
+    HKEY k1,k2,k3;
+    if(RegOpenKeyEx(HKEY_CLASSES_ROOT,&quot;*&quot;,0,KEY_ALL_ACCESS,&amp;k1) != ERROR_SUCCESS){
+        return 0;
+    }
+    if(RegOpenKeyEx(k1,&quot;shell&quot;,0,KEY_ALL_ACCESS,&amp;k2) != ERROR_SUCCESS){
+        return 0;
+    }
+    if(RegOpenKeyEx(k2,&quot;Use Hzip to compress/decompress...&quot;,0,KEY_ALL_ACCESS,&amp;k3) != ERROR_SUCCESS){ 
+        return 0;
+    }   
+    return 1;
+}
+void SetKey(char *exepath){//设置或取消右键菜单注册表 
+    HKEY k1,k2,k3,k4;
+    char readvalue[128]={};
+    char setvalue[128]={};
+    if(RegOpenKeyEx(HKEY_CLASSES_ROOT,&quot;*&quot;,0,KEY_ALL_ACCESS,&amp;k1) != ERROR_SUCCESS){
+        RegCreateKey(HKEY_CLASSES_ROOT,&quot;*&quot;,&amp;k1);
+    }
+    if(RegOpenKeyEx(k1,&quot;shell&quot;,0,KEY_ALL_ACCESS,&amp;k2) != ERROR_SUCCESS){
+        RegCreateKey(k1,&quot;shell&quot;,&amp;k2);
+    }
+    if(RegOpenKeyEx(k2,&quot;Use Hzip to compress/decompress...&quot;,0,KEY_ALL_ACCESS,&amp;k3) != ERROR_SUCCESS){//没有右键 
+        RegCreateKey(k2,&quot;Use Hzip to compress/decompress...&quot;,&amp;k3);
+        RegCreateKey(k3,&quot;command&quot;,&amp;k4);
+        strcpy(setvalue,exepath);
+        strcat(setvalue,&quot; %1&quot;);
+        RegSetValueEx(k4,NULL,0,REG_SZ,setvalue,sizeof(setvalue));
+        DrawSelect(1);
+        MessageBox(NULL,&quot;Program has created a right-click menu to use Hzip.&quot;,&quot;SET&quot;,MB_OK|MB_ICONINFORMATION);
+    }
+    else{//有右键，删除 
+        RegDeleteKey(k3,&quot;command&quot;);
+        RegDeleteKey(k2,&quot;Use Hzip to compress/decompress...&quot;);
+        DrawSelect(0);
+        MessageBox(NULL,&quot;Program has deteled the right-click menu to use Hzip.&quot;,&quot;DETELE&quot;,MB_OK|MB_ICONINFORMATION);
+    }   
+    RegCloseKey(k1);
+    RegCloseKey(k2);
+    RegCloseKey(k3);
+    RegCloseKey(k4);
+}
+int Compress(char *fpath){//预处理及压缩 
+    FILE *fp1=fopen(fpath,&quot;rb+&quot;);
+    char cfpath[512];
+    GetCompressedFilePath(fpath,cfpath);//生成压缩文件存储路径 
+    FILE *fp2=fopen(cfpath,&quot;wb+&quot;);
+    char MARK[21]=&quot;#HAFFMANCOMPRESSFILE#&quot;;
+    fwrite(MARK,21,1,fp2);//标记这是一个压缩文件 
+
+    pfrelist fl;
+    CreateFrequencyListFromFile(fp1,&amp;fl);//读取源文件，创建频度表
+    SaveFrequencyListToFile(fp2,fl);//保存频度表到目标文件
+if(fl-&gt;num!=0 &amp;&amp; fl-&gt;num!=1){
+//0表示空文件，1表示只有一种字符，这两种情况都不用编码，保存频度表即可 
+        htree ht;
+        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);//从频度表创建哈夫曼树 
+        char haffmancode[256][256]={};
+        CreateHaffmanCode(ht,haffmancode);
+        fseek(fp1,0,SEEK_SET);//源文件移回文件头 
+        HaffmanCompress(fp1,fp2,haffmancode,ht-&gt;f);//根结点的权值即为总字符数        
+    }
+    fclose(fp1);
+    fclose(fp2);
+}
+int Decompress(char *fpath){//预处理及解压 
+    FILE *fp1=fopen(fpath,&quot;rb+&quot;);
+    char dfpath[512];
+    GetDecompressedFilePath(fpath,dfpath);//生成解压文件存储路径 
+    FILE *fp2=fopen(dfpath,&quot;wb+&quot;);
+    fseek(fp1,21,SEEK_SET);//跳过标记 
+
+    pfrelist fl;
+    LoadFrequencyListFromFile(fp1,&amp;fl);
+    if(fl-&gt;num==0) ;//空文件，不操作
+    else if(fl-&gt;num==1){//只有一种字符的文件 
+        unsigned int i;
+        for(i=0;i&lt;fl-&gt;list[0].f;i++) fwrite(&amp;(fl-&gt;list[0].ch),1,1,fp2);
+    }
+    else{
+        htree ht;
+        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);
+//从频度表创建哈夫曼树，解压时不用再生成哈夫曼编码，搜索树即可 
+        HaffmanDecompress(fp1,fp2,ht);      
+    }
+
+    fclose(fp1);
+    fclose(fp2);
+}
+int main(int argc,char *argv[]){
+    UIInit();
+
+    if(argc&gt;1){//有传入路径
+        DrawAllBox();
+        FILETYPE=GetFileTypeFromPath(argv[1]);  
+        FILESIZE=GetFileSizeFromPath(argv[1]); 
+        GetFileNameFromPath(argv[1],FILENAME); 
+        DrawInfoText(FILENAME,FILETYPE,FILESIZE);
+
+        time(&amp;time_begin); //计时开始 
+        if(FILETYPE==0){
+            Compress(argv[1]);
+        }
+        else{
+            Decompress(argv[1]);
+        }
+        UpdateTimeText(1);
+    }
+    else{
+        DrawSelect(CheckKey());
+        INPUT_RECORD inrec;
+        DWORD res;//返回已读取的记录数
+        COORD pos={0,0};
+        int k;
+        for(;;){
+            k++;
+            ReadConsoleInput(hin,&amp;inrec,1,&amp;res);//读取鼠标信息
+            if (inrec.EventType==MOUSE_EVENT){
+                if (inrec.Event.MouseEvent.dwEventFlags==0 &amp;&amp; \
+                inrec.Event.MouseEvent.dwButtonState==FROM_LEFT_1ST_BUTTON_PRESSED){
+                    SetKey(argv[0]);//设置右键
+
+                }
+            }
+        }
+    }
+    char t_finish[30];
+    sprintf(t_finish,&quot;Finished! Press any key to exit!&quot;);
+    UI_DrawText(hout,F_CYAN | B_BLACK,t_finish,strlen(t_finish),HEIGHT-2,0+2,WIDTH-1-2);
+    getchar();
+}
+</code></pre>
+<p>MyUI.h<br>​<br>​    界面部分，代码过长且与数据结构关系不大，此处不贴出</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
+        <p><span>发布时间:</span>2017-11-11, 00:00:00</p>
+        <p><span>最后更新:</span>2019-03-14, 20:16:19</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/11/11/ds/lab3_Haffman/" title="数据结构上机题3 哈夫曼压缩">https://l-x.me/2017/11/11/ds/lab3_Haffman/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2017/11/11/ds/lab3_Haffman/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/12/09/ds/lab4_ShortestPaths/">
+                    数据结构上机题4 最短路径
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/10/29/ds/lab2_Bank/">
+                    数据结构上机题2 模拟银行业务办理
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#哈夫曼压缩"><span class="toc-text">哈夫曼压缩</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#题目"><span class="toc-text">题目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一、-需求分析"><span class="toc-text">一、    需求分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、-概要设计"><span class="toc-text">二、    概要设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、-调试分析"><span class="toc-text">四、    调试分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、-用户手册"><span class="toc-text">五、    用户手册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、-测试结果"><span class="toc-text">六、    测试结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#七、-附录"><span class="toc-text">七、    附录</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"数据结构上机题3 哈夫曼压缩　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/12/09/ds/lab4_ShortestPaths/" title="上一篇: 数据结构上机题4 最短路径">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/10/29/ds/lab2_Bank/" title="下一篇: 数据结构上机题2 模拟银行业务办理">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/9999/01/01/article/my_blog/">博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/pc/lab3/">并行计算上机实验三 CUDA实现向量加法和矩阵乘法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/16/pc/lab2/">并行计算上机实验二 MPI实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/leetcode/single-number-iv/">LeetCode题目改编——只出现一次的数字IV</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/pc/lab1/">并行计算上机实验一 OpenMP实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/29/article/bit_operation_tips/">C/C++ 位运算总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/article/Makefile/">Makefile 使用总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/21/article/dp_1-5/">动态规划入门（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/article/tea_and_health/">茶与健康</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/05/mcps/lab_res/">汇编上机资源</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/mcps/lab4/">汇编上机题4</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/26/mcps/lab3/">汇编上机题3</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/25/alg/lab3/">算法基础上机实验三 最长公共子序列问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/19/mcps/lab2/">汇编上机题2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/18/alg/lab2/">算法基础上机实验二 红黑树维护算法及其区间树应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/mcps/lab1/">汇编上机题1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/12/article/USTC_Hackergame2018_8/">USTCHackergame2018之"我是谁"</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/13/article/verilog_signed_and_unsigned/">Verilog中的有符号数与无符号数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/10/cod/lab6_Multi-CycleCPU/">计算机组成原理上机实验6 多周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/04/cod/lab5_SingleCycleCPU/">计算机组成原理上机实验5 单周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/">操作系统阅读报告：进程通信与同步、进程调度</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/18/os/System_Call/System Call/">操作系统阅读报告：系统调用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/11/os/OS_Summary/OS Summary/">操作系统阅读报告：操作系统概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/09/ds/lab4_ShortestPaths/">数据结构上机题4 最短路径</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/ds/lab1_Polynome/">数据结构上机题1 一元稀疏多项式计算</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/article/expression_evaluation/">C语言表达式计算器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B："完美阴阳矩阵"</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/11/clp/lab9a/">程序设计II上机实验9A：算24</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2020 Lyncien
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+		
+		
+			<!-- Highlight.js -->
+			<!-- "//cdn.bootcdn.net/ajax/libs/highlight.js/9.2.0/styles/github.min.css" -->
+			<!-- "http://apps.bdimg.com/libs/highlight.js/9.1.0/styles/default.min.css" -->
+			<link rel="stylesheet" href="/old_resources/js/highlight/styles/vs2015.css">
+			<script src="/old_resources/js/highlight/highlight.pack.js"></script>
+			<script>
+					hljs.initHighlightingOnLoad();
+			</script>
+		
+		
+		
+			<a href="https://clustrmaps.com/site/1b46r" title="Visit tracker"><img width="0" heght="0" src="//www.clustrmaps.com/map_v2.png?d=i8Jh6LoQOmC5xU8sSnCrTkWgsRpkxH4HkQy9AZ7_Q0E&cl=ffffff"></a>
+		
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/old_resources/js/main.js" src="//cdn.bootcdn.net/ajax/libs/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcdn.net/ajax/libs/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Lyncien">
+
+
+
+<meta name="description" content="USTCHackergame2018之“加密解密算法”题目 加密算法和解密算法提示：本题中使用的 base64 编码，采用已被广泛应用于各种场合的 RFC 4648 §5 标准。 小赵听到自己成为了信息安全大赛的创始人后感到非常吃惊：“我一个少院学生会的干事，怎么就成信息安全大赛的创始人了呢？”这也难怪，毕竟小赵后来成为了物理学院的学生。物理和信息安全，通常情况下可都是八杆子打不着的呢。 当然了，">
+<meta name="keywords" content="Hackergame2018">
+<meta property="og:type" content="article">
+<meta property="og:title" content="USTC Hackergame2018 之 “加密解密算法”">
+<meta property="og:url" content="https://l-x.me/2018/10/15/article/USTC_Hackergame2018_18/index.html">
+<meta property="og:site_name" content="Lyncien&#39;s homepage">
+<meta property="og:description" content="USTCHackergame2018之“加密解密算法”题目 加密算法和解密算法提示：本题中使用的 base64 编码，采用已被广泛应用于各种场合的 RFC 4648 §5 标准。 小赵听到自己成为了信息安全大赛的创始人后感到非常吃惊：“我一个少院学生会的干事，怎么就成信息安全大赛的创始人了呢？”这也难怪，毕竟小赵后来成为了物理学院的学生。物理和信息安全，通常情况下可都是八杆子打不着的呢。 当然了，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://l-x.me/2018/10/15/article/USTC_Hackergame2018_18/BaiduShurufa_2018-10-15_20-19-38.png">
+<meta property="og:updated_time" content="2019-03-14T12:08:11.023Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="USTC Hackergame2018 之 “加密解密算法”">
+<meta name="twitter:description" content="USTCHackergame2018之“加密解密算法”题目 加密算法和解密算法提示：本题中使用的 base64 编码，采用已被广泛应用于各种场合的 RFC 4648 §5 标准。 小赵听到自己成为了信息安全大赛的创始人后感到非常吃惊：“我一个少院学生会的干事，怎么就成信息安全大赛的创始人了呢？”这也难怪，毕竟小赵后来成为了物理学院的学生。物理和信息安全，通常情况下可都是八杆子打不着的呢。 当然了，">
+<meta name="twitter:image" content="https://l-x.me/2018/10/15/article/USTC_Hackergame2018_18/BaiduShurufa_2018-10-15_20-19-38.png">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Lyncien&#39;s homepage" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/old_resources/css/style.css">
+
+
+
+<link href="//cdn.bootcdn.net/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>USTC Hackergame2018 之 “加密解密算法” | Lyncien&#39;s homepage</title>
+
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcdn.net/ajax/libs/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<script id="jump-to-new" src="/old_resources/js/redirect.js" async></script>
+</head>
+<script src="/old_resources/js/head-pic.js" ></script> <!-- head-pic-flash by Lyncien -->
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic" id="head-pic"> <!-- head-pic-flash by Lyncien -->
+            <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Lyncien</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">林深见鹿</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Lyncien</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic" id="head-pic-mobile"> <!-- head-pic-flash by Lyncien -->
+                <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Lyncien</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" target="_blank" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" target="_blank" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" target="_blank" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-article/USTC_Hackergame2018_18" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/10/15/article/USTC_Hackergame2018_18/" class="article-date">
+      <time datetime="2018-10-14T16:00:00.000Z" itemprop="datePublished">2018-10-15</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      USTC Hackergame2018 之 “加密解密算法”
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="USTCHackergame2018之“加密解密算法”"><a href="#USTCHackergame2018之“加密解密算法”" class="headerlink" title="USTCHackergame2018之“加密解密算法”"></a>USTCHackergame2018之“加密解密算法”</h1><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><blockquote>
+<h4 id="加密算法和解密算法"><a href="#加密算法和解密算法" class="headerlink" title="加密算法和解密算法"></a>加密算法和解密算法</h4><p>提示：本题中使用的 base64 编码，采用已被广泛应用于各种场合的 RFC 4648 §5 标准。</p>
+<p>小赵听到自己成为了信息安全大赛的创始人后感到非常吃惊：“我一个少院学生会的干事，怎么就成信息安全大赛的创始人了呢？”这也难怪，毕竟小赵后来成为了物理学院的学生。物理和信息安全，通常情况下可都是八杆子打不着的呢。</p>
+<p>当然了，小赵作为物理学院的学生，和其他物理学院的学生一样，身上的浮躁劲儿可一点都不少，常常因为一点小成就而沾沾自喜。这不，因为个人安全上的不重视，小赵的某个学弟小郑，很快从小赵暗恋的女孩子手里拿到了小赵和她交流的加密算法的程序。小赵在得知此事后反而没有尽可能地息事宁人，反而公开宣称，由于解密算法目前没有公开，所以拿到了加密算法也没有什么用。看来小赵对于现代密码学，根本没什么全面深入的了解啊。</p>
+<p>不过，即使小赵使用的是对称加密算法，分析出解密算法也并非易事——小赵对程序进行了混淆，而混淆的方法是使用 BrainFuck 虚拟机——这也正是小赵的底气所在。现在的任务是分析并读懂一段 BrainFuck 程序，从而将一段密文还原。小郑拿到的密文是：</p>
+<pre><code class="JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH">JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH
+</code></pre>
+<p>现在小郑将这一任务交给了跃跃欲试的你。快来挖掘小赵的黑历史吧！</p>
+<h4 id="FLAG-格式"><a href="#FLAG-格式" class="headerlink" title="FLAG 格式"></a>FLAG 格式</h4><p>以下是两条示例原文和密文：</p>
+<blockquote>
+<pre><code>QUICK_BROWN_FOXES_JUMP_OVER_THE_LAZY_DOG =&gt; aMRKoll07lcf49SIuPrNg8v5bMctTkfrQmchaEkF
+quick-brown-foxes-jump-over-the-lazy-dog =&gt; p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGNPVALq5l
+</code></pre></blockquote>
+<ul>
+<li>假设密文是 <code>p9dJ4Jsrj3oDy_KxMJ1N750NvUBtXVUGNPVALq5l</code></li>
+<li>最后解得原文是 <code>quick-brown-foxes-jump-over-the-lazy-dog</code></li>
+<li>则 FLAG 格式为 <code>flag{quick-brown-foxes-jump-over-the-lazy-dog}</code></li>
+</ul>
+<p>下面的输入输出框可以帮助测试原文是否已成功匹配加密过的 FLAG：</p>
+<table>
+<thead>
+<tr>
+<th>输入（合法）</th>
+<th>输出（匹配）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><code>JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="编码与解码"><a href="#编码与解码" class="headerlink" title="编码与解码"></a>编码与解码</h4><p>本题使用的 BrainFuck 解释器所使用的内存空间可视为长度无限，每一个 Cell 的大小为 256，同时加减是循环的（即 255 加一为 0，反之 0 减一为 255），此外所有合法的八个程序字符外的字符将会被忽略。原文需要编码转换为输入 BrainFuck 解释器的格式，解释器的输出同样需要解码转换才能输出密文。下面以<code>QUICK_BROWN_FOXES_JUMP_OVER_THE_LAZY_DOG</code>为例。</p>
+<p>编码过程如下：</p>
+<ul>
+<li>将原文分为四段，每段长度为十： <code>[QUICK_BROW, N_FOXES_JU, MP_OVER_TH, E_LAZY_DOG]</code></li>
+<li>每一段按 Base64 的顺序映射到 0 和 63 之间的数字：<ul>
+<li>第一段映射后结果为： <code>[16, 20, 8, 2, 10, 63, 1, 17, 14, 22]</code></li>
+<li>第二段映射后结果为： <code>[13, 63, 5, 14, 23, 4, 18, 63, 9, 20]</code></li>
+<li>依此类推</li>
+</ul>
+</li>
+<li>将十个为一组的数字输入 BrainFuck 解释器</li>
+</ul>
+<p>解码过程如下：</p>
+<ul>
+<li>BrainFuck 解释器一次输出十个数字：<ul>
+<li>第一段输出后结果为： <code>[154, 76, 209, 202, 232, 37, 165, 180, 251, 165]</code></li>
+<li>第二段输出后结果为： <code>[28, 159, 248, 253, 146, 136, 174, 207, 171, 141]</code></li>
+<li>依此类推</li>
+</ul>
+</li>
+<li>每一段的每一个数字对 64 取模：<ul>
+<li>第一段取模后结果为： <code>[26, 12, 17, 10, 40, 37, 37, 52, 59, 37]</code></li>
+<li>第二段取模后结果为： <code>[28, 31, 56, 61, 18, 8, 46, 15, 43, 13]</code></li>
+<li>依此类推</li>
+</ul>
+</li>
+<li>每一段按 Base64 的顺序映射后拼接在一起： <code>[aMRKoll07l, cf49SIuPrN, g8v5bMctTk, frQmchaEkF]</code></li>
+<li>将四段拼接后得到密文</li>
+</ul>
+<p>本题目内置了一个使用 JavaScript 编写的 BrainFuck 解释器（当然了，性能堪忧，不过一次加密还是很快的）。相关的文件位于<a href="bf.js"><code>bf.js</code></a>中。BrainFuck 源代码位于<a href="encrypt.bf"><code>encrypt.bf</code></a>中。</p>
+</blockquote>
+<a id="more"></a>
+<p>encrypt.bf的BrainFuck代码如下</p>
+<pre><code>/* author: @ustc_zzzz */ call(`,[-&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;+++&gt;&gt;++&gt;&gt;++++&gt;++++++&lt;&lt;+++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;
+++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++++++++&gt;&gt;++&gt;&gt;++++&lt;+++++++++&lt;&lt;++++&lt;&lt;++++&lt;&lt;++&lt;&lt;++&lt;]&lt;,[-&gt;&gt;++
++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++&gt;++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;&lt;+++&lt;&lt;+++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++++&gt;
+&gt;+++&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;+++++++++&lt;++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;]&lt;,[-&gt;&gt;++++++++&gt;&gt;+++++++&gt;&gt;
+++&gt;&gt;++&gt;&gt;+++++++++&gt;+++&lt;&lt;++++&lt;&lt;+++&lt;&lt;+++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;++
++++&lt;++++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;++++&lt;]&lt;,[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;+++&lt;&lt;++++++++&lt;
+&lt;++++++&lt;&lt;+++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;+++++++&lt;++++++++&lt;&lt;++++++&lt;&lt;++
++++&lt;&lt;+++&lt;&lt;+++++++&lt;]&lt;,[-&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++&gt;&gt;+++++++&gt;+++++++&lt;&lt;+++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++++++
+&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++++&gt;&gt;++++++&lt;++++&lt;&lt;+++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;+++++&lt;]&lt;,[-&gt;&gt;+++++&gt;&gt;++
+&gt;&gt;++++&gt;&gt;+++&gt;&gt;++++++&gt;++&lt;&lt;+++++++&lt;&lt;++++&lt;&lt;+++++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;+++++&gt;&gt;++++
+++++&gt;&gt;+++++++++&lt;+++++++&lt;&lt;++&lt;&lt;++++&lt;&lt;+++&lt;&lt;++&lt;]&lt;,[-&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++&gt;&gt;++++++&gt;&gt;++++++++&gt;++&lt;&lt;++++&lt;&lt;+
+++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++++++&lt;+++++&lt;&lt;++++&lt;&lt;++++++++&lt;&lt;++++
+&lt;&lt;+++++++&lt;]&lt;,[-&gt;&gt;+++++++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;++&lt;&lt;++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++&lt;&lt;++
+++++++&lt;]&gt;[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++&lt;+++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++&lt;&lt;++++++++&lt;]&lt;,[-&gt;&gt;++
+&gt;&gt;++++++++&gt;&gt;++&gt;&gt;++++++&gt;&gt;+++++&gt;++++&lt;&lt;++++&lt;&lt;+++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;+++++++&gt;&gt;++&gt;&gt;++
+++++++&gt;&gt;+++++++&gt;&gt;++++&lt;++&lt;&lt;+++&lt;&lt;+++++++&lt;&lt;+++++&lt;&lt;++&lt;]&lt;,[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;++++&gt;&gt;++&gt;+++++&lt;&lt;
++++++&lt;&lt;++&lt;&lt;++&lt;&lt;+++++&lt;&lt;++++++++&lt;]&gt;[-&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++&gt;&gt;+++++++++&lt;++++++++&lt;&lt;++++++++&lt;&lt;++++
+&lt;&lt;++++&lt;&lt;+++++++++&lt;]&gt;++.&gt;++++++.&gt;++++++++.&gt;++++++++.&gt;+++.&gt;+++++.&gt;+++++.&gt;+++++++.&gt;++++.&gt;+++++++++.`)
+</code></pre><h3 id="解题"><a href="#解题" class="headerlink" title="解题"></a>解题</h3><p>学习一下BrainFuck语法</p>
+<blockquote>
+<p>Brainfuck是一种极小化的计算机语言，它是由Urban Müller在1993年创建的。由于fuck在英语中是脏话，这种语言有时被称为brainf*ck或brainf**k，甚至被简称为BF。</p>
+</blockquote>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt;</td>
+<td>指针加一</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>指针减一</td>
+</tr>
+<tr>
+<td>+</td>
+<td>指针指向的字节的值加一</td>
+</tr>
+<tr>
+<td>-</td>
+<td>指针指向的字节的值减一</td>
+</tr>
+<tr>
+<td>.</td>
+<td>输出指针指向的单元内容（ASCⅡ码）</td>
+</tr>
+<tr>
+<td>,</td>
+<td>输入内容到指针指向的单元（ASCⅡ码）</td>
+</tr>
+<tr>
+<td>[</td>
+<td>如果指针指向的单元值为零，向后跳转到对应的]指令的次一指令处</td>
+</tr>
+<tr>
+<td>]</td>
+<td>如果指针指向的单元值不为零，向前跳转到对应的[指令的次一指令处</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<blockquote>
+<p>Brainfuck程序可以用下面的替换方法翻译成<a href="https://baike.baidu.com/item/C%E8%AF%AD%E8%A8%80" target="_blank" rel="noopener">C语言</a>（假设ptr是char*类型）：</p>
+<table>
+<thead>
+<tr>
+<th>Brainfuck</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt;</td>
+<td>++ptr;</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>–ptr;</td>
+</tr>
+<tr>
+<td>+</td>
+<td>++*ptr;</td>
+</tr>
+<tr>
+<td>-</td>
+<td>–*ptr;</td>
+</tr>
+<tr>
+<td>.</td>
+<td><a href="https://baike.baidu.com/item/putchar/4747878" target="_blank" rel="noopener">putchar</a>(*ptr);</td>
+</tr>
+<tr>
+<td>,</td>
+<td>*ptr =getch();</td>
+</tr>
+<tr>
+<td>[</td>
+<td>while (*ptr) {</td>
+</tr>
+<tr>
+<td>]</td>
+<td>}</td>
+</tr>
+</tbody>
+</table>
+<p><strong>当前位置清零</strong></p>
+<p>[-] 将当前指针的值归零</p>
+<p><strong>之前位置清零</strong></p>
+<p>[[-]&lt;] 将当前指针以及之前的指针归零</p>
+<p><strong>字符I/O</strong></p>
+<p>,. 从键盘读取一个字符并输出到屏幕上。</p>
+<p><strong>简单的循环</strong></p>
+<p>,[.,] 这是一个连续从键盘读取字符并<a href="https://baike.baidu.com/item/%E5%9B%9E%E6%98%BE" target="_blank" rel="noopener">回显</a>到屏幕上的循环。注意，这里假定0表示输入结束，事实上有些系统并非如此。以-1和”未改变”作为判断依据的程序代码分别是”,+[-.,+]”和”,[.[-],]”。</p>
+<p><strong>指针维护</strong></p>
+<p>>,[.&gt;,] 通过移动指针保存所有的输入，供后面的程序使用。</p>
+<p><strong>加法</strong></p>
+<p>[-&gt;+&lt;]</p>
+<p>把当前位置的值加到后面的单元中（破坏性的加，它导致左边的单元被归零）。</p>
+</blockquote>
+<p>观察原来的代码，发现是很多个循环</p>
+<p>分行一下比较清楚，对第一个循环注释一下</p>
+<pre><code class="C">, 
+//a[0]=k;
+[-&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;+++&gt;&gt;++&gt;&gt;++++&gt;++++++&lt;&lt;+++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;] 
+//a[0]--; a[2]=7; a[4]=5; a[6]=3; a[8]=2; a[10]=4; a[11]=6; a[9]=3; a[7]=9; a[5]=8; a[3]=6; a[1]=8;
+//a[0-11]*k
+&gt;
+[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++++++++&gt;&gt;++&gt;&gt;++++&lt;+++++++++&lt;&lt;++++&lt;&lt;++++&lt;&lt;++&lt;&lt;++&lt;]
+//a[1]--; 
+&lt;
+,
+[-&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++&gt;++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;&lt;+++&lt;&lt;+++&lt;&lt;++++++++&lt;]
+&gt;
+[-&gt;&gt;++++++++&gt;&gt;+++&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;+++++++++&lt;++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;]
+&lt;
+,
+[-&gt;&gt;++++++++&gt;&gt;+++++++&gt;&gt;++&gt;&gt;++&gt;&gt;+++++++++&gt;+++&lt;&lt;++++&lt;&lt;+++&lt;&lt;+++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]
+&gt;
+[-&gt;&gt;++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;+++++&lt;++++&lt;&lt;+++++++++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;++++&lt;]
+&lt;
+,
+[-&gt;&gt;+++++&gt;&gt;+++++++++&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;+++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;+++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]
+&gt;
+[-&gt;&gt;++++++&gt;&gt;++++++&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;+++++++&lt;++++++++&lt;&lt;++++++&lt;&lt;+++++&lt;&lt;+++&lt;&lt;+++++++&lt;]
+&lt;
+,
+[-&gt;&gt;+++++++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++&gt;&gt;+++++++&gt;+++++++&lt;&lt;+++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;]
+&gt;
+[-&gt;&gt;+++&gt;&gt;++++&gt;&gt;++++&gt;&gt;+++++&gt;&gt;++++++&lt;++++&lt;&lt;+++&lt;&lt;++++++++&lt;&lt;+++++++&lt;&lt;+++++&lt;]
+&lt;
+,
+[-&gt;&gt;+++++&gt;&gt;++&gt;&gt;++++&gt;&gt;+++&gt;&gt;++++++&gt;++&lt;&lt;+++++++&lt;&lt;++++&lt;&lt;+++++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;]
+&gt;
+[-&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;+++++&gt;&gt;++++++++&gt;&gt;+++++++++&lt;+++++++&lt;&lt;++&lt;&lt;++++&lt;&lt;+++&lt;&lt;++&lt;]
+&lt;
+,
+[-&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++&gt;&gt;++++++&gt;&gt;++++++++&gt;++&lt;&lt;++++&lt;&lt;+++&lt;&lt;++++++++&lt;&lt;++++++&lt;&lt;++++++++&lt;]
+&gt;
+[-&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++++++&lt;+++++&lt;&lt;++++&lt;&lt;++++++++&lt;&lt;++++&lt;&lt;+++++++&lt;]
+&lt;
+,
+[-&gt;&gt;+++++++++&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;++&lt;&lt;++++++++&lt;&lt;+++++&lt;&lt;+++++&lt;&lt;+++&lt;&lt;++++++++&lt;]
+&gt;
+[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++++++&gt;&gt;++++&gt;&gt;++&lt;+++++++&lt;&lt;+++++++++&lt;&lt;++&lt;&lt;+++&lt;&lt;++++++++&lt;]
+&lt;
+,
+[-&gt;&gt;++&gt;&gt;++++++++&gt;&gt;++&gt;&gt;++++++&gt;&gt;+++++&gt;++++&lt;&lt;++++&lt;&lt;+++++++&lt;&lt;+++++++&lt;&lt;++++++++&lt;&lt;++++++++&lt;]
+&gt;
+[-&gt;&gt;+++++++&gt;&gt;++&gt;&gt;++++++++&gt;&gt;+++++++&gt;&gt;++++&lt;++&lt;&lt;+++&lt;&lt;+++++++&lt;&lt;+++++&lt;&lt;++&lt;]
+&lt;
+,
+[-&gt;&gt;+++++++++&gt;&gt;+++++++&gt;&gt;+++++&gt;&gt;++++&gt;&gt;++&gt;+++++&lt;&lt;+++++&lt;&lt;++&lt;&lt;++&lt;&lt;+++++&lt;&lt;++++++++&lt;]
+&gt;
+[-&gt;&gt;++++++++&gt;&gt;++++++&gt;&gt;++&gt;&gt;+++++&gt;&gt;+++++++++&lt;++++++++&lt;&lt;++++++++&lt;&lt;++++&lt;&lt;++++&lt;&lt;+++++++++&lt;]
+&gt;
+++.&gt;++++++.&gt;++++++++.&gt;++++++++.&gt;+++.&gt;+++++.&gt;+++++.&gt;+++++++.&gt;++++.&gt;+++++++++.
+</code></pre>
+<p>每组都是两个循环，先输入a[0]，</p>
+<p>进行a[0]次循环，每次循环给a[1-11]各加一个定值（等于加号个数），其中a[1]+=8，</p>
+<p>然后进行a[1]=8*a[0]次循环，每次循环给a[2-11]各加一个定值</p>
+<p>用C语言有针对性地把上面代码转为伪代码，并获得每个加号的个数</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+int tmp1[10];
+
+void pflist(){
+    printf(&quot;{&quot;);
+    for(int i=0;i&lt;10;i++) printf(&quot;%d,&quot;,tmp1[i]);
+    printf(&quot;\b}\n&quot;);
+    memset(tmp1,0,sizeof(tmp1));
+}
+
+int main(){
+    FILE *fp=fopen(&quot;encrypt.bf&quot;,&quot;r&quot;);
+    char ch;
+    int p=0;
+    int a[20];
+    int in_while;
+    int in_add;
+    int add_times=0;
+    while((ch=fgetc(fp))!=EOF){
+        //printf(&quot;%c&quot;,ch);
+        if(ch!=&#39;+&#39; &amp;&amp; in_add){in_add=0;if(p&gt;=2){tmp1[p-2]+=add_times;};printf(&quot;%d\n&quot;,add_times);add_times=0;}
+        switch(ch){
+            case (int)&#39;&gt;&#39;: {p++;break;}
+            case (int)&#39;&lt;&#39;: {p--;break;}
+            case (int)&#39;[&#39;: {in_while=1;printf(&quot;while(a[%d]){\n&quot;,p);break;}
+            case (int)&#39;]&#39;: {in_while=0;pflist();printf(&quot;}\n&quot;);break;}
+            case (int)&#39;+&#39;: {if(!in_add){in_add=1;add_times++;printf(&quot;a[%d]+=&quot;,p);}else{add_times++;}break;}
+            case (int)&#39;,&#39;: {printf(&quot;a[%d]=in()\n&quot;,p);break;}
+            case (int)&#39;.&#39;: {printf(&quot;out(a[%d])\n&quot;,p);break;}
+            default: {break;}
+        }
+
+    }
+    return 0;
+}
+
+</code></pre>
+<p>得到每个循环中的各个定值，原BrainFuck编写的加密程序可等效地转为如下C代码</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+int arr[10]={};
+int a[10][10]={{7,6,5,8,3,9,2,3,4,6},{5,3,8,3,6,8,7,6,7,6},{8,8,7,5,2,3,2,4,9,3},{5,6,9,5,3,6,4,8,4,3},{7,7,4,5,4,5,3,9,7,7},{5,7,2,9,4,4,3,7,6,2},{6,6,7,8,3,3,6,4,8,2},{9,3,8,5,6,5,7,8,9,2},{2,8,8,7,2,7,6,4,5,4},{9,5,7,2,5,2,4,5,2,5}};
+int b[10][10]={{2,5,2,9,4,9,4,2,9,4},{8,8,9,3,2,7,9,4,6,9},{4,4,7,8,8,6,9,6,4,5},{7,6,3,6,5,5,6,8,8,7},{5,3,7,4,8,4,3,5,4,6},{2,2,3,9,4,5,2,8,7,9},{7,6,4,2,8,9,4,4,5,6},{8,9,3,7,2,9,9,4,7,2},{2,7,5,2,7,8,3,7,2,4},{9,8,4,6,4,2,8,5,8,9}};
+int c[10]={2,6,8,8,3,5,5,7,4,9};
+int main(){
+    int t;
+    for(int i=0;i&lt;10;i++){
+        scanf(&quot;%d&quot;,&amp;t);
+        //printf(&quot;%d\n&quot;,t);
+        for(int j=0;j&lt;10;j++){
+            arr[j]+=(a[i][j]*t);
+            arr[j]+=(b[i][j]*8*t);
+        }
+    }
+    for(int j=0;j&lt;10;j++) printf(&quot;%d &quot;,(arr[j]+c[j])%256);
+    return 0;
+}
+</code></pre>
+<p>题目给的是base64映射后的字符串<code>JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH</code></p>
+<p>写如下Python代码转换回去</p>
+<pre><code class="python">bmap=&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_&quot;
+def encode(l):
+    s=&quot;&quot;
+    for i in l:
+        s=s+bmap[i]
+    return s
+
+def decode(s):
+    l=[]
+    for ch in s:
+        for i in range(64):
+            if bmap[i]==ch:
+                l.append(i)
+    return l
+
+#print(decode(&quot;QUICK_BROWN_FOXES_JUMP_OVER_THE_LAZY_DOG&quot;))
+s=&quot;JzRVPiVpqo4iDM8celyueIs4ff4DKeG3EMKihzuH&quot;
+print(decode(s))
+</code></pre>
+<p>输出如下</p>
+<pre><code>[9, 51, 17, 21, 15, 34, 21, 41, 42, 40, 56, 34, 3, 12, 60, 28, 30, 37, 50, 46, 30, 8, 44, 56, 31, 31, 56, 3, 10, 30, 6, 55, 4, 12, 10, 34, 33, 51, 46, 7]
+</code></pre><p>分为4组</p>
+<pre><code>[9, 51, 17, 21, 15, 34, 21, 41, 42, 40]
+[56, 34, 3, 12, 60, 28, 30, 37, 50, 46]
+[30, 8, 44, 56, 31, 31, 56, 3, 10, 30]
+[6, 55, 4, 12, 10, 34, 33, 51, 46, 7]
+</code></pre><p>这4组就是原4组数列经过加密程序所得到的，现在就是要求原来的数列，相当于解方程组，当然是在模64情况下（加密过程是模256的，但输出序列要进过base64之前又被模64了），</p>
+<p>用Mathematica写如下代码</p>
+<pre><code>a={{7,6,5,8,3,9,2,3,4,6},{5,3,8,3,6,8,7,6,7,6},{8,8,7,5,2,3,2,4,9,3},{5,6,9,5,3,6,4,8,4,3},{7,7,4,5,4,5,3,9,7,7},{5,7,2,9,4,4,3,7,6,2},{6,6,7,8,3,3,6,4,8,2},{9,3,8,5,6,5,7,8,9,2},{2,8,8,7,2,7,6,4,5,4},{9,5,7,2,5,2,4,5,2,5}}
+b={{2,5,2,9,4,9,4,2,9,4},{8,8,9,3,2,7,9,4,6,9},{4,4,7,8,8,6,9,6,4,5},{7,6,3,6,5,5,6,8,8,7},{5,3,7,4,8,4,3,5,4,6},{2,2,3,9,4,5,2,8,7,9},{7,6,4,2,8,9,4,4,5,6},{8,9,3,7,2,9,9,4,7,2},{2,7,5,2,7,8,3,7,2,4},{9,8,4,6,4,2,8,5,8,9}}
+c={2,6,8,8,3,5,5,7,4,9}
+d=a+8*b
+
+
+s={9, 51, 17, 21, 15, 34, 21, 41, 42, 40}
+x={x1,x2,x3,x4,x5,x6,x7,x8,x9,x10}
+
+NSolve[Mod[Dot[x,d]+c,64]==s,x,Integers]
+</code></pre><p>对于第一组，可得</p>
+<pre><code>{{x1 -> ConditionalExpression[
+    33 + 64 C[1], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
+       C[8] | C[9] | C[10]) \[Element] Integers], 
+  x2 -> ConditionalExpression[
+    53 + 64 C[2], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
+       C[8] | C[9] | C[10]) \[Element] Integers], 
+  x3 -> ConditionalExpression[
+    37 + 64 C[3], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
+       C[8] | C[9] | C[10]) \[Element] Integers], 
+  x4 -> ConditionalExpression[
+    37 + 64 C[4], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
+       C[8] | C[9] | C[10]) \[Element] Integers], 
+  x5 -> ConditionalExpression[
+    62 + 64 C[5], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
+       C[8] | C[9] | C[10]) \[Element] Integers], 
+  x6 -> ConditionalExpression[
+    28 + 64 C[6], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
+       C[8] | C[9] | C[10]) \[Element] Integers], 
+  x7 -> ConditionalExpression[
+    53 + 64 C[7], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
+       C[8] | C[9] | C[10]) \[Element] Integers], 
+  x8 -> ConditionalExpression[
+    41 + 64 C[8], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
+       C[8] | C[9] | C[10]) \[Element] Integers], 
+  x9 -> ConditionalExpression[
+    33 + 64 C[9], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
+       C[8] | C[9] | C[10]) \[Element] Integers], 
+  x10 -> ConditionalExpression[
+    55 + 64 C[10], (C[1] | C[2] | C[3] | C[4] | C[5] | C[6] | C[7] | 
+       C[8] | C[9] | C[10]) \[Element] Integers]}}
+</code></pre><p>直接取</p>
+<pre><code>33,53,37,37,62,28,53,41,33,55
+</code></pre><p>类似地对其他3组用Mathematica求解，然后利用上面的Python代码进行base64映射</p>
+<pre><code>print(encode([33,53,37,37,62,28,53,41,33,55]))
+print(encode([43,62,48,53,45,33,62,53,52,49]))
+print(encode([53,52,62,43,55,47,55,43,44,53]))
+print(encode([27,37,55,62,38,26,45,43,53,49]))
+</code></pre><p>得</p>
+<pre><code>h1ll-c1ph3
+r-w1th-10x
+10-r3v3rs1
+bl3-matr1x
+</code></pre><p>则有<code>flag{h1ll-c1ph3r-w1th-10x10-r3v3rs1bl3-matr1x}</code></p>
+<p>答案正确！</p>
+<p><img src="//l-x.me/2018/10/15/article/USTC_Hackergame2018_18/BaiduShurufa_2018-10-15_20-19-38.png" alt="BaiduShurufa_2018-10-15_20-19-38"></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
+        <p><span>发布时间:</span>2018-10-15, 00:00:00</p>
+        <p><span>最后更新:</span>2019-03-14, 20:08:11</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/10/15/article/USTC_Hackergame2018_18/" title="USTC Hackergame2018 之 “加密解密算法”">https://l-x.me/2018/10/15/article/USTC_Hackergame2018_18/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2018/10/15/article/USTC_Hackergame2018_18/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/10/27/article/learning_and_forgetting/">
+                    学习与遗忘
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/10/12/article/USTC_Hackergame2018_8/">
+                    USTCHackergame2018之&#34;我是谁&#34;
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#USTCHackergame2018之“加密解密算法”"><span class="toc-text">USTCHackergame2018之“加密解密算法”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目"><span class="toc-text">题目</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#加密算法和解密算法"><span class="toc-text">加密算法和解密算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FLAG-格式"><span class="toc-text">FLAG 格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#编码与解码"><span class="toc-text">编码与解码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解题"><span class="toc-text">解题</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"USTC Hackergame2018 之 “加密解密算法”　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/10/27/article/learning_and_forgetting/" title="上一篇: 学习与遗忘">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/10/12/article/USTC_Hackergame2018_8/" title="下一篇: USTCHackergame2018之&#34;我是谁&#34;">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/9999/01/01/article/my_blog/">博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/pc/lab3/">并行计算上机实验三 CUDA实现向量加法和矩阵乘法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/16/pc/lab2/">并行计算上机实验二 MPI实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/leetcode/single-number-iv/">LeetCode题目改编——只出现一次的数字IV</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/pc/lab1/">并行计算上机实验一 OpenMP实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/29/article/bit_operation_tips/">C/C++ 位运算总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/article/Makefile/">Makefile 使用总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/21/article/dp_1-5/">动态规划入门（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/article/tea_and_health/">茶与健康</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/05/mcps/lab_res/">汇编上机资源</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/mcps/lab4/">汇编上机题4</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/26/mcps/lab3/">汇编上机题3</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/25/alg/lab3/">算法基础上机实验三 最长公共子序列问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/19/mcps/lab2/">汇编上机题2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/18/alg/lab2/">算法基础上机实验二 红黑树维护算法及其区间树应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/mcps/lab1/">汇编上机题1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/12/article/USTC_Hackergame2018_8/">USTCHackergame2018之"我是谁"</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/13/article/verilog_signed_and_unsigned/">Verilog中的有符号数与无符号数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/10/cod/lab6_Multi-CycleCPU/">计算机组成原理上机实验6 多周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/04/cod/lab5_SingleCycleCPU/">计算机组成原理上机实验5 单周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/">操作系统阅读报告：进程通信与同步、进程调度</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/18/os/System_Call/System Call/">操作系统阅读报告：系统调用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/11/os/OS_Summary/OS Summary/">操作系统阅读报告：操作系统概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/09/ds/lab4_ShortestPaths/">数据结构上机题4 最短路径</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/ds/lab1_Polynome/">数据结构上机题1 一元稀疏多项式计算</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/article/expression_evaluation/">C语言表达式计算器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B："完美阴阳矩阵"</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/11/clp/lab9a/">程序设计II上机实验9A：算24</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2020 Lyncien
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+		
+		
+			<!-- Highlight.js -->
+			<!-- "//cdn.bootcdn.net/ajax/libs/highlight.js/9.2.0/styles/github.min.css" -->
+			<!-- "http://apps.bdimg.com/libs/highlight.js/9.1.0/styles/default.min.css" -->
+			<link rel="stylesheet" href="/old_resources/js/highlight/styles/vs2015.css">
+			<script src="/old_resources/js/highlight/highlight.pack.js"></script>
+			<script>
+					hljs.initHighlightingOnLoad();
+			</script>
+		
+		
+		
+			<a href="https://clustrmaps.com/site/1b46r" title="Visit tracker"><img width="0" heght="0" src="//www.clustrmaps.com/map_v2.png?d=i8Jh6LoQOmC5xU8sSnCrTkWgsRpkxH4HkQy9AZ7_Q0E&cl=ffffff"></a>
+		
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/old_resources/js/main.js" src="//cdn.bootcdn.net/ajax/libs/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcdn.net/ajax/libs/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

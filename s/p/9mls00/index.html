@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">Verilog中的有符号数与无符号数</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2018-06-13</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 4213 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 14 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h1 id="Verilog中的有符号数与无符号数"><a href="#Verilog中的有符号数与无符号数" class="headerlink" title="Verilog中的有符号数与无符号数"></a>Verilog中的有符号数与无符号数</h1><h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><ul>
+<li><p>在用Verilog编写流水线CPU时，ALU需要实现add、addu、sub、subu、slt、sltu功能，分别是加、减、小于则置位的有符号和无符号版本，不过之前使用Verilog编写代码的时候从来没有考虑过符号问题，基本都是按无符号处理，除了在立即数符号拓展部分涉及到了符号</p>
+<pre><code>  `assign SignExtented = &#123;&#123;16&#123;IMM16[15]&#125;&#125;,IMM16&#125;;`
+</code></pre>
+<p>  这里相当于是手动按符号拓展。</p>
+</li>
+<li><p>那么，现在要实现的addu和add的区别在哪呢？还有溢出如何判断？</p>
+</li>
+</ul>
+<h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><ul>
+<li><p>马上回想了下原码和补码的问题，但是这只是在有符号情况下对正负数表示的统一，现在的问题是Verilog中“+”这个运算符是认为操作数是有符号还是无符号呢？（当然，正数的情况没有区别）。马上测试了一下：<br> ​    </p>
+<pre><code class="verilog">reg [3:0] a；
+reg [3:0] b；
+reg [3:0] out；
+initial begin
+    a = -1;
+    b = -2;
+    out = a + b;
+end
+</code></pre>
+<p> 结果out=-3，我以为“+”是计算有符号的情况的。<br> 以二进制查看了一下波形，是<code>a=4&#39;b1111,b=4&#39;1110,out=4&#39;b1101</code><br> 看来如果赋值为负数，是以补码的形式存储的</p>
+<p> 那么如果操作数是两个无符号数，且足够大，首位是1，不就也被“+”当成有符号负数了吗？这就不能实现无符号的加法了。</p>
+</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="初步理解"><a href="#初步理解" class="headerlink" title="初步理解"></a>初步理解</h2><ul>
+<li><p>查看一本编写cpu的参考书，里面是这样写的</p>
+<p>  <img src="/s/p/9mls00/alupic1.png"><br>  <img src="/s/p/9mls00/alupic2.png"><br>  <img src="/s/p/9mls00/alupic3.png"><br>  <img src="/s/p/9mls00/alupic4.png"><br>  <img src="/s/p/9mls00/alupic5.png"></p>
+</li>
+<li><p>这有符号和无符号有什么区别！！！</p>
+</li>
+<li><p>发现wire后面带着signed，马上查了下，这是Verilog2001新增的关键字，目的是为了方便处理有符号数，如果不加signed，就是按无符号处理。</p>
+<ul>
+<li>signed类型的变量，在位数增加要拓展高位的时候，是按符号拓展，也就是说，前面的我们手动实现的符号拓展，这里自动实现了。</li>
+</ul>
+</li>
+<li><p>那么为什么它的有符号计算和无符号计算都还是同样用无符号数int_0,int_1处理，而溢出的判断是专门增加一个signed型的变量s_out，用$signed()把out转成有符号存在s_out，然后判断？</p>
+</li>
+<li><p>花了一点时间遍访了博客后，发现了这张图</p>
+<p>  <img src="/s/p/9mls00/ss.png"></p>
+<p>  这不就是在模2^n意义下的加法吗？<br>  等等，我再去看一下a,b，a=4’b1111,b=4’1110,直接相加，舍弃最高进位（mod 2^4），这不就是out=4’b1101吗？可是刚刚明明是解释为负数啊。。<br>  思考了许久，啊，突然意识到，这个“+”确实是无符号的加，也就是电路中最基本的加法器的功能，这也是为什么负数要表示成补码的原因了（符号直接参与运算），看来之前没有真正理解补码的优越性。</p>
+</li>
+<li><p>这样一来，只要有符号时负数按补码存储，那么有符号和无符号的计算就是一样的</p>
+</li>
+<li><p>那么signed类型和unsigned类型的区别在哪呢？即使使用$signed()转换后，二进制代码并没有变，也就是，一串二进制代码，是有符号还是无符号，完全取决于你如何解释，不同解释就导致转换为十进制的时候得到不同的值，比较大小的时候也得到不同的结果。</p>
+</li>
+</ul>
+<p>##进阶</p>
+<ul>
+<li>那么溢出是如何判断的？<ul>
+<li>Mars的指令解释里add和addu的唯一区别在于addu不考虑溢出</li>
+<li>我就想，无符号为什么就不会溢出了？最高位如果进位不就是溢出了吗？</li>
+</ul>
+</li>
+<li>又是一番思索后，翻出了数电课本（啊，当时没认真学的后果），再参考博客后，得到判断溢出的方法<blockquote>
+<p>补码加法运算溢出判断三种方法：</p>
+<p>［方法一］<br>Xf、Yf分别两个数的符号位,Zf为运算结果符号位。<br>当Xf =Yf =0（两数同为正）,而Zf=1(结果为负)时,负溢出；<br>当出现Xf =Yf =1（两数同为负）,而Zf=0（结果为正），正溢出.</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>［方法二］<br>Cs表示符号位的进位，Cp表示最高数值位进位，⊕表示异或。<br>若 Cs⊕Cp =0 ，无溢出；<br>若 Cs⊕Cp =1 ，有溢出。</p>
+</blockquote>
+<blockquote>
+<p>［方法三］<br>用变形补码进行双符号位运算（正数符为00,负数符号以11）<br>若运算结果的符号位为”01”,则正溢；<br>若结果双符号为10,则负溢出；<br>若结果的双符号位为00或11，无溢出。</p>
+</blockquote>
+<ul>
+<li>从方法一，我才意识到之前理解的溢出是错误的，溢出并不是最高位有进位，而是有符号情况下同号相加时得到结果符合相反（也就是超过了可表示范围，当然，异号相加的时候不可能超过表示范围），而无符号的时候是没有溢出的，因为它满足模n加法。</li>
+<li>搞清楚了溢出后，上面参考书的写法也就不难理解了，就是判断两个源操作数的符号和结果符号。<ul>
+<li>不过有一点值得注意，s_out是signed型，那么”&lt;”和”&gt;”就是针对有符号的运算了（相当于C++中运算符的“重载”）。有符号的变量有可能“&lt;0”，而一个不加signed的变量”&gt;0”是恒成立的。所以，在比较两个无符号数大小时，应该写成if(a&gt;b)而不能写成if(a-b&gt;0)，a-b得到还是无符号数，这个判断恒成立。</li>
+</ul>
+</li>
+</ul>
+<h2 id="相关"><a href="#相关" class="headerlink" title="相关"></a>相关</h2><ul>
+<li>Verilog中有符号和无符号混合运算：两个有符号数运算、两个无符号数运算、有符号数运算和无符号数运算。 只有两个操作数都是有符号数，才会把两个操作数都看作有符号数计算，否则无论是有符号数还是无符号数都会按照无符号数计算。 </li>
+</ul>
+<h2 id="ALU中SLT的实现"><a href="#ALU中SLT的实现" class="headerlink" title="ALU中SLT的实现"></a>ALU中SLT的实现</h2><ul>
+<li><p>明白了上面的知识，slt的实现也就非常简单了，可以两种写法：</p>
+<ul>
+<li><p>一是无符号变量存储，自行判断符号</p>
+<pre><code class="verilog">if(alu_a[31] == alu_b[31]) alu_out = (alu_a &lt; alu_b) ? 32&#39;b1 : 32&#39;b0;
+    //对于不加signed的变量类型，运算和比较视为无符号，但依然可以存储有符号数，这里相当于自行根据首位判断
+    //首位相等，即同号情况，直接比较，如果同正，后面31位大的，原数就大，如果同负，后面31位（补码）大的，依然是原数大
+    else alu_out = (alu_a[31] &lt; alu_b[31]) ? 32&#39;b0 : 32&#39;b1;//异号情况，直接比较符号
+</code></pre>
+</li>
+<li><p>二是转为有符号，直接用“&lt;”比较</p>
+<p> <code>alu_out = ($signed(alu_a) &lt; $signed(alu_b)) ? 32&#39;b1 : 32&#39;b0;</code></p>
+</li>
+<li><p>测试一下，两种方法结果一样<br><img src="/s/p/9mls00/sltpic1.png"> </p>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9mnmo0/" class="prev">计算机组成原理上机实验7 流水线CPU</a>
+		 
+
+		 
+			<a href="/s/p/9liw00/" class="next">操作系统阅读报告：大容量存储器与文件系统</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9mls00/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

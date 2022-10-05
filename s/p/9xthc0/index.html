@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">编译原理课程实验汇报</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2019-01-17</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 13627 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 45 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<div style="text-align:center;"><font size="6" color="blue">编译原理课程实验汇报</font></div>
+
+<h2 id="第一部分：小组合作篇"><a href="#第一部分：小组合作篇" class="headerlink" title="第一部分：小组合作篇"></a>第一部分：小组合作篇</h2><h4 id="1-实验内容"><a href="#1-实验内容" class="headerlink" title="1. 实验内容"></a>1. 实验内容</h4><p>在给定框架下，完成一个PL0语言的简单编译器</p>
+<ul>
+<li>预备实验<ul>
+<li>安装Linux系统</li>
+<li>安装GCC/Git/CMake</li>
+<li>学习使用git命令合作编写代码</li>
+</ul>
+</li>
+<li>Lab1<ul>
+<li>熟悉PL0语言词法</li>
+<li>实现语法分析部分，对输入的文件实现Token流输出</li>
+</ul>
+</li>
+<li>Lab2<ul>
+<li>熟悉PL0语言的语法图</li>
+<li>实现语法分析部分</li>
+<li>使用递归下降的方式</li>
+<li>产生语法树</li>
+<li>部分错误的检测</li>
+</ul>
+</li>
+<li>Lab3<ul>
+<li>更完整的错误检测与处理</li>
+<li>对PL0语言进行拓展</li>
+<li>设计并绘制新的语法图</li>
+</ul>
+</li>
+<li>Lab4<ul>
+<li>完善Lab3添加的功能</li>
+<li>实现生成中间代码（基于特定模型的虚拟机）</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-总体设计和实现功能"><a href="#2-总体设计和实现功能" class="headerlink" title="2. 总体设计和实现功能"></a>2. 总体设计和实现功能</h4><ul>
+<li>根据助教所给的框架，主要包括以下几部分<ul>
+<li>common部分定义了编译器相关的数据结构和全局变量</li>
+<li>err部分定义了错误了类型对应的提示信息</li>
+<li>lex部分实现词法分析，输入文件字符流，构建一个状态机进行分析，输出Token流</li>
+<li>syntax部分实现语法分析和代码生成。调用lex，逐个读取Token，进行递归下降的语法分析，用语法制导的方式生成中间代码</li>
+<li>test.c<ul>
+<li>使用以上几部分构建编译器</li>
+<li>前期用于测试</li>
+<li>最后用于生成一个PL0编译器，调用时两个参数分别为输入的PL0源代码文件和输出的中间代码文件，该中间代码可在助教提供的PL0虚拟机上运行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>最后在助教的虚拟机上运行得分为124</li>
+</ul>
+<span id="more"></span>
+
+<h4 id="3-小组成员之间的合作形式"><a href="#3-小组成员之间的合作形式" class="headerlink" title="3. 小组成员之间的合作形式"></a>3. 小组成员之间的合作形式</h4><ul>
+<li>每次实验我先完成了一大部分</li>
+<li>在我的万般催促下，在每周日下午会面讨论，我和组长继续完善代码</li>
+<li>DDL前一天由我收尾</li>
+</ul>
+<h4 id="4-对小组合作效果进行评价"><a href="#4-对小组合作效果进行评价" class="headerlink" title="4. 对小组合作效果进行评价"></a>4. 对小组合作效果进行评价</h4><ul>
+<li>合作效果其实不大</li>
+<li>组长忙于其他课程，不过与我讨论很多；另一位同学就划水了…-_-</li>
+<li>大部分代码都是由我完成</li>
+</ul>
+<h2 id="第二部分：个人任务篇"><a href="#第二部分：个人任务篇" class="headerlink" title="第二部分：个人任务篇"></a>第二部分：个人任务篇</h2><h4 id="1-我的主要任务"><a href="#1-我的主要任务" class="headerlink" title="1. 我的主要任务"></a>1. 我的主要任务</h4><ul>
+<li>词法的<strong>全部</strong>实现</li>
+<li>语法的<strong>大部分</strong>实现（除了错误处理的细节）</li>
+<li>生成代码部分的<strong>几乎全部</strong>（除了call的一部分代码）</li>
+<li>绘制新的语法图</li>
+</ul>
+<h4 id="2-每一个任务的完成"><a href="#2-每一个任务的完成" class="headerlink" title="2. 每一个任务的完成"></a>2. 每一个任务的完成</h4><ul>
+<li><p><strong>词法部分</strong></p>
+<ul>
+<li><p><code>PL0Lex_get_token</code>函数每次被调用时，顺序读入文件中的字符，直到得到一个token或着发现语法错误</p>
+</li>
+<li><p>不进行复杂的判断，而是预先构造状态转换表，实现了一个有限自动机</p>
+<ul>
+<li>包括非接受状态集和接受状态集</li>
+<li>一开始进入<code>START</code>状态，然后进入一个while循环，每次读入一个字符后根据状态转换表进行转换</li>
+<li>若读取的字符类型为<code>ILLEGAL</code>，直接返回错误类型。</li>
+<li>如果进入了接受状态则返回token及其类型，长度，行号，位置</li>
+<li>如果进入非接受状态，则循环继续，但要注意对数字和标识符以及长度进行记录，以便后续返回<ul>
+<li>如果读取到数字，则进入<code>IN_NUM</code>状态，继续读到数字则保持该状态，读到其他类型字符则进入<code>NUM_AC</code>状态。</li>
+<li>如果读取到字母，则进入<code>IN_ID</code>状态，继续读到数字，字母和下划线则保持该状态，读到其他类型字符则进入<code>ID_AC</code>状态。</li>
+<li>对于长度为2的symbol<ul>
+<li>对于各比较运算符<code>&lt;=</code>和<code>&gt;=</code>，读到第一个字母时，进入一个选择状态，根据下一个字符是否为<code>=</code>来进入相应接受状态，注意是否回退一个字符。</li>
+<li>对于<code>!=</code>和<code>:=</code>，读取第一个字符时，分别进入选择状态，如果下一个字符是<code>=</code>，则接受，否则，第一个字符是非法字符，报错。</li>
+</ul>
+</li>
+<li>对于剩下各个长度为1的symbol，读到该字符就进入对应symbol的接受状态</li>
+<li>对于注释，读取到<code>/</code>，进入一个选择状态，如果下一个字符是<code>*</code>则进入注释状态，否则接受<code>/</code>。退出注释状态同理。</li>
+</ul>
+</li>
+<li>如果当前的状态是<code>IN_LINECOMMENTS</code>则忽略一切字符直到读取到换行符<code>\n</code></li>
+<li>如果当前的状态是<code>IN_BLOCKCOMMENTS</code>则忽略一切字符直到读取到<code>*/</code></li>
+</ul>
+</li>
+<li><p>关于是否回退一个字符，预先设置一个数组来查询。</p>
+</li>
+<li><p>关于保留字，不在状态表中体现，进入<code>ID_AC</code>后取得一个字符串，此时才与保留字数组进行比较，如果不属于其中任何一个，则认为是标识符。</p>
+</li>
+<li><p>关于状态转换表</p>
+<ul>
+<li><p>二维表，实现上面描述的自动机的功能，给定当前状态和输入字符，得到下一个状态</p>
+</li>
+<li><p>为了使状态表不会太大，对字符进行分类，改为根据当前状态和当前输入的字符<strong>类型</strong>进行转换</p>
+<ul>
+<li>数字类型</li>
+<li>字母类型</li>
+<li>分隔符类型</li>
+<li>长度为1的symbol字符每种对应一个类型</li>
+<li>长度为2的symbol中出现的额外字符<code>!</code>和<code>:</code>也作为两种类型</li>
+<li>其他字符均视为非法字符类型。</li>
+</ul>
+</li>
+<li><p>字符类型定义</p>
+<pre><code class="C">typedef enum _tCharType&#123;
+    LETTER, /* A-Za-z_ */
+    DIGIT,  /* 0-9 */
+    SPACE,  /* */
+    TAB,    /* \t */
+    NEWLINE,/* \n */
+    PLUS,   /* + */
+    MINUS,    /* - */
+    TIMES,    /* * */
+    SLASH,    /* / */
+    EQU,    /* = */
+    LES,    /* &lt; */
+    GTR,    /* &gt; */
+    LPAREN,    /* ( */
+    RPAREN,    /* ) */
+    COMMA,    /* , */
+    SEMICOLON,/* ; */
+    PERIOD,    /* . */
+    COLON,    /* : */
+    EXCLAMA,/* ! */
+    AND,    /* &amp; */
+    OR,        /* | */
+    ILLEGAL    /* other */
+&#125; CharType;
+</code></pre>
+</li>
+<li><p>状态定义</p>
+<pre><code class="c">typedef enum _tState&#123;
+    START,
+    SLASH_SEL,
+    LES_SEL,
+    GTR_SEL,
+    IN_NUM,
+    IN_ID,
+    IN_LINECOMMENTS,
+    IN_BLOCKCOMMENTS,
+    TO_END_BLOCKCOMMENTS,
+    COLON_SEL,
+    EXCLAMA_SEL,
+    AND_SEL,
+    OR_SEL, //以上是中间状态（非接受）
+    PLUS_AC,
+    MINUS_AC,
+    TIMES_AC,
+    SLASH_AC,
+    EQU_AC,
+    NEQ_AC,
+    LES_AC,
+    LEQ_AC,
+    GTR_AC,
+    GEQ_AC,
+    LPAREN_AC,
+    RPAREN_AC,
+    COMMA_AC,
+    SEMICOLON_AC,
+    PERIOD_AC,
+    BECOMES_AC,
+    NOT_AC,
+    AND_AC,
+    OR_AC,
+    NUM_AC,
+    ID_AC, //以上是接受状态
+    ERROR1,// &quot;:&quot; expect &quot;=&quot;
+    ERROR2,//expect &quot;&amp;&amp;&quot; but find &quot;&amp;&quot;
+    ERROR3    //expect &quot;||&quot; but find &quot;|&quot;
+&#125; State;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>语法部分</strong></p>
+<ul>
+<li>使用递归下降的方式</li>
+<li>实现拓展语法<ul>
+<li>增加逻辑运算符<code>&amp;&amp;</code> <code> ||</code> <code>! </code><ul>
+<li>将PL/0语言中的“条件”概念一般化 (表达式值非零即为“真”)</li>
+<li>短路计算</li>
+</ul>
+</li>
+<li>加入<code>return</code>语句</li>
+<li>增加<code>else</code> <code>elif</code></li>
+<li>增加<code>do</code> <code>while</code></li>
+<li>增加参数传递</li>
+<li>在语法分析中引入负数</li>
+</ul>
+</li>
+<li>语法图如下<ul>
+<li><img src="/s/p/9xthc0/1547603448952.png" alt="1547603448952"></li>
+<li><img src="/s/p/9xthc0/1547603474286.png" alt="1547603474286"></li>
+<li><img src="/s/p/9xthc0/1547603515703.png" alt="1547603515703"></li>
+<li><img src="/s/p/9xthc0/1547603534249.png" alt="1547603534249"></li>
+</ul>
+</li>
+<li>根据语法图实现上述非终结符对应的函数<ul>
+<li><code>program</code></li>
+<li><code>program_block</code></li>
+<li><code>var_declaration</code></li>
+<li><code>const_declaration</code></li>
+<li><code>statement</code></li>
+<li><code>or_expression</code></li>
+<li><code>and_expression</code></li>
+<li><code>relation_expression</code></li>
+<li><code>arithmetic_expression</code></li>
+<li><code>term</code></li>
+<li><code>factor</code></li>
+</ul>
+</li>
+<li>其他函数<ul>
+<li><code>gettoken</code>：调用词法分析器，获取一个Token</li>
+<li><code>match</code>：比较当前Token与预期的(通过参数传入)是否一致</li>
+<li><code>table_append</code>：将一个标识符加入全局表中</li>
+<li><code>table_append2</code>：将一个标识符(参数)加入另一个全局表中</li>
+<li><code>intable</code>：查找一个标识符在上面两个表中的下标，包括变量/常量/过程名/参数名</li>
+</ul>
+</li>
+<li>错误检测恢复的实现<ul>
+<li>发现当前Token不是预期的时候，即跳过后面的若干个Token，直到下一个可以正确地跟随当前正在分析的句子结构的符号为止。</li>
+<li>对于上面的每个函数（对应语法图的每一个分析过程），调用时提供一个显式参数（一个集合），它指明当前活动结点的可能的后继符号集合，这个集合由上层的函数计算。</li>
+<li>后继符号集合计算<ul>
+<li>在最上层先用一些明显的关键符号给它赋初值</li>
+<li>随着分析的层次深入，逐步补充别的合法符号</li>
+</ul>
+</li>
+<li>在<code>statement</code>和<code>factor</code>的开始和结束时进行检测（调用check函数）<ul>
+<li>因为这两个函数出现大量分支，需要对开始符号进行检测。</li>
+<li>其他层次的函数最终都会通过层层次调用在这两个函数里发现错误。</li>
+</ul>
+</li>
+<li><code>check</code> 函数实现<ul>
+<li>有三个参数：<ul>
+<li>允许的下一个符号集合S1</li>
+<li>另加的停止符号集合S2，有些符号的出现，虽然无疑是错的，但绝不应被忽略而跳过</li>
+<li>应该报的错误信息</li>
+</ul>
+</li>
+<li>如果当前Token不在集合S1中，即报错，此时合并S1和S2为S，继续读取Token，直到找到一个Token在S中</li>
+<li>这个函数可使分析程序不会<strong>盲目地</strong>跳过后面的符号</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>生成代码部分</strong></p>
+<ul>
+<li><p>全局数组<code>codes</code>，存储全部代码</p>
+<ul>
+<li><p>每条代码有两个参数，第一个参数是指令名称，第二个参数用于<code>PUT</code>的常数或者<code>JMP</code>的目标地址，其他指令的第二个参数为NONE（预先定义的一个值）</p>
+</li>
+<li><pre><code class="c">typedef struct _code&#123;
+    char ins[4];
+    int para;
+&#125;code;
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><code>gen</code>函数，用于每次生成一条代码</p>
+</li>
+<li><p>PL0虚拟机包括3部分，codeheap/stack/memory</p>
+<ul>
+<li><p>这里，stack只作为运算使用，当前运算总是对stack顶端的一个或两个值进行操作(虚拟机指令决定了这个特性)</p>
+</li>
+<li><p>memory被划分为两部分，从低地址端memory[1]开始增长作为模拟的运行栈(runstack)，从高地址端memory[1023]开始递减作为寄存器</p>
+<pre><code>--------------men[0]
+|null
+|runstack
+|..
+|..            &lt;-- runstack&#39;s top(REG_SP)
+|
+|reg4 //REG_SP
+|reg3 //REG_BP 
+|reg2 //REG_BX
+|reg1 //REG_AX
+--------------men[1023]
+
+a record in runstack (running)
+--------------low address  
+|return value
+|return address(in codeheap)
+|parameters
+|old base                    &lt;---base (REG_BP) 
+|local id(var/const/procedure)                    
+--------------high address  &lt;---top (REG_SP)
+
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>用虚拟机的指令以及memory模拟一个运行栈和寄存器组，实现以下函数</p>
+<ul>
+<li><code>gen_savereg(REG regid)</code>函数，将stack栈顶值保存到上面的某个寄存器</li>
+<li><code>gen_loadreg(REG regid)</code>函数，将上面的某个寄存器的值读取到stack栈顶</li>
+<li><code>gen_runstack_push</code>，包括3个函数，向运行栈中压入一个值，这个值可以是立即数/来自寄存器/来自stack栈顶</li>
+<li><code>gen_runstack_pop</code>，包括2个函数，从运行栈取出栈顶值，这个值可以被扔掉/保存到寄存器</li>
+<li><code>gen_exchangestacktop</code>，交换stack栈顶的两个值<ul>
+<li>先存到”寄存器“</li>
+<li>再反序压入</li>
+</ul>
+</li>
+<li><code>gen_int2bool</code>，将stack栈顶值转为bool值<ul>
+<li>非0值即为1</li>
+<li>实现：先<code>PUT 0 </code>，再<code>EQ</code>，最后<code>NOT</code></li>
+</ul>
+</li>
+<li><code>gen_id_addr(int index)</code>，根据标识符表/参数表的下标，动态生成某个变量/常量/参数在运行栈中相对基址的偏移量，然后加上基址，得到在memory中的地址，将这个地址放到stack栈顶<ul>
+<li>基址是随程序运行栈的变化而变化的</li>
+<li>偏移量在生成代码时就算好了，根据语法分析时加入变量表和参数表的下标<ul>
+<li>运行栈中当前基址之下是参数（偏移量为负）</li>
+<li>运行栈中当前基址之上是局部变量（偏移量为正）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>主要功能与拓展功能的实现</p>
+<ul>
+<li>增加逻辑运算符 <code>&amp;&amp;</code>  <code>||</code> <code>!</code> <ul>
+<li>上面语法部分把<code>expression</code>和<code>condition</code>拓展为4个层次<code>or_expression</code>，<code>and_expression</code>，<code>relation_expression</code>，<code>arithmetic_expression</code></li>
+<li>将PL/0语言中的“条件”概念一般化 (表达式值非零即为“真”)<ul>
+<li><code>arithmetic_expression</code>计算算术表达式得到的值向上面3层传递时</li>
+<li>如果上面3层只有都一个运算数，这个值被保留，即作为最终or_expression的值</li>
+<li>如果某层有多个参数，则转换为bool值(0/1)再继续运算，调用<code>gen_int2bool</code>实现</li>
+</ul>
+</li>
+<li>短路计算<ul>
+<li><code>or_expression</code>第一个数为1时，生成<code>JMP</code>指令（参数先空着），跳过之后多个值的计算，这里使用回填技术，在生成后面的计算代码后，再将代码所在的行填到这里JMP的参数</li>
+<li><code>and_expression</code>第一个数为0时，同理</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>加入<code>return</code>语句，增加参数传递<ul>
+<li><code>factor</code>和<code>statement</code>中分析<code>call</code>时，利用<code>gen_runstack_push</code>函数完成<ul>
+<li>生成*”将返回地址(当前代码下标+1)压入运行栈”*的代码</li>
+<li>再生成*”将参数依次压入运行栈”*，记下参数个数</li>
+<li>然后生成<em>“跳转到子过程开始处”</em>的代码</li>
+<li>最后按个数生成*”将参数依次弹出运行栈”*的代码。此时返回值正好在stack顶部</li>
+</ul>
+</li>
+<li><code>procedure</code>部分，扫描到参数全部添加进另一个参数表(专门存放参数)，同时将过程名称和当前代码地址加入标识符表</li>
+<li><code>statement</code>中的<code>return</code>语句，将返回值压栈，交换栈顶两个值，则栈顶值是返回地址，生成跳转代码即可</li>
+</ul>
+</li>
+<li>增加<code>else</code> <code>elif</code><ul>
+<li>利用<code>JPC</code>和<code>JMP</code>指令，依然使用回填技术，很简单</li>
+</ul>
+</li>
+<li>增加<code>do</code> <code>while</code><ul>
+<li>同上</li>
+</ul>
+</li>
+<li>负数<ul>
+<li>不在词法分析中实现</li>
+<li><code>const_declaration</code>取得常量数字Token时，如果前面一个Token是减号，则数取反后再存入加入标识符表</li>
+<li><code>factor</code>中，根据语法图，识别到负号时，再次调用<code>factor</code>，结果在栈顶，此时再生成两条代码<code>PUT 0; SUB;</code>实现将栈顶值取反</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-遇到的困难及解决"><a href="#3-遇到的困难及解决" class="headerlink" title="3. 遇到的困难及解决"></a>3. 遇到的困难及解决</h4><ul>
+<li>行号的计算问题<ul>
+<li>通过识别<code>\n</code>，遇到就增加</li>
+<li>但出现现象：对于某些行，行号增加了两次</li>
+<li>这种情况出现在标识符是该行的最后一个Token且标识符之后就是换行符，这样，在标识符结束时会有一个回退一个字符的动作，导致<code>\n</code>被扫描两次，则行号也被增加了两次。</li>
+<li>为了避免回退导致<code>\n</code>出现两次，应该限制<code>\n</code>扫描后是在<code>START</code>状态下，也是不回退的情况下，判断此行结束，所以判断条件改为<code>if(ch==&#39;\n&#39; &amp;&amp; state==START)</code></li>
+<li>考虑到还有块注释的情况，应该改为<code>if(ch==&#39;\n&#39; &amp;&amp; (state==START || state==IN_BLOCKCOMMENTS))</code></li>
+</ul>
+</li>
+<li>打印错误所在行的文本<ul>
+<li>最后一次实验需要打印错误所在行的文本，而之前词法分析时是每次用<code>fgetc</code>读取一个字符，并没有保存当前行</li>
+<li>修改读取方式，一开始用<code>fgets</code>读取一行，缓存至<code>linebuf</code>中，每次用<code>pos</code>偏移获取一个字符放在全局变量<code>ch</code>中，如果<code>ch==0</code>，即读取到<code>linebuf</code>结束时，再使用<code>fgets</code>读取一行。</li>
+<li><code>linebuf</code>定义在在<code>lex</code>结构体中，语法分析时调用错误函数时可以使用。</li>
+</ul>
+</li>
+<li>错误恢复分析问题<ul>
+<li>一开始不知道如何下手</li>
+<li>认真阅读课本中关于错误处理的部分，然后查阅了很多资料之后才大概明白如何处理</li>
+</ul>
+</li>
+<li>一些细节问题<ul>
+<li>有时候遇到某个错误时，反复报同一个错：处理完一个Token忘了<code>gettoken</code></li>
+<li>注意虚拟机的一些特性<ul>
+<li>比如<code>DIV</code>和<code>SUB</code>取操作数的顺序和语法分析时的顺序时相反的，需要自行交换栈顶两个数</li>
+<li>调用虚拟机打印栈顶值后并不会弹出栈顶值</li>
+<li><code>NOT</code>，<code>AND</code>，<code>OR</code>只能实现对0和1的运算，数值到布尔值的运算需要自行实现</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-亮点"><a href="#4-亮点" class="headerlink" title="4. 亮点"></a>4. 亮点</h4><ul>
+<li>状态表的压缩（详见上面总体设计）<ul>
+<li>合并输入符号的类型</li>
+</ul>
+</li>
+<li>集合的表示<ul>
+<li>没有使用任何数据结构</li>
+<li>因为集合元素是有限的Token类型，故集合大小有上限</li>
+<li>直接用长整型数表示集合，每个位表示一种Token类型(类似独热编码)<ul>
+<li>将Token_Type（枚举类型）用2的幂映射到一个长整数</li>
+</ul>
+</li>
+<li>用位运算实现集合操作<ul>
+<li>创建集合：直接定义一个长整型数为0</li>
+<li>合并集合：位或运算</li>
+<li>元素是否在集合中：位与运算</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>错误处理<ul>
+<li>动态生成可能的后续符号集合</li>
+<li>有选择地跳过非预期的符号</li>
+<li>较好地实现错误跳过并继续分析</li>
+</ul>
+</li>
+<li>模型运行栈和寄存器<ul>
+<li>虚拟机提供的栈只能实现简单运算，无法深入到栈中获取数据</li>
+<li>在内存中模拟运行栈，用生成的代码去<strong>”操作“</strong>运行栈</li>
+<li>动态地在向栈中加入活动记录，实现过程的递归调用</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-总结与心得体会"><a href="#5-总结与心得体会" class="headerlink" title="5. 总结与心得体会"></a>5. 总结与心得体会</h4><ul>
+<li>通过实验，我能更深入理解上课所学的理论知识<ul>
+<li>词法：有限状态机</li>
+<li>语法：递归下降预测分析</li>
+<li>生成代码：语法制导的翻译，回填技术</li>
+<li>错误处理：First集，Follow集</li>
+</ul>
+</li>
+<li>熟悉了git的使用</li>
+<li>体会到了编译器编写的困难<ul>
+<li>检测到错误之后要能继续分析，lab2和lab3大部分时间都在想这个问题</li>
+<li>这只是一个小小的实验，实现前端的一些简陋功能，但它已经花费了很长时间</li>
+<li>如果面对更复杂的语法，就需要借助生成器，如书上所讲的Yacc</li>
+<li>如果再考虑语言的各种特性（面向对象、多态、重载），那就更困难了</li>
+<li>编译器生成代码要针对”体系结构“，这里就是助教提供的虚拟机</li>
+</ul>
+</li>
+<li>体会到大型工程管理不易<ul>
+<li>需要编织好划分好每个文件的功能</li>
+<li>处理好全局变量、外部变量，避免重复定义，功能冗余</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9ztpc0/" class="prev">并行计算初探</a>
+		 
+
+		 
+			<a href="/s/p/9vv400/" class="next">茶与健康</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9xthc0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

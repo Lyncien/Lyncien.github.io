@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">计算机组成原理上机实验4 有限状态机</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2018-04-19</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 7802 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 26 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><ul>
+<li><p>综合利用三次实验的结果，完成以下功能：</p>
+</li>
+<li><p>通过例化，向ram中0地址到13地址存入14个数，比如10-23；向ram中100地址到106地址存入7个数，比如0~6，分别代表运算符（与ALU的操作符对应），最后向ram 107地址写入-1</p>
+</li>
+<li><p>运算控制：</p>
+<pre><code> - 从ram 0地址开始的地方取两个数，分别放在reg0和reg1，然后从ram 100地址开始的地方取一个运算符，放到reg2，计算之后，把结果存入ram地址200
+
+ - 从ram 2地址开始的地方取两个数，分别放在reg0和reg1，从ram 101地址开始的地方取一个运算符，放到reg2，计算之后，把结果存入ram地址201
+
+ - ……
+
+ - 如果取出操作符为-1，则结束。
+</code></pre>
+</li>
+</ul>
+<h2 id="实验平台"><a href="#实验平台" class="headerlink" title="实验平台"></a>实验平台</h2><p>ISE 14.7</p>
+<h2 id="实验过程（分析）"><a href="#实验过程（分析）" class="headerlink" title="实验过程（分析）"></a>实验过程（分析）</h2><ol>
+<li><p>模块化设计，一个alu模块，一个regfile模块，一个IP核生成的ram模块，一个control模块，控制reg、ram和alu，顶层一个top模块实例化前几个模块，ram初始化有coe文件读入。</p>
+</li>
+<li><p>alu模块使用case语句判断7种操作类型。</p>
+</li>
+<li><p>regfile模块用组合逻辑读，时序逻辑写。</p>
+</li>
+<li><p>control模块思路（4周期）由于reg在这里没有实质作用（仅是复制了一份存储），故不考虑相关控制<br> <img src="/s/p/9jrxc0/pic1.png"><br> 其中ram_ra为ram读地址，ram_rd为ram读数据，ram_we为ram写使能，tda、tdb为临时寄存上一周期的结果。</p>
+</li>
+<li><p>分析结果</p>
+<table>
+<thead>
+<tr>
+<th>Op</th>
+<th align="center">Data1</th>
+<th align="center">Data2</th>
+<th align="center">Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0(nop)</td>
+<td align="center">11</td>
+<td align="center">10</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td>1(add)</td>
+<td align="center">13</td>
+<td align="center">12</td>
+<td align="center">25</td>
+</tr>
+<tr>
+<td>2(sub)</td>
+<td align="center">15</td>
+<td align="center">14</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td>3(and)</td>
+<td align="center">17(32’b0…10001)</td>
+<td align="center">16(32’b0…10000)</td>
+<td align="center">16(32’b0…10000)</td>
+</tr>
+<tr>
+<td>4(or)</td>
+<td align="center">19(32’b0…10011)</td>
+<td align="center">18(32’b0…10010)</td>
+<td align="center">19(32’b0…10011)</td>
+</tr>
+<tr>
+<td>5(xor)</td>
+<td align="center">21(32’b0…10101)</td>
+<td align="center">20(32’b0…10100)</td>
+<td align="center">1(32’b0…00001)</td>
+</tr>
+<tr>
+<td>6(nor)</td>
+<td align="center">23(32’b0…10111)</td>
+<td align="center">22(32’b0…10110)</td>
+<td align="center">-24(32’b1…101000)</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<span id="more"></span>
+
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><ul>
+<li><p>仿真结果</p>
+<p>  IP核ram设置界面中Load In设置ram初始化coe文件的路径，其中文件内容为</p>
+<pre><code>  MEMORY_INITIALIZATION_RADIX=10;
+  
+  MEMORY_INITIALIZATION_VECTOR=
+  
+  10,11,12,13,14,15,16,17,18,19,20,21,22,23,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,1,2,3,4,5,6,-1,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</code></pre>
+<p>  仿真得ram和reg数据为</p>
+<p>  <img src="/s/p/9jrxc0/pic2.png"></p>
+<p>  ……</p>
+<p>  <img src="/s/p/9jrxc0/pic3.png"></p>
+<p>  ……</p>
+<p>  <img src="/s/p/9jrxc0/pic4.png"></p>
+<p>  可见计算结果符合分析。</p>
+</li>
+</ul>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录:"></a>附录:</h2><ul>
+<li><p>模块源代码</p>
+<p>top.v</p>
+<pre><code class="verilog">module top(
+    input clk,
+    input rst_n
+);
+    
+    wire [5:0] ra;
+    wire [5:0] wa;
+    wire [31:0] rd;
+    wire [31:0] wd;
+    wire [31:0] aluout;
+    
+    reg we=1&#39;b1;
+    wire [31:0] tda;
+    wire [31:0] tdb;    
+    
+    wire clkb;
+    wire ram_we;
+    wire [7:0] ram_ra;
+    wire [7:0] ram_wa;
+    wire [31:0] ram_rd;
+    wire [31:0] ram_wd;
+    
+    alu alu1(ram_rd,tdb,tda,aluout);
+    regfile regfile1(clk,rst_n,ra,wa,wd,we,rd);
+    control control1(clk,rst_n,aluout,ra,rd,wa,wd,tda,tdb,ram_we,ram_ra,ram_rd,ram_wa,ram_wd);
+    ram ram1(clk,ram_we,ram_wa,ram_wd,clk,ram_ra,ram_rd);
+    
+endmodule
+</code></pre>
+<p>alu.v</p>
+<pre><code class="verilog">parameter A_NOP =5&#39;h00; //nop
+parameter A_ADD =5&#39;h01; //sign_add
+parameter A_SUB =5&#39;h02; //sign_sub
+parameter A_AND =5&#39;h03; //and
+parameter A_OR  =5&#39;h04; //or
+parameter A_XOR =5&#39;h05; //xor
+parameter A_NOR =5&#39;h06; //nor
+
+module alu(
+    input [31:0] alu_a,
+    input [31:0] alu_b,
+    input [4:0] alu_op,
+    output reg [31:0] alu_out
+    );
+    always@(*)
+        case (alu_op)
+            A_NOP: alu_out = 0;
+            A_ADD: alu_out = alu_a + alu_b;
+            A_SUB: alu_out = alu_a - alu_b;
+            A_AND: alu_out = alu_a &amp; alu_b;
+            A_OR : alu_out = alu_a | alu_b;
+            A_XOR: alu_out = alu_a ^ alu_b;
+            A_NOR: alu_out = ~(alu_a | alu_b);
+            default: alu_out = 0;
+        endcase
+endmodule
+</code></pre>
+<p>regfile.v</p>
+<pre><code class="verilog">module regfile(
+    input   clk,
+    input rst_n,
+    input [5:0] rAddr1,//读地址
+    input [5:0] wAddr,//写地址
+    input [31:0] wDin,//写数据
+    input wEna,//写使能
+    output [31:0] rDout1//读数据1
+);
+    reg [31:0] data [0:63];
+    integer i;
+    assign rDout1=data[rAddr1];//读
+    
+    always@(posedge clk or rst_n)//写和复位
+        if(~rst_n)
+        begin 
+            for(i=0; i&lt;64; i=i+1) data[i]&lt;=0;
+        end
+        else
+        begin
+            if(wEna)
+                data[wAddr]&lt;=wDin;
+        end
+endmodule
+</code></pre>
+<p>control.v</p>
+<pre><code class="verilog">module control(
+    input clk,rst_n,
+    input [31:0] aluout,
+    
+    output reg [5:0] ra=6&#39;d0,//reg read addr
+    input [31:0] rd,//reg read data
+    output reg [5:0] wa=6&#39;d0,//reg write addr
+    output reg [31:0] wd,//reg write data
+    
+    output reg [31:0] tda,//tmp data a
+    output reg [31:0] tdb,//tmp data b
+    
+    output reg ram_we,//ram write enable
+    output reg [7:0] ram_ra,//ram read addr
+    input [31:0] ram_rd,//ram read data
+    output reg [7:0] ram_wa,//ram write addr
+    output reg [31:0] ram_wd//ram write data
+    );
+    reg [2:0] cstate;//current state
+    reg [2:0] nstate;//next state
+    reg endflag=0;
+    integer i=0;
+    
+    always @(posedge clk or negedge rst_n)
+        if(~rst_n) 
+            cstate&lt;=3&#39;d0;
+        else 
+            cstate&lt;=nstate;
+    
+    always @(*)
+        if(cstate==3&#39;d0) nstate=3&#39;d1;
+        else if(cstate==3&#39;d1 &amp; endflag==1&#39;d0) nstate=3&#39;d2;
+        else if(cstate==3&#39;d1 &amp; endflag==1&#39;d1) nstate=3&#39;d5;
+        else if(cstate==3&#39;d2) nstate=3&#39;d3;
+        else if(cstate==3&#39;d3) nstate=3&#39;d4;
+        else if(cstate==3&#39;d4) nstate=3&#39;d1;
+        else if(cstate==3&#39;d5) nstate=3&#39;d5;
+    always @(negedge clk or negedge rst_n)
+    begin
+        if(~rst_n)
+            begin
+                ram_ra&lt;=0;
+                ram_wa&lt;=0;
+                i&lt;=0;
+            end
+        else if(cstate==3&#39;d1)
+            begin
+                ram_ra&lt;=100+i;  
+            end
+        else if(cstate==3&#39;d2)
+            begin
+                ram_ra&lt;=2*i;
+                tda&lt;=ram_rd;
+                if(ram_rd==-1) endflag&lt;=1;
+            end
+        else if(cstate==3&#39;d3)
+            begin
+                ram_ra&lt;=2*i+1;
+                tdb&lt;=ram_rd;
+            end
+        else if(cstate==3&#39;d4)
+            begin
+                ram_wa&lt;=200+i;
+                ram_we&lt;=1;
+                ram_wd&lt;=aluout;
+                i&lt;=i+1;
+            end         
+    end
+
+endmodule
+</code></pre>
+<p>test.v</p>
+<pre><code class="verilog">module test(
+    );
+    reg clk,rst_n;
+    top test(
+        .clk(clk),
+        .rst_n(rst_n),
+    );
+    always #10 clk=~clk;
+    initial begin
+        clk=0;
+        rst_n=0;
+        #20;
+        rst_n=1;
+    end
+endmodule
+</code></pre>
+</li>
+</ul>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9k31c0/" class="prev">操作系统阅读报告：进程通信与同步、进程调度</a>
+		 
+
+		 
+			<a href="/s/p/9isqo0/" class="next">操作系统阅读报告：进程与线程</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9jrxc0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

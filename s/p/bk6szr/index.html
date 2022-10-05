@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">LeetCode刷题笔记——二分查找</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2022-02-24</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 5034 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 17 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h4 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h4><p>二分查找，单调性不是必须的</p>
+<p>想象一个无限长的数组，左边全是<code>false</code>，右边全是<code>true</code>，</p>
+<p>存在第一个使得<code>f(x)=true</code>的<code>x=k</code>，也就是突变点，突变点之后均满足<code>f(x)=true</code></p>
+<p>给定一个包含突变点的左闭右开坐标范围<code>[l,r)</code>，二分查找可以不断缩小范围找出这个点，最后<code>l</code>和<code>r</code>重叠于突变点<code>k</code></p>
+<p>模板如下，<code>f(x)</code>可以套用任何条件，只要问题可以抽象成上面描述的性质即可</p>
+<pre><code class="cpp">int binarySearch(vector&lt;int&gt;&amp; nums) &#123;
+    int n = nums.size();
+    int l = 0, r = n;
+    while (l &lt; r) &#123;
+        int m = l + (r - l) / 2;
+        if (f(m)) r = m;
+        else l = m + 1;
+    &#125;
+    return nums[r];
+&#125;
+</code></pre>
+<p>二分过程中，中点如果满足<code>f(m)=true</code>，说明突变点只会是<code>m</code>或<code>m</code>的左侧，缩小右边界<code>r=m</code>即可，否则缩小左边界，<code>l=m+1</code></p>
+<p>整个过程不断把右边界缩小到第一个满足<code>f(x)=true</code>的下标；若右边界已到位<code>r=k</code>，而左边界未重合，则之后只会一直缩小左边界，（因为中位数是下中位数，不会出现中位数是<code>k</code>），直到<code>l=r=k</code></p>
+<h5 id="升序数组找到一个大于等于target的下标"><a href="#升序数组找到一个大于等于target的下标" class="headerlink" title="升序数组找到一个大于等于target的下标"></a>升序数组找到一个大于等于target的下标</h5><p>对于升序<code>nums</code>，存在一个最小下标<code>x</code>，在该下标及其之后满足<code>f(x)=true</code></p>
+<p>那么<code>f(x) = (nums[x] &gt;= target)</code>，代入模板得</p>
+<pre><code class="cpp">int binarySearch(vector&lt;int&gt;&amp; nums, int target) &#123;
+    int n = nums.size();
+    int l = 0, r = n;
+    while (l &lt; r) &#123;
+        int m = l + (r - l) / 2;
+        if (nums[m] &gt;= target) r = m;
+        else l = m + 1;
+    &#125;
+    return nums[r];
+&#125;
+</code></pre>
+<p>而传统的二分查找指定target的下标，只是把上面的条件取等时单独考虑，直接返回而已，是特殊情况</p>
+<p>对应的C++库函数实现了相同功能</p>
+<pre><code class="C++">lower_bound(ForwardIterator first, ForwardIterator last, const T&amp; val, Compare comp)
+</code></pre>
+<p>该函数描述如下</p>
+<blockquote>
+<p>Returns an iterator pointing to <strong>the first element</strong> in the range <code>[first,last)</code> which <strong>does not compare less</strong> than <code>val</code>. </p>
+<p>The elements are compared using <code>operator&lt;</code> or <code>comp</code>. </p>
+<p>The elements in the range shall already be <a target="_blank" rel="noopener" href="http://www.cplusplus.com/is_sorted">sorted</a> according to this same criterion (<code>operator&lt;</code> or <code>comp</code>), or at least <a target="_blank" rel="noopener" href="http://www.cplusplus.com/is_partitioned">partitioned</a> with respect to <code>val</code>.</p>
+</blockquote>
+<p>在具体实现上有细微区别，大体如下，与上面的实现相比，<code>if</code>的条件和两个分支顺序相反</p>
+<p>因为C++该函数使用<code>comp</code>，语义是<strong>小于</strong>，而<code>lower_bound</code>目标是第一个不小于，也就是第一个<strong>大于等于</strong>，所以<code>comp(nums[m], target)</code>这里相当于<code>!f(条件)</code></p>
+<p>（如果需要自定义<code>comp</code>函数以使用<code>lower_bound</code>找到第一个满足xx条件的元素，就需要注意条件和comp的关系，有时候需要取反）</p>
+<pre><code class="C++">int binarySearch(vector&lt;int&gt;&amp; nums, int target) &#123;
+    int n = nums.size();
+    int l = 0, r = n;
+    while (l &lt; r) &#123;
+        int m = l + (r - l) / 2;
+        if (comp(nums[m], target)) l = m + 1;
+        else r = m;
+    &#125;
+    return nums[r];
+&#125;
+</code></pre>
+<h5 id="升序数组找到一个大于target的下标"><a href="#升序数组找到一个大于target的下标" class="headerlink" title="升序数组找到一个大于target的下标"></a>升序数组找到一个大于target的下标</h5><p>对于升序<code>nums</code>，存在一个最小下标<code>x</code>，在该下标及其之后满足<code>f(x)=true</code></p>
+<p>那么<code>f(x) = (nums[x] &gt; target)</code>，代入模板得</p>
+<pre><code class="c++">int binarySearch(vector&lt;int&gt;&amp; nums, int target) &#123;
+    int n = nums.size();
+    int l = 0, r = n;
+    while (l &lt; r) &#123;
+        int m = l + (r - l) / 2;
+        if (nums[m] &gt; target) r = m;
+        else l = m + 1;
+    &#125;
+    return nums[r];
+&#125;
+</code></pre>
+<p>对应的C++库函数实现了相同功能</p>
+<pre><code class="c++">upper_bound(ForwardIterator first, ForwardIterator last, const T&amp; val, Compare comp)
+</code></pre>
+<p>该函数描述如下</p>
+<blockquote>
+<p>Returns an iterator pointing to <strong>the first element</strong> in the range <code>[first,last)</code> which <strong>compares greater than</strong> <code>val</code>.</p>
+<p>The elements are compared using <code>operator&lt;</code> or <code>comp</code>. </p>
+<p>The elements in the range shall already be <a target="_blank" rel="noopener" href="http://www.cplusplus.com/is_sorted">sorted</a> according to this same criterion (<code>operator&lt;</code> or <code>comp</code>), or at least <a target="_blank" rel="noopener" href="http://www.cplusplus.com/is_partitioned">partitioned</a> with respect to <code>val</code>.</p>
+</blockquote>
+<p>具体实现大体如下，<code>if</code>的条件和分支顺序和上面是一致的，</p>
+<p>因为语义上<code>comp</code>是<strong>小于</strong>，而<code>upper_bound</code>目标是第一个<strong>大于</strong>，</p>
+<p>所以这里<code>comp(target, nums[m])</code>就是<code>f(条件)</code></p>
+<p>（注意这里<code>comp</code>两个参数传入的位置是和<code>lower_bound</code>的<code>comp</code>相反的）</p>
+<pre><code class="c++">int binarySearch(vector&lt;int&gt;&amp; nums, int target) &#123;
+    int n = nums.size();
+    int l = 0, r = n;
+    while (l &lt; r) &#123;
+        int m = l + (r - l) / 2;
+        if (comp(target, nums[m])) l = m + 1;
+        else r = m;
+    &#125;
+    return nums[r];
+&#125;
+</code></pre>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/bki8wr/" class="prev">C++学习笔记</a>
+		 
+
+		 
+			<a href="/s/p/bijpya/" class="next">LeetCode刷题笔记——迭代、递归、回溯、搜索、动态规划和贪心</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/bk6szr/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">Hexo博客搭建记录</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2021-03-18</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 12524 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 42 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>Hexo一个基于Nodejs的静态博客框架，通用预定义的模板和内嵌变量将Markdown文档渲染为静态网页</p>
+<p>本博客就是使用Hexo搭建的，并且自行开发了主题</p>
+<p>通过官方<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/helpers">文档</a>和<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/api/">API手册</a>，即可搭建和编写简单主题，但有些配置和细节文档中没有描述的很清楚，这里主要记录了博主搭建博客和编写主题、使用插件的过程</p>
+<h4 id="包"><a href="#包" class="headerlink" title="包"></a>包</h4><p>Nodejs通过npm来管理模块/包，包目录下的package.json记录的包的名称、版本和依赖包（dependencies）等信息，安装的包在node_modules中</p>
+<p>对于hexo，在一个目录（下面称为博客目录或博客）初始化后就产生了一个包，这个包里的package.json还有一个特殊项<code>hexo</code>，指定了hexo的版本，一般不需要手动修改package.json</p>
+<p>通过npm可以安装主题和插件（主题和插件本身也是一个个包，作为博客包的依赖）</p>
+<p>dependencies中可以看到一些默认安装的官方插件</p>
+<pre><code>&quot;hexo-generator-archive&quot;: &quot;^1.0.0&quot;,
+&quot;hexo-generator-category&quot;: &quot;^1.0.0&quot;,
+&quot;hexo-generator-tag&quot;: &quot;^1.0.0&quot;,
+&quot;hexo-renderer-swig&quot;: &quot;^1.0.0&quot;,
+&quot;hexo-renderer-stylus&quot;: &quot;^1.0.0&quot;,
+&quot;hexo-renderer-marked&quot;: &quot;^4.0.0&quot;,
+&quot;hexo-theme-landscape&quot;: &quot;^0.0.3&quot;,
+</code></pre>
+<ul>
+<li><p>renderer是渲染器，从一种文件格式得到另一种文件格式</p>
+<ul>
+<li>swig / markdown -&gt; html</li>
+<li>less / sass / stylus -&gt; css</li>
+</ul>
+</li>
+<li><p>generator是页面生成器，通过调用hexo的api，根据某个特定的模板，在特定的路径下生成页面</p>
+</li>
+<li><p>theme是主题，默认安装landscape主题</p>
+</li>
+</ul>
+<p>博客的配置在_config.yml文件中，hexo渲染过程中，主题、插件可以读取配置的中的配置项</p>
+<p>博客目录下的scripts子目录可以放置一些js脚本，通过hexo的api介入渲染和生成过程，类似于插件，如果要实现一些自用的功能，而不需发布为插件，则不用建立一个单独的包，直接添加到该目录下即可，渲染时</p>
+<p>博客目录下的themes子目录也可以放置手动下载解压的主题</p>
+<p>博客目录下的source子目录存放博客源文件，_posts目录中markdown格式文件会被渲染，而其他文件直接复制到public，具体规则可以在配置中控制</p>
+<p>博客目录下的public子目录存放生成的静态页面文件</p>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><ul>
+<li><p>配置中的永久链接格式<code>permalink: </code>，可以用一些预定义变量，对于文章的路径</p>
+<ul>
+<li><code>:title</code>包括了相对_post的路径</li>
+<li><code>:name</code>才是纯文件名</li>
+</ul>
+</li>
+<li><p>可在配置中添加以下，来开启<code>hexo server</code>时的gzip压缩</p>
+<ul>
+<li>官方文档里没有提及，但打印<code>hexo.config</code>对象可以看到默认配置</li>
+<li>开启后在调试时使用浏览器控制台的lighthouse作性能评估时就不会提示<code>启用文本压缩</code>这一项了</li>
+</ul>
+<pre><code class="yaml">server:
+  compress: true
+</code></pre>
+</li>
+</ul>
+<h4 id="渲染器"><a href="#渲染器" class="headerlink" title="渲染器"></a>渲染器</h4><p>渲染器插件实际上只是对真正的渲染引擎作简单的包装，通过hexo的API<code>hexo.extend.renderer.register</code>注册文件映射，调用真正的渲染引擎渲染，</p>
+<p>比如hexo-renderer-less插件，实际调用less进行渲染</p>
+<h6 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h6><p>模板的默认渲染器是ejs，即主题的layout目录下应该都是.ejs文件</p>
+<p>也可以换成swig，jade，pug等</p>
+<p>只能安装一种，否则可能会有冲突</p>
+<pre><code class="bash">npm install hexo-renderer-ejs --save
+npm install hexo-renderer-swig --save
+npm install hexo-renderer-jade --save
+npm install hexo-renderer-pug --save
+</code></pre>
+<h6 id="样式"><a href="#样式" class="headerlink" title="样式"></a>样式</h6><p>样式的默认渲染器是stylus</p>
+<p>可以安装less或sass渲染器</p>
+<pre><code class="bash">npm install hexo-renderer-less --save
+npm install hexo-renderer-stylus --save
+npm install hexo-renderer-sass --save
+</code></pre>
+<p>对于less插件，自定义渲染的文件路径和less配置项，需要在<strong>主题的</strong>配置中修改，如<code>themes/yourtheme/_config.yml</code></p>
+<pre><code class="yaml">less:
+  paths: [&quot;/[主题的]source/css&quot;, &quot;/[主题的]source/css/*&quot;, &quot;/[主题的]source/css/style.less&quot;] //会转换到public对应的css，下划线开头的子文件夹不会处理
+  options: //会直接传给less
+    compress: true
+</code></pre>
+<h6 id="markdown"><a href="#markdown" class="headerlink" title="markdown"></a>markdown</h6><p>markdown的默认渲染器是marked，会对<code>$$</code>内部公式进行默认转义导致mathjax解析失败</p>
+<p>kramed是在marked基础上修改的，支持了数学公式以markdown中的原样输出</p>
+<pre><code class="bash">npm uninstall hexo-renderer-marked --save
+npm install hexo-renderer-kramed --save
+</code></pre>
+<p>但其实还是有小问题，比如 <code>$a_b^c,C_&#123;linear&#125;$</code>中间两个下划线之间的内容会被当成斜体</p>
+<p>最后还是在主题中写了脚本通过api在渲染前提前替换，渲染后再替换回去</p>
+<h4 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h4><p>默认的几个生成器的生成规则如下</p>
+<h5 id="archives"><a href="#archives" class="headerlink" title="archives"></a>archives</h5><p>生成后有一个总主页 /archives/</p>
+<p>每年有一个主页 /archives/[year]</p>
+<p>每月有一个主页 /archives/[year]/[month]</p>
+<p>它们都由archive.ejs生成，可在模板内判断is_archive, is_year, is_month</p>
+<h5 id="tags"><a href="#tags" class="headerlink" title="tags"></a>tags</h5><p>每个tag有一个主页 /tags/[tag]，由tag.ejs生成</p>
+<p>没有总主页，需要自行补充！</p>
+<ul>
+<li><p>方法一：在source中，添加tags目录并在其中添加文件index.md<br>此时是用普通的布局page.ejs生成，可在其模板内部通过路径<code>page.path === &quot;tags/index.html&quot;</code><br>或 <code>page.source === &quot;tags/index.md&quot;</code>作特殊判断</p>
+</li>
+<li><p>方法二：在layout里新建一个布局tags.ejs（内容自定，可以用变量<code>site.tags</code>获取所有标签），然后在scrips里添加一个generator脚本，注册</p>
+<pre><code class="js">hexo.extend.generator.register(&#39;tags&#39;, function(locals)&#123;
+    return &#123;
+        path: &#39;/tags/index.html&#39;,
+        layout: [&#39;tags&#39;],
+        data: locals.theme
+    &#125;;
+&#125;);
+</code></pre>
+</li>
+</ul>
+<p>注意：<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/tag-plugins">标签插件</a>是用于在markdown中引入新的语法标记，和这里文章的分类标签不是一回事，另外，本博客及主题不打算使用标签插件，因为这会引入非标准markdown语法，不便于以后迁移</p>
+<h5 id="categories"><a href="#categories" class="headerlink" title="categories"></a>categories</h5><p>类似tags</p>
+<h4 id="一些有用的插件"><a href="#一些有用的插件" class="headerlink" title="一些有用的插件"></a>一些有用的插件</h4><h6 id="图片路径问题"><a href="#图片路径问题" class="headerlink" title="图片路径问题"></a>图片路径问题</h6><p>修改博客配置的<code>post_asset_folder: true</code>，这样每篇文章都使用独立的资源文件夹（即<code>hexo new [title]</code> 时会创建同名文件夹）</p>
+<p>但如果在markdown中按一般方式（即相对于独立资源文件夹的路径）引用图片，在渲染后的文章页能看到图片，在主页的文章预览中很可能看不到相对路径图片，需要安装以下插件</p>
+<pre><code class="bash">npm install https://github.com/7ym0n/hexo-asset-image --save
+</code></pre>
+<h6 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h6><p>静态博客无法通过与服务器交互查询来搜索指定文章，只能在渲染时生成所有文章的一些元信息保存为JSON，在页面加载中通过JS载入，用户搜索时直接从JSON中获取，下面这个插件可以实现</p>
+<pre><code class="bash">npm install hexo-generator-search --save
+</code></pre>
+<p>博客配置添加</p>
+<pre><code class="yaml">search:
+  path: search.xml 或 search.json
+  field: post
+  content: true
+</code></pre>
+<p>加上content后可以实现全文搜索，但可能导致JSON文件过大，页面加载时间变长</p>
+<h6 id="SEO"><a href="#SEO" class="headerlink" title="SEO"></a>SEO</h6><p>通过添加网站地图即sitemap，向搜索引擎提供网站的页面位置信息</p>
+<pre><code class="bash">npm install hexo-generator-sitemap --save
+npm install hexo-generator-baidu-sitemap --save
+</code></pre>
+<p>博客配置添加</p>
+<pre><code class="yaml">sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
+</code></pre>
+<p>sitemap是官方插件，不过好像没有处理配置中root不是/的情况</p>
+<p>baidu-sitemap是第三方插件，没有包括tags/categories页面，但处理了root不是/的情况</p>
+<p>另外，可以在博客source根目录添加<code>robots.txt</code>文件</p>
+<pre><code>User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /tags/
+Allow: /categories/
+Allow: /page/
+
+Disallow: /js/
+Disallow: /css/
+Disallow: /img/
+
+Sitemap: /sitemap.xml
+Sitemap: /baidusitemap.xml
+</code></pre>
+<h6 id="高亮"><a href="#高亮" class="headerlink" title="高亮"></a>高亮</h6><p>关闭hexo默认的高亮引擎，本博客是在主题中实现高亮</p>
+<pre><code class="yaml">highlight:
+  enable: false
+prismjs:
+  enable: false
+</code></pre>
+<h6 id="GIT部署"><a href="#GIT部署" class="headerlink" title="GIT部署"></a>GIT部署</h6><p>如果在渲染后需要一键部署到github，可以安装插件</p>
+<pre><code class="bash">npm install hexo-deployer-git --save
+</code></pre>
+<p>博客配置添加</p>
+<pre><code class="yaml">deploy: 
+  type: git 
+  repo: https://github.com/用户名/用户名.github.io.git 
+  branch: master
+</code></pre>
+<p>执行</p>
+<pre><code class="bash">hexo d
+</code></pre>
+<p>此时会在博客目录下生成<code>.deploy_git</code>目录（内容同public目录），即git仓库，会被强制push到github上</p>
+<h4 id="主题与插件开发"><a href="#主题与插件开发" class="headerlink" title="主题与插件开发"></a>主题与插件开发</h4><p>主题是一个单独的包，包括几个目录</p>
+<p>layout目录，存放模板文件，会被博客全局注册的生成器或者主题内注册的生成器使用</p>
+<p>scripts目录，类似全局的scripts目录，调用API或实现自定义功能，如</p>
+<ul>
+<li>注册生成器</li>
+<li>注册渲染前后的事件监听，实现对渲染过程的控制，如渲染前替换所有的数学公式</li>
+</ul>
+<p>source目录，包括网站发布需要的一些样式和脚本文件，样式可以是原始的css，也可以是less等（会经过全局注册的渲染器生成css）</p>
+<h4 id="模板-1"><a href="#模板-1" class="headerlink" title="模板"></a>模板</h4><p>主题的layout目录下存放了各种模板，它们会被注册的对应生成器读取，通过渲染器，加上hexo的内部变量，如文章的信息和配置项等等，最终生成静态页面</p>
+<p>在模板中，通过内置的上下文变量和一些辅助函数，可以实现自定义生成页面的内容和样式</p>
+<h5 id="内置上下文变量"><a href="#内置上下文变量" class="headerlink" title="内置上下文变量"></a>内置上下文变量</h5><p>全局变量：即所有页面中都可访问的变量，官方表格如下</p>
+<table>
+<thead>
+<tr>
+<th align="left">变量</th>
+<th align="left">描述</th>
+<th align="left">类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>site</code></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/variables#%E7%BD%91%E7%AB%99%E5%8F%98%E9%87%8F">网站变量</a></td>
+<td align="left"><code>object</code>; 见 <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/variables#%E7%BD%91%E7%AB%99%E5%8F%98%E9%87%8F">网站变量</a></td>
+</tr>
+<tr>
+<td align="left"><code>page</code></td>
+<td align="left">针对该页面的内容以及 front-matter 中自定义的变量。</td>
+<td align="left"><code>object</code>; 见 <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/variables#%E9%A1%B5%E9%9D%A2%E5%8F%98%E9%87%8F">页面变量</a></td>
+</tr>
+<tr>
+<td align="left"><code>config</code></td>
+<td align="left">网站配置</td>
+<td align="left"><code>object</code> (站点的配置文件)</td>
+</tr>
+<tr>
+<td align="left"><code>theme</code></td>
+<td align="left">主题配置。继承自网站配置。</td>
+<td align="left"><code>object</code> (主题配置文件)</td>
+</tr>
+<tr>
+<td align="left"><code>path</code></td>
+<td align="left">当前页面的路径（不含根路径）</td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>url</code></td>
+<td align="left">当前页面的完整网址</td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>env</code></td>
+<td align="left">环境变量</td>
+<td align="left">???</td>
+</tr>
+</tbody></table>
+<h6 id="网站变量site"><a href="#网站变量site" class="headerlink" title="网站变量site"></a>网站变量<code>site</code></h6><p><code>site.posts</code>    即所有文章    指放在<code>_post</code>文件夹下的md文件<br><code>site.pages</code>    即所有分页    指放在<code>_post</code>文件夹外的md文件</p>
+<h6 id="页面变量page"><a href="#页面变量page" class="headerlink" title="页面变量page"></a>页面变量<code>page</code></h6><p>在不同类型（<code>page</code>/<code>post</code>/<code>index</code>/<code>archive</code>/<code>tag</code>/<code>category</code>）的页面中，页面变量<code>page</code>包含的属性是不一样的，具体参考<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/variables">官方文档</a></p>
+<p>注意：每一个页面都有一个变量叫<code>page</code>，同时，有一种布局或者说页面类型叫<code>page</code>（意为普通的页面，相对的<code>post</code>/<code>index</code>/<code>archive</code>/<code>tag</code>/<code>category</code>是特殊的页面类型），不要混淆了哦</p>
+<h6 id="其他注意"><a href="#其他注意" class="headerlink" title="其他注意"></a>其他注意</h6><ul>
+<li><p>内置的数组变量，如<code>site.posts</code>并不是真的Array，而是一种对象，</p>
+<ul>
+<li>有data和length属性，data才是Array(可用forEach)，</li>
+<li>有each方法，回调函数<code>function(obj, idx)&#123;&#125;</code></li>
+</ul>
+</li>
+<li><p>对于<code>site.posts</code>的每一个<code>post</code>对象，<code>post.date</code>即文章的日期，若不在markdown文件的头部元数据中指定，则默认为文件的创建日期</p>
+<ul>
+<li>指定日期文本后，hexo将日期文本解析为momentjs对象，包含时区偏移，所以日期的数字不一定等于文本的数字，比如文本 2018-02-25 00:00:00 -&gt; momentjs对象(2018,02,24,23,00,00,+7)<br>momentjs对象.format()  -&gt; 2018-02-24 23:00:00</li>
+<li>渲染时，使用hexo自带辅助函数格式化 date(post.date, ‘YYYY-MM-DD’) 是不考虑时区偏移的？实测结果是等于原始指定的文本</li>
+</ul>
+</li>
+</ul>
+<h5 id="内置辅助函数"><a href="#内置辅助函数" class="headerlink" title="内置辅助函数"></a>内置辅助函数</h5><p><code>url_for(page.path)</code> 会补上path里缺少的root部分（如果root是/，则没有变化）</p>
+<h4 id="API"><a href="#API" class="headerlink" title="API"></a>API</h4><p>可在博客的scripts或主题的scripts目录下添加JS脚本，调用hexo的api，改变渲染过程</p>
+<p><code>hexo</code>是个全局变量，是Hexo类的实例，在脚本里console.log打印就能得知有哪些属性</p>
+<p>一些有用的属性</p>
+<ul>
+<li><p><code>xx_dir</code>各种路径</p>
+<pre><code>base_dir: &#39;[path to you blog]\\&#39;,
+public_dir: &#39;[path to you blog]\\public\\&#39;,
+source_dir: &#39;[path to you blog]\\source\\&#39;,
+plugin_dir: &#39;[path to you blog]\\node_modules\\&#39;,
+script_dir: &#39;[path to you blog]\\scripts\\&#39;,
+scaffold_dir: &#39;[path to you blog]\\scaffolds\\&#39;,
+theme_dir: &#39;[path to you blog]\\themes\\[theme name]\\&#39;,
+theme_script_dir: &#39;[path to you blog]\\themes\\[theme name]\\scripts\\&#39;,
+</code></pre>
+</li>
+<li><p><code>hexo.config</code>是全局配置，是<code>_config.yml</code>文件内容的JSON表示，包括未在配置文件中指明的一些默认配置</p>
+</li>
+<li><p><code>hexo.theme.config</code>是主题配置，好像只在 回调函数中才能读取到，脚本全局的访问不到（可能此时未加载主题配置）</p>
+</li>
+<li><p><code>hexo.locals</code>是“局部变量”，其实就是上面模板里的全局变量<code>site</code>，可通过<code>get/set</code>获取和修改某个变量</p>
+<ul>
+<li>比如<code>hexo.locals.get(&#39;pages&#39;)</code>相当于模板里的<code>site.pages</code></li>
+</ul>
+</li>
+<li><p><code>set</code>方法的参数是一个回调函数</p>
+</li>
+<li><p><code>hexo.*.context == hexo</code> （<code>*</code>包括<code>source</code>,<code>render</code>, <code>theme</code>等等）</p>
+</li>
+<li><p><code>hexo.extend.*.register(callback)</code> 系列（<code>*</code>包括<code>filter</code>,<code>generator</code>,<code>renderer</code>等等）注册的回调函数中，满足<code>this == hexo</code></p>
+</li>
+</ul>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/b2ppc0/" class="prev">markdown test</a>
+		 
+
+		 
+			<a href="/s/p/a4rhc0/" class="next">并行计算上机实验三 CUDA实现向量加法和矩阵乘法</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/b2jglz/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

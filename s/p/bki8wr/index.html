@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">C++学习笔记</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2022-03-02</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 4643 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 15 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h4 id="一些注意"><a href="#一些注意" class="headerlink" title="一些注意"></a>一些注意</h4><p>member initialization list 的初始化顺序由class中member声明顺序决定，而不是list本身的顺序</p>
+<p>大多数平台上，所有类型的指针具有相同的二进制表述</p>
+<p>const_cast关键字用于指针或引用，只能去除底层const，即把一个指向const int类型的指针改成指向int类型的指针，不能将指针的顶层const去除, 也不能将指向的对象的const属性去除</p>
+<h4 id="一些思考"><a href="#一些思考" class="headerlink" title="一些思考"></a>一些思考</h4><p>指针存储了地址，其类型只决定编译器以何种长度访问内存，如<code>int *</code>在64位机器上以4字节为长度</p>
+<ul>
+<li><p><code>void *</code>只有地址信息，无法解引（和<code>void</code>实际上没关系，<code>void</code>表示没有参数或没有返回值）</p>
+</li>
+<li><p>从<code>int *</code>可以隐式转换为<code>void *</code>，因为事实上丢失了长度信息</p>
+</li>
+<li><p>从<code>void *</code>只能强制显示转换为<code>int *</code>，这事实上增加了信息，只有编程者知道</p>
+</li>
+</ul>
+<p>了解C++类库相关实现十分重要，使用高级工具和直接低级工具存在<strong>开销差</strong>，这个<strong>开销差</strong>就是抽象代价(<em>abstraction penalty</em>)。</p>
+<p>某些情况下，高级工具会提供一些额外的功能。大部分情况下这都不是问题，因为你没有为你不使用的那部分买单。在罕见的情况下，这些未使用的功能会影响其他代码的性能。如果你很看重程序的性能，并且高级工具带来的开销过高，你最好是通过较低级别的工具来手工实现你需要的功能。在绝大多数情况下，额外增加的复杂性和出错几率都远大于性能的小幅提升带来的收益。</p>
+<h4 id="一些问题"><a href="#一些问题" class="headerlink" title="一些问题"></a>一些问题</h4><p>Q: inline函数能取地址吗？</p>
+<p>A: 能，但这样代码中会生成一个函数本体用于取地址（通过函数指针调用通常不会被inline），即使在直接调用处是展开的</p>
+<p>Q: 虚函数能inline吗？</p>
+<p>A: 不能，虚函数是运行时才能确定调用哪个具体的函数，而inline是在编译期对函数进行展开，这两个概念本质上是矛盾的</p>
+<p>Q: 没有定义copy constructor ，但有 default constructor，函数按值返回会发生什么？</p>
+<p>A: 使用编译器默认产生的copy constructor，bitwise拷贝或memberwise拷贝，但可能不是我们预期的结果（不是深拷贝）</p>
+<p>Q: 基类虚函数，子类虚函数同名不同参数（重载？）会发生什么问题？</p>
+<p>A: 通过基类指针只能调用到基类的函数，无论该指针指向的是基类还是派生类，如果使用基类指针调用子类同名重载函数，编译不通过</p>
+<p>Q: new [] 一个数组，长度信息存储在哪？malloc的长度信息能被获取？</p>
+<p>A: 编译器将new分解为两个动作，operator new(size) 和 构造函数，向operator new传递申请的字节数时会多一些额外空间存储数组长度（用于delete时调用析构函数），operator new默认调用malloc申请，而malloc本身也维护了一个区块的大小（Cookie），但malloc并不知道是否该区块是否为数组</p>
+<p>Q: new [] 一个数组，用delete释放会发生什么</p>
+<p>A: 对于具有平凡的析构函数的类（包括基本类型），不会发生什么，delete依然能够是否对应申请时长度的空间（因为是由free实现），但对于那些需要在析构函数中释放相关资源的类，由于使用delete，不能进行正确次数的调用析构函数，可能出现资源泄露</p>
+<p>Q: 虚函数，基类和派生类返回值类型不同？</p>
+<h4 id="一些名词"><a href="#一些名词" class="headerlink" title="一些名词"></a>一些名词</h4><table>
+<thead>
+<tr>
+<th>缩略语</th>
+<th>全称</th>
+<th>中文</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SFINAE</td>
+<td>Substitution Failure Is Not An Error</td>
+<td>替换失败并非错误</td>
+</tr>
+<tr>
+<td>RAII</td>
+<td>Resource Acquisition Is Initialization</td>
+<td>资源获取即初始化</td>
+</tr>
+<tr>
+<td>RTTI</td>
+<td>Run-Time Type Identification</td>
+<td>运行时类型识别</td>
+</tr>
+<tr>
+<td>pImpl</td>
+<td>pointer to implementation</td>
+<td></td>
+</tr>
+<tr>
+<td>NVI</td>
+<td>Non-Virtual Interface（一种称为模板方法的设计模式，和C++模板没关系）</td>
+<td></td>
+</tr>
+<tr>
+<td>(N)RVO</td>
+<td>(Named) Return Value Optimization</td>
+<td>（命名）返回值优化</td>
+</tr>
+<tr>
+<td>EBO</td>
+<td>Empty Base Optimization</td>
+<td>空白基类优化</td>
+</tr>
+<tr>
+<td></td>
+<td>stack unwinding</td>
+<td>栈展开</td>
+</tr>
+</tbody></table>
+<h4 id="一些参考"><a href="#一些参考" class="headerlink" title="一些参考"></a>一些参考</h4><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_1306966457508118528">https://www.zhihu.com/column/c_1306966457508118528</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/378355217">https://zhuanlan.zhihu.com/p/378355217</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/377145104">https://zhuanlan.zhihu.com/p/377145104</a></p>
+<h6 id="Modern-C"><a href="#Modern-C" class="headerlink" title="Modern C++"></a>Modern C++</h6><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/cpp/welcome-back-to-cpp-modern-cpp?view=msvc-170&amp;viewFallbackFrom=vs-2019">https://docs.microsoft.com/en-us/cpp/cpp/welcome-back-to-cpp-modern-cpp?view=msvc-170&amp;viewFallbackFrom=vs-2019</a></p>
+<h6 id="String"><a href="#String" class="headerlink" title="String"></a>String</h6><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cthon/p/9181979.html">https://www.cnblogs.com/cthon/p/9181979.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://feihu.me/blog/2014/sgi-std-sort/">知无涯之std::sort源码剖析</a></p>
+<h6 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h6><p><a target="_blank" rel="noopener" href="https://paul.pub/cpp-memory-model/">https://paul.pub/cpp-memory-model/</a></p>
+<p><a target="_blank" rel="noopener" href="https://paul.pub/cpp-concurrency">https://paul.pub/cpp-concurrency</a></p>
+<p><a target="_blank" rel="noopener" href="https://gaomf.cn/2020/09/11/Cpp_Volatile_Atomic_Memory_barrier/">https://gaomf.cn/2020/09/11/Cpp_Volatile_Atomic_Memory_barrier/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ishen/p/13200838.html">https://www.cnblogs.com/ishen/p/13200838.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/43526907">https://zhuanlan.zhihu.com/p/43526907</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/41872203">https://zhuanlan.zhihu.com/p/41872203</a></p>
+<h6 id="协变"><a href="#协变" class="headerlink" title="协变"></a>协变</h6><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/db76a8b08694">https://www.jianshu.com/p/db76a8b08694</a></p>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/bm4vhj/" class="prev">LeetCode刷题笔记——背包问题汇总</a>
+		 
+
+		 
+			<a href="/s/p/bk6szr/" class="next">LeetCode刷题笔记——二分查找</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/bki8wr/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

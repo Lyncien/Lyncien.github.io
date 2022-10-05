@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">数据结构上机题2 模拟银行业务办理</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2017-10-29</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 28541 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 95 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><ol>
+<li>检查日期：</li>
+<li>28截止（下周六10.21做完的可以提前检查，人会比较少）</li>
+<li>实验内容：<br>参考题集中P100的实验2.6银行模拟（做P102实验2.8电梯模拟也可以）输出界面要求按照时间顺序输出时间，事件，并计算平均等待时间。不出意外的话，要么rand设置会出现队伍越来越长要么会出现队伍变空没人。那么设置关门时间清空所有排队者或者中午吃饭关门等等，vip通道可自己设计。可自己添加辅助条件，要求合理，能说服助教。输出界面鼓励同学们用图形界面（动画的方式）来呈现。给分以完成程度评定（大家要仔细理解题集上面实验的题意哈）</li>
+<li>要求：数据结构用链表与队列，还要有上述能表现出事件先后顺序的输出界面（希望大家的输出界面友好一点…），源代码当场检查完拷到实验室电脑上（命名：学号+姓名+实验x），每次上机要先签到，依签到顺序检查，本次实验要写实验报告（格式参考题集P105迷宫问题的实习报告）实验报告要求纸质版，记得写名字学号，实验检查结束后周一上课交。<br>以及：实验一还没有检查的同学下周六还可以接着去检查。（实验一不需要实验报告，只需提交源代码）</li>
+</ol>
+<h2 id="一、-需求分析"><a href="#一、-需求分析" class="headerlink" title="一、    需求分析"></a>一、    需求分析</h2><ol>
+<li><p>   实现功能：模拟银行业务办理。银行只能同时运行一个窗口，但设有两个队列。客户到达时，先排第一个队列，客户可以办理两种业务：取款或存款。如果是第一种业务，但银行现有的资金不能满足客户，那么客户立刻排入第二个队列队尾进行等候，否则，花费一定时间办理业务后立刻离开。每当办理完一个第二种业务客户时，顺序检查（假设检查不需要时间）第二个队列的客户，对于能满足者进行业务办理，否则排入队尾继续等候。如果检查过程中，银行的资金已经小于刚才办理完第一种业务的客户时的资金或者第二个队列中的所有客户已经检查了一遍，则停止检查，继续接待第一个队列中的客户。在到达营业结束时间时，所有客户立刻离开银行。计算所有客户在银行内逗留的平均时间并输出。</p>
+</li>
+<li><p>   初始时需要设置银行营业时间CloseTime(int,&gt;0)、银行初始资金BankMoney(int,&gt;0)、下一个客户到来时间间隔的上下限NextCutormerTime(int,&gt;0)、客户办理业务所需时间的上下限DurTime(int,&gt;0)、客户交易金额的上下限Amount(int,!=0)，由用户通过控制台窗口输入。</p>
+</li>
+<li><p>   模拟业务办理过程采用事件驱动方式，用动态链表数据结构实现事件的加入与执行。</p>
+</li>
+<li><p>   客户队列用顺序存储的循环队列存放。</p>
+</li>
+<li><p>   模拟过程中在控制台中实时输出当前时间、银行资金、正在办理业务的客户、两个队列中的客户、发生的事件。</p>
+</li>
+<li><p>测试数据：任意，注意测定两种极端情况，<br> （1）    两个客户到达间隔极短，而客户办理时间极长。<br> （2）    两个客户到达间隔极长，而客户办理时间极短。</p>
+</li>
+</ol>
+<span id="more"></span>
+
+<h2 id="二、-概要设计"><a href="#二、-概要设计" class="headerlink" title="二、    概要设计"></a>二、    概要设计</h2><ol>
+<li>抽象数据类型客户队列定义如下：<pre><code> ADT UserQueue&#123;
+     数据对象：D=&#123;User|User.id=1,2,...,n;n&gt;=0&#125;
+     数据关系：无
+     基本操作：
+         InitQueue(&amp;q);
+             操作结果：创建客户队列q。
+         DestoryQueue(&amp;q);
+             初始条件：客户队列q存在。
+             操作结果：销毁客户队列q。
+         QueueLength(q);
+             初始条件：客户队列q存在。
+             操作结果：返回客户队列q的长度。
+         EnQueue(&amp;q,elem);
+             初始条件：客户队列q存在。
+             操作结果：将客户elem加入客户队列q的队尾。         
+         DeQueue(&amp;q,&amp;elem);
+             初始条件：客户队列q存在。
+             操作结果：将客户从客户队列q的队头删除，存放在elem中。   
+         PeekQueueByPos(&amp;q,i,&amp;elem);
+             初始条件：客户队列q存在。
+             操作结果：返回客户队列q的第i个元素但不出队。   
+ &#125;ADT UserQueue
+</code></pre>
+</li>
+</ol>
+<ol start="2">
+<li><p>抽象数据类型事件链表定义如下：</p>
+<pre><code> ADT EventLinkList&#123;
+     数据对象：D=&#123;Event&#125;
+     数据关系：无
+     基本操作：
+         MakeEventNode(occurtime,type);
+             操作结果：根据参数创建事件节点。
+         DestoryEventList(&amp;el);
+             初始条件：事件链表el存在。
+             操作结果：销毁事件链表el。
+         InitEventList(&amp;el);
+             初始条件：事件链表el存在。
+             操作结果：创建事件链表el。
+         InsertEventToListInOrder(el,&amp;ev);
+             初始条件：事件链表el存在。
+             操作结果：将事件ev按时间顺序插入事件链表el。
+         DeleteEventFromListByPos(el,pos,&amp;ev);
+             初始条件：事件链表el存在。
+             操作结果：删除事件链表el的第pos个事件，放在ev中。  
+ &#125;ADT EventLinkList
+</code></pre>
+</li>
+<li><p>主程序</p>
+<pre><code> void main()&#123;
+     用户输入参数;
+     初始化窗口及各数据类型;
+     while(营业未结束)&#123;
+         取下一个事件;
+         switch(该事件)&#123;
+             case 到来: 加入用户队列；
+                 if(服务窗口空闲) 服务队列1的下一个客户;
+                 break;
+             case 离开:
+                 停留时间计算并加入统计时间;
+                 银行资金改变;
+                 if(该客户是存款) 检查队列2;
+                 else (该客户是取款 &amp;&amp; 客户来自队列2) 继续检查队列2;
+                 if(不是正在检查队列2) 服务队列1的下一个客户;
+                 break;  
+             case 结束: 队列中所有客户离开； 
+         &#125;
+     &#125;
+     输出平均时间;
+ &#125;
+</code></pre>
+</li>
+<li><p>   本程序含四个模块</p>
+</li>
+</ol>
+<pre><code>(1)    主模块
+(2)    用户队列模块
+(3)    事件链表模块
+(4)    图形界面模块
+</code></pre>
+<p><img src="/s/p/9axeo0/0.png"></p>
+<h2 id="三、-详细设计"><a href="#三、-详细设计" class="headerlink" title="三、    详细设计"></a>三、    详细设计</h2><p>1．    客户类型</p>
+<pre><code>typedef struct _User&#123;
+    int id; 
+    int arrtime;
+    int durtime;
+    int amount;
+&#125;User;
+</code></pre>
+<p>2．    客户队列类型</p>
+<pre><code>typedef struct _SqQueue&#123;
+    User *base;
+    int front;
+    int rear;
+&#125;SqQueue;
+</code></pre>
+<p>3．    事件及事件链表类型</p>
+<pre><code>typedef struct _Event&#123;
+    int occurtime;
+    enum TYPE type;
+    struct _Event *next;
+&#125;Event,*EvList;
+</code></pre>
+<p>4．    客户队列操作</p>
+<pre><code>Status InitQueue(SqQueue *q);
+//初始化队列
+Status DestoryQueue(SqQueue *q);
+//销毁队列
+int QueueLength(SqQueue q);
+//队列长度
+Status EnQueue(SqQueue *q,User elem);
+//入队
+Status DeQueue(SqQueue *q,User *elem);
+//出队
+Status PeekQueueByPos(SqQueue *q,int i,User *elem);
+//查看第i个元素但不出队 
+</code></pre>
+<p>5．    事件链表操作</p>
+<pre><code>Event* MakeEventNode(int occurtime,int type);
+//创建事件结点 
+Status DestoryEventList(EvList *l);
+//销毁事件链表 
+Status InitEventList(EvList *l);
+//初始化事件链表 
+Status InsertEventToListInOrder(EvList l,Event *ev);
+//按时间顺序插入事件，插入后该事件将成为事件列表的一部分
+Status DeleteEventFromListByPos(EvList l,int pos,Event *ev);
+//删除指定位置的事件，pos=1...length,ev存放删除的事件 
+</code></pre>
+<p>6．    图形界面操作</p>
+<pre><code>SMALL_RECT UI_SetRect(int left,int top,int right,int bottom);
+//根据坐标取返回对应矩形区域数据 
+void UI_SetConsoleWindowSize(HANDLE hOut,int width,int height);
+//设置窗口大小
+void UI_SetConsoleScreenBufferSize(HANDLE hOut,int width,int height);
+//设置缓冲区大小
+void UI_InitSTDHandle(HANDLE *hOut,CONSOLE_SCREEN_BUFFER_INFO *bInfo,int width,int height);
+//初始化 
+void UI_DrawText(HANDLE hOut,WORD attr,char *text,int len,int row,int left,int right);
+//在指定行左右位置之间居中输出一行文本
+void UI_CleanText(HANDLE hOut,int row,int left,int right);
+//在指定行左右位置之间清除一行文本
+void UI_CleanTextRect(HANDLE hOut,int top,int bottom,int left,int right);
+//在指定区域之间清除文本
+void UI_DrawBox(HANDLE hOut,int bSingle,SMALL_RECT rc,WORD attr);
+//画方框 
+</code></pre>
+<p>7．    其他函数</p>
+<pre><code>void ShowBox();
+//绘制所有方框 
+void ShowBankandTimeText();
+//绘制时间和银行资金的文本 
+void ShowMessageText1();
+//绘制信息文本1 
+void ShowMessageText2(int id,int type);
+//绘制信息文本2
+void ShowQueueText();
+//绘制队列文本
+int Random(int low,int high);
+//随机数 
+void RandNextCustomer();
+//生成下一个客户到来事件 
+void Init();
+//初始化 
+Status ServeNextCustomerInQueue1(SqQueue *q_point);
+//服务队列1的下一个客户，如果不满足，则继续寻找下一个 
+Status ServeNextCustomerInQueue2(SqQueue *q_point);
+//服务队列2的下一个客户
+Status Check();
+//检查队列2 
+</code></pre>
+<p>8．    具体的函数实现见附录，均有详细注释，此处不再赘述。</p>
+<h2 id="四、-调试分析"><a href="#四、-调试分析" class="headerlink" title="四、    调试分析"></a>四、    调试分析</h2><p>1．    本程序的难点在于在事件中对队列2的检查，以及对队列中下个办理业务的客户的选取。<br>​<br>2．    在对队列2的检查上，编写了Check函数，每当队列1的客户存款之后调用，在Check函数中顺序寻找下一个符合要求的客户，后调用ServeNextCustomerInQueue2进行业务办理，但该客户完成后，队列2中可能仍有满足需求的客户，故应设置全局变量Checking表示当前是在队列2检查状态，以便在该客户发生离开事件时，再次调用Check继续检查队列2，如果此时没有符合条件的客户，则置Checking状态为0，以便离开事件发生时，下一个办理业务的客户从队列1中选取。这种方法需要置全局变量，且思路不是很清晰，之前设想了将离开事件从main函数中剥离，而检查队列2时，进入Check函数，在其中满足了尽可能多的客户后才退回主函数，期间可调用离开事件函数处理队列2的客户离开，但考虑到本程序为事件驱动，事件按照时间顺序发生，在处理队列2的客户时，可能有新的客户到来事件发生，如果进入Check后一直执行至不能满足条件，可能导致时间线出现错乱，期间到来的客户事件将发生在之后唉。目前没有想到更好的方法。</p>
+<p>3．    在对队列中下一个办理业务的客户的选取上，编写了ServeNextCustomerInQueue1和ServeNextCustomerInQueue2，这里出现了部分功能重叠，此乃败笔唉。主要是ServeNextCustomerInQueue1需要递归直至找到可以办理业务的下一个客户，但ServeNextCustomerInQueue2无需判断，在Check中已进行判断</p>
+<p>4．    ServeNextCustomerInQueue中使用了DeQueue,因此参数需要传入q1的地址，之前疏忽，直接以q1为参数，导致q1中的元素执行了DeQueue仍然存在。</p>
+<p>5．    本程序模拟银行业务，本来打算用时间作为循环变量，结束营业时间为结束条件，但是为了体现离散事件模拟，故采用事件驱动模式，即以事件为单位，一次循环发生一个事件，但在界面输出上，为了保证时间的连续性和可观看性，在输出上把两个事件之间的时间流逝体现出来</p>
+<p>6．    使用C语言且不使用第三方库进行图形界面编程实在困难，之前打算学习一下MFC，然而其繁琐得令人望而却步！</p>
+<h2 id="五、-用户手册"><a href="#五、-用户手册" class="headerlink" title="五、    用户手册"></a>五、    用户手册</h2><p><img src="/s/p/9axeo0/01.png"><br><img src="/s/p/9axeo0/02.png">  </p>
+<h2 id="六、-测试结果"><a href="#六、-测试结果" class="headerlink" title="六、    测试结果"></a>六、    测试结果</h2><ol>
+<li><p>   输入及输出如图，两个客户到达间隔极短，而客户办理时间极长。<br><img src="/s/p/9axeo0/03.png">  </p>
+</li>
+<li><p>   输入及输出如图，两个客户到达间隔极长，而客户办理时间极短。<br><img src="/s/p/9axeo0/04.png">   </p>
+</li>
+<li><p>其他截图<br><img src="/s/p/9axeo0/1.png"><br><img src="/s/p/9axeo0/2.png"><br><img src="/s/p/9axeo0/3.png"><br><img src="/s/p/9axeo0/4.png"><br><img src="/s/p/9axeo0/5.png"><br><img src="/s/p/9axeo0/6.png">  </p>
+</li>
+</ol>
+<h2 id="七、-附录"><a href="#七、-附录" class="headerlink" title="七、    附录"></a>七、    附录</h2><ul>
+<li>源程序文件清单：</li>
+</ul>
+<p>（1）    UserQueue.h<br>​<br>（2）    EventLinkList.h<br>​<br>（3）    MyUI.h<br>​<br>（4）    Bank.c</p>
+<p>UserQueue.h</p>
+<pre><code class="c">/*
+    Last Update time: 2017-10-17 
+    Version：1.0
+    Author：LinXiang (PB16020923) 
+    Description：
+        UserQueue.
+*/
+#include &lt;stdlib.h&gt;
+#define QMAXSIZE 100
+#define OK 1
+#define ERROR 0 
+typedef int Status;
+typedef struct _User&#123;
+    int id; 
+    int arrtime;
+    int durtime;
+    int amount;
+&#125;User;
+typedef struct _SqQueue&#123;
+    User *base;
+    int front;
+    int rear;
+&#125;SqQueue;
+Status InitQueue(SqQueue *q)&#123;//初始化队列 
+    q-&gt;base=(User *)malloc(QMAXSIZE*sizeof(User));
+    q-&gt;front=0;
+    q-&gt;rear=0;
+    return OK;
+&#125; 
+Status DestoryQueue(SqQueue *q)&#123;//销毁队列 
+    if(!q-&gt;base) return ERROR; 
+    free(q-&gt;base);
+    q-&gt;front=0;
+    q-&gt;rear=0;
+    return OK;
+&#125;
+int QueueLength(SqQueue q)&#123;//求队列长度 
+    return (q.rear-q.front+QMAXSIZE) % QMAXSIZE;
+&#125;
+Status EnQueue(SqQueue *q,User elem)&#123;//入队 
+    if((q-&gt;rear+1) % QMAXSIZE==q-&gt;front) return ERROR;
+    q-&gt;base[q-&gt;rear]=elem;
+    q-&gt;rear=(q-&gt;rear+1) % QMAXSIZE;
+    return OK;
+&#125;
+Status DeQueue(SqQueue *q,User *elem)&#123;//出队 
+    if(q-&gt;rear==q-&gt;front) return ERROR;
+    *elem=q-&gt;base[q-&gt;front];
+    q-&gt;front=(q-&gt;front+1) % QMAXSIZE;
+    return OK;
+&#125;
+Status PeekQueue(SqQueue *q,User *elem)&#123;//查看队头但不出队 
+    if(q-&gt;rear==q-&gt;front) return ERROR;
+    *elem=q-&gt;base[q-&gt;front];
+    return OK;
+&#125;
+Status PeekQueueByPos(SqQueue *q,int i,User *elem)&#123;//查看第i个元素但不出队 
+    if(i&gt;QueueLength(*q)) return ERROR;
+    *elem=q-&gt;base[(q-&gt;front+i-1) % QMAXSIZE];
+    return OK;
+&#125;
+</code></pre>
+<p>EventLinkList.h</p>
+<pre><code class="c">/*
+    Last Update time: 2017-10-17 
+    Version：1.0
+    Author：LinXiang (PB16020923) 
+    Description：
+        EventLinkList.
+*/
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#define OK 1
+#define ERROR 0 
+enum TYPE&#123;HEADNODE,ARR,LEAVE,CLOSE&#125;;//枚举事件类型，其中HEADNODE为表示头节点
+typedef int Status;
+typedef struct _Event&#123;
+    int occurtime;
+    enum TYPE type;
+    struct _Event *next;
+&#125;Event,*EvList;
+Event* MakeEventNode(int occurtime,int type)&#123;//创建事件结点 
+    Event *p=(Event*)malloc(sizeof(Event));
+    p-&gt;type=(enum TYPE)type;
+    p-&gt;occurtime=occurtime;
+    p-&gt;next=NULL;
+    return p;
+&#125;
+Status DestoryEventList(EvList *l)&#123;//销毁事件链表 
+    if(*l==NULL) return OK;
+    Event *p=(*l)-&gt;next,*q;
+    while(p!=NULL)&#123;
+        q=p-&gt;next;
+        free(p);
+        p=q;
+    &#125; 
+    free(*l);
+    *l=NULL;
+    return OK;
+&#125;
+Status InitEventList(EvList *l)&#123;//初始化事件链表 
+    if(*l!=NULL) DestoryEventList(l);
+    *l=MakeEventNode(-1,HEADNODE);
+    return OK;
+&#125;
+Status InsertEventToListInOrder(EvList l,Event *ev)&#123;
+//按时间顺序插入事件，插入后该事件将成为事件列表的一部分
+    Event *q=l,*p;
+    while(q-&gt;next!=NULL &amp;&amp; q-&gt;next-&gt;occurtime&lt;ev-&gt;occurtime)&#123;
+        q=q-&gt;next;
+    &#125;
+    ev-&gt;next=q-&gt;next;
+    q-&gt;next=ev;
+    return OK;
+&#125;
+Status DeleteEventFromListByPos(EvList l,int pos,Event *ev)&#123;
+//删除指定位置的事件，pos=1...length,ev存放删除的事件 
+    if(pos&lt;1) return ERROR;
+    Event *q=l;
+    int i=1;
+    while(q-&gt;next!=NULL &amp;&amp; i++&lt;pos)&#123;
+        q=q-&gt;next;
+    &#125;
+    if(q-&gt;next==NULL) return ERROR;
+    else&#123;
+        Event *r=q-&gt;next;
+        memcpy(ev,r,sizeof(Event)); 
+        q-&gt;next=q-&gt;next-&gt;next;
+        free(r);
+    &#125;
+    return OK;  
+&#125;
+</code></pre>
+<p>MyUI.h</p>
+<pre><code class="c">/*
+    Last Update time: 2017-10-22 
+    Version：1.0
+    Author：LinXiang (PB16020923) 
+    Description：
+        MyUI.c.
+*/
+#include &lt;windows.h&gt;
+#include &lt;stdio.h&gt;
+#define F_GRAY FOREGROUND_INTENSITY 
+#define F_CYAN FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
+#define F_ORANGE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY
+#define F_PURPLE FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY
+#define F_RED FOREGROUND_RED | FOREGROUND_INTENSITY
+#define F_GREEN FOREGROUND_GREEN | FOREGROUND_INTENSITY
+#define F_BLUE FOREGROUND_BLUE | FOREGROUND_INTENSITY
+#define F_WHITE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY
+#define F_USUALWHITE FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE //不加亮的白色为正常颜色 
+#define F_BLACK FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | COMMON_LVB_REVERSE_VIDEO
+#define B_GRAY BACKGROUND_INTENSITY 
+#define B_CYAN BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_INTENSITY
+#define B_ORANGE BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY
+#define B_PURPLE BACKGROUND_RED | BACKGROUND_BLUE | BACKGROUND_INTENSITY
+#define B_BLUE BACKGROUND_BLUE | BACKGROUND_INTENSITY
+#define B_RED BACKGROUND_RED | BACKGROUND_INTENSITY
+#define B_GREEN BACKGROUND_GREEN | BACKGROUND_INTENSITY
+#define B_WHITE BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY
+#define B_USUALWHITE BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE //不加亮的白色为正常颜色 
+#define B_BLACK BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | COMMON_LVB_REVERSE_VIDEO
+SMALL_RECT UI_SetRect(int left,int top,int right,int bottom)&#123;
+//根据坐标取返回对应矩形区域数据 
+    SMALL_RECT rc=&#123;0,0,0,0&#125;;
+    rc.Left=left;
+    rc.Top=top;
+    rc.Right=right;
+    rc.Bottom=bottom;
+    return rc;
+&#125;
+void UI_SetConsoleWindowSize(HANDLE hOut,int width,int height) &#123;//设置窗口大小
+    SMALL_RECT rc;
+    rc=UI_SetRect(0,0,width-1,height-1);
+    SetConsoleWindowInfo(hOut,1,&amp;rc); // 重置窗口位置和大小
+&#125;
+void UI_SetConsoleScreenBufferSize(HANDLE hOut,int width,int height) &#123;
+//设置缓冲区大小
+    COORD size;
+    size.X=width;
+    size.Y=height;
+    SetConsoleScreenBufferSize(hOut,size); // 重新设置缓冲区大小
+&#125;
+void UI_InitSTDHandle(HANDLE *hOut,CONSOLE_SCREEN_BUFFER_INFO *bInfo,int width,int height)&#123;//初始化 
+    *hOut=GetStdHandle(STD_OUTPUT_HANDLE);
+    GetConsoleScreenBufferInfo(*hOut, bInfo);
+    SetConsoleOutputCP(437);//设置代码页
+    UI_SetConsoleScreenBufferSize(*hOut,width,height);//必须先设置大的缓冲区 
+    UI_SetConsoleWindowSize(*hOut,width,height);//才能设置对应大小的窗口 
+&#125;
+void UI_DrawText(HANDLE hOut,WORD attr,char *text,int len,int row,int left,int right)&#123;//在指定行左右位置之间居中输出一行文本
+    DWORD buf[128];//
+    COORD pos;
+    pos.Y=row;
+    pos.X=(right-left+1-len)/2+left;
+FillConsoleOutputAttribute(hOut, attr , len, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+WriteConsoleOutputCharacter(hOut, text, len, pos, (LPDWORD)buf);
+//在pos处输出长为len的text 
+&#125;
+void UI_CleanText(HANDLE hOut,int row,int left,int right)&#123;
+//在指定行左右位置之间清除一行文本
+    DWORD buf[128];//
+    COORD pos;
+    pos.Y=row;
+    pos.X=left;
+    WORD attr=F_BLACK; 
+FillConsoleOutputAttribute(hOut, attr , right-left+1, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+FillConsoleOutputCharacter(hOut,&#39; &#39;, right-left+1, pos, (LPDWORD)buf);
+//在pos处重复输出多个某字符 
+&#125;
+void UI_CleanTextRect(HANDLE hOut,int top,int bottom,int left,int right)&#123;
+//在指定区域之间清除文本
+    DWORD buf[128];
+    WORD attr=F_BLACK;
+    int i;
+    for(i=top;i&lt;=bottom;i++)&#123;
+        COORD pos;
+        pos.Y=i;
+        pos.X=left;
+        FillConsoleOutputAttribute(hOut, attr , right-left+1, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+        FillConsoleOutputCharacter(hOut,&#39; &#39;, right-left+1, pos, (LPDWORD)buf);
+//在pos处重复输出多个某字符    
+    &#125;
+&#125;
+void UI_DrawBox(HANDLE hOut,int bSingle,SMALL_RECT rc,WORD attr)&#123;//画方框 
+    char chBox[6];
+    DWORD buf[128];//存放最后一个参数：输出的字符数 
+    COORD pos;
+    if (bSingle) &#123;
+        chBox[0] = (char)0xda; // 左上角点
+        chBox[1] = (char)0xbf; // 右上角点
+        chBox[2] = (char)0xc0; // 左下角点
+        chBox[3] = (char)0xd9; // 右下角点
+        chBox[4] = (char)0xc4; // 水平
+        chBox[5] = (char)0xb3; // 坚直
+    &#125;
+    else&#123;
+        chBox[0] = (char)0xc9; // 左上角点
+        chBox[1] = (char)0xbb; // 右上角点
+        chBox[2] = (char)0xc8; // 左下角点
+        chBox[3] = (char)0xbc; // 右下角点
+        chBox[4] = (char)0xcd; // 水平
+        chBox[5] = (char)0xba; // 坚直
+    &#125;
+    pos.Y = rc.Top;
+    // 画左上角
+    pos.X = rc.Left;
+FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+    WriteConsoleOutputCharacter(hOut, &amp;chBox[0],1, pos, (LPDWORD)buf);
+    // 画右上角
+    pos.X = rc.Right;
+FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+    WriteConsoleOutputCharacter(hOut, &amp;chBox[1], 1, pos, (LPDWORD)buf);
+    
+    pos.Y = rc.Bottom;
+    // 画左下角
+    pos.X = rc.Left;
+FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+    WriteConsoleOutputCharacter(hOut, &amp;chBox[2], 1, pos, (LPDWORD)buf);
+    // 画右下角
+    pos.X = rc.Right;
+FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+    WriteConsoleOutputCharacter(hOut, &amp;chBox[3], 1, pos, (LPDWORD)buf);
+
+    // 画边框的上 下边界
+    for(pos.X = rc.Left+1;pos.X&lt;rc.Right;pos.X++)&#123;  
+        pos.Y = rc.Top;
+        FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+        WriteConsoleOutputCharacter(hOut, &amp;chBox[4], 1, pos, (LPDWORD)buf);
+// 画上边界
+        pos.Y = rc.Bottom;
+        FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+        WriteConsoleOutputCharacter(hOut, &amp;chBox[4], 1, pos, (LPDWORD)buf);
+// 画下边界
+    &#125;
+    // 画边框的左右边界
+    for (pos.Y = rc.Top+1; pos.Y&lt;rc.Bottom; pos.Y++)&#123;
+        pos.X = rc.Left;
+        FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+        WriteConsoleOutputCharacter(hOut, &amp;chBox[5], 1, pos, (LPDWORD)buf);
+// 画左边界
+        pos.X = rc.Right;
+        FillConsoleOutputAttribute(hOut, attr , 1, pos, (LPDWORD)buf);
+//给该坐标的字符上色 
+        WriteConsoleOutputCharacter(hOut, &amp;chBox[5], 1, pos, (LPDWORD)buf); 
+// 画右边界
+    &#125;
+&#125;
+</code></pre>
+<p>Bank.c</p>
+<pre><code class="c">/*
+    Last Update time: 2017-10-26 
+    Version：1.0
+    Author：LinXiang (PB16020923) 
+    Description：
+        Bank.c.
+*/
+#include &quot;UserQueue.h&quot;
+#include &quot;EventLinkList.h&quot;
+#include &quot;MyUI.h&quot; 
+#define DEBUG
+#define TRUE 1
+#define FALSE 0
+#define WIDTH 120 //窗口的宽和高 
+#define HEIGHT 50
+int ScreenHeight=HEIGHT;//屏幕缓冲区的时间高度，会随队列长度而变，初始等于窗口高度
+int CustomNum=0,BankMoney=10000,CloseTime=600,TotalTime=0,Time=0; 
+//客户数，银行资金，结束时间，客户停留累计时间，当前时间
+int NextCustomTime_LowerBound=1,NextCustomTime_UpperBound=10; //下一个客户到来的时间间隔上下限
+int CustomDurTime_LowerBound=1,CustomDurTime_UpperBound=20; //客户办理业务时间的上下想
+int CustomAmount_LowerBound=1,CustomAmount_UpperBound=9000; //客户服务的金额
+int moneybeforecheck=0; //在检查队列2之前的银行资金
+int MORE=0,checking=0;//继续营业，正在检查第二个队列 
+EvList el=NULL; //事件链表
+SqQueue q1,q2; //队列1，2
+User servingusr=&#123;0,0,0,0&#125;;//正在服务的客户
+HANDLE hout; //控制台句柄
+CONSOLE_SCREEN_BUFFER_INFO binfo;
+void ShowBox()&#123;//绘制所有方框 
+    system(&quot;cls&quot;);
+    SMALL_RECT rc;
+    rc=UI_SetRect(0,0,WIDTH-1,2);
+    UI_DrawBox(hout,0,rc,F_CYAN); //画最上面的框
+    
+    rc=UI_SetRect(0,3,WIDTH/2-1,5);
+    UI_DrawBox(hout,0,rc,F_GREEN);  //画第一个消息框
+    rc=UI_SetRect(WIDTH/2,3,WIDTH-1,5);
+    UI_DrawBox(hout,0,rc,F_GREEN);  //画第二个消息框
+
+    rc=UI_SetRect(0,6,WIDTH/2-1,8);
+    UI_DrawBox(hout,0,rc,F_ORANGE); //画队列1的框
+    rc=UI_SetRect(WIDTH/2,6,WIDTH-1,8);
+    UI_DrawBox(hout,0,rc,F_BLUE); //画队列2的框
+    
+    rc=UI_SetRect(0,6,WIDTH/2-1,ScreenHeight-1);
+    UI_DrawBox(hout,0,rc,F_ORANGE); //画队列1的框
+    rc=UI_SetRect(WIDTH/2,6,WIDTH-1,ScreenHeight-1);
+    UI_DrawBox(hout,0,rc,F_BLUE); //画队列2的框
+&#125; 
+void ShowBankandTimeText()&#123;//绘制时间和银行资金的文本 
+    char t_bankmony[30];
+    sprintf(t_bankmony,&quot;BankMoney: %d YUAN&quot;,BankMoney);
+    UI_CleanText(hout,1,WIDTH/2+1,WIDTH-1-1);//清除原先的文本 
+    UI_DrawText(hout,F_CYAN,t_bankmony,strlen(t_bankmony),1,WIDTH/2+1,WIDTH-1-1);
+    char t_time[30];
+    sprintf(t_time,&quot;Time: %d minute&quot;,Time);
+    UI_CleanText(hout,1,0+1,WIDTH/2-1-1);   
+    UI_DrawText(hout,F_CYAN,t_time,strlen(t_time),1,0+1,WIDTH/2-1-1);   
+    char t_q1[30];
+    sprintf(t_q1,&quot;Queue 1: [%d] customers&quot;,QueueLength(q1));
+    UI_CleanText(hout,7,0+1,WIDTH/2-1-1);
+    UI_DrawText(hout,F_ORANGE,t_q1,strlen(t_q1),7,0+1,WIDTH/2-1-1);         
+    char t_q2[30];
+    sprintf(t_q2,&quot;Queue 2: [%d] customers&quot;,QueueLength(q2));
+    UI_CleanText(hout,7,WIDTH/2+1,WIDTH-1-1);
+    UI_DrawText(hout,F_BLUE,t_q2,strlen(t_q2),7,WIDTH/2+1,WIDTH-1-1);   
+&#125;
+void ShowMessageText1()&#123;//绘制信息文本1 
+    char t_message[100];
+    if(servingusr.id!=0)
+        sprintf(t_message,&quot;Serving for ID:%-3d(AMOUNT:%-6d ARRTIME:%-4d DURTIME:%-3d)&quot;\
+        ,servingusr.id,servingusr.amount,servingusr.arrtime,servingusr.durtime);
+    else
+        sprintf(t_message,&quot;Bank Info: Free.&quot;);
+    UI_CleanText(hout,4,0+1,WIDTH/2-1-1);
+    UI_DrawText(hout,F_GREEN,t_message,strlen(t_message),4,0+1,WIDTH/2-1-1);        
+&#125;
+void ShowMessageText2(int id,int type)&#123; //绘制信息文本2
+    char t_message[100];
+    switch(type)&#123;
+        case 1: sprintf(t_message,&quot;Bank Info: ID:%d arrive at the %d minute.&quot;,id,Time); break;
+        case 2: sprintf(t_message,&quot;Bank Info: ID:%d leave at the %d minute.&quot;,id,Time); break;
+    &#125;
+    UI_CleanText(hout,4,WIDTH/2+1,WIDTH-1-1);
+    UI_DrawText(hout,F_GREEN,t_message,strlen(t_message),4,WIDTH/2+1,WIDTH-1-1);        
+&#125;
+void ShowQueueText()&#123;//绘制队列文本
+    User usr;
+    UI_CleanTextRect(hout,9,ScreenHeight-1-1,0+1,WIDTH/2-1-1);
+    UI_CleanTextRect(hout,9,ScreenHeight-1-1,WIDTH/2+1,WIDTH-1-1);
+    int l=QueueLength(q1),i;
+    if(l&gt;ScreenHeight-10)&#123;//超出缓冲区高度，重绘 
+        UI_SetConsoleScreenBufferSize(hout,WIDTH,++ScreenHeight);
+        ShowBox();
+        ShowBankandTimeText();
+    &#125;
+    for(i=1;i&lt;=l;i++)&#123;//输出队列1
+        PeekQueueByPos(&amp;q1,i,&amp;usr);
+        char t_q1c[80];
+        sprintf(t_q1c,&quot;ID:%-3d (AMOUNT:%-6d ARRTIME:%-4d DURTIME:%-3d)&quot;,usr.id,usr.amount,usr.arrtime,usr.durtime);
+        UI_DrawText(hout,F_ORANGE,t_q1c,strlen(t_q1c),9+i-1,0+1,WIDTH/2-1-1);
+    &#125;
+    l=QueueLength(q2);
+    if(l&gt;ScreenHeight-10)&#123;//超出缓冲区高度，重绘 
+        UI_SetConsoleScreenBufferSize(hout,WIDTH,++ScreenHeight);
+        ShowBox();
+        ShowBankandTimeText();
+    &#125;
+    for(i=1;i&lt;=l;i++)&#123;//输出队列2
+        PeekQueueByPos(&amp;q2,i,&amp;usr);
+        char t_q2c[80];
+        sprintf(t_q2c,&quot;ID:%-3d (AMOUNT:%-6d ARRTIME:%-4d DURTIME:%-3d)&quot;,usr.id,usr.amount,usr.arrtime,usr.durtime);
+        UI_DrawText(hout,F_BLUE,t_q2c,strlen(t_q2c),9+i-1,WIDTH/2+1,WIDTH-1-1);
+    &#125;
+&#125;
+int Random(int low,int high)&#123;//随机数 
+    return(low+rand()%(high-low+1));
+&#125;
+void RandNextCustomer() &#123;//生成下一个客户到来事件 
+    int nexttime=Time+Random(NextCustomTime_LowerBound,NextCustomTime_UpperBound);
+    if(nexttime&lt;CloseTime)&#123;
+        Event *ev_arr=MakeEventNode(nexttime,ARR);
+        InsertEventToListInOrder(el,ev_arr);//加入下一个客户到来事件 
+    &#125;
+&#125;
+void Init()&#123;//初始化 
+    UI_InitSTDHandle(&amp;hout,&amp;binfo,WIDTH,HEIGHT);
+    srand((unsigned int)time(NULL)); //置随机数种子
+    InitEventList(&amp;el); 
+    InitQueue(&amp;q1);
+    InitQueue(&amp;q2); 
+    Event *ev_cl=MakeEventNode(CloseTime,CLOSE);
+    InsertEventToListInOrder(el,ev_cl);//加入营业结束事件 
+    RandNextCustomer();//第一个客户 
+&#125;
+Status ServeNextCustomerInQueue1(SqQueue *q_point)&#123;
+//服务队列1的下一个客户，如果不满足，则继续寻找下一个 
+//!!!此处传入q的地址是为了该函数内部使用了DeQueue，需要改变q 
+    if(QueueLength(*q_point))&#123; //队列不为空
+        DeQueue(q_point,&amp;servingusr); //取队头
+        if(servingusr.amount&lt;0 &amp;&amp; -servingusr.amount&gt;BankMoney)&#123; //是取款但银行满足不了，加入队2
+            EnQueue(&amp;q2,servingusr);
+            return ServeNextCustomerInQueue1(q_point); //往后寻找
+        &#125;
+        Event *ev_leave=MakeEventNode(Time+servingusr.durtime,LEAVE);
+        InsertEventToListInOrder(el,ev_leave);//加入该客户离开事件 
+    &#125;
+    else&#123;
+        servingusr.id=0;//表示当前没有客户正在服务 
+    &#125;
+    return OK;
+&#125;
+Status ServeNextCustomerInQueue2(SqQueue *q_point)&#123;//服务队列2的下一个客户
+    if(QueueLength(*q_point))&#123;
+        DeQueue(q_point,&amp;servingusr);
+        Event *ev_leave=MakeEventNode(Time+servingusr.durtime,LEAVE);
+        InsertEventToListInOrder(el,ev_leave);//加入该客户离开事件 
+    &#125;
+    else&#123;
+        servingusr.id=0;//表示当前没有客户正在服务 
+    &#125;
+    return OK;
+&#125;
+Status Check()&#123;//检查队列2 
+    if(BankMoney&lt;=moneybeforecheck)&#123;
+        checking=0;
+        return FALSE;
+    &#125;
+    int l=QueueLength(q2),k=0;
+    while(k&lt;l)&#123;//尚未将队列2中的所有客户检查一遍 
+        User usr;
+        PeekQueue(&amp;q2,&amp;usr);
+        if(-usr.amount&gt;BankMoney)&#123;//银行的钱不能满足该客户 
+            k++; 
+            DeQueue(&amp;q2,&amp;usr);
+            EnQueue(&amp;q2,usr); //加入队尾
+        &#125;
+        else&#123;
+            checking=1;
+            ServeNextCustomerInQueue2(&amp;q2);
+            return FALSE;
+        &#125;
+    &#125;
+    //此时队列2已遍历一遍，无满足要求者 
+    checking=0;
+    return FALSE;   
+&#125;
+int main()&#123;
+    system(&quot;color 0B&quot;);
+    printf(&quot;Input the \n&lt;BankMoney&gt; &lt;CloseTime&gt; \n&lt;NextCustomTime_LowerBound&gt; &lt;NextCustomTime_UpperBound&gt;\n&quot;);
+    printf(&quot;&lt;CustomDurTime_LowerBound&gt; &lt;CustomDurTime_UpperBound&gt; \n&lt;CustomAmount_LowerBound&gt; &lt;CustomAmount_UpperBound&gt;:\n&quot;);//让用户输入起始参数
+    scanf(&quot;%d%d%d%d%d%d%d%d&quot;,&amp;BankMoney,&amp;CloseTime,&amp;NextCustomTime_LowerBound,&amp;NextCustomTime_UpperBound, \
+    &amp;CustomDurTime_LowerBound,&amp;CustomDurTime_UpperBound,&amp;CustomAmount_LowerBound,&amp;CustomAmount_UpperBound);
+    Init();
+    MORE=1;
+    ShowBox();
+    while(MORE)&#123;
+        Event ev;
+        DeleteEventFromListByPos(el,1,&amp;ev);
+        
+        while(Time&lt;ev.occurtime)&#123; //当前时间未到该时间发生的时间，则时间递增，体现时间连续性
+            Time++;
+            ShowBankandTimeText();
+            ShowMessageText1();
+            ShowQueueText();//更新各个文本
+            Sleep(200); //延迟200ms
+        &#125;
+        User usr;
+        switch(ev.type)&#123;
+            case ARR: //到来事件
+                usr.id=++CustomNum;
+                usr.arrtime=ev.occurtime;
+usr.durtime=Random(CustomDurTime_LowerBound,CustomDurTime_UpperBound);
+                usr.amount=(Random(0,1)==0?1:-1)*Random(CustomAmount_LowerBound,CustomAmount_UpperBound);
+                EnQueue(&amp;q1,usr);
+                ShowMessageText2(usr.id,1);
+                RandNextCustomer();//随机生成下一个客户到来事件
+                if(servingusr.id==0) //当前没有客户正在办理，则办理下一个
+                //该情况出现在第一个客户或者之前队列以空但下一个客户未到来 
+                    ServeNextCustomerInQueue1(&amp;q1); 
+                break;
+            case LEAVE: //离开事件
+                ShowMessageText2(servingusr.id,2);
+                TotalTime+=ev.occurtime-servingusr.arrtime+1;
+                BankMoney+=servingusr.amount;
+                if(servingusr.amount&gt;0)&#123; //该客户是第二种业务（存款） 
+                    moneybeforecheck=BankMoney-servingusr.amount;
+                    Check(); //检查队列2
+                &#125;
+                else if(servingusr.amount&lt;0 || checking)&#123;//该客户是第一种业务（取款）但来自队列2 
+                    Check();//继续检查 
+                &#125;
+                if(!checking) ServeNextCustomerInQueue1(&amp;q1);//不是正在检查队列2，则处理队列1下一个客户的办理 
+                break;
+            case CLOSE: //结束事件
+                MORE=0;
+                while(QueueLength(q1))&#123; //所有客户离开
+                    DeQueue(&amp;q1,&amp;usr);
+                    TotalTime+=Time-usr.arrtime;
+                &#125;
+                while(QueueLength(q2))&#123;
+                    DeQueue(&amp;q2,&amp;usr);
+                    TotalTime+=Time-usr.arrtime;
+                &#125;
+                continue;
+        &#125;       
+        Sleep(1000); //每个是事件延迟1s以便观看
+    &#125;
+    ScreenHeight+=3;
+    UI_SetConsoleScreenBufferSize(hout,WIDTH,ScreenHeight);
+    UI_DrawBox(hout,1,UI_SetRect(0,ScreenHeight-1-2,WIDTH-1,ScreenHeight-1),F_RED);
+    char t_awt[50];
+    if(CustomNum)
+        sprintf(t_awt,&quot;Average stay time: %d&quot;,TotalTime/CustomNum);
+    else
+        sprintf(t_awt,&quot;No Customer&quot;);
+    UI_DrawText(hout,F_RED,t_awt,strlen(t_awt),ScreenHeight-1-1,1,WIDTH-1);
+    MessageBox(NULL,t_awt,&quot;Close&quot;,MB_OK | MB_ICONINFORMATION); //输出平均停留时间
+    ScreenHeight+=1;
+    UI_SetConsoleScreenBufferSize(hout,WIDTH,ScreenHeight);
+    COORD curpos;
+    curpos.X=0;
+    curpos.Y=ScreenHeight-1;
+    SetConsoleCursorPosition(hout,curpos); 
+    return 0;
+&#125;
+</code></pre>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9blhc0/" class="prev">数据结构上机题3 哈夫曼压缩</a>
+		 
+
+		 
+			<a href="/s/p/9amao0/" class="next">数据结构上机题1 一元稀疏多项式计算</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9axeo0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

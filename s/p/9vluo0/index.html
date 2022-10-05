@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">汇编上机资源</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2018-12-05</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 3515 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 12 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h3 id="IDE"><a href="#IDE" class="headerlink" title="IDE"></a>IDE</h3><ol>
+<li><p>使用<a href="/s/p/9vluo0/emu8086setup.exe">Emu8086</a>仿真(支持DOS16位程序)</p>
+<ul>
+<li>emu8086不能用：<ol>
+<li>32位寄存器</li>
+<li>INVOKE </li>
+<li>USES </li>
+<li>.IF .ENDIF .ELSEIF</li>
+<li>.REPEAT  .UNTIL</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>或者<a href="/s/p/9vluo0/MASM_PLUS_1.2.exe">MASMPlus</a>+<a href="/s/p/9vluo0/DOSBox0.74-2-win32-installer.exe">DOSBOX</a>(支持DOS16位或32位程序)</p>
+<ul>
+<li><p>详解从零开始配置汇编开发环境(DosBox,MasmPlus)</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yongf2014/article/details/46273949">https://blog.csdn.net/yongf2014/article/details/46273949</a></p>
+</li>
+<li><p>DOSBOX使用:<br>窗口太小问题<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37822685/article/details/80241598">https://blog.csdn.net/m0_37822685/article/details/80241598</a><br>挂载指定目录<br><a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/ce09321b7649012bff858f32.html">https://jingyan.baidu.com/article/ce09321b7649012bff858f32.html</a></p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="Docs"><a href="#Docs" class="headerlink" title="Docs"></a>Docs</h3><ul>
+<li><p><a href="/s/p/9vluo0/DOS_Interrupts.html">DOS_Interrupts</a></p>
+</li>
+<li><p><a href="/s/p/9vluo0/DOS_Error_Codes.html">DOS_Error_Codes</a></p>
+</li>
+<li><p>Win32汇编–使用 MASM<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/poli/p/4737352.html">https://www.cnblogs.com/poli/p/4737352.html</a></p>
+</li>
+</ul>
+<span id="more"></span>
+
+<h3 id="Note"><a href="#Note" class="headerlink" title="Note"></a>Note</h3><ul>
+<li><p>PROC里记得RET，否则调用过程后不返回，将顺序执行</p>
+</li>
+<li><p>MACRO里的LABEL使用前用LOCAL限制在局部，否则多次调用宏会报重复</p>
+</li>
+<li><p>NUMS是WORD（字）数组，MOV NUMS[BX],AX 后BX应该加2才能下一次使用，如果加1，下一次是存在下一字节，而不是下一字，可能会覆盖之前的数据</p>
+</li>
+<li><p>int 21h是只能在DOS下使用，但不是只能16位模式，.386开关开启后仍可以使用</p>
+</li>
+<li><p> masmplus相关</p>
+</li>
+<li><p>在dos上想使用32位寄存器的话<br>那就要 &gt;= .386</p>
+</li>
+<li><p>.386 ;指明指令集<br>.model flat,stdcall 程序工作模式,<br>flat为Windows程序使用的模式(代码和数据使用同一个4GB段),<br>stdcall为API调用时右边的参数先入栈</p>
+<p>option casemap:none ;指明大小写敏感</p>
+</li>
+<li><p>过程结束不能只写<code>ENDP</code>,要完整<code>PROCNAME ENDP</code></p>
+</li>
+<li><p>调用没有参数的PROC时可直接CALL</p>
+<p>有参数的应该用<code>INVOKE</code></p>
+<pre><code class="assembly">INVOKE FGETN,FILEHANDLE,DNUMS[BX]
+</code></pre>
+<p>INVOKE格式</p>
+<pre><code>invoke procedure, parameter1, parameter2, parameter3 
+</code></pre>
+<p>等价于手动PUSH参数，然后用CALL</p>
+<pre><code>push parameter3
+push parameter2
+push parameter1
+call procedure 
+</code></pre>
+</li>
+<li><p>在masmplus中编译</p>
+<pre><code class="assembly">CALC:
+    BIGMUL D_N_FAC,D_TMP,D_I
+    MOV8 D_TMP,D_N_FAC  
+    CALL PRINTNHEX 
+    PRINTNEWLINE
+    INC D_I[0]  ;I++
+    LOOP CALC 
+</code></pre>
+<p>提示</p>
+<blockquote>
+<p>error A2075: jump destination too far : by 22 byte(s)</p>
+</blockquote>
+<p>stackoverflow上查得原因是</p>
+<blockquote>
+<p><code>loop</code> has limited range. It can only jump up to 127 bytes ahead or 128 back in the instruction stream measured from the start of the following instruction.</p>
+</blockquote>
+<p>前面几条宏展开后指令非常长</p>
+<p>把LOOP改用</p>
+<pre><code class="assembly">DEC CX
+CMP CX,0
+JNE CALC
+</code></pre>
+<p>就行了 </p>
+</li>
+<li><p>使用64位寄存器</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/DennyChen/p/8143629.html">https://www.cnblogs.com/DennyChen/p/8143629.html</a><br>64位汇编要用ml64.exe</p>
+<p><a target="_blank" rel="noopener" href="https://bbs.csdn.net/topics/392154763?page=1">https://bbs.csdn.net/topics/392154763?page=1</a><br>64位寄存器使用问题</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cosmoslife/article/details/15020181">https://blog.csdn.net/cosmoslife/article/details/15020181</a><br>x64汇编</p>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9vt9c0/" class="prev">算法基础上机实验五 图搜索BFS算法及存储优化</a>
+		 
+
+		 
+			<a href="/s/p/9vi5c0/" class="next">汇编上机题4</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9vluo0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

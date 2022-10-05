@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Lyncien">
+
+
+
+<meta name="description" content="动态规划入门（1）前言此文来自百度文库：https://wenku.baidu.com/view/ac0738232f60ddccda38a053.html 原文为txt格式且排版混乱，原作者已不可考（从文中例题看，估计写于10几年前） 此处贴出为Markdown格式重排版，修正部分错误，且所有Pascal代码已用Python重写，由于时间有限，文中部分公式未重排 原文为32讲，此处重新划分为8篇">
+<meta name="keywords" content="Algorithm,DP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动态规划入门（1）">
+<meta property="og:url" content="https://l-x.me/2019/02/21/article/dp_1-5/index.html">
+<meta property="og:site_name" content="Lyncien&#39;s homepage">
+<meta property="og:description" content="动态规划入门（1）前言此文来自百度文库：https://wenku.baidu.com/view/ac0738232f60ddccda38a053.html 原文为txt格式且排版混乱，原作者已不可考（从文中例题看，估计写于10几年前） 此处贴出为Markdown格式重排版，修正部分错误，且所有Pascal代码已用Python重写，由于时间有限，文中部分公式未重排 原文为32讲，此处重新划分为8篇">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-07T16:02:11.057Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="动态规划入门（1）">
+<meta name="twitter:description" content="动态规划入门（1）前言此文来自百度文库：https://wenku.baidu.com/view/ac0738232f60ddccda38a053.html 原文为txt格式且排版混乱，原作者已不可考（从文中例题看，估计写于10几年前） 此处贴出为Markdown格式重排版，修正部分错误，且所有Pascal代码已用Python重写，由于时间有限，文中部分公式未重排 原文为32讲，此处重新划分为8篇">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Lyncien&#39;s homepage" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/old_resources/css/style.css">
+
+
+
+<link href="//cdn.bootcdn.net/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>动态规划入门（1） | Lyncien&#39;s homepage</title>
+
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcdn.net/ajax/libs/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<script id="jump-to-new" src="/old_resources/js/redirect.js" async></script>
+</head>
+<script src="/old_resources/js/head-pic.js" ></script> <!-- head-pic-flash by Lyncien -->
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic" id="head-pic"> <!-- head-pic-flash by Lyncien -->
+            <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Lyncien</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">林深见鹿</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Lyncien</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic" id="head-pic-mobile"> <!-- head-pic-flash by Lyncien -->
+                <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Lyncien</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" target="_blank" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" target="_blank" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" target="_blank" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-article/dp_1-5" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/02/21/article/dp_1-5/" class="article-date">
+      <time datetime="2019-02-20T16:00:00.000Z" itemprop="datePublished">2019-02-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      动态规划入门（1）
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DP/">DP</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="动态规划入门（1）"><a href="#动态规划入门（1）" class="headerlink" title="动态规划入门（1）"></a>动态规划入门（1）</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>此文来自百度文库：<a href="https://wenku.baidu.com/view/ac0738232f60ddccda38a053.html" target="_blank" rel="noopener">https://wenku.baidu.com/view/ac0738232f60ddccda38a053.html</a></p>
+<p>原文为txt格式且排版混乱，原作者已不可考（从文中例题看，估计写于10几年前）</p>
+<p>此处贴出为Markdown格式重排版，修正部分错误，且所有Pascal代码已用Python重写，由于时间有限，文中部分公式未重排</p>
+<p>原文为32讲，此处重新划分为8篇</p>
+<a id="more"></a>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><h4 id="一、动态规划三要素：阶段，状态，决策。"><a href="#一、动态规划三要素：阶段，状态，决策。" class="headerlink" title="一、动态规划三要素：阶段，状态，决策。"></a>一、动态规划三要素：阶段，状态，决策。</h4><ul>
+<li>他们的概念到处都是，我就不多说了，我只说说我对他们的理解：<ul>
+<li>如果把动态规划的求解过程看成一个工厂的生产线，阶段就是生产某个商品的不同的环节，状态就是工件当前的形态，决策就是对工件的操作。显然不同阶段是对产品的一个前面各个状态的小结，有一个个的小结构成了最终的整个生产线。每个状态间又有关联（下一个状态是由上一个状态做了某个决策后产生的）。<br>下面举个例子：</li>
+<li>要生产一批雪糕，在这个过程中要分好多环节：购买牛奶，对牛奶提纯处理，放入工厂加工，加工后的商品要包装，包装后就去销售……，这样没个环节就可以看做是一个阶段；产品在不同的时候有不同的状态，刚开始时只是白白的牛奶，进入生产后做成了各种造型，从冷冻库拿出来后就变成雪糕（由液态变成固态=_=||）。每个形态就是一个状态，那从液态变成固态经过了冰冻这一操作，这个操作就是一个决策。</li>
+<li>一个状态经过一个决策变成了另外一个状态，这个过程就是状态转移，用来描述状态转移的方程就是状态转移方程。</li>
+<li>经过这个例子相信大家对动态规划有所了解了吧。</li>
+</ul>
+</li>
+<li>下面在说说我对动态规划的另外一个理解：<ul>
+<li>用图论知识理解动态规划：把动态规划中的状态抽象成一个点，在有直接关联的状态间连一条有向边，状态转移的代价就是边上的权。这样就形成了一个有向无环图AOE网（为什么无环呢？往下看）。对这个图进行拓扑排序，删除一个边后同时出现入度为0的状态在同一阶段。这样对图求最优路径就是动态规划问题的求解。</li>
+</ul>
+</li>
+</ul>
+<h4 id="二、动态规划的适用范围"><a href="#二、动态规划的适用范围" class="headerlink" title="二、动态规划的适用范围"></a>二、动态规划的适用范围</h4><p>动态规划用于解决多阶段决策最优化问题，但是不是所有的最优化问题都可以用动态规划解答呢？<br>一般在题目中出现求最优解的问题就要考虑动态规划了，但是否可以用还要满足两个条件：</p>
+<ul>
+<li>最优子结构（最优化原理）<ul>
+<li>最优化原理在下面的最短路径问题中有详细的解答；</li>
+</ul>
+</li>
+<li>无后效性<ul>
+<li>什么是无后效性呢？</li>
+<li>就是说在状态i求解时用到状态j而状态j求解有用到状态k。。状态N。</li>
+<li>而求状态N时有用到了状态i这样求解状态的过程形成了环就没法用动态规划解答了，这也是上面用图论理解动态规划中形成的图无环的原因。</li>
+<li>也就是说当前状态是前面状态的完美总结，现在与过去无关。。。</li>
+<li>当然，有时换一个划分状态或阶段的方法就满足无后效性了，这样的问题仍然可以用动态规划解。</li>
+</ul>
+</li>
+</ul>
+<h4 id="三、动态规划解决问题的一般思路"><a href="#三、动态规划解决问题的一般思路" class="headerlink" title="三、动态规划解决问题的一般思路"></a>三、动态规划解决问题的一般思路</h4><p>拿到多阶段决策最优化问题后，第一步要判断这个问题是否可以用动态规划解决，如果不能就要考虑搜索或贪心了。当确定问题可以用动态规划后，就要用下面介绍的方法解决问题了：</p>
+<h5 id="模型匹配法"><a href="#模型匹配法" class="headerlink" title="模型匹配法"></a>模型匹配法</h5><p>最先考虑的就是这个方法了。挖掘问题的本质，如果发现问题是自己熟悉的某个基本的模型，就直接套用，但要小心其中的一些小的变动，现在考题办都是基本模型的变形套用时要小心条件，三思而后行。这些基本模型在先面的分类中将一一介绍。</p>
+<h5 id="三要素法"><a href="#三要素法" class="headerlink" title="三要素法"></a>三要素法</h5><p>仔细分析问题尝试着确定动态规划的三要素，不同问题的确定方向不同：<br>先确定阶段的问题：数塔问题，和走路问题（详见解题报告）<br>先确定状态的问题：大多数都是先确定状态的。<br>先确定决策的问题：背包问题。（详见解题报告）<br>一般都是先从比较明显的地方入手，至于怎么知道哪个明显就是经验问题了，多做题就会发现。</p>
+<h5 id="寻找规律法"><a href="#寻找规律法" class="headerlink" title="寻找规律法"></a>寻找规律法</h5><p>这个方法很简单，耐心推几组数据后，看他们的规律，总结规律间的共性，有点贪心的意思。</p>
+<h5 id="边界条件法"><a href="#边界条件法" class="headerlink" title="边界条件法"></a>边界条件法</h5><p>找到问题的边界条件，然后考虑边界条件与它的领接状态之间的关系。这个方法也很起效。</p>
+<h5 id="放宽约束和增加约束"><a href="#放宽约束和增加约束" class="headerlink" title="放宽约束和增加约束"></a>放宽约束和增加约束</h5><p>这个思想是在陈启锋的论文里看到的，具体内容就是给问题增加一些条件或删除一些条件使问题变的清晰。</p>
+<hr>
+<h3 id="动态规划分类讨论"><a href="#动态规划分类讨论" class="headerlink" title="动态规划分类讨论"></a>动态规划分类讨论</h3><p>这里用状态维数对动态规划进行了分类：</p>
+<h3 id="1-状态是一维的"><a href="#1-状态是一维的" class="headerlink" title="1. 状态是一维的"></a>1. 状态是一维的</h3><h4 id="1-1-下降-非降子序列问题"><a href="#1-1-下降-非降子序列问题" class="headerlink" title="1.1 下降/非降子序列问题"></a>1.1 下降/非降子序列问题</h4><p>问题描述：</p>
+<p>(挖掘题目的本质，一但抽象成这样的描述就可以用这个方法解)</p>
+<blockquote>
+<p>在一个无序的序列a1,a2,a3,a4…an里，找到一个最长的序列满足：ai&lt;=aj&lt;=ak…&lt;=am,且i&lt;j&lt;k…&lt;m.（最长非降子序列）或ai&gt;aj&gt;ak…&gt;am,且i&gt;j&gt;k…&gt;m.（最长下降子序列）。</p>
+</blockquote>
+<p>问题分析：</p>
+<p>如果前i-1个数中用到ak (ak&gt;ai或ak&lt;=ai)构成了一个的最长的序列加上第i个数$a_i$就是前i个数中用到i的最长的序列了。那么求用到ak构成的最长的序列有要求前k-1个数中……</p>
+<p>从上面的分析可以看出这样划分问题满足最优子结构，那满足无后效性么？显然对于第i个数时只考虑前i-1个数,显然满足无后效性，可以用动态规划解。</p>
+<p>分析到这里动态规划的三要素就不难得出了：如果按照序列编号划分阶段，设计一个状态opt[i]表示前i个数中用到第i个数所构成的最优解。那么决策就是在前i-1个状态中找到最大的opt[j]使得aj&gt;ai(或aj&lt;=ai)，opt[j]+1就是opt[i]的值；用方程表示为：{我习惯了这种写法，但不是状态转移方程的标准写法 }</p>
+<p>$$<br>最长上升序列: opt[i]=max(opt[j])+1   (0&lt;=j&lt;i 且a_j&lt;=a_i)       \<br>最长下降序列: opt[i]=max(opt[j])+1   (0&lt;=j<i 且a_j="">a_i)<br>$$<br>实现求解的部分代码：</i></p>
+<pre><code class="pascal">opt[0]:=maxsize；{maxsize 为maxlongint或-maxlongint}
+for i:=1 to n do
+    for j:=0 to i-1 do
+        if ( a[j]&gt;a[i]) and (opt[j]+1&gt;opt[i]) then
+            opt[i]:=opt[j]+1;
+ans:=-maxlongint;
+for i:=1 to n do
+    if opt[i]&gt;ans then
+        ans:=opt[i];                {ans 为最终解}
+</code></pre>
+<p>复杂度：</p>
+<p>从上面的实现不难看出时间复杂度为$O(N^2)$，空间复杂度$O(N)$；</p>
+<hr>
+<h5 id="例题1-拦截导弹"><a href="#例题1-拦截导弹" class="headerlink" title="例题1 拦截导弹"></a>例题1 拦截导弹</h5><blockquote>
+<p>(missile.pas/c/cpp)</p>
+<p>来源：NOIP1999(提高组) 第一题</p>
+<p>【问题描述】</p>
+<p>某国为了防御敌国的导弹袭击，发展出一种导弹拦截系统。但是这种导弹拦截系统有一个缺陷：虽然它的第一发炮弹能够到达任意的高度，但是以后每一发炮弹都不能高于前一发的高度。某天，雷达捕捉到敌国的导弹来袭。由于该系统还在试用阶段，所以只有一套系统，因此有可能不能拦截所有的导弹。</p>
+<p>输入导弹依次飞来的高度（雷达给出的高度数据是不大于30000的正整数），计算这套系统最多能拦截多少导弹，如果要拦截所有导弹最少要配备多少套这种导弹拦截系统。</p>
+<p>【输入文件】missile.in</p>
+<p>单独一行列出导弹依次飞来的高度。</p>
+<p>【输出文件】missile.out</p>
+<p>两行，分别是最多能拦截的导弹数，要拦截所有导弹最少要配备的系统数</p>
+<p>【输入样例】</p>
+<pre><code>389 207 155 300 299 170 158 65
+</code></pre><p>【输出样例】</p>
+<pre><code>6
+2
+</code></pre></blockquote>
+<p>【问题分析】</p>
+<p>有经验的选手不难看出这是一个求最长下降序列问题，显然标准算法是动态规划。</p>
+<p>以导弹依次飞来的顺序为阶段，设计状态opt[i]表示前i个导弹中拦截了导弹i可以拦截最多能拦截到的导弹的个数。</p>
+<p>状态转移方程：<br>$$<br>opt[i]=max(opt[j])+1 \ (h[i]&gt;=h[j],0=&lt;j&lt;i)<br>$$<br>其中h[i]存第i个导弹的高度</p>
+<p>最大的opt[i]就是最终的解。</p>
+<p>这只解决了第一问，对于第二问最直观的方法就是求完一次opt[i]后把刚才要打的导弹去掉，在求一次opt[i]直到打完所有的导弹，但这样做就错了。</p>
+<p>不难举出反例： 6 1 7 3 2       </p>
+<pre><code>错解：6 3 2/1/7
+正解：6 1/7 3 2
+</code></pre><p>其实认真分析一下题就回发现：每一个导弹最终的结果都是要被打的，如果它后面有一个比它高的导弹，那打它的这个装置无论如何也不能打那个导弹了，经过这么一分析，这个问题便抽象成在已知序列里找最长上升序列的问题。</p>
+<p>求最长上升序列和上面说的求最长非升序列是一样的，这里就不多说了。</p>
+<p>复杂度：时间复杂度为$O(N^2)$，空间复杂度$O(N)$；</p>
+<p>【源代码】</p>
+<pre><code class="python">def missile():
+    high = [0] + [int(s) for s in input().split(&#39; &#39;)]
+    n = len(high)
+    dp1 = [0] * n
+    dp2 = [0] * n
+    #寻找最长上升子序列
+    high[0] = -9999999999
+    ans2 = 0
+    for i in range(1, n):
+        for j in range(i - 1, -1, -1):    
+            if high[i] &gt; high[j] and dp2[j] + 1 &gt; dp2[i]:
+                dp2[i] = dp2[j] + 1
+            if dp2[i] &gt; ans2:
+                ans2 = dp2[i]
+    #寻找最长非升子序列
+    high[0] = 9999999999
+    ans1 = 0
+    for i in range(1, n):
+        for j in range(i - 1, -1, -1):    
+            if high[i] &lt; high[j] and dp1[j] + 1 &gt; dp1[i]:
+                dp1[i] = dp1[j] + 1
+            if dp1[i] &gt; ans1:
+                ans1 = dp1[i]
+    print(ans1)    
+    print(ans2)
+missile()
+</code></pre>
+<hr>
+<h5 id="例题2-合唱队形"><a href="#例题2-合唱队形" class="headerlink" title="例题2  合唱队形"></a>例题2  合唱队形</h5><blockquote>
+<p>(chorus.pas/c/cpp)</p>
+<p>来源：NOIP2004(提高组) 第一题</p>
+<p>N位同学站成一排，音乐老师要请其中的(N-K)位同学出列，使得剩下的K位同学排成合唱队形。<br>合唱队形是指这样的一种队形：设K位同学从左到右依次编号为1，2…，K，他们的身高分别为T1，T2，…，TK，  则他们的身高满足<code>T1&lt;...&lt;Ti&gt;Ti+1&gt;…&gt;TK(1&lt;=i&lt;=K)</code>。</p>
+<p>你的任务是，已知所有N位同学的身高，计算最少需要几位同学出列，可以使得剩下的同学排成合唱队形。</p>
+<p>【输入文件】</p>
+<p>输入文件chorus.in的第一行是一个整数N(2&lt;=N&lt;=100)，表示同学的总数。第一行有n个整数，用空格分隔，第i个整数Ti(130&lt;=Ti&lt;=230)是第i位同学的身高(厘米)。</p>
+<p>【输出文件】</p>
+<p>输出文件chorus.out包括一行，这一行只包含一个整数，就是最少需要几位同学出列。</p>
+<p>【样例输入】</p>
+<pre><code>8
+186 186 150 200 160 130 197 220
+</code></pre><p>【样例输出】</p>
+<pre><code>4
+</code></pre><p>【数据规模】<br>对于50％的数据，保证有n&lt;=20；<br>对于全部的数据，保证有n&lt;=100。</p>
+</blockquote>
+<p>【问题分析】</p>
+<p>出列人数最少，也就是说留的人最多，也就是序列最长。</p>
+<p>这样分析就是典型的最长下降子序列问题。只要枚举每一个人站中间时可以的到的最优解。显然它就等于，包括他在内向左求最长上升子序列，向右求最长下降子序列。</p>
+<p>我们看一下复杂度：</p>
+<p>计算最长下降子序列的复杂度是O（N2），一共求N次，总复杂度是O（N3）。这样的复杂度对于这个题的数据范围来说是可以AC的。但有没有更好的方法呢？</p>
+<p>其实最长子序列只要一次就可以了。因为最长下降（上升）子序列不受中间人的影响。</p>
+<p>只要用OPT1求一次最长上升子序列，OPT2求一次最长下降子序列。这样答案就是N-max(opt1[i]+opt2[i]-1).</p>
+<p>复杂度由O（N3）降到了O（N2）。</p>
+<p>【源代码】</p>
+<pre><code class="python">def chorus():
+    n = int(input())
+    high = [int(s) for s in input().split(&#39; &#39;)]
+    dp1 = [1] * n
+    dp2 = [1] * n
+    #寻找最长下降子序列
+    for i in range(1, n):
+        for j in range(i - 1, -1, -1):    
+            if high[i] &gt; high[j] and dp1[j] + 1 &gt; dp1[i]:
+                dp1[i] = dp1[j] + 1
+    #反向寻找最长下降子序列
+    for i in range(n - 2, -1, -1):
+        for j in range(i + 1, n):    
+            if high[i] &gt; high[j] and dp2[j] + 1 &gt; dp2[i]:
+                dp2[i] = dp2[j] + 1
+    ans = 0
+    for i in range(0, n):
+        if dp1[i] + dp2[i] - 1 &gt; ans:
+            ans = dp1[i] + dp2[i] - 1
+    print(n - ans)
+chorus()
+</code></pre>
+<hr>
+<h5 id="例题3-逢低吸纳"><a href="#例题3-逢低吸纳" class="headerlink" title="例题3 逢低吸纳"></a>例题3 逢低吸纳</h5><blockquote>
+<p>来源: USACO 4-3-1</p>
+<p>【问题描述】</p>
+<p>“逢低吸纳”是炒股的一条成功秘诀。如果你想成为一个成功的投资者，就要遵守这条秘诀:</p>
+<blockquote>
+<p>“逢低吸纳，越低越买”</p>
+</blockquote>
+<p>这句话的意思是：每次你购买股票时的股价一定要比你上次购买时的股价低.按照这个规则购买股票的次数越多越好，看看你最多能按这个规则买几次。</p>
+<p>给定连续的N天中每天的股价。你可以在任何一天购买一次股票，但是购买时的股价一定要比你上次购买时的股价低。写一个程序，求出最多能买几次股票。</p>
+<p>以下面这个表为例, 某几天的股价是:</p>
+<table>
+<thead>
+<tr>
+<th>天数</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+<th>11</th>
+<th>12</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>股价</td>
+<td>68</td>
+<td>69</td>
+<td>54</td>
+<td>64</td>
+<td>68</td>
+<td>64</td>
+<td>70</td>
+<td>67</td>
+<td>78</td>
+<td>62</td>
+<td>98</td>
+<td>87</td>
+</tr>
+</tbody>
+</table>
+<p>这个例子中, 聪明的投资者(按上面的定义)，如果每次买股票时的股价都比上一次买时低，那么他最多能买4次股票。一种买法如下(可能有其他的买法):</p>
+<table>
+<thead>
+<tr>
+<th>天数</th>
+<th>2</th>
+<th>5</th>
+<th>6</th>
+<th>10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>股价</td>
+<td>69</td>
+<td>68</td>
+<td>64</td>
+<td>62</td>
+</tr>
+</tbody>
+</table>
+<p>【输入文件】buylow.in</p>
+<p>第1行: N (1 &lt;= N &lt;= 5000), 表示能买股票的天数。</p>
+<p>第2行以下: N个正整数 (可能分多行) ，第i个正整数表示第i天的股价. 这些正整数大小不会超过longint(pascal)/long(c++).</p>
+<p>【输出文件】buylow.out</p>
+<p>只有一行，输出两个整数：</p>
+<p>能够买进股票的天数长度，达到这个值的股票购买方案数量</p>
+<p>在计算解的数量的时候，如果两个解所组成的字符串相同，那么这样的两个解被认为是相同的（只能算做一个解）。因此，两个不同的购买方案可能产生同一个字符串，这样只能计算一次。</p>
+<p>【输入样例】</p>
+<pre><code>12 
+68 69 54 64 68 64 70 67 78 62 98 87
+</code></pre><p>【输出样例】</p>
+<pre><code>4 2
+</code></pre><p>【提交链接】</p>
+<p><a href="http://train.usaco.org/" target="_blank" rel="noopener">http://train.usaco.org/</a></p>
+</blockquote>
+<p>【问题分析】</p>
+<p>从题目描述就可以看出这是最长下降子序列问题，于是求解第一问不是难事，以天数为阶段，设计状态opt[i] 表示前i天中要买第i天的股票所能得到的最大购买次数。</p>
+<p>状态转移方程：</p>
+<p>opt[i]=max(opt[j])+1  (a[i]&gt;=a[j],0=&lt;j&lt;i)   {a[i]存第i天股价}</p>
+<p>最大的opt[i]就是最终的解。</p>
+<p>第二问呢，稍麻烦一点。</p>
+<p>从问题的边界出发考虑问题，当第一问求得一个最优解opt[i]=X时，</p>
+<p> 在1到N中如果还有另外一个opt[j]=x那么选取J的这个方案肯定是成立的。</p>
+<p> 是不是统计所有的opt[j]=x 的个数就是解了呢？　　</p>
+<p>显然没那么简单，因为选取Ｊ这天的股票构成的方案不见得＝１，看下面一个例子：</p>
+<p>５　6  4　3　１ 2</p>
+<p>方案一：５４３１</p>
+<p>方案二：５４３２</p>
+<p>方案三：６４３１</p>
+<p>方案四：６４３２</p>
+<p>x = 4</p>
+<p>也就是说虽然opt[5]=X 和opt[6]=X，但个数只有两个，而实际上应该有四个方案，但在仔细观察发现，构成opt[5]=x 的这个方案中 opt[j]=x-1的方案数有两个,opt[j]=x-2的有一个，opt[j]=x-3 的有一个……</p>
+<p>显然这是满足递归定义的，设计函数F(i)表示前i张中用到第i张股票的方案数。</p>
+<pre><code>递推式：
+        1              (i=0)
+F(i) = 
+        Sum(F(j))    (0&lt;=j&lt;=n, a[j]&gt;a[i], opt[j]=opt[i]-1) 
+
+答案 = sum(F(j))    {0&lt;j&lt;=n, opt[j]=x}
+</code></pre><p>复杂度：</p>
+<p>求解第一问时间复杂度是O(N2),求解第二问如果用递推或递归+记忆化时间复杂度仍为O（N2）但要是用赤裸裸的递归那就复杂多了……，因为那样造成了好多不必要的计算。</p>
+<p>你认为这样做就解决了这道题目了么？还没有，还要注意一些东西：</p>
+<p>（1）如果有两个方案中出现序列一样，视为一个方案，要需要加一个数组next用next[i] 记录和第i个数情况一样（即：opt[i]=opt[j] 且 a[i]=a[j]）可看做一个方案的最近的位置。</p>
+<p>递推时j只要走到next[i]即可。</p>
+<p>（2）为了方便操作可以将a[n+1]赋值为-maxlongint这样可以认为第n+1个一定可以买，答案就是sum(F(n+1))。</p>
+<p>（3）看数据规模显然要用高精度。</p>
+<p>注：USACO上最后一个点错了。我在程序中做了处理。</p>
+<p>【源代码】</p>
+<pre><code class="python">def buylow():
+    n = int(input())
+    price = [int(s) for s in input().split(&#39; &#39;)] + [-99999999999]
+    dp1 = [1] * (n + 1)
+    next = [0] * (n + 1)
+    #寻找最长下降子序列
+    for i in range(1, n + 1):
+        for j in range(i - 1, -1, -1):    
+            if price[i] &lt; price[j] and dp1[j] + 1 &gt; dp1[i]:
+                dp1[i] = dp1[j] + 1
+    for i in range(1, n + 1):
+        j = i - 1
+        while j and (dp1[i] != dp1[j] or price[i] != price[j]):
+            j -= 1
+        next[i] = j 
+    #方案数
+    f = [1 if dp1[i] == 1 else 0 for i in range(n + 1)]
+    for i in range(1, n + 1):
+        for j in range(next[i], i):
+            if price[i] &lt; price[j] and dp1[j] + 1 == dp1[i]:
+                f[i] += f[j]
+    #print(dp1, f)
+    print(dp1[n] - 1, f[n])
+buylow()
+</code></pre>
+<hr>
+<h5 id="例题4-船"><a href="#例题4-船" class="headerlink" title="例题4 船"></a>例题4 船</h5><blockquote>
+<p>(ships.pas/c/cpp)<br>来源：《奥赛经典》（提高篇）</p>
+<p>【问题描述】</p>
+<p>PALMIA国家被一条河流分成南北两岸，南北两岸上各有N个村庄。北岸的每一个村庄有一个唯一的朋友在南岸，且他们的朋友村庄彼此不同。</p>
+<p>每一对朋友村庄想要一条船来连接他们，他们向政府提出申请以获得批准。由于河面上常常有雾，政府决定禁止船只航线相交（如果相交，则很可能导致碰船）。</p>
+<p>你的任务是编写一个程序，帮助政府官员决定批准哪些船只航线，使得不相交的航线数目最大。</p>
+<p>【输入文件】ships.in</p>
+<p>输入文件由几组数据组成。每组数据的第一行有2个整数X，Y，中间有一个空格隔开，X代表PALMIA河的长度（10&lt;=X&lt;=6000），Y代表河的宽度（10&lt;=Y&lt;=100）。第二行包含整数N，表示分别坐落在南北两岸上的村庄的数目（1&lt;=N&lt;=5000）。在接下来的N行中，每一行有两个非负整数C，D，由一个空格隔开，分别表示这一对朋友村庄沿河岸与PALMIA河最西边界的距离（C代表北岸的村庄，D代表南岸的村庄），不存在同岸又同位置的村庄。最后一组数据的下面仅有一行，是两个0，也被一空格隔开。</p>
+<p>【输出文件】ships.out</p>
+<p>对输入文件的每一组数据，输出文件应在连续的行中表示出最大可能满足上述条件的航线的数目。</p>
+<p>【输入样例】</p>
+<pre><code>30 4
+7
+22 4
+2 6
+10 3
+15 12
+9 8
+17 17
+4 2
+0 0
+</code></pre><p>【输出样例】</p>
+<pre><code>4
+</code></pre></blockquote>
+<p>【问题分析】</p>
+<p>这道题目相对来说思考难度较高，从字面意义上看不出问题的本质来，有点无法下手的感觉。这里我给大家推荐两种思考这类问题的方法。</p>
+<p>法一：寻找规律法（我前面总结提到的第3个方法）</p>
+<p>寻找规律自然要推几组数据，首先当然有从样例入手；</p>
+<p>仔细观察上图：红色航线是合法的，那么他们满足什么规律呢？</p>
+<pre><code>              C1    C2   C3   C4
+北岸红线的端点： 4     9    15   17
+南岸红线的端点： 2     8    12   17
+              D1    D2   D3   D4
+</code></pre><p>不难看出无论线的斜率如何，都有这样的规律：</p>
+<p>C1&lt;C2&lt;C3&lt;C4 且  D1&lt;D2&lt;D3&lt;D4</p>
+<p>如果我们把输入数据排升序，问题变抽象为：</p>
+<p>在一个序列（D）里找到最长的序列满足DI&lt;DJ&lt;Dk……且i&lt;j&lt;k</p>
+<p>这样的话便是典型的最长非降子序列问题了。。。。</p>
+<p>法二：边界条件法（我前面总结提到的第4个方法）</p>
+<p>边界法其实就是把数据往小了缩，显然N=1是答案是1。N=2时呢？</p>
+<p>考虑这样一组数据：</p>
+<p>N=2</p>
+<p>C1    D1</p>
+<p>C2    D2</p>
+<p>当 C1<c2 时，如果d1="">D2 那么一定会相交，反之则不会相交。</c2></p>
+<p>当 C1&gt;C2 时，如果D1&lt;D2 那么一定会相交，反之则不会相交。</p>
+<p>N=3</p>
+<p>C1    D1</p>
+<p>C2    D2</p>
+<p>C3    D3</p>
+<p>……</p>
+<p>其实不用在推导N=3了，有兴趣的可以推导去。看N=2时就能得出：</p>
+<p>对于任意两条航线如果满足Ci&lt;Cj 且Di&lt;Dj 则两条航线不相交。这样的话要想在一个序列里让所有的航线都不相交那比然满足，C1&lt;C2&lt;C3…Cans且D1&lt;D2&lt;D3…&lt;Dans ，也就是将C排序后求出最长的满足这个条件的序列的长度就是解。</p>
+<p>这样分析后显然是一个最长非降子序列问题。</p>
+<p>复杂度：排序可以用O（nlogn）的算法，求最长非降子序列时间复杂度是O(n2).</p>
+<p>总复杂度为O（n2）.</p>
+<p>【源代码】</p>
+<pre><code class="python">def ships():
+    w, l = [int(s) for s in input().split(&#39; &#39;)]
+    while w and l:
+        n = int(input())
+        pairs = []
+        for i in range(n):
+            pairs.append([int(s) for s in input().split(&#39; &#39;)])
+        pairs.sort(key = lambda x : x[0])
+        #寻找最长上升子序列
+        dp = [1] * n
+        for i in range(1, n):
+            for j in range(i):
+                if pairs[j][1] &lt; pairs[i][1] and dp[j] + 1 &gt; dp[i]:
+                    dp[i] = dp[j] + 1    
+        print(max(dp))
+        #下一个测试            
+        w, l = [int(s) for s in input().split(&#39; &#39;)]
+ships()    
+</code></pre>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/02/21/article/dp_1-5/">动态规划入门（1）</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
+        <p><span>发布时间:</span>2019-02-21, 00:00:00</p>
+        <p><span>最后更新:</span>2019-03-08, 00:02:11</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/02/21/article/dp_1-5/" title="动态规划入门（1）">https://l-x.me/2019/02/21/article/dp_1-5/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2019/02/21/article/dp_1-5/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/02/25/article/pc_first_problem/">
+                    并行计算初探
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2019/01/17/cp/lab_final/">
+                    编译原理课程实验汇报
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#动态规划入门（1）"><span class="toc-text">动态规划入门（1）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本概念"><span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一、动态规划三要素：阶段，状态，决策。"><span class="toc-text">一、动态规划三要素：阶段，状态，决策。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、动态规划的适用范围"><span class="toc-text">二、动态规划的适用范围</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、动态规划解决问题的一般思路"><span class="toc-text">三、动态规划解决问题的一般思路</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#模型匹配法"><span class="toc-text">模型匹配法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#三要素法"><span class="toc-text">三要素法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#寻找规律法"><span class="toc-text">寻找规律法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#边界条件法"><span class="toc-text">边界条件法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#放宽约束和增加约束"><span class="toc-text">放宽约束和增加约束</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态规划分类讨论"><span class="toc-text">动态规划分类讨论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-状态是一维的"><span class="toc-text">1. 状态是一维的</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-下降-非降子序列问题"><span class="toc-text">1.1 下降/非降子序列问题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#例题1-拦截导弹"><span class="toc-text">例题1 拦截导弹</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例题2-合唱队形"><span class="toc-text">例题2  合唱队形</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例题3-逢低吸纳"><span class="toc-text">例题3 逢低吸纳</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例题4-船"><span class="toc-text">例题4 船</span></a></li></ol></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"动态规划入门（1）　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/02/25/article/pc_first_problem/" title="上一篇: 并行计算初探">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2019/01/17/cp/lab_final/" title="下一篇: 编译原理课程实验汇报">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/9999/01/01/article/my_blog/">博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/pc/lab3/">并行计算上机实验三 CUDA实现向量加法和矩阵乘法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/16/pc/lab2/">并行计算上机实验二 MPI实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/leetcode/single-number-iv/">LeetCode题目改编——只出现一次的数字IV</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/pc/lab1/">并行计算上机实验一 OpenMP实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/29/article/bit_operation_tips/">C/C++ 位运算总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/article/Makefile/">Makefile 使用总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/21/article/dp_1-5/">动态规划入门（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/article/tea_and_health/">茶与健康</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/05/mcps/lab_res/">汇编上机资源</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/mcps/lab4/">汇编上机题4</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/26/mcps/lab3/">汇编上机题3</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/25/alg/lab3/">算法基础上机实验三 最长公共子序列问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/19/mcps/lab2/">汇编上机题2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/18/alg/lab2/">算法基础上机实验二 红黑树维护算法及其区间树应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/mcps/lab1/">汇编上机题1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/12/article/USTC_Hackergame2018_8/">USTCHackergame2018之"我是谁"</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/13/article/verilog_signed_and_unsigned/">Verilog中的有符号数与无符号数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/10/cod/lab6_Multi-CycleCPU/">计算机组成原理上机实验6 多周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/04/cod/lab5_SingleCycleCPU/">计算机组成原理上机实验5 单周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/">操作系统阅读报告：进程通信与同步、进程调度</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/18/os/System_Call/System Call/">操作系统阅读报告：系统调用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/11/os/OS_Summary/OS Summary/">操作系统阅读报告：操作系统概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/09/ds/lab4_ShortestPaths/">数据结构上机题4 最短路径</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/ds/lab1_Polynome/">数据结构上机题1 一元稀疏多项式计算</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/article/expression_evaluation/">C语言表达式计算器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B："完美阴阳矩阵"</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/11/clp/lab9a/">程序设计II上机实验9A：算24</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2020 Lyncien
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+		
+		
+			<!-- Highlight.js -->
+			<!-- "//cdn.bootcdn.net/ajax/libs/highlight.js/9.2.0/styles/github.min.css" -->
+			<!-- "http://apps.bdimg.com/libs/highlight.js/9.1.0/styles/default.min.css" -->
+			<link rel="stylesheet" href="/old_resources/js/highlight/styles/vs2015.css">
+			<script src="/old_resources/js/highlight/highlight.pack.js"></script>
+			<script>
+					hljs.initHighlightingOnLoad();
+			</script>
+		
+		
+		
+			<a href="https://clustrmaps.com/site/1b46r" title="Visit tracker"><img width="0" heght="0" src="//www.clustrmaps.com/map_v2.png?d=i8Jh6LoQOmC5xU8sSnCrTkWgsRpkxH4HkQy9AZ7_Q0E&cl=ffffff"></a>
+		
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/old_resources/js/main.js" src="//cdn.bootcdn.net/ajax/libs/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcdn.net/ajax/libs/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

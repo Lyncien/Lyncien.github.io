@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">数据结构上机题3 哈夫曼压缩</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2017-11-11</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 29517 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 98 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h1 id="哈夫曼压缩"><a href="#哈夫曼压缩" class="headerlink" title="哈夫曼压缩"></a>哈夫曼压缩</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>实验三: 此次实验限定语言C/C++，允许使用stl。</p>
+<p>ddl：下下周六（11月19日）。</p>
+<p>实验要求：实现任意二进制文件压缩解压。将哈夫曼树或者词频率表保存到文件，压缩后解压所需信息全部从你自己压缩得到的文件中拿到。检查:对于一般txt文档实现效果明显的压缩结果并正确解压7分，大文件（几十兆以上）非文本文件正确压缩解压。（9分）报告1分。本周六实验一和二未检查完的来检查，下周六实验三写好的可以提前来检查。下下周六ddl</p>
+<h2 id="一、-需求分析"><a href="#一、-需求分析" class="headerlink" title="一、    需求分析"></a>一、    需求分析</h2><ol>
+<li>   实现功能：</li>
+</ol>
+<pre><code>（1）    利用Haffman编码压缩文件。打开文件后扫描文件读入数据，以二进制方式读取，每次处理8位（1个字节），八位二进制码有256种组合，对应ascii码中0-255的字符，读取结束后，统计出字符频率表并降序排序，根据字符频率表创建Haffman树，导出Haffman编码，之后再次扫描文件，将每个字符对应的Haffman编码依次写入目标文件，完成压缩。
+
+（2）    解压本程序创建的压缩文件。打开文件后扫描文件读入数据，以二进制方式读取，首先读取创建压缩文件是存储在文件头的字符频率表或者Haffman树，然后读取压缩数据，设置一个缓存空间buf，每次处理1位的数据，查找Haffman编码对应的字符，输出至目标文件，完成解压。
+
+（3）    通过修改Windows注册表设置右键菜单快捷方式来打开本程序，以便传入要处理的文件路径。
+</code></pre>
+<ol start="2">
+<li><p>   模块化设计，创建词频表和Haffman树两种数据结构。</p>
+</li>
+<li><p>   采用main函数的参数传入要压缩或者解压的文件路径，然后处理文件并显示处理界面。如果没有传入任何文件路径，则显示设置界面。</p>
+</li>
+<li><p>   处理界面上显示当前处理过程（解压/压缩）、处理的文件名、文件大小，实时输出处理的进度、已花时间和剩余时间。</p>
+</li>
+<li><p>   测试数据：选取几种代表性的文件：</p>
+</li>
+</ol>
+<pre><code>（1）    文本文件，实现较明显的压缩。
+
+（2）    可执行文件和较大的二进制文件，实现正确的解压缩，解压缩前后文件一致，能正确打开执行或访问。
+</code></pre>
+<span id="more"></span>
+
+<h2 id="二、-概要设计"><a href="#二、-概要设计" class="headerlink" title="二、    概要设计"></a>二、    概要设计</h2><ol>
+<li><p>抽象数据类型词频表定义如下：</p>
+<pre><code>ADT FrequencyList&#123;
+    数据对象：Frequency=&#123;ch,f|0&lt;=ch&lt;=255,f&gt;=0&#125;
+              FrequencyList=&#123;Frequency&#125;
+    数据关系：无
+    基本操作：    
+        CreateFrequencyListFromFile(&amp;file,&amp;fl);
+            初始条件：文件file存在且被打开。
+            操作结果：从文件数据创建词频表fl。
+        SaveFrequencyListToFile(&amp;file,fl);
+            初始条件：词频表fl存在，文件file存在且被打开。
+            操作结果：保存词频表fl到文件file中。
+        LoadFrequencyListFromFile(&amp;file,&amp;fl);
+            初始条件：文件file存在且被打开，文件file是按
+CreateFrequencyListFromFile方法创建的文件。
+            操作结果：从文件数据载入存储的词频表fl。 
+&#125;ADT FrequencyList
+</code></pre>
+</li>
+<li><p>抽象数据类型哈夫曼树定义如下：</p>
+<pre><code>ADT HaffmanTree&#123;
+    数据对象：HaffmanTreeNode=&#123;lchild,rchild,parent,ch,f&#125;
+              HaffmanTree=&#123;HaffmanTreeNode&#125;
+    数据关系：每个节点指向左右两个孩子节点（如果有的话）
+    基本操作：
+        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);
+            初始条件：词频表fl存在。
+            操作结果：从词频表fl创建哈夫曼树ht。
+        CreateHaffmanCode(ht,&amp;haffmancode);
+            初始条件：Haffman树ht存在。
+            操作结果：根据哈夫曼树ht生成哈夫曼编码haffmancode。  
+&#125;ADT HaffmanTree
+</code></pre>
+</li>
+<li><p>主函数，压缩函数，解压函数的实现框架</p>
+<pre><code>//以下代码是实现框架，不保证细节完备，详情请看后附源代码
+int main(int argc,char *argv[])&#123;
+    界面初始化;
+    if(argc&gt;1)&#123;
+        根据argv[1]的文件路径获取文件名FILENAME;
+        获取文件大小FILESIZE;
+        判断文件类型FILETYPE;
+        
+
+​```
+    绘制文件处理界面;
+    
+    计时开始，记录time_begin; 
+    if(FILETYPE==0)&#123;
+        HaffmanCompress压缩;
+    &#125;
+    else&#123;
+        HaffmanDecompress解压;
+    &#125;
+&#125;
+else&#123;
+    绘制设置界面;
+    for(;;)&#123;
+        读取鼠标信息;
+        if (鼠标点击)&#123;
+            设置右键;
+        &#125;
+    &#125;
+&#125;
+输出完成信息;
+​```
+
+&#125;
+Status HaffmanCompress(当前文件,目标文件,哈夫曼编码表,当前文件总长度)&#123;//压缩
+    while(读取文件每次n字节 &amp;&amp; 文件没有结束)&#123;//
+        for(i=0;i&lt;n;i++)&#123;   
+            获取该字节对应的哈夫曼编码;
+            while(哈夫曼编码指针)&#123;
+                缓存左移一位; 
+                缓存最低位存哈夫曼编码的当前位;
+                哈夫曼编码指针++;
+                缓存长度++;
+                if(缓存达到输出长度)&#123;
+                    缓存长度=0;
+                    把缓存写到文件;
+                &#125; 
+            &#125;
+            进度++;
+            刷新显示进度;
+        &#125;
+    &#125;
+    while(缓存长度不足指定长度)&#123;
+        文件尾补足长度;
+    &#125;
+    把缓存写到文件;
+    return OK;
+&#125;
+Status HaffmanDecompress(当前文件,目标文件,哈夫曼树)&#123;//解压
+    读取目标文件总长度bytenum;
+    htn=哈夫曼树根结点;
+    while(k&lt;总长度)&#123;
+        读取一定长度数据写入缓存inbuf;
+        do&#123;
+            取缓存inbuf最高位b; 
+            缓存inbuf左移一位;
+            if(b==0)&#123;
+                htn=htn-&gt;lchild;
+            &#125;
+            else&#123;
+                htn=htn-&gt;rchild;
+            &#125;
+            if(htn左孩子和右孩子都是空)&#123;//到达叶结点 
+                输出叶上的字符到缓存outbuf;
+                if(outbuf到一定长度)&#123;
+                    写出缓存outbuf到目标文件;
+                &#125;
+                计数k++; 
+                if(k==bytenum) break;
+                回根结点; 
+            &#125;
+        &#125;while(缓存inbuf还没处理完);
+        刷新显示进度;
+    &#125;
+    return OK;
+&#125;
+</code></pre>
+</li>
+<li><p>本程序含四个模块</p>
+<p>(1)    主模块<br>(2)    词频表模块<br>(3)    哈夫曼树、编码和解压缩模块<br>(4)    图形界面模块</p>
+</li>
+</ol>
+<p><img src="/s/p/9blhc0/0.png"></p>
+<h2 id="三、-详细设计"><a href="#三、-详细设计" class="headerlink" title="三、    详细设计"></a>三、    详细设计</h2><p>1．    词频结点类型</p>
+<pre><code class="c">typedef struct Frequency&#123;//一个字符(8位)及其出现频次 
+    unsigned char ch;//0&lt;=ch&lt;=255
+    unsigned int f;
+&#125;fre,*pfre;
+</code></pre>
+<p>2．    词频表类型</p>
+<pre><code>typedef struct FrequencyList&#123;//频度表，所有出现的字符及频次
+    int num;//1&lt;=num&lt;=256
+    pfre list; //频度表数组，动态申请 
+&#125;frelist,*pfrelist;
+</code></pre>
+<p>3．    哈夫曼树类型</p>
+<pre><code class="c">typedef struct HaffmanTreeNode&#123;
+    struct HaffmanTreeNode *lchild,*rchild,*parent;
+    unsigned int f;
+    unsigned char ch;
+&#125;htreenode,*htree;
+</code></pre>
+<p>4．    词频表操作</p>
+<pre><code class="c">Status CreateFrequencyListFromFile(FILE *fp,pfrelist *fl);
+    //从任意文件中创建频度表 
+Status SaveFrequencyListToFile(FILE *fp,pfrelist fl);
+    //保存频度表到压缩文件中 
+Status LoadFrequencyListFromFile(FILE *fp,pfrelist *fl);
+//从压缩文件中读取频度表
+</code></pre>
+<p>5．    哈夫曼树操作及解压缩</p>
+<pre><code class="c">Status CreateHaffmanTreeFromFrequencyList(pfrelist fl,htree* ht)&#123;
+//从频度表创建哈夫曼数，频度表保证至少两种字符 
+Status PreOrderTraverse(htree ht,int child,int i,char code[],char haffmancode[256][256])&#123;
+//先序遍历，child=0表示当前是左孩子，child=1表示当前是右孩子
+//i为当前层次,code为当前遍历路径已存编码，haffmancode是编码表 
+Status CreateHaffmanCode(htree ht,char haffmancode[256][256])&#123;
+//创建编码表haffmancode[256][256],牺牲一些空间以便快速索引
+Status HaffmanCompress(FILE *fp1,FILE *fp2,char haffmancode[256][256],unsigned int bytenum)&#123;
+//压缩,bytenum为总长度 
+Status HaffmanDecompress(FILE *fp1,FILE *fp2,htree ht)&#123;
+//解压,解压时直接用哈夫曼树搜索对应字符 
+</code></pre>
+<p>6．    图形界面操作</p>
+<pre><code>SMALL_RECT UI_SetRect(int left,int top,int right,int bottom);
+//根据坐标取返回对应矩形区域数据 
+void UI_SetConsoleWindowSize(HANDLE hOut,int width,int height);
+//设置窗口大小
+void UI_SetConsoleScreenBufferSize(HANDLE hOut,int width,int height);
+//设置缓冲区大小
+void UI_InitSTDHandle(HANDLE *hOut,CONSOLE_SCREEN_BUFFER_INFO *bInfo,int width,int height);
+//初始化 
+void UI_DrawText(HANDLE hOut,WORD attr,char *text,int len,int row,int left,int right);
+//在指定行左右位置之间居中输出一行文本
+void UI_CleanText(HANDLE hOut,int row,int left,int right);
+//在指定行左右位置之间清除一行文本
+void UI_CleanTextRect(HANDLE hOut,int top,int bottom,int left,int right);
+//在指定区域之间清除文本
+void UI_DrawBox(HANDLE hOut,int bSingle,SMALL_RECT rc,WORD attr);
+//画方框 
+void ClearScreen(HANDLE hOut,DWORD att)&#123;
+//清屏，且设置样式
+</code></pre>
+<p>7．    其他函数</p>
+<pre><code>void GetCompressedFilePath(char *FPath,char *CFPath);
+//从传入的路径求得对应压缩文件路径 
+void GetDecompressedFilePath(char *FPath,char *DFPath);
+//从传入的压缩文路径求得对应解压文件路径 
+void GetFileNameFromPath(char *FPath,char *FName);
+//从路径中提取文件名
+long GetFileSizeFromPath(char *FPath);
+//获取文件大小 
+int GetFileTypeFromPath(char *FPath);
+//判断文件类型是解压(1)还是压缩(0)
+void UIInit();
+//UI初始化 
+void DrawAllBox();
+//绘制所有方框 
+void DrawInfoText(char *filename,int type,int size);
+//显示文件名，类型是解压(1)还是压缩(0)
+void UpdateTimeText(double progress);
+//根据进度(0-1)更新剩余时间 
+void DrawSelect(int select);
+//没有文件传入时显示配置界面,select=1表示已选中，即当前已创建右键菜单
+int CheckKey();
+//检查右键菜单注册表是否已设置 
+void SetKey(char *exepath);
+//设置或取消右键菜单注册表 
+int Compress(char *fpath);
+//预处理及压缩 
+int Decompress(char *fpath);
+//预处理及解压 
+</code></pre>
+<p>8．    具体的函数实现见附录，均有详细注释，此处不再赘述。</p>
+<h2 id="四、-调试分析"><a href="#四、-调试分析" class="headerlink" title="四、    调试分析"></a>四、    调试分析</h2><p>1．    本程序的难点在于哈夫曼树的创建、存储、读取、匹配。<br>2．    本程序选择存储词频表而不是哈夫曼树，在解压时读取词频表重新创建哈夫曼树，文件结构如下图。</p>
+<p><img src="/s/p/9blhc0/1.png">   </p>
+<p>FileTypeMark位于文件头，标记了“#HAFFMANCOMPRESSFILE#”，以供解压时识别为压缩文件。之后的一段数据FrequencyList 存放了字符频率表，表头记录出现了字符类型总数，之后为各个字符及其频度。最后的部分存放了经过哈夫曼编码后的原文件数据，头部记录了原文件的长度。</p>
+<p>3．    在文件的读取和存储上，设置一个读写缓存，每次读入一定的字节数，然后进行处理，而不是每次读入一个字节，这样效率太低，写出时同理。</p>
+<p>4．    解压时重建哈夫曼树后，不要再次导出哈夫曼编码，每次读取一位二进制数据，直接搜索哈夫曼树，是0则跳转左孩子，是1则跳转右孩子。</p>
+<p>5．    空文件和只有一种字符时应该单独考虑，哈夫曼树不能处理。</p>
+<p>6．    之前在压缩时每次存入4个字节（32位），若文件尾不是整字节，补足为整字节（8位的倍数），看似没有问题，但是在读取时仍按4字节读取存入unsigned int，末尾的数据若非刚好为4个字节（低位为空），则读入时有效数据会被存入unsigned int的低位（int存储时先存入了低8-1位，再存16-9位…以此类推），造成错误。</p>
+<p>7．    关于fread，若不考虑返回值，fread(buf,size,count,fp)，size和count的值可互换，只要size*count是需要读取的字节数即可。但是如果想知道实际读取了多少字节，比如一次读入1024字节，应该写为fread(buf,1,1024,fp)，当剩余数据不足1024时，会返回实际读取的count数，在这里就是字节数。若写为fread(buf,1024,1,fp)，当剩余数据超过1024时，返回1024，当剩余数据不足1024时，将返回0(虽然buf中会存有实际读取的数据)。</p>
+<p>8．    还是fread的问题，传统情况下为了避免最后一个字节使用了两次，采用while(fread(buf,1,1,fp) &amp;&amp; !feof(fp)) 因为fread读完最后一个字节后，feof仍然不变，再次fread才触发feof。这里一次读取一个字节，fread(buf,1,1,fp)的返回值只会是0和1，即使读取最后一个字节也为1，再次读取才0，因此while中用&amp;&amp;没有问题，两个条件只会同为0或同为1。如果一次读取多个字节（比如1024），在文件总长度为1024的倍数时，和上述情况没有区别，若非1024倍数，最后一次读取fread将返回实际读取数量(&lt;1024)，但是此时已经触发feof（因为最后一次读取是没有满足fread的请求的，这里的逻辑很微妙）,故while中&amp;&amp;应该改用||。</p>
+<p>9．    在界面更新问题上，编写了一个更新显示进度函数，直接在压缩/解压函数中调用。</p>
+<h2 id="五、-用户手册"><a href="#五、-用户手册" class="headerlink" title="五、    用户手册"></a>五、    用户手册</h2><p><img src="/s/p/9blhc0/2.png"></p>
+<p><img src="/s/p/9blhc0/3.png"></p>
+<h2 id="六、-测试结果"><a href="#六、-测试结果" class="headerlink" title="六、    测试结果"></a>六、    测试结果</h2><ol>
+<li>   一个文本文件“四大名著.txt”（原大小 6,321,865字节，压缩后4,827,905字节，压缩率75%），一个可执行文件（压缩率77%），实现明显的压缩。</li>
+<li>   和一份pdf文档实现正确解压缩，但压缩效果不明显（压缩率99%），解压缩前后md5值不变。</li>
+<li>   解压缩时间在可接受的范围内，约16MB/s.</li>
+</ol>
+<p><img src="/s/p/9blhc0/4.png"><br><img src="/s/p/9blhc0/5.png"><br><img src="/s/p/9blhc0/6.png"><br><img src="/s/p/9blhc0/7.png"><br><img src="/s/p/9blhc0/8.png">   </p>
+<h2 id="七、-附录"><a href="#七、-附录" class="headerlink" title="七、    附录"></a>七、    附录</h2><p>源程序文件清单：</p>
+<p>（1）    FrequencyList.h</p>
+<p>（2）    HaffmanTree.h</p>
+<p>（3）    MyUI.h</p>
+<p>（4）    Hzip.c</p>
+<p>FrequencyList.h</p>
+<pre><code>/*
+    Last Update time: 2017-11-01 
+    Version：1.0
+    Author：LinXiang (PB16020923) 
+    Description：
+        FrequencyList.
+*/
+#ifndef FREQUENCYLIST_H
+#define FREQUENCYLIST_H
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#define OK 1
+#define ERROR 0
+typedef int Status;  
+typedef struct Frequency&#123;//一个字符(8位)及其出现频次 
+    unsigned char ch;//0&lt;=ch&lt;=255
+    unsigned int f;
+&#125;fre,*pfre;
+typedef struct FrequencyList&#123;//频度表，所有出现的字符及频次
+    int num;//1&lt;=num&lt;=256
+    pfre list; //频度表数组，动态申请 
+&#125;frelist,*pfrelist;
+int frecmp(const void *a,const void *b)&#123;
+    pfre aa=(pfre)a;
+    pfre bb=(pfre)b;
+    return (int)(bb-&gt;f-aa-&gt;f);//b-a这样才能让qsort降序排列 
+&#125;
+void UpdateTimeText(double progress);//声明以便下面函数调用更新进度 
+Status CreateFrequencyListFromFile(FILE *fp,pfrelist *fl)&#123;//从任意文件中创建频度表 
+    fre arr[256]=&#123;&#125;;//临时存放所有字符，直接按下标存入更方便，不用插入或遍历 
+    unsigned char buf[1048576]=&#123;&#125;;//当前读入缓存 
+    int i,n; //n表示实际读入的字符数，仅在文件尾时不是1024 
+    while((n=fread(buf,1,1048576,fp)) || !feof(fp))&#123;//读取文件每次1024字节，
+    //注意size=1,count=1024,才能知道实际成功读入字节数(fread返回值),不要反过来,反过来的话一旦不满1024，fread返回值将为0 
+        for(i=0;i&lt;n;i++)&#123;
+            arr[buf[i]].ch=buf[i];
+            arr[buf[i]].f++;
+        &#125;
+    &#125;
+    qsort(arr,256,sizeof(fre),&amp;frecmp);//排序，不出现的字符会被排至尾部 
+    *fl=(pfrelist)malloc(sizeof(frelist));//让fl存放指向frelist的指针 
+    for(i=0;i&lt;256;i++)&#123;//统计出现的字符数量 
+        if(arr[i].f==0) break; 
+    &#125;
+    (*fl)-&gt;num=i;
+    (*fl)-&gt;list=(pfre)malloc(sizeof(fre)*((*fl)-&gt;num));//申请频度表的数组空间 
+    for(i=0;i&lt;(*fl)-&gt;num;i++)&#123;
+        (*fl)-&gt;list[i].ch=arr[i].ch; 
+        (*fl)-&gt;list[i].f=arr[i].f;
+    &#125;
+    return OK;
+&#125;
+Status SaveFrequencyListToFile(FILE *fp,pfrelist fl)&#123;//保存频度表到压缩文件中 
+    fwrite(&amp;(fl-&gt;num),4,1,fp);
+    int i;  
+    for(i=0;i&lt;fl-&gt;num;i++)&#123;
+        fwrite(&amp;(fl-&gt;list[i].ch),1,1,fp);
+        fwrite(&amp;(fl-&gt;list[i].f),4,1,fp);
+    &#125;
+    return OK; 
+&#125;
+Status LoadFrequencyListFromFile(FILE *fp,pfrelist *fl)&#123;//从压缩文件中读取频度表
+    *fl=(pfrelist)malloc(sizeof(frelist));//让fl存放指向frelist的指针 
+    fread(&amp;((*fl)-&gt;num),4,1,fp);
+    (*fl)-&gt;list=(pfre)malloc(sizeof(fre)*((*fl)-&gt;num));//申请频度表的数组空间 
+    int i;  
+    for(i=0;i&lt;(*fl)-&gt;num;i++)&#123;
+        fread(&amp;((*fl)-&gt;list[i].ch),1,1,fp);
+        fread(&amp;((*fl)-&gt;list[i].f),4,1,fp);
+    &#125;
+    return OK; 
+&#125;
+#endif
+</code></pre>
+<p>HaffmanTree.h</p>
+<pre><code class="c">/*
+    Last Update time: 2017-11-01 
+    Version：1.0
+    Author：LinXiang (PB16020923) 
+    Description：
+        HaffmanTree.
+*/
+#ifndef HAFFMANTREE_H
+#define HAFFMANTREE_H
+#define OK 1
+#define ERROR 0
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &quot;FrequencyList.h&quot;
+typedef int Status; 
+typedef struct HaffmanTreeNode&#123;
+    struct HaffmanTreeNode *lchild,*rchild,*parent;
+    unsigned int f;
+    unsigned char ch;
+&#125;htreenode,*htree;
+void UpdateTimeText(double progress);//声明以便下面函数调用更新进度 
+Status CreateHaffmanTreeFromFrequencyList(pfrelist fl,htree* ht)&#123;
+//从频度表创建哈夫曼数，频度表保证至少两种字符 
+    int hfn=fl-&gt;num*2-1;//haffmantreenode个数
+    htreenode *arr=(htreenode *)malloc(sizeof(htreenode)*hfn);
+    int i,t;
+    for(i=0;i&lt;fl-&gt;num;i++)&#123;//前 fl-&gt;num 个放叶结点 
+        t=fl-&gt;num-i-1;//使升序排列 
+        arr[t].ch=fl-&gt;list[i].ch;
+        arr[t].f=fl-&gt;list[i].f;
+        arr[t].lchild=NULL;
+        arr[t].rchild=NULL;
+        arr[t].parent=NULL;
+    &#125;
+    int j,k;
+    for(j=i,k=0;i&lt;hfn;i++)&#123;
+        arr[i].f=0;//权值初始为0 
+        //先选择最小的一个做左孩子 
+        if(i-j&gt;=1 &amp;&amp; fl-&gt;num-k&gt;=1)&#123;//叶结点和非叶结点都至少有一个可选 
+            if(arr[k].f&lt;=arr[j].f)&#123;
+                arr[i].lchild=&amp;arr[k];
+                arr[k].parent=&amp;arr[i];
+                arr[i].f+=arr[k].f; 
+                k++;
+            &#125;
+            else&#123;
+                arr[i].lchild=&amp;arr[j];
+                arr[j].parent=&amp;arr[i];
+                arr[i].f+=arr[j].f; 
+                j++;
+            &#125;
+        &#125;
+        else if(fl-&gt;num-k&gt;=1)&#123;//只有叶结点可选 
+            arr[i].lchild=&amp;arr[k];
+            arr[k].parent=&amp;arr[i];
+            arr[i].f+=arr[k].f; 
+            k++;
+        &#125;
+        else&#123;//只有非叶结点可选 
+            arr[i].lchild=&amp;arr[j];
+            arr[j].parent=&amp;arr[i];
+            arr[i].f+=arr[j].f; 
+            j++;
+        &#125; 
+         
+        //再选择最小的一个做右孩子 
+        if(i-j&gt;=1 &amp;&amp; fl-&gt;num-k&gt;=1)&#123;//叶结点和非叶结点都至少有一个可选 
+            if(arr[k].f&lt;=arr[j].f)&#123;
+                arr[i].rchild=&amp;arr[k];
+                arr[k].parent=&amp;arr[i];
+                arr[i].f+=arr[k].f;
+                k++;
+            &#125;
+            else&#123;
+                arr[i].rchild=&amp;arr[j];
+                arr[j].parent=&amp;arr[i];
+                arr[i].f+=arr[j].f;
+                j++;
+            &#125;
+        &#125;
+        else if(fl-&gt;num-k&gt;=1)&#123;//只有叶结点可选 
+            arr[i].rchild=&amp;arr[k];
+            arr[k].parent=&amp;arr[i];
+            arr[i].f+=arr[k].f;
+            k++;
+        &#125;
+        else&#123;//只有非叶结点可选 
+            arr[i].rchild=&amp;arr[j];
+            arr[j].parent=&amp;arr[i];
+            arr[i].f+=arr[j].f;
+            j++;
+        &#125;
+    &#125;
+    *ht=&amp;arr[hfn-1];//指向根 
+    return OK; 
+&#125;
+Status PreOrderTraverse(htree ht,int child,int i,char code[],char haffmancode[256][256])&#123;
+//先序遍历，child=0表示当前是左孩子，child=1表示当前是右孩子,i为当前层次,code为当前遍历路径已存编码，haffmancode是编码表 
+    if(ht==NULL) return ERROR;
+    code[i]=child+&#39;0&#39;;
+    if(ht-&gt;lchild==NULL &amp;&amp; ht-&gt;rchild==NULL)&#123;//这是个叶结点  
+        strcpy(haffmancode[ht-&gt;ch],code);//把当前编码保存到编码表里 
+    &#125;
+    else&#123;
+        PreOrderTraverse(ht-&gt;lchild,0,i+1,code,haffmancode);
+        PreOrderTraverse(ht-&gt;rchild,1,i+1,code,haffmancode);
+    &#125;
+    code[i]=0;//恢复
+    return OK; 
+&#125; 
+Status CreateHaffmanCode(htree ht,char haffmancode[256][256])&#123;
+//编码表haffmancode[256][256]牺牲一些空间以便快速索引
+    char code[256]=&#123;&#125;;//临时存放编码 
+    PreOrderTraverse(ht-&gt;lchild,0,0,code,haffmancode);
+    PreOrderTraverse(ht-&gt;rchild,1,0,code,haffmancode);
+    return OK;
+&#125;
+Status HaffmanCompress(FILE *fp1,FILE *fp2,char haffmancode[256][256],unsigned int bytenum)&#123;
+//压缩,bytenum为总长度 
+    unsigned char inbuf[262144]=&#123;&#125;;//当前读入 
+    unsigned int outbuf=0;//操作的缓存，满32位(4字节)才写入outbuf2，这个缓存主要用于位操作 
+    unsigned int outbuf2[262144]=&#123;&#125;;//输出的缓存1024*4字节 
+    fwrite(&amp;bytenum,4,1,fp2);//记下总长度 
+    int up=bytenum/100;//设置界面更新间隔
+    if(up==0) up=1; //文件过小，界面更新间隔为0，置1 
+    int cnt=0;//循环计数器，缓存输出用的 
+    unsigned int k=0;//计数器，更新界面用的
+    int cnt2=0; //循环计数器，缓存输出用的
+    int i,n=0;
+    while((n=fread(inbuf,1,262144,fp1)) || !feof(fp1))&#123;//读取文件每次262144字节
+        for(i=0;i&lt;n;i++)&#123;   
+            char *p=haffmancode[inbuf[i]];
+            while(*p)&#123;
+                outbuf&lt;&lt;=1;//左移一位 
+                outbuf | = (*p-&#39;0&#39;);//最低位存p
+                p++;
+                cnt++;
+                if(cnt%32==0)&#123;//满8位输出 
+                    cnt=0;
+                    outbuf2[cnt2++]=outbuf;
+                    outbuf=0;
+                    if(cnt2==262144)&#123;
+                        cnt2=0;
+                        fwrite(outbuf2,4,262144,fp2);
+                        memset(outbuf2,0,262144*4);
+                    &#125;
+                &#125; 
+            &#125;
+            k++;
+            if(k%up==0) UpdateTimeText((double)k/(double)bytenum);
+        &#125;
+    &#125;
+    while(cnt%32!=0)&#123;//文件尾补足为32位的整数倍 
+        outbuf&lt;&lt;=1;
+        cnt++;
+    &#125;
+    outbuf2[cnt2++]=outbuf;
+    fwrite(outbuf2,4,cnt2,fp2);
+    return OK;
+&#125;
+Status HaffmanDecompress(FILE *fp1,FILE *fp2,htree ht)&#123;//解压,解压时直接用哈夫曼数搜索对应字符 
+    unsigned int inbuf=0;//输入的缓存，每次读取32位(4字节)
+    unsigned char outbuf=0;//输出缓存（1字节） 
+    unsigned char outbuf2[1048576]=&#123;&#125;;//输出缓存2（1048576字节） 
+    unsigned int bytenum;//总字节数 
+    unsigned int k=0; 
+    int cnt=0;
+    int b;
+    htreenode* htn=ht;
+    fread(&amp;bytenum,4,1,fp1);//读取总长度 
+    int up=bytenum/100;//设置界面更新间隔
+    if(up==0) up=1; //文件过小，界面更新间隔为0，置1 
+    int cnt2=0;
+    while(k&lt;bytenum)&#123;
+        fread(&amp;inbuf,1,4,fp1);//size=1,count=4
+        do&#123;
+            b=inbuf &amp; 0x80000000;//取最高位 
+            inbuf&lt;&lt;=1;//左移一位 
+            cnt++;
+            if(b==0)&#123;
+                htn=htn-&gt;lchild;
+            &#125;
+            else&#123;
+                htn=htn-&gt;rchild;
+            &#125;
+            if(htn-&gt;lchild==NULL &amp;&amp; htn-&gt;rchild==NULL)&#123;//到达叶结点 
+                outbuf=htn-&gt;ch;
+                outbuf2[cnt2++]=outbuf;
+                outbuf=0;
+                if(cnt2==1048576)&#123;
+                    cnt2=0;
+                    fwrite(outbuf2,1,1048576,fp2);
+                    memset(outbuf2,0,1048576);
+                &#125;   
+                k++;//计数加一 
+                if(k==bytenum) break;
+                htn=ht;//回根结点 
+            &#125;
+        &#125;while(cnt%32!=0);
+        cnt=0;
+        if(k%up==0) UpdateTimeText((double)k/(double)bytenum);
+    &#125;
+    fwrite(outbuf2,1,cnt2,fp2);
+    return OK;
+&#125;
+#endif
+</code></pre>
+<p>Hzip.c</p>
+<pre><code class="c">/*
+    Last Update time: 2017-11-11     
+    Version：1.1
+    Author：LinXiang (PB16020923) 
+    Description：
+        Hzip.c.
+*/
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt; 
+#include &lt;time.h&gt;
+#include &quot;MyUI.h&quot;
+#include &quot;FrequencyList.h&quot;
+#include &quot;HaffmanTree.h&quot;
+#define WIDTH 50 //窗口的宽和高 
+#define HEIGHT 15
+HANDLE hout;
+HANDLE hin;
+time_t time_begin;
+time_t time_now;
+long FILESIZE;//记录文件长度，用于读取文件时计算进度
+int FILETYPE;// 
+char FILENAME[30]; 
+void GetCompressedFilePath(char *FPath,char *CFPath)&#123;//从传入的路径求得对应压缩文件路径 
+    strcpy(CFPath,FPath);
+    strcat(CFPath,&quot;.hzip&quot;);
+&#125;
+void GetDecompressedFilePath(char *FPath,char *DFPath)&#123;//从传入的压缩文路径求得对应解压文件路径 
+    strcpy(DFPath,FPath);
+    DFPath[strlen(DFPath)-5]=0;//去除尾部&quot;.hzip&quot; 
+&#125;
+void GetFileNameFromPath(char *FPath,char *FName)&#123;//从路径中提取文件名
+    char *pos;//最后一个\的位置 
+    char *p=FPath;
+    while(*p)&#123;
+        if(*p==&#39;\\&#39;) pos=p;
+        p++;
+    &#125;
+    while(*pos)&#123;
+        *FName++=*(++pos);//此法即可跳过‘\’本身，又可复制字符串结束符到FName中 
+    &#125;
+&#125;
+long GetFileSizeFromPath(char *FPath)&#123; //获取文件大小 
+    FILE *fp=fopen(FPath,&quot;r&quot;);  
+    if(!fp) return -1;  
+    fseek(fp,0L,SEEK_END);  
+    long size=ftell(fp);  
+    fclose(fp);  
+    return size;  
+&#125; 
+int GetFileTypeFromPath(char *FPath)&#123;//判断是解压(1)还是压缩(0)
+    FILE *fp=fopen(FPath,&quot;rb+&quot;);
+    char MARK[22];
+    int type;
+    if(!fread(MARK,21,1,fp))&#123;
+        type=0;
+    &#125;
+    else&#123;
+        MARK[21]=0;//字符串结尾 
+        if(strcmp(&quot;#HAFFMANCOMPRESSFILE#&quot;,MARK)) type=0;
+        else type=1;    
+    &#125;
+    fclose(fp);
+    return type;
+&#125;
+void UIInit()&#123;//UI初始化 
+    UI_InitSTDHandle(&amp;hout,&amp;hin,WIDTH,HEIGHT);
+    UI_SetConsoleScreenBufferSize(hout,WIDTH,HEIGHT);//设置缓冲区大小
+    UI_SetConsoleWindowSize(hout,WIDTH,HEIGHT);//设置窗口大小 
+    //system(&quot;color F0&quot;);此句与鼠标操作冲突！！！！！不要用system() 
+    ClearScreen(hout,B_WHITE); //清屏并设置前景背景色，不要用上句 
+    
+    COORD curpos;
+    curpos.X=5;
+    curpos.Y=HEIGHT-2;
+    SetConsoleCursorPosition(hout,curpos);//设置光标位置 
+    CONSOLE_CURSOR_INFO cursor_info=&#123;1,0&#125;; 
+    SetConsoleCursorInfo(hout,&amp;cursor_info);//隐藏光标 
+&#125;
+void DrawAllBox()&#123;//绘制所有方框 
+    SMALL_RECT rc;
+    rc=UI_SetRect(0,0,WIDTH-1,3);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_RED);
+    rc=UI_SetRect(0,4,WIDTH-1,7);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_BLUE);
+    rc=UI_SetRect(0,8,WIDTH-1,11);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_BLUE); 
+    rc=UI_SetRect(0,12,WIDTH-1,14);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_CYAN); 
+&#125;
+void DrawInfoText(char *filename,int type,int size)&#123;//文件名，类型是解压(1)还是压缩(0)
+    char t_title[30];
+    sprintf(t_title,&quot;Hzip V1.1&quot;);
+    UI_DrawText(hout,B_WHITE | F_RED,t_title,strlen(t_title),1,0+2,WIDTH-1-2);
+    sprintf(t_title,&quot;Code by PB16020923&quot;);
+    UI_DrawText(hout,B_WHITE | F_RED,t_title,strlen(t_title),2,0+2,WIDTH-1-2);
+    //窗口标题显示当前操作
+    char t_info[38];
+    sprintf(t_info,&quot;Hzip V1.1 - %s&quot;,type==0?&quot;Compressing...&quot;:&quot;Decompressing...&quot;);
+    SetConsoleTitle(t_info);
+    //文件名
+    char t_filename[38];
+    sprintf(t_filename,&quot;FileName: %s&quot;,filename);    
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_filename,strlen(t_filename),5,0+2,WIDTH-1-2);
+    //文件大小 
+    char t_size[38];
+    sprintf(t_size,&quot;Size: %0.2f KB&quot;,(double)size/1024);
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_size,strlen(t_size),6,0+2,WIDTH-1-2);   
+&#125;
+void UpdateTimeText(double progress)&#123;//根据进度(0-1)更新剩余时间 
+    time(&amp;time_now); 
+    //已花时间 
+    char t_spenttime[40];
+    sprintf(t_spenttime,&quot;Spent Time: %d s&quot;,time_now-time_begin);
+    UI_CleanText(hout,9,0+2,WIDTH-1-2);
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_spenttime,strlen(t_spenttime),9,0+2,WIDTH-1-2);
+    //剩余时间 
+    char t_remainedtime[40];
+    sprintf(t_remainedtime,&quot;Remained Time: %d s&quot;,(int)((time_now-time_begin)*(1-progress)/progress));
+    UI_CleanText(hout,10,0+2,WIDTH-1-2);
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_remainedtime,strlen(t_remainedtime),10,0+2,WIDTH-1-2);
+    //画进度条 
+    int k=47*progress,i;
+    for(i=2;i&lt;=k;i++)&#123;
+        //UI_DrawText(hout,B_BLUE,&quot; &quot;,1,12,i,i);
+        UI_DrawText(hout,B_CYAN,&quot; &quot;,1,13,i,i);
+    &#125;
+&#125;
+void DrawSelect(int select)&#123;//没有文件传入时显示配置界面,select=1表示已选中，即当前已创建右键菜单
+    ClearScreen(hout,B_WHITE); 
+    SMALL_RECT rc;
+    rc=UI_SetRect(0,0,WIDTH-1,4);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_RED);      
+    char t_title[38];
+    sprintf(t_title,&quot;Hzip V1.1 - Setting&quot;);
+    UI_DrawText(hout,B_WHITE | F_RED,t_title,strlen(t_title),2,0+2,WIDTH-1-2);
+    
+    int dx=10,dy=5;
+    rc=UI_SetRect(0+dx,0+dy,5+dx,2+dy);
+    UI_DrawBox(hout,1,rc,B_WHITE | F_BLUE);
+    UI_DrawText(hout,B_WHITE | F_BLUE,select==1?&quot;√&quot;:&quot;  &quot;,2,1+dy,2+dx,3+dx);   
+    char t_cj[30]=&quot;Create right-click menu&quot;;
+    UI_DrawText(hout,B_WHITE | F_BLUE,t_cj,strlen(t_cj),1+dy,7+dx,7+dx+strlen(t_cj));
+&#125;
+int CheckKey()&#123;//检查右键菜单注册表是否已设置 
+    HKEY k1,k2,k3;
+    if(RegOpenKeyEx(HKEY_CLASSES_ROOT,&quot;*&quot;,0,KEY_ALL_ACCESS,&amp;k1) != ERROR_SUCCESS)&#123;
+        return 0;
+    &#125;
+    if(RegOpenKeyEx(k1,&quot;shell&quot;,0,KEY_ALL_ACCESS,&amp;k2) != ERROR_SUCCESS)&#123;
+        return 0;
+    &#125;
+    if(RegOpenKeyEx(k2,&quot;Use Hzip to compress/decompress...&quot;,0,KEY_ALL_ACCESS,&amp;k3) != ERROR_SUCCESS)&#123; 
+        return 0;
+    &#125;   
+    return 1;
+&#125;
+void SetKey(char *exepath)&#123;//设置或取消右键菜单注册表 
+    HKEY k1,k2,k3,k4;
+    char readvalue[128]=&#123;&#125;;
+    char setvalue[128]=&#123;&#125;;
+    if(RegOpenKeyEx(HKEY_CLASSES_ROOT,&quot;*&quot;,0,KEY_ALL_ACCESS,&amp;k1) != ERROR_SUCCESS)&#123;
+        RegCreateKey(HKEY_CLASSES_ROOT,&quot;*&quot;,&amp;k1);
+    &#125;
+    if(RegOpenKeyEx(k1,&quot;shell&quot;,0,KEY_ALL_ACCESS,&amp;k2) != ERROR_SUCCESS)&#123;
+        RegCreateKey(k1,&quot;shell&quot;,&amp;k2);
+    &#125;
+    if(RegOpenKeyEx(k2,&quot;Use Hzip to compress/decompress...&quot;,0,KEY_ALL_ACCESS,&amp;k3) != ERROR_SUCCESS)&#123;//没有右键 
+        RegCreateKey(k2,&quot;Use Hzip to compress/decompress...&quot;,&amp;k3);
+        RegCreateKey(k3,&quot;command&quot;,&amp;k4);
+        strcpy(setvalue,exepath);
+        strcat(setvalue,&quot; %1&quot;);
+        RegSetValueEx(k4,NULL,0,REG_SZ,setvalue,sizeof(setvalue));
+        DrawSelect(1);
+        MessageBox(NULL,&quot;Program has created a right-click menu to use Hzip.&quot;,&quot;SET&quot;,MB_OK|MB_ICONINFORMATION);
+    &#125;
+    else&#123;//有右键，删除 
+        RegDeleteKey(k3,&quot;command&quot;);
+        RegDeleteKey(k2,&quot;Use Hzip to compress/decompress...&quot;);
+        DrawSelect(0);
+        MessageBox(NULL,&quot;Program has deteled the right-click menu to use Hzip.&quot;,&quot;DETELE&quot;,MB_OK|MB_ICONINFORMATION);
+    &#125;   
+    RegCloseKey(k1);
+    RegCloseKey(k2);
+    RegCloseKey(k3);
+    RegCloseKey(k4);
+&#125;
+int Compress(char *fpath)&#123;//预处理及压缩 
+    FILE *fp1=fopen(fpath,&quot;rb+&quot;);
+    char cfpath[512];
+    GetCompressedFilePath(fpath,cfpath);//生成压缩文件存储路径 
+    FILE *fp2=fopen(cfpath,&quot;wb+&quot;);
+    char MARK[21]=&quot;#HAFFMANCOMPRESSFILE#&quot;;
+    fwrite(MARK,21,1,fp2);//标记这是一个压缩文件 
+    
+    pfrelist fl;
+    CreateFrequencyListFromFile(fp1,&amp;fl);//读取源文件，创建频度表
+    SaveFrequencyListToFile(fp2,fl);//保存频度表到目标文件
+if(fl-&gt;num!=0 &amp;&amp; fl-&gt;num!=1)&#123;
+//0表示空文件，1表示只有一种字符，这两种情况都不用编码，保存频度表即可 
+        htree ht;
+        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);//从频度表创建哈夫曼树 
+        char haffmancode[256][256]=&#123;&#125;;
+        CreateHaffmanCode(ht,haffmancode);
+        fseek(fp1,0,SEEK_SET);//源文件移回文件头 
+        HaffmanCompress(fp1,fp2,haffmancode,ht-&gt;f);//根结点的权值即为总字符数        
+    &#125;
+    fclose(fp1);
+    fclose(fp2);
+&#125;
+int Decompress(char *fpath)&#123;//预处理及解压 
+    FILE *fp1=fopen(fpath,&quot;rb+&quot;);
+    char dfpath[512];
+    GetDecompressedFilePath(fpath,dfpath);//生成解压文件存储路径 
+    FILE *fp2=fopen(dfpath,&quot;wb+&quot;);
+    fseek(fp1,21,SEEK_SET);//跳过标记 
+    
+    pfrelist fl;
+    LoadFrequencyListFromFile(fp1,&amp;fl);
+    if(fl-&gt;num==0) ;//空文件，不操作
+    else if(fl-&gt;num==1)&#123;//只有一种字符的文件 
+        unsigned int i;
+        for(i=0;i&lt;fl-&gt;list[0].f;i++) fwrite(&amp;(fl-&gt;list[0].ch),1,1,fp2);
+    &#125;
+    else&#123;
+        htree ht;
+        CreateHaffmanTreeFromFrequencyList(fl,&amp;ht);
+//从频度表创建哈夫曼树，解压时不用再生成哈夫曼编码，搜索树即可 
+        HaffmanDecompress(fp1,fp2,ht);      
+    &#125;
+
+    fclose(fp1);
+    fclose(fp2);
+&#125;
+int main(int argc,char *argv[])&#123;
+    UIInit();
+    
+    if(argc&gt;1)&#123;//有传入路径
+        DrawAllBox();
+        FILETYPE=GetFileTypeFromPath(argv[1]);  
+        FILESIZE=GetFileSizeFromPath(argv[1]); 
+        GetFileNameFromPath(argv[1],FILENAME); 
+        DrawInfoText(FILENAME,FILETYPE,FILESIZE);
+        
+        time(&amp;time_begin); //计时开始 
+        if(FILETYPE==0)&#123;
+            Compress(argv[1]);
+        &#125;
+        else&#123;
+            Decompress(argv[1]);
+        &#125;
+        UpdateTimeText(1);
+    &#125;
+    else&#123;
+        DrawSelect(CheckKey());
+        INPUT_RECORD inrec;
+        DWORD res;//返回已读取的记录数
+        COORD pos=&#123;0,0&#125;;
+        int k;
+        for(;;)&#123;
+            k++;
+            ReadConsoleInput(hin,&amp;inrec,1,&amp;res);//读取鼠标信息
+            if (inrec.EventType==MOUSE_EVENT)&#123;
+                if (inrec.Event.MouseEvent.dwEventFlags==0 &amp;&amp; \
+                inrec.Event.MouseEvent.dwButtonState==FROM_LEFT_1ST_BUTTON_PRESSED)&#123;
+                    SetKey(argv[0]);//设置右键
+                    
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+    char t_finish[30];
+    sprintf(t_finish,&quot;Finished! Press any key to exit!&quot;);
+    UI_DrawText(hout,F_CYAN | B_BLACK,t_finish,strlen(t_finish),HEIGHT-2,0+2,WIDTH-1-2);
+    getchar();
+&#125;
+</code></pre>
+<p>MyUI.h<br>​<br>​    界面部分，代码过长且与数据结构关系不大，此处不贴出</p>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9d1c00/" class="prev">数据结构上机题4 最短路径</a>
+		 
+
+		 
+			<a href="/s/p/9axeo0/" class="next">数据结构上机题2 模拟银行业务办理</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9blhc0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

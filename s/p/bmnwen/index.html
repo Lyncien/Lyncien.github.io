@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">LeetCode刷题笔记——理解二叉树的非递归遍历II</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2022-04-13</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 10604 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 35 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<p>未完成..待续</p>
+<p>在上一篇中，我们讨论了迭代遍历二叉树的各种细节，这篇主要讲重建二叉树</p>
+<h2 id="根据遍历结果-序列重建二叉树"><a href="#根据遍历结果-序列重建二叉树" class="headerlink" title="根据遍历结果/序列重建二叉树"></a>根据遍历结果/序列重建二叉树</h2><p>首先假定原二叉树所有节点的值不相同，否则没有意义</p>
+<p>比如极端情况所有节点的值都一样，这样无论是正常树状还是一条链状结构，任意遍历方式结果都一样，无法保留任何结构信息</p>
+<p>这里的遍历结果/序列通常指以顺序容器存储的数值序列或包括空结点标记的字符串序列</p>
+<h3 id="直接遍历的结果"><a href="#直接遍历的结果" class="headerlink" title="直接遍历的结果"></a>直接遍历的结果</h3><p>直接遍历二叉树的结果丢失了结构信息，无法对根节点和左右子树进行分离：</p>
+<ul>
+<li><p>中序序列无法确定根节点</p>
+</li>
+<li><p>先序序列（首元素为根节点）和后序序列（尾元素为根节点）无法确定左右子树的分界点</p>
+</li>
+</ul>
+<h3 id="多种直接遍历的结果"><a href="#多种直接遍历的结果" class="headerlink" title="多种直接遍历的结果"></a>多种直接遍历的结果</h3><h4 id="先序-中序-后序-中序"><a href="#先序-中序-后序-中序" class="headerlink" title="先序+中序 / 后序+中序"></a>先序+中序 / 后序+中序</h4><p>可以由 先序序列+中序序列 或者 后序序列+中序序列 唯一确定一棵二叉树，思路如下</p>
+<p>首先先序序列和后序序列可以确定根节点的值（分别在首尾）</p>
+<p>然后在中序序列中定位到根节点的位置，其之前即为左子树中序序列，其之后为右子树中序序列（即使两者之一或都是空子树，也能确定左右关系）</p>
+<h5 id="先序-中序"><a href="#先序-中序" class="headerlink" title="先序+中序"></a>先序+中序</h5><p>遍历先序遍历的结果（另外维护一个遍历中序遍历的下标）</p>
+<p>如果当前节点不是下一个中序遍历的节点，则不断进入左子树（把当前节点接在栈顶结点的左子树，并压栈）</p>
+<p>如果当前节点是下一个中序遍历的节点，说明当前节点没有左子树？</p>
+<p>栈中节点为「还没有确定右孩子的节点」</p>
+<pre><code class="python">def buildTree(preorder, inorder):
+    if not preorder:
+        return None
+    root = TreeNode(preorder[0])
+    stack = [root]
+    inorderIndex = 0
+    for val in preorder[1:]:
+        currNode = TreeNode(val)
+        if stack[-1].val != inorder[inorderIndex]:
+            stack[-1].left = currNode
+        else:
+            while stack and stack[-1].val == inorder[inorderIndex]:
+                node = stack.pop()
+                inorderIndex += 1
+            node.right = currNode
+        stack.append(currNode)
+    return root
+</code></pre>
+<h5 id="后序-中序"><a href="#后序-中序" class="headerlink" title="后序+中序"></a>后序+中序</h5><p>和上面的实现对称</p>
+<pre><code class="python">def buildTree(inorder, postorder):
+    if not postorder:
+        return None
+    root = TreeNode(postorder[-1])
+    stack = [root]
+    inorderIndex = len(inorder) - 1
+    for val in reversed(postorder[:-1]):
+        currNode = TreeNode(val)
+        if stack[-1].val != inorder[inorderIndex]:
+            stack[-1].right = currNode
+        else:
+            while stack and stack[-1].val == inorder[inorderIndex]:
+                node = stack.pop()
+                inorderIndex -= 1
+            node.left = currNode
+        stack.append(currNode)
+    return root
+</code></pre>
+<h4 id="先序-后序"><a href="#先序-后序" class="headerlink" title="先序+后序"></a>先序+后序</h4><p>仅由 先序序列+后序序列 一般情况无法唯一确定一棵二叉树，</p>
+<p>因为先序和后序都是左右子树相继访问，在<strong>某个子树为空时</strong>无法确定该部分遍历的结果属于哪个子树</p>
+<p>最简单的情况 (根结点0左结点1 和 根结点0右结点1)</p>
+<pre><code>
+  0    0
+ /  和  \
+1        1
+</code></pre>
+<p>前序序列都是<code>[0,1]</code>，后序序列都是<code>[1,0]</code></p>
+<p>特别地，如果原二叉树仅存在度为0和2的结点，则可以由先序序列+后序序列唯一确定，简单举例如下</p>
+<p>给定前序和后序序列</p>
+<pre><code>[1,2,3,4,5,6,7,8,9,10,11] 和 [3,4,2,8,9,6,10,11,7,5,1]
+</code></pre>
+<p>显然根节点为1</p>
+<p>从前序的第二个元素我们得知左子树的根节点为2，在后序中查找到对应位置，其之前即为左子树，之后为右子树</p>
+<p>左子树前序和后序</p>
+<pre><code>[2,3,4] 和 [3,4,2]
+</code></pre>
+<p>右子树前序和后序</p>
+<pre><code>[5,6,7,8,9,10,11] 和 [8,9,6,10,11,7,5]
+</code></pre>
+<h5 id="实现，递归"><a href="#实现，递归" class="headerlink" title="实现，递归"></a>实现，递归</h5><ol>
+<li>不依赖全局变量，但需要peek左子节点的值提前定位分割点</li>
+</ol>
+<p>1.1. 进行子串切割，效率不高</p>
+<pre><code class="python">def buildTree(preorder, postorder):
+    if not preorder: return None
+    root = TreeNode(preorder[0])
+    if len(preorder) == 1: return root
+    L = postorder.index(preorder[1]) + 1 #左子树根节点在后序遍历中的位置+1，该位置及之后为右子树的遍历结果，L也是左子树的结点数
+    root.left = buildTree(preorder[1:L+1], postorder[:L])
+    root.right = buildTree(preorder[L+1:], postorder[L:-1])
+    return root
+</code></pre>
+<p>1.2. 直接在原串上递归，下标计算较繁琐</p>
+<pre><code class="python">def buildTree(preorder, postorder):
+    def make(preIndex, postIndex, N):
+        if N == 0: return None
+        root = TreeNode(preorder[preIndex])
+        if N == 1: return root
+        for L in xrange(N): #确定左子树的节点数量
+            if postorder[postIndex + L - 1] == preorder[preIndex + 1]:
+                break
+        root.left = make(preIndex + 1, postIndex, L)
+        root.right = make(preIndex + 1 + L, postIndex + L, N - 1 - L)
+        return root
+    return make(0, 0, len(preorder))
+</code></pre>
+<ol start="2">
+<li>依赖全局变量，通过peek后序遍历的下一个节点，判断是否等于前序遍历的当前节点</li>
+</ol>
+<p>若不等于，说明存在左/右子树，先尝试递归构建左子树，再次判断，若还不等于，尝试递归构建右子树</p>
+<p>（由之前的分析，我们知道对于只存在左子树或只存在右子树的情况，我们无法确定是左还是右，这里的实现，相当于总是重建为左子树）</p>
+<p>若等于，说明没有左右子树</p>
+<pre><code class="python">preIndex = 0
+postIndex = 0
+def buildTree(preorder, postorder):
+    root = TreeNode(pre[preIndex])
+    preIndex += 1
+    if post[postIndex] != root.val):
+        root.left = buildTree(preorder, postorder)
+    if post[postIndex] != root.val):
+        root.right = buildTree(preorder, postorder)
+    postIndex += 1
+    return root
+</code></pre>
+<h5 id="实现，非递归"><a href="#实现，非递归" class="headerlink" title="实现，非递归"></a>实现，非递归</h5><pre><code class="python">def buildTree(preorder, postorder):
+    root = TreeNode(preorder[0])
+    stack = [root]
+    postorderIndex = 0
+    for val in preorder[1:]:
+        currNode = TreeNode(val)
+        while stack[-1].val == postorder[postorderIndex]:
+            stack.pop()
+            postorderindex += 1
+        if stack[-1].left == None:
+            stack[-1].left = currNode
+        else:
+            stack[-1].right = currNode
+        stack.push_back(currNode)
+    return stack[0]
+</code></pre>
+<h3 id="增加空结点的遍历结果"><a href="#增加空结点的遍历结果" class="headerlink" title="增加空结点的遍历结果"></a>增加空结点的遍历结果</h3><p>遍历时额外记录空结点的信息，此时等价于原二叉树只包含度为0和2的节点</p>
+<pre><code>
+      9
+    /   \
+   3     2
+  / \   / \
+ 4   1 #   6
+/ \ / \   / \
+# # # #   # #
+</code></pre>
+<p>这种情况下可以实现由 先序遍历结果 或者 层序遍历结果 重建二叉树</p>
+<p>逆波兰表达式对应的语法树也是只包含度为0和2的节点，所以无歧义</p>
+<h4 id="层序"><a href="#层序" class="headerlink" title="层序"></a>层序</h4><pre><code class="python">def buildTree(tokens):
+    root = TreeNode(int(tokens[0]))
+    queue = collections.deque([root]) #已构建的结点（待构建左右子树）
+    i = 1
+    while queue:
+        node = queue.popleft()
+        if tokens[i] != &#39;None&#39;:
+            node.left = TreeNode(int(tokens[i]))
+            queue.append(node.left)
+        i += 1
+        if tokens[i] != &#39;None&#39;:
+            node.right = TreeNode(int(tokens[i]))
+            queue.append(node.right)
+        i += 1
+    return root
+</code></pre>
+<h3 id="二叉搜索树直接遍历的结果"><a href="#二叉搜索树直接遍历的结果" class="headerlink" title="二叉搜索树直接遍历的结果"></a>二叉搜索树直接遍历的结果</h3><p>二叉搜索树能够只通过 前序序列 或 后序序列 重建，而且无需记录空结点</p>
+<h4 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h4><p>因为二叉搜索树的 中序序列 是递增的序列，如果知道 前序序列 或 后序序列，就可以通过<strong>排序</strong>获得中序序列，即</p>
+<p><code>inorder = sorted(preorder)</code></p>
+<p>再使用二叉树的 先序+中序 或者 后序+中序 重建方法即可</p>
+<h4 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h4><p>可以利用二叉搜索树的有序特性，优化通用解法</p>
+<p>无需存储空结点，而是利用值的范围来判断左右子树的分界点</p>
+<p>以前序序列为例，第一个值为根节点的值，由于二叉搜索树左子树的值均小于根节点，则可以在前序序列中定位到左右子树序列的分界</p>
+<h5 id="后序"><a href="#后序" class="headerlink" title="后序"></a>后序</h5><pre><code class="python">def buildBST(tokens):
+    def helper(lower = float(&#39;-inf&#39;), upper = float(&#39;inf&#39;)):
+        if not tokens or tokens[-1] &lt; lower or tokens[-1] &gt; upper:
+            return None
+        val = int(tokens.pop())
+        root = TreeNode(val)
+        root.right = helper(val, upper)
+        root.left = helper(lower, val)
+        return root
+    return helper()
+</code></pre>
+<pre><code class="python">def buildBST(preorder):
+    root = TreeNode(preorder[0])
+    stack = []
+    stack.append(root)
+    for val in preorder[1:]:
+        # 将栈的最后一个元素作为父元素，并从下一个前序遍历的节点创建子节点
+        currentNode = TreeNode(val)
+        node = stack[-1]
+        # 栈中小于当前节点值的元素全部出栈，当前节点连接到最后一个弹出栈的结点的右边
+        while stack and stack[-1].val &lt; currentNode.val:
+            node = stack.pop()
+        if node.val &lt; currentNode.val:
+            node.right = currentNode
+        else:
+            node.left = currentNode
+        stack.append(currentNode)
+    return root
+</code></pre>
+<p>特别地，如果树结点的值大小范围确定，可用用长度一致的二进制块存储（而不是直接将数值转为字符串），比如四个字节，再存储为字符串，这样无需分隔符，输入字符串可根据预定义块大小分割</p>
+<h2 id="二叉树序列化和反序列化"><a href="#二叉树序列化和反序列化" class="headerlink" title="二叉树序列化和反序列化"></a>二叉树序列化和反序列化</h2><p>序列化：将对象的状态信息编码/转换为可以存储或传输的形式，比如字符串</p>
+<h3 id="单一遍历"><a href="#单一遍历" class="headerlink" title="单一遍历"></a>单一遍历</h3><p>二叉树的序列化可以直接复用上述遍历方法和根据遍历结果重建二叉树的方法</p>
+<p>序列化时只需要将遍历结果以特定的分隔符拼接转化为字符串即可</p>
+<p>反序列化时可根据预定分隔符转换回值序列</p>
+<h3 id="其他方法"><a href="#其他方法" class="headerlink" title="其他方法"></a>其他方法</h3><p>使用嵌套括号分隔遍历结果</p>
+<p>Tree = root(Tree_left)(Tree_right)</p>
+<p>Tree = (Tree_left)root(Tree_right)</p>
+<p>Tree = (Tree_left)(Tree_right)root</p>
+<p>则只使用单个遍历结果就能够反序列化回二叉树</p>
+<p>因为每个左括号都有唯一对应的右括号，可以唯一确定序列中 根结点 与 左、右子树 的分界位置</p>
+<p>事实上，不必所有空结点都用空括号对表示，仅右子树不为空时，左子树的空括号需保留</p>
+<h2 id="相关题目"><a href="#相关题目" class="headerlink" title="相关题目"></a>相关题目</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/">https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/">https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/">https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-postorder-traversal/</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/recover-a-tree-from-preorder-traversal/">https://leetcode-cn.com/problems/recover-a-tree-from-preorder-traversal/</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/construct-binary-search-tree-from-preorder-traversal/">https://leetcode-cn.com/problems/construct-binary-search-tree-from-preorder-traversal/</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/construct-string-from-binary-tree/">https://leetcode-cn.com/problems/construct-string-from-binary-tree/</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree">https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/serialize-and-deserialize-bst/">https://leetcode-cn.com/problems/serialize-and-deserialize-bst/</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/verify-preorder-serialization-of-a-binary-tree/">https://leetcode-cn.com/problems/verify-preorder-serialization-of-a-binary-tree/</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/verify-preorder-sequence-in-binary-search-tree">https://leetcode-cn.com/problems/verify-preorder-sequence-in-binary-search-tree</a></p>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/btthcc/" class="prev">安全意识</a>
+		 
+
+		 
+			<a href="/s/p/bm4vhj/" class="next">LeetCode刷题笔记——背包问题汇总</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/bmnwen/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<title> Crime Map of Chicago </title>
+<script type="text/javascript" src="//api.map.baidu.com/api?v=3.0&ak=KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu"></script>
+<!-- <script type="text/javascript" src="//api.map.baidu.com/api?v=1.0&type=webgl&ak=KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu"></script> -->
+<style type="text/css">
+body, html,#container {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+#marks {
+	position: fixed;
+	left: 10px;
+	top: 10px;
+	background-color: rgba(129, 129, 129, 0.192);
+}
+.mark {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	cursor: pointer;
+	margin: 4px;
+}
+.mark-text {
+	font-size: 14px;
+	color: rgb(45, 8, 63);
+	font-weight: bold;
+}
+.mark-rect {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin: 2px;
+	background-color: transparent;
+	border: 1px solid black;
+}
+.mark.disabled .mark-rect {
+	opacity: 0.4;
+	border: 1px solid transparent;
+}
+.mark.disabled .mark-text {
+	opacity: 0.7;
+	font-weight: normal;
+}
+#since {
+	position: fixed;
+	top: 20px;
+	left: 50%;
+}
+</style>
+<script>
+	function hsla2rgba(H = 0, S = 0, L = 0, A = 1, stringMode = true) {
+		const C = (1 - Math.abs(2 * L - 1)) * S;
+		const X = C * (1 - Math.abs(((H / 60) % 2) - 1));
+		const m = L - C / 2;
+		const vRGB = [];
+		if (H >= 0 && H < 60) {
+			vRGB.push(C, X, 0);
+		} else if (H >= 60 && H < 120) {
+			vRGB.push(X, C, 0);
+		} else if (H >= 120 && H < 180) {
+			vRGB.push(0, C, X);
+		} else if (H >= 180 && H < 240) {
+			vRGB.push(0, X, C);
+		} else if (H >= 240 && H < 300) {
+			vRGB.push(X, 0, C);
+		} else if (H >= 300 && H < 360) {
+			vRGB.push(C, 0, X);
+		}
+		const [vR, vG, vB] = vRGB;
+		const R = 255 * (vR + m);
+		const G = 255 * (vG + m);
+		const B = 255 * (vB + m);
+		if (stringMode)
+			return `rgba(${R},${G},${B},${A})`;
+		return {r: R, g: G, b: B, a: A};
+	}
+</script>
+</head>
+<body>
+    <div id="container"></div>
+	<div id="marks"></div>
+	<div id="since">
+		since
+		<select name="since-select" id="since-select">
+			<option value="2001">2001</option>
+			<option value="2002">2002</option>
+			<option value="2003">2003</option>
+			<option value="2004">2004</option>
+			<option value="2005">2005</option>
+			<option value="2006">2006</option>
+			<option value="2007">2007</option>
+			<option value="2008">2008</option>
+			<option value="2009">2009</option>
+			<option value="2010" selected>2010</option>
+			<option value="2011">2011</option>
+			<option value="2012">2012</option>
+			<option value="2013">2013</option>
+			<option value="2014">2014</option>
+			<option value="2015">2015</option>
+			<option value="2016">2016</option>
+			<option value="2017">2017</option>
+			<option value="2018">2018</option>
+			<option value="2019">2019</option>
+			<option value="2020">2020</option>
+			<option value="2021">2021</option>
+		</select>
+	</div>
+
+</body>
+</html>
+<script type="text/javascript">
+(async function () {
+	let response = await fetch("./crime_all.json");
+	let data = await response.json();
+	let items = data.items;
+	let primaries = data.primaries;
+	let primary2idx = data.primary2idx;
+	// console.log(data);
+	for (let item of items) {
+		item['lat'] = parseFloat(item['lat']);
+		item['lng'] = parseFloat(item['lng']);
+	}
+	let types;
+	if (!primaries) {
+		let types_dict = {}
+		for (let item of items) {
+			types_dict[item['primary']] = true;
+		}
+		types = []; for (let type in types_dict) types.push(type);
+	} else {
+		types = primaries;
+	}
+
+	console.log(types);
+
+	let item_groups = {};
+	for (let type of types) 
+		item_groups[type] = [];
+	if (!primaries) {
+		for (let item of items) {
+			let type = item['p'];
+			item_groups[type].push(item);
+		}
+	} else {
+		for (let item of items) {
+			let type = types[item['p']];
+			item_groups[type].push(item);
+		}		
+	}
+
+
+	// 'ROBBERY', 'OTHER NARCOTIC VIOLATION', 'KIDNAPPING', 'PUBLIC INDECENCY', 'LIQUOR LAW VIOLATION', 'PROSTITUTION', 'ARSON', 'OBSCENITY', 'HUMAN TRAFFICKING', 'BURGLARY', 'WEAPONS VIOLATION', 'BATTERY', 'THEFT', 'STALKING', 'CONCEALED CARRY LICENSE VIOLATION', 'PUBLIC PEACE VIOLATION', 'OFFENSE INVOLVING CHILDREN', 'CRIMINAL DAMAGE', 'NON-CRIMINAL', 'GAMBLING', 'SEX OFFENSE', 'HOMICIDE', 'CRIMINAL TRESPASS', 'DECEPTIVE PRACTICE', 'OTHER OFFENSE', 'INTIMIDATION', 'CRIMINAL SEXUAL ASSAULT', 'ASSAULT', 'INTERFERENCE WITH PUBLIC OFFICER', 'NARCOTICS', 'MOTOR VEHICLE THEFT'
+	// “抢劫”、“其他违法行为”、“绑架”、“公共赔偿”、“违反酒类法”、“起诉”、“纵火”、“猥亵”、“贩卖人口”、“盗窃”、“武器侵犯”、“电池”、“偷窃”、“堆放”、“隐蔽运输许可证侵犯”、《公共和平侵犯》、“触犯儿童罪”、“刑事损害赔偿金”、“非刑事”L'，'赌博'，'性侵犯'，'杀人'，“刑事侵权”、“欺骗行为”、“其他罪行”、“内奸”、“性犯罪”、“同谋”、“干涉公职人员”、“戏剧性”、“机动车盗窃”
+	let type2color = {}
+	let type2enable = {}
+	for (let type of types) {
+		type2enable[type] = true;
+	}
+	type2enable['ROBBERY'] = false;
+	type2enable['ASSAULT'] = false;
+	type2enable['ARSON'] = false;
+	type2enable['WEAPONS VIOLATION'] = false;
+	type2enable['SEX OFFENSE'] = false;
+	type2enable['CRIMINAL SEXUAL ASSAULT'] = false;
+
+	let marks_ele = document.getElementById('marks');
+	let i = 0, n = types.length;
+	for (let type of types) {
+		let mark_ele = document.createElement('div');
+		mark_ele.className = "mark";	
+		mark_ele.innerHTML = "<div class='mark-text'>" + type + "</div>"
+		if (!type2enable[type]) mark_ele.classList.add('disabled');
+		mark_ele.addEventListener('click', function (ev) {
+			this.classList.toggle('disabled');
+			let type = this.lastElementChild.innerText;
+			type2enable[type] = !type2enable[type];
+		});
+		let mark_rect_ele = document.createElement('div');
+		mark_rect_ele.className = "mark-rect";	
+		mark_rect_ele.style.backgroundColor = hsla2rgba(i / n * 360, 0.5, 0.5);
+		type2color[type] = hsla2rgba(i / n * 360, 0.5, 0.5, 1, false);
+		mark_ele.prepend(mark_rect_ele);
+		marks_ele.appendChild(mark_ele);
+		++i;
+	}
+	console.log(type2color);
+
+	let since = 2010;
+	let since_t = +(new Date(2010, 1, 1)) / 1000;
+	document.getElementById('since-select').addEventListener('change', function() {
+		since = this.value;
+		since_t = +(new Date(since, 1, 1)) / 1000;
+	});
+
+	let bmap_version = '3';
+	if (window.BMapGL) {
+		window.BMap = window.BMapGL;
+		bmap_version = 'gl';
+	}
+    let map = new BMap.Map("container");
+    map.centerAndZoom(new BMap.Point(-87.6855288, 41.86158478), 12);
+    map.enableScrollWheelZoom();
+	// map.enablePinchToZoom();
+
+	if (bmap_version == 'gl') {
+		BMap.GeolocationControl = BMap.LocationControl;
+		BMap.NavigationControl = BMap.ZoomControl;
+	}
+
+	let scaleCtrl = new BMap.ScaleControl();  // 添加比例尺控件
+	map.addControl(scaleCtrl);
+
+	let zoomCtrl = new BMap.NavigationControl({ anchor: BMAP_ANCHOR_BOTTOM_LEFT });  // 添加缩放控件
+	map.addControl(zoomCtrl);
+
+	// let cityCtrl = new BMap.CityListControl({ anchor: BMAP_ANCHOR_TOP_RIGHT });  // 添加城市列表控件
+	// map.addControl(cityCtrl);
+
+	let locControl = new BMap.GeolocationControl({ anchor: BMAP_ANCHOR_BOTTOM_RIGHT }) // 添加定位控件
+	map.addControl(locControl);
+
+	if (bmap_version == '3') map.addControl(new BMap.OverviewMapControl());
+
+
+	function update(type) {
+		let ctx = this.canvas.getContext("2d");
+		if (!ctx) return;
+		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+		if (type2enable[type] == false) return;
+		// ctx.fillStyle = "rgba(50, 50, 255, 0.7)";
+		// ctx.fillStyle = type2color[type];
+		// date_early = item_groups[type][0].date;
+
+		let color = type2color[type];
+		let r = color.r;
+		let g = color.g;
+		let b = color.b;
+		ctx.beginPath();
+		for (let item of item_groups[type]) {
+			let lat = item['lat'];
+			let lng = item['lng'];
+			let date = item['d'];
+			if (date < since_t) continue;
+			let opacity = (date - 949334400) / (1675180800 - 949334400) * 0.7 + 0.3
+			let pixel = map.pointToPixel(new BMap.Point(lng, lat));
+			ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+			ctx.fillRect(pixel.x - 2, pixel.y - 2, 4, 4);
+		}
+	}
+
+	for (let type in item_groups) {
+		item_groups[type].sort((a, b) => {
+			return a.date - b.date;
+		});
+		// console.log(item_groups[type]);
+		let canvasLayer = new BMap.CanvasLayer({
+			update: function() {
+				update.call(this, type);
+			}
+		});
+		map.addOverlay(canvasLayer);
+	}
+
+	// let myGeo = new BMap.Geocoder();      
+	// 将地址解析结果显示在地图上，并调整地图视野    
+	// myGeo.getPoint("New Relax Inn", function(point){      
+	// 	if (point) {      
+	// 		map.centerAndZoom(point, 16);      
+	// 		map.addOverlay(new BMap.Marker(point));      
+	// 	}      
+	// }, "库克");
+
+})();
+
+</script>

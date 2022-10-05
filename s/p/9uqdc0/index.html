@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">算法基础上机实验二 红黑树维护算法及其区间树应用</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2018-11-18</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 17790 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 59 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>红黑树维护算法及其区间树应用</p>
+<h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><h4 id="（一）红黑树"><a href="#（一）红黑树" class="headerlink" title="（一）红黑树"></a>（一）红黑树</h4><p>红黑树是一棵二叉搜索树，是众多平衡二叉树中的一种，它可以保证在最坏情况下基本操作的时间复杂度为O(lgn)</p>
+<p>红黑树的每个结点包含5个属性：color、key、left、right、parent，分别表示颜色、关键字、左孩子、右孩子、父亲。</p>
+<p><img src="/s/p/9uqdc0/clip_image002.jpg" alt="img"></p>
+<p>红黑树有以下性质：</p>
+<p>① 每个节点必须为红色或黑色； </p>
+<p>② 根为黑色； </p>
+<p>③ 树中的nil叶子为黑； </p>
+<p>④ 若节点为红，则其两个孩子必为黑；</p>
+<p>⑤ 每节点到其后代叶子的所有路径含有同样多的黑节点； </p>
+<span id="more"></span>
+
+<p>红黑树的基本操作：</p>
+<h5 id="（1）左旋-右旋"><a href="#（1）左旋-右旋" class="headerlink" title="（1）左旋/右旋"></a>（1）左旋/右旋</h5><p>这是一种能保持二叉搜索树性质的局部操作。</p>
+<p><img src="/s/p/9uqdc0/clip_image004.jpg" alt="img"></p>
+<p>以左旋为例，操作顺序如下：</p>
+<p>① y←right[x] //记录指向y节点的指针</p>
+<p>② right[x]←left[y], p[left[y]]←x //β连到x右</p>
+<p>③ parent[y]←parent[x], parent[x]的左或右指针指向y //y连到p[x]</p>
+<p>④ left[y]←x, parent[x]←y// x连到y左</p>
+<p><img src="/s/p/9uqdc0/clip_image006.jpg" alt="img"></p>
+<p>​                      该操作的时间复杂度T(n)=O(1)</p>
+<h5 id="（2）插入"><a href="#（2）插入" class="headerlink" title="（2）插入"></a>（2）插入</h5><p>这个操作是在二叉搜索树的插入操作上略作修改，分为三步：</p>
+<p>①将z节点按BST树规则插入红黑树中，z是叶子节点；</p>
+<p>②将z涂红；</p>
+<p>③调整使其满足红黑树的性质；</p>
+<p>调整过程分析如下：</p>
+<p>Z插入之后，为红色结点，其两个孩子为黑色NIL，满足性质1，3，5，可能违反性质2，4，即z是（红色）根或者z的父亲是红色。</p>
+<p>调整方案：通过旋转和改变颜色，自下而上调整（z进行上溯），使树满足红黑树性质。</p>
+<p>(1)若z为根，将其涂黑；</p>
+<p>(2)若z为非根，则p[z]存在</p>
+<p>①若p[z]为黑，无需调整</p>
+<p>②若p[z]为红，违反性质4，则需调整</p>
+<p>具体来说分为6种情况：</p>
+<p>case1~3为z的双亲p[z]是其祖父p[p[z]]的左孩子，*</p>
+<p>case4<del>6为z的双亲p[z]是其祖父p[p[z]]的右孩子（与case1</del>3对称）。*</p>
+<ul>
+<li>Case1: z的叔叔y是红色，这时通过调整叔叔、父亲和祖父的颜色，将违反性质的结点上移，调整最多至根。若红色传播到根，将根涂黑，则树的黑高增1</li>
+</ul>
+<p><img src="/s/p/9uqdc0/clip_image008.jpg" alt="img"></p>
+<ul>
+<li><p>Case 2：当z的叔叔y是黑色，且z是双亲p[z]的右孩子，这种情况通过左旋变换为Case3.</p>
+</li>
+<li><p>Case 3：当z的叔叔y是黑色，且z是双亲p[z]的左孩子</p>
+</li>
+</ul>
+<p><img src="/s/p/9uqdc0/clip_image010.jpg" alt="img"></p>
+<p>调整算法的时间：O(logn)</p>
+<p>整个插入算法的时间：O(logn)</p>
+<h5 id="（3）删除"><a href="#（3）删除" class="headerlink" title="（3）删除"></a>（3）删除</h5><p>这个操作将树上的一个结点z删除，然后进行z的孩子的调整，使之满足二叉搜索树的性质，最后，然后红黑树性质被破坏，则需要进行颜色的调整。</p>
+<p>首先是对删除结点z进行分类讨论，有3种情况：</p>
+<ul>
+<li><p>Case 1：z为叶子；</p>
+</li>
+<li><p>Case 2：z只有一个孩子(非空)</p>
+</li>
+</ul>
+<p>case 1是case 2的特例，处理模式是一样</p>
+<p>处理方式：删除z，连接x。这里x是z的中序后继；</p>
+<p><img src="/s/p/9uqdc0/clip_image012.jpg" alt="img"></p>
+<ul>
+<li>Case 3：z的两个孩子均非空；</li>
+</ul>
+<p>处理方式：</p>
+<p>(1)找z的中序后继即找z的右子树中最左下节点y；</p>
+<p>(2)删除y，将y的内容copy到z，再将y的右子连到p[y]左下。</p>
+<p><img src="/s/p/9uqdc0/clip_image014.jpg" alt="img"></p>
+<p>最后分析颜色的调整：</p>
+<p>删红点不影响，删黑点需要调整。</p>
+<p>对于结点x，或是y的唯一孩子，或是哨兵nil[T]。</p>
+<p>可以想象将y的黑色涂到x上，于是</p>
+<p>①    若x是根，且原为黑，直接移去多余一层黑色(树黑高减1)，终止；</p>
+<p>②    若x原为红，将y的黑色涂到x上，终止；</p>
+<p>③    若x非根节点，且原为黑色，则x为双黑。通过变色、旋转使多余黑色向上传播，直到某个红色节点或传到根；</p>
+<p>具体来说，分为8种情况，</p>
+<p>case 1~4为x是p[x]的左子；*</p>
+<p>case 5~8为x是p[x]的右子（对称地）*</p>
+<p>以case1~4为例</p>
+<ul>
+<li>Case 1：x的兄弟w是红色（w是红，则 p[x]必黑）</li>
+</ul>
+<p>处理方式如图，目标是将情况变成Case2,3,4处理</p>
+<p><img src="/s/p/9uqdc0/clip_image016.jpg" alt="img"></p>
+<ul>
+<li>Case 2：x的黑兄弟w的两个孩子均为黑</li>
+</ul>
+<p>处理方式如图，目标是将 x上移到B，通过A和D的黑色上移</p>
+<p><img src="/s/p/9uqdc0/clip_image018.jpg" alt="img"></p>
+<ul>
+<li>Case 3：x的黑兄弟w的右子为黑且左子为红</li>
+</ul>
+<p>处理方式如图，目标是将case3转为case4</p>
+<p><img src="/s/p/9uqdc0/clip_image020.jpg" alt="img"></p>
+<ul>
+<li>Case 4：x的黑兄弟w的右子为红(左子为黑或红)</li>
+</ul>
+<p>x的黑色上移给B，B的原色下移给D，D将黑色下移给C和E，通过旋转解决矛盾点C</p>
+<p><img src="/s/p/9uqdc0/clip_image022.jpg" alt="img"></p>
+<h4 id="（二）区间树"><a href="#（二）区间树" class="headerlink" title="（二）区间树"></a>（二）区间树</h4><p>区间树是对红黑树的扩张，其每个结点存储一个区间，包括low和high两个值，其中low作为红黑树的key。</p>
+<p>为了实现重叠区间的查找，还需要为每个结点添加一个max域，其值为以该结点为根的子树的所有区间的最大端点。</p>
+<p>（1）max值的计算：该节点的区间右端点、左子树max值、右子树max值三者中的最大值。</p>
+<p>max值的维护：需要在旋转、插入和删除时进行调整。</p>
+<p>①左旋后，y的max更新为x原来的max，x的max重新按上面的方法计算，时间复杂度为O(1)。</p>
+<p><img src="/s/p/9uqdc0/clip_image023.jpg" alt="img"></p>
+<p>②插入z时，z的max值设为自己区间的右端点，然后对于从根到插入位置的每个结点，如果其max值小于z的max值，则更新为z的max值。时间复杂度为O(logn)。</p>
+<p>③删除z时，如果z只有一个孩子或者没有孩子，则直接从z的父亲开始向上到根结点，依次重新计算max值。如z有左右孩子，在找到z的中序遍历后继y后，从y的父亲开始向上至根结点，依次计算max值。时间复杂度为O(logn)。</p>
+<p>（2）重叠区间的查找：x从根结点开始，如果x为nil或待查找的区间与其重叠，则返回x。否则，x更新，如果x左孩子不为nil且max值大于待查找区间的左端点，则x更新为x的左孩子，反之更新为x的右孩子。</p>
+<p>时间复杂度为O(logn)</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code class="c++">#include &lt;cstdio&gt;
+#include &lt;cstdlib&gt;
+enum Color&#123;
+    RED,
+    BLACK
+&#125;;
+typedef struct RBTreeNode&#123;
+    struct RBTreeNode *parent;
+    struct RBTreeNode *left;
+    struct RBTreeNode *right;
+    Color color;
+    int key;//low
+    int high;//high
+    int maxep;//子树中区间最大端点
+&#125;node;
+class RBTree&#123;
+   public:
+    RBTree();
+    ~RBTree();
+    struct RBTreeNode *root;
+    struct RBTreeNode *nil;
+    void Insert(node *z);
+    void Delete(node *z);
+    node* Search(int key);
+    node* IntervalSearch(int low,int high);
+    void Print();
+    bool Overlap(int alow,int ahigh,int blow,int bhigh);
+    void pn(node *x);
+   private:
+    void Updatemaxep(node *x);
+    void Updatemaxep2(node *x);
+    void _Print(node *x,int depth);
+    void LRotate(node *x);
+    void RRotate(node *x);
+    void Insert_fixup(node *z);
+    void Transplant(node *u,node *v);
+    node *Minimum(node *x);
+    void Delete_fixup(node *x);
+&#125;;
+int max(int a,int b)&#123;
+    if(a &gt; b) return a;
+    else return b;
+&#125;
+RBTree::RBTree()&#123;
+    this-&gt;nil = new node;
+    this-&gt;nil-&gt;color = BLACK;
+    this-&gt;nil-&gt;left = NULL;
+    this-&gt;nil-&gt;right = NULL;
+    this-&gt;nil-&gt;parent = NULL;
+    this-&gt;nil-&gt;key = -1;
+    this-&gt;nil-&gt;high = -1;
+    this-&gt;nil-&gt;maxep = -1;
+    this-&gt;root = this-&gt;nil;
+&#125;
+RBTree::~RBTree()&#123;
+    delete this-&gt;nil;
+&#125;
+void RBTree::Updatemaxep(node *x)&#123;
+    x-&gt;maxep = max(x-&gt;high,max(x-&gt;left-&gt;maxep,x-&gt;right-&gt;maxep));
+&#125;
+void RBTree::LRotate(node *x)&#123;//左旋
+    node *y = x-&gt;right;
+    x-&gt;right = y-&gt;left;
+    if(y-&gt;left != this-&gt;nil)
+        y-&gt;left-&gt;parent = x;
+    y-&gt;parent = x-&gt;parent;
+    if(x-&gt;parent == this-&gt;nil)
+        this-&gt;root = y;
+    else if(x == x-&gt;parent-&gt;left)
+        x-&gt;parent-&gt;left = y;
+    else
+        x-&gt;parent-&gt;right = y;
+    y-&gt;left = x;
+    x-&gt;parent = y;
+    y-&gt;maxep = x-&gt;maxep;//区间树维护maxep
+    Updatemaxep(x);//区间树维护maxep
+&#125;
+void RBTree::RRotate(node *x)&#123;//右旋
+    node *y = x-&gt;left;
+    x-&gt;left = y-&gt;right;
+    if(y-&gt;right != this-&gt;nil)
+        y-&gt;right-&gt;parent = x;
+    y-&gt;parent = x-&gt;parent;
+    if(x-&gt;parent == this-&gt;nil)
+        this-&gt;root = y;
+    else if(x == x-&gt;parent-&gt;right)
+        x-&gt;parent-&gt;right = y;
+    else
+        x-&gt;parent-&gt;left = y;
+    y-&gt;right = x;
+    x-&gt;parent = y;
+    y-&gt;maxep = x-&gt;maxep;//区间树维护maxep
+    Updatemaxep(x);//区间树维护maxep
+&#125;
+void RBTree::Insert_fixup(node *z)&#123;//插入后为保存红黑树性质而作的调整
+    while(z-&gt;parent-&gt;color == RED)&#123; //父亲是黑则无需调整，父亲是红也保证了父亲存在（不是nil）,并且祖父存在
+        if(z-&gt;parent == z-&gt;parent-&gt;parent-&gt;left)&#123;//父亲是祖父的左孩子
+            node *y = z-&gt;parent-&gt;parent-&gt;right;//记录叔节点
+            if(y-&gt;color == RED)&#123;//叔是红
+                z-&gt;parent-&gt;color = BLACK;//父亲变黑
+                y-&gt;color = BLACK;//叔变黑
+                z-&gt;parent-&gt;parent-&gt;color = RED;//祖父变红
+                z = z-&gt;parent-&gt;parent;//问题向上转移两层
+            &#125;
+            else if(z == z-&gt;parent-&gt;right)&#123;//叔是黑
+                //z是父亲的右孩子，则对z父亲左旋，并且新的z是原来z的父亲，且是原来z的左孩子，统一按下面的情况处理
+                    z = z-&gt;parent;
+                    LRotate(z);
+            &#125;
+            else&#123;
+                z-&gt;parent-&gt;color = BLACK;//父变黑
+                z-&gt;parent-&gt;parent-&gt;color = RED;//祖变红
+                RRotate(z-&gt;parent-&gt;parent);//把黑色父亲旋转到祖父的位置，此时红左孩还是左孩，红祖父变成右孩子
+            &#125;
+        &#125;
+        else&#123;//对称情况，父亲是祖父的右孩子
+            node *y = z-&gt;parent-&gt;parent-&gt;left;//记录叔节点
+            if(y-&gt;color == RED)&#123;//叔是红
+                z-&gt;parent-&gt;color = BLACK;//父亲变黑
+                y-&gt;color = BLACK;//叔变黑
+                z-&gt;parent-&gt;parent-&gt;color = RED;//祖父变红
+                z = z-&gt;parent-&gt;parent;//问题向上转移两层
+            &#125;
+            else if(z == z-&gt;parent-&gt;left)&#123;//z是父亲的左孩子，则对z父亲右旋，并且新的z是原来z的父亲，且是原来z的右孩子，统一按下面的情况处理
+                    z = z-&gt;parent;
+                    RRotate(z);
+            &#125;
+            else&#123;
+                z-&gt;parent-&gt;color = BLACK;//父变黑
+                z-&gt;parent-&gt;parent-&gt;color = RED;//祖变红
+                LRotate(z-&gt;parent-&gt;parent);//把黑色父亲旋转到祖父的位置，此时红右孩还是右孩，红祖父变成左孩子
+            &#125;
+        &#125;
+    &#125;
+    this-&gt;root-&gt;color = BLACK;
+&#125;
+void RBTree::Insert(node *z)&#123;//插入
+    node *y = this-&gt;nil;
+    node *x = this-&gt;root;
+    z-&gt;left = this-&gt;nil;
+    z-&gt;right = this-&gt;nil;
+    z-&gt;color = RED;
+    z-&gt;maxep = z-&gt;high;//区间树维护maxep
+    while(x != this-&gt;nil)&#123;
+        x-&gt;maxep = max(x-&gt;maxep,z-&gt;maxep);//区间树维护maxep,从根到z的路径上的节点更新maxep
+        y = x;
+        if(z-&gt;key &lt; x-&gt;key)
+            x = x-&gt;left;
+        else
+            x = x-&gt;right;
+    &#125;
+    z-&gt;parent = y;
+    if(y == this-&gt;nil)
+        this-&gt;root = z;
+    else if(z-&gt;key &lt; y-&gt;key)
+        y-&gt;left = z;
+    else
+        y-&gt;right = z;
+    Insert_fixup(z);
+&#125;
+node* RBTree::Minimum(node *x)&#123;//以x为根的子树中的最小key的节点
+    while(x-&gt;left != this-&gt;nil)
+        x = x-&gt;left;
+    return x;
+&#125;
+void RBTree::Transplant(node *u,node *v)&#123;//以v代替u，这里没有处理u和v的孩子,注意：u/v各自的指向结点并没有改变
+    if(u-&gt;parent == this-&gt;nil)//u是根
+        this-&gt;root = v;
+    else if(u == u-&gt;parent-&gt;left)
+        u-&gt;parent-&gt;left = v;
+    else
+        u-&gt;parent-&gt;right = v;
+    v-&gt;parent = u-&gt;parent;
+&#125;
+void RBTree::pn(node *x)&#123;
+    printf(&quot;[%d,%d]|%d(%s)\n&quot;,x-&gt;key,x-&gt;high,x-&gt;maxep,x-&gt;color==RED?&quot;R&quot;:&quot;B&quot;);
+&#125;
+void RBTree::Delete_fixup(node *x)&#123;
+    while(x != this-&gt;root &amp;&amp; x-&gt;color == BLACK)&#123;
+        if(x == x-&gt;parent-&gt;left)&#123;
+            node *w = x-&gt;parent-&gt;right;
+            if(w-&gt;color == RED)&#123;
+                w-&gt;color = BLACK;
+                x-&gt;parent-&gt;color = RED;
+                LRotate(x-&gt;parent);
+                w = x-&gt;parent-&gt;right;
+            &#125;
+            if(w-&gt;left-&gt;color == BLACK &amp;&amp; w-&gt;right-&gt;color == BLACK)&#123;
+                w-&gt;color = RED;
+                x = x-&gt;parent;
+            &#125;
+            else&#123;
+                if(w-&gt;right-&gt;color == BLACK)&#123;
+                    w-&gt;left-&gt;color = BLACK;
+                    w-&gt;color = RED;
+                    RRotate(w);
+                    w = x-&gt;parent-&gt;right;
+                &#125;
+                w-&gt;color = x-&gt;parent-&gt;color;
+                x-&gt;parent-&gt;color = BLACK;
+                w-&gt;right-&gt;color = BLACK;
+                LRotate(x-&gt;parent);
+                x = this-&gt;root;
+
+            &#125;
+        &#125;
+        else&#123;//x == x-&gt;parent-&gt;right
+            node *w = x-&gt;parent-&gt;left;
+            if(w-&gt;color == RED)&#123;
+                w-&gt;color = BLACK;
+                x-&gt;parent-&gt;color = RED;
+                RRotate(x-&gt;parent);
+                w = x-&gt;parent-&gt;left;
+            &#125;
+            if(w-&gt;right-&gt;color == BLACK &amp;&amp; w-&gt;left-&gt;color == BLACK)&#123;
+                w-&gt;color = RED;
+                x = x-&gt;parent;
+            &#125;
+            else&#123;
+                if(w-&gt;left-&gt;color == BLACK)&#123;
+                    w-&gt;right-&gt;color = BLACK;
+                    w-&gt;color = RED;
+                    LRotate(w);
+                    w = x-&gt;parent-&gt;left;
+                &#125;
+                w-&gt;color = x-&gt;parent-&gt;color;
+                x-&gt;parent-&gt;color = BLACK;
+                w-&gt;left-&gt;color = BLACK;
+                RRotate(x-&gt;parent);
+                x = this-&gt;root;
+            &#125;
+        &#125;
+    &#125;
+    x-&gt;color = BLACK;
+&#125;
+void RBTree::Updatemaxep2(node *x)&#123;
+    while(x != this-&gt;nil)&#123;
+        Updatemaxep(x);
+        x=x-&gt;parent;
+    &#125;
+&#125;
+
+void RBTree::Delete(node *z)&#123;
+    node *x;
+    node *y = z;
+    Color y_original_color = y-&gt;color;
+    if(z-&gt;left == this-&gt;nil)&#123;//没有左孩子或者没有孩子
+        x = z-&gt;right;//可能是空
+        Transplant(z,z-&gt;right);
+        Updatemaxep2(z-&gt;parent);
+
+    &#125;
+    else if(z-&gt;right == this-&gt;nil)&#123;//没有右孩子但有左孩子
+        x = z-&gt;left;
+        Transplant(z,z-&gt;left);
+        Updatemaxep2(z-&gt;parent);
+
+    &#125;//上面两种情况，直接删除z,以z的一个孩子代替z
+    else&#123;//有左右孩子
+        y = Minimum(z-&gt;right);//寻找z在中序遍历中的下一个结点，以此为新的y，并且y没有左孩子
+        y_original_color = y-&gt;color;
+        node *g = y-&gt;parent;
+        x = y-&gt;right;
+        if(y-&gt;parent == z)&#123;//y的父亲是z，则y就是z的右孩子
+            x-&gt;parent = y;
+        &#125;
+        else&#123;//y是z的右子树中最小者，但不是z的右孩子
+            //if(y-&gt;right != this-&gt;nil)
+            Transplant(y,y-&gt;right);
+            y-&gt;right = z-&gt;right;
+            y-&gt;right-&gt;parent = y;
+        &#125;
+        Transplant(z,y);//用y代替z
+        y-&gt;left = z-&gt;left;
+        y-&gt;left-&gt;parent = y;
+        y-&gt;color = z-&gt;color;
+        Updatemaxep2(g);
+    &#125;
+    if(y_original_color == BLACK)
+        Delete_fixup(x);
+&#125;
+
+void RBTree::_Print(node *x,int depth)&#123;
+    if(x != this-&gt;nil)&#123;
+        _Print(x-&gt;right,depth+1);
+        for(int i = 0;i &lt; depth - 1;i++)&#123;
+            printf(&quot;          &quot;);
+        &#125;
+        printf(&quot;[%d,%d]|%d(%s)\n&quot;,x-&gt;key,x-&gt;high,x-&gt;maxep,x-&gt;color==RED?&quot;R&quot;:&quot;B&quot;);
+        _Print(x-&gt;left,depth+1);
+    &#125;
+&#125;
+void RBTree::Print()&#123;
+    node *p = this-&gt;root;
+    printf(&quot;------------------------------------------------------------------------------------\n&quot;);
+    _Print(this-&gt;root,1);
+    printf(&quot;------------------------------------------------------------------------------------\n&quot;);
+&#125;
+node* RBTree::Search(int key)&#123;
+    node *x =this-&gt;root;
+    while(x != this-&gt;nil &amp;&amp; key != x-&gt;key)
+        if(key &lt; x-&gt;key)
+            x = x-&gt;left;
+        else
+            x = x-&gt;right;
+    return x;
+&#125;
+bool RBTree::Overlap(int alow,int ahigh,int blow,int bhigh)&#123;
+    if(ahigh &lt; blow || alow &gt; bhigh)     // a &amp; b do not overlap
+        return 0;
+    return 1;
+&#125;
+node* RBTree::IntervalSearch(int low,int high)&#123;
+    node *x=this-&gt;root;
+    while(x != this-&gt;nil &amp;&amp; !Overlap(low,high,x-&gt;key,x-&gt;high))
+    &#123;
+        if(x-&gt;left != this-&gt;nil &amp;&amp; x-&gt;left-&gt;maxep &gt;= low)
+            x = x-&gt;left;
+        else
+            x = x-&gt;right;
+        &#125;
+    return x;
+&#125;
+
+int main()&#123;
+    int sel;
+    int i,n;
+    char path[128] = &quot;in2.txt&quot;;
+    int low,high;
+    node *tmpnode;
+    RBTree *T = new RBTree();
+    while(1)&#123;
+        printf(&quot;MENU:\n1-File\n2-Insert\n3-Delete\n4-Find\n5-Print\n6-Exit\nSel:&quot;);
+        scanf(&quot;%d&quot;,&amp;sel);
+        switch(sel)&#123;
+            case 1:&#123;
+                //printf(&quot;Input file path:&quot;);
+                //scanf(&quot;%s&quot;,path);
+                FILE *fp=fopen(path,&quot;r&quot;);
+                fscanf(fp,&quot;%d&quot;,&amp;n);
+                for(i=1;i&lt;=n;i++)&#123;
+                    node *p = new node;
+                    fscanf(fp,&quot;%d %d&quot;,&amp;(p-&gt;key),&amp;(p-&gt;high));
+                    T-&gt;Insert(p);
+                    T-&gt;Print();
+                &#125;
+                fclose(fp);
+                break;
+            &#125;
+            case 2:&#123;
+                printf(&quot;Input low and high:&quot;);
+                scanf(&quot;%d%d&quot;,&amp;low,&amp;high);
+                node *p = new node;
+                p-&gt;key = low;
+                p-&gt;high = high;
+                T-&gt;Insert(p);
+                T-&gt;Print();
+                break;
+            &#125;
+            case 3:&#123;
+                printf(&quot;Input low:&quot;);
+                scanf(&quot;%d&quot;,&amp;low);
+                if((tmpnode = T-&gt;Search(low)) == T-&gt;nil)&#123;
+                    printf(&quot;can&#39;t find this node.\n&quot;);
+                    break;
+                &#125;
+                //printf(&quot;%d,%d,%d&quot;,tmpnode-&gt;key,tmpnode-&gt;high,tmpnode-&gt;maxep);
+                T-&gt;Delete(tmpnode);
+                T-&gt;Print();
+                break;
+            &#125;
+            case 4:&#123;
+                printf(&quot;Input low and high:&quot;);
+                scanf(&quot;%d%d&quot;,&amp;low,&amp;high);
+                if((tmpnode = T-&gt;IntervalSearch(low,high)) == T-&gt;nil)
+                    printf(&quot;can&#39;t find.\n&quot;);
+                else printf(&quot;[%d,%d]\n&quot;,tmpnode-&gt;key,tmpnode-&gt;high);
+                break;
+            &#125;
+            case 5:&#123;
+                T-&gt;Print();
+                break;
+            &#125;
+            case 6:&#123;
+                return 0;
+            &#125;
+        &#125;
+    &#125;
+    delete T;
+    return 0;
+&#125;
+</code></pre>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这次实验让我比较深入地了解了红黑树的性质和操作及其应用。红黑树是高级数据结构，它可以保证在最坏情况下基本操作的时间复杂度为O(lgn)，但编写的代码较为复杂，需要分清楚每种情况及其对应的处理，课本种对情况的分类十分精炼，有的情况不是并列的，不同的情况可能是相互转换的关系，需要仔细思考。</p>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9us800/" class="prev">汇编上机题2</a>
+		 
+
+		 
+			<a href="/s/p/9uf9c0/" class="next">汇编上机题1</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9uqdc0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Lyncien">
+
+
+
+<meta name="description" content="编译原理课程实验汇报  第一部分：小组合作篇1. 实验内容在给定框架下，完成一个PL0语言的简单编译器  预备实验 安装Linux系统 安装GCC/Git/CMake 学习使用git命令合作编写代码   Lab1 熟悉PL0语言词法 实现语法分析部分，对输入的文件实现Token流输出   Lab2 熟悉PL0语言的语法图 实现语法分析部分 使用递归下降的方式 产生语法树 部分错误的检测   Lab">
+<meta name="keywords" content="C,Compiler">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译原理课程实验汇报">
+<meta property="og:url" content="https://l-x.me/2019/01/17/cp/lab_final/index.html">
+<meta property="og:site_name" content="Lyncien&#39;s homepage">
+<meta property="og:description" content="编译原理课程实验汇报  第一部分：小组合作篇1. 实验内容在给定框架下，完成一个PL0语言的简单编译器  预备实验 安装Linux系统 安装GCC/Git/CMake 学习使用git命令合作编写代码   Lab1 熟悉PL0语言词法 实现语法分析部分，对输入的文件实现Token流输出   Lab2 熟悉PL0语言的语法图 实现语法分析部分 使用递归下降的方式 产生语法树 部分错误的检测   Lab">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://l-x.me/2019/01/17/cp/lab_final/1547603448952.png">
+<meta property="og:image" content="https://l-x.me/2019/01/17/cp/lab_final/1547603474286.png">
+<meta property="og:image" content="https://l-x.me/2019/01/17/cp/lab_final/1547603515703.png">
+<meta property="og:image" content="https://l-x.me/2019/01/17/cp/lab_final/1547603534249.png">
+<meta property="og:updated_time" content="2019-03-14T12:10:02.728Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编译原理课程实验汇报">
+<meta name="twitter:description" content="编译原理课程实验汇报  第一部分：小组合作篇1. 实验内容在给定框架下，完成一个PL0语言的简单编译器  预备实验 安装Linux系统 安装GCC/Git/CMake 学习使用git命令合作编写代码   Lab1 熟悉PL0语言词法 实现语法分析部分，对输入的文件实现Token流输出   Lab2 熟悉PL0语言的语法图 实现语法分析部分 使用递归下降的方式 产生语法树 部分错误的检测   Lab">
+<meta name="twitter:image" content="https://l-x.me/2019/01/17/cp/lab_final/1547603448952.png">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Lyncien&#39;s homepage" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/old_resources/css/style.css">
+
+
+
+<link href="//cdn.bootcdn.net/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>编译原理课程实验汇报 | Lyncien&#39;s homepage</title>
+
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcdn.net/ajax/libs/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<script id="jump-to-new" src="/old_resources/js/redirect.js" async></script>
+</head>
+<script src="/old_resources/js/head-pic.js" ></script> <!-- head-pic-flash by Lyncien -->
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic" id="head-pic"> <!-- head-pic-flash by Lyncien -->
+            <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Lyncien</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">林深见鹿</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Lyncien</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic" id="head-pic-mobile"> <!-- head-pic-flash by Lyncien -->
+                <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Lyncien</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" target="_blank" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" target="_blank" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" target="_blank" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-cp/lab_final" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/01/17/cp/lab_final/" class="article-date">
+      <time datetime="2019-01-16T16:00:00.000Z" itemprop="datePublished">2019-01-17</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      编译原理课程实验汇报
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Compiler/">Compiler</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <center><font size="6" color="blue">编译原理课程实验汇报</font></center>
+
+<h2 id="第一部分：小组合作篇"><a href="#第一部分：小组合作篇" class="headerlink" title="第一部分：小组合作篇"></a>第一部分：小组合作篇</h2><h4 id="1-实验内容"><a href="#1-实验内容" class="headerlink" title="1. 实验内容"></a>1. 实验内容</h4><p>在给定框架下，完成一个PL0语言的简单编译器</p>
+<ul>
+<li>预备实验<ul>
+<li>安装Linux系统</li>
+<li>安装GCC/Git/CMake</li>
+<li>学习使用git命令合作编写代码</li>
+</ul>
+</li>
+<li>Lab1<ul>
+<li>熟悉PL0语言词法</li>
+<li>实现语法分析部分，对输入的文件实现Token流输出</li>
+</ul>
+</li>
+<li>Lab2<ul>
+<li>熟悉PL0语言的语法图</li>
+<li>实现语法分析部分</li>
+<li>使用递归下降的方式</li>
+<li>产生语法树</li>
+<li>部分错误的检测</li>
+</ul>
+</li>
+<li>Lab3<ul>
+<li>更完整的错误检测与处理</li>
+<li>对PL0语言进行拓展</li>
+<li>设计并绘制新的语法图</li>
+</ul>
+</li>
+<li>Lab4<ul>
+<li>完善Lab3添加的功能</li>
+<li>实现生成中间代码（基于特定模型的虚拟机）</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-总体设计和实现功能"><a href="#2-总体设计和实现功能" class="headerlink" title="2. 总体设计和实现功能"></a>2. 总体设计和实现功能</h4><ul>
+<li>根据助教所给的框架，主要包括以下几部分<ul>
+<li>common部分定义了编译器相关的数据结构和全局变量</li>
+<li>err部分定义了错误了类型对应的提示信息</li>
+<li>lex部分实现词法分析，输入文件字符流，构建一个状态机进行分析，输出Token流</li>
+<li>syntax部分实现语法分析和代码生成。调用lex，逐个读取Token，进行递归下降的语法分析，用语法制导的方式生成中间代码</li>
+<li>test.c<ul>
+<li>使用以上几部分构建编译器</li>
+<li>前期用于测试</li>
+<li>最后用于生成一个PL0编译器，调用时两个参数分别为输入的PL0源代码文件和输出的中间代码文件，该中间代码可在助教提供的PL0虚拟机上运行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>最后在助教的虚拟机上运行得分为124</li>
+</ul>
+<a id="more"></a>
+<h4 id="3-小组成员之间的合作形式"><a href="#3-小组成员之间的合作形式" class="headerlink" title="3. 小组成员之间的合作形式"></a>3. 小组成员之间的合作形式</h4><ul>
+<li>每次实验我先完成了一大部分</li>
+<li>在我的万般催促下，在每周日下午会面讨论，我和组长继续完善代码</li>
+<li>DDL前一天由我收尾</li>
+</ul>
+<h4 id="4-对小组合作效果进行评价"><a href="#4-对小组合作效果进行评价" class="headerlink" title="4. 对小组合作效果进行评价"></a>4. 对小组合作效果进行评价</h4><ul>
+<li>合作效果其实不大</li>
+<li>组长忙于其他课程，不过与我讨论很多；另一位同学就划水了…-_-</li>
+<li>大部分代码都是由我完成</li>
+</ul>
+<h2 id="第二部分：个人任务篇"><a href="#第二部分：个人任务篇" class="headerlink" title="第二部分：个人任务篇"></a>第二部分：个人任务篇</h2><h4 id="1-我的主要任务"><a href="#1-我的主要任务" class="headerlink" title="1. 我的主要任务"></a>1. 我的主要任务</h4><ul>
+<li>词法的<strong>全部</strong>实现</li>
+<li>语法的<strong>大部分</strong>实现（除了错误处理的细节）</li>
+<li>生成代码部分的<strong>几乎全部</strong>（除了call的一部分代码）</li>
+<li>绘制新的语法图</li>
+</ul>
+<h4 id="2-每一个任务的完成"><a href="#2-每一个任务的完成" class="headerlink" title="2. 每一个任务的完成"></a>2. 每一个任务的完成</h4><ul>
+<li><p><strong>词法部分</strong></p>
+<ul>
+<li><code>PL0Lex_get_token</code>函数每次被调用时，顺序读入文件中的字符，直到得到一个token或着发现语法错误</li>
+<li>不进行复杂的判断，而是预先构造状态转换表，实现了一个有限自动机<ul>
+<li>包括非接受状态集和接受状态集</li>
+<li>一开始进入<code>START</code>状态，然后进入一个while循环，每次读入一个字符后根据状态转换表进行转换</li>
+<li>若读取的字符类型为<code>ILLEGAL</code>，直接返回错误类型。</li>
+<li>如果进入了接受状态则返回token及其类型，长度，行号，位置</li>
+<li>如果进入非接受状态，则循环继续，但要注意对数字和标识符以及长度进行记录，以便后续返回<ul>
+<li>如果读取到数字，则进入<code>IN_NUM</code>状态，继续读到数字则保持该状态，读到其他类型字符则进入<code>NUM_AC</code>状态。</li>
+<li>如果读取到字母，则进入<code>IN_ID</code>状态，继续读到数字，字母和下划线则保持该状态，读到其他类型字符则进入<code>ID_AC</code>状态。</li>
+<li>对于长度为2的symbol<ul>
+<li>对于各比较运算符<code>&lt;=</code>和<code>&gt;=</code>，读到第一个字母时，进入一个选择状态，根据下一个字符是否为<code>=</code>来进入相应接受状态，注意是否回退一个字符。</li>
+<li>对于<code>!=</code>和<code>:=</code>，读取第一个字符时，分别进入选择状态，如果下一个字符是<code>=</code>，则接受，否则，第一个字符是非法字符，报错。</li>
+</ul>
+</li>
+<li>对于剩下各个长度为1的symbol，读到该字符就进入对应symbol的接受状态</li>
+<li>对于注释，读取到<code>/</code>，进入一个选择状态，如果下一个字符是<code>*</code>则进入注释状态，否则接受<code>/</code>。退出注释状态同理。</li>
+</ul>
+</li>
+<li>如果当前的状态是<code>IN_LINECOMMENTS</code>则忽略一切字符直到读取到换行符<code>\n</code></li>
+<li>如果当前的状态是<code>IN_BLOCKCOMMENTS</code>则忽略一切字符直到读取到<code>*/</code></li>
+</ul>
+</li>
+<li>关于是否回退一个字符，预先设置一个数组来查询。</li>
+<li><p>关于保留字，不在状态表中体现，进入<code>ID_AC</code>后取得一个字符串，此时才与保留字数组进行比较，如果不属于其中任何一个，则认为是标识符。</p>
+</li>
+<li><p>关于状态转换表</p>
+<ul>
+<li><p>二维表，实现上面描述的自动机的功能，给定当前状态和输入字符，得到下一个状态</p>
+</li>
+<li><p>为了使状态表不会太大，对字符进行分类，改为根据当前状态和当前输入的字符<strong>类型</strong>进行转换</p>
+<ul>
+<li>数字类型</li>
+<li>字母类型</li>
+<li>分隔符类型</li>
+<li>长度为1的symbol字符每种对应一个类型</li>
+<li>长度为2的symbol中出现的额外字符<code>!</code>和<code>:</code>也作为两种类型</li>
+<li>其他字符均视为非法字符类型。</li>
+</ul>
+</li>
+<li><p>字符类型定义</p>
+<pre><code class="C">typedef enum _tCharType{
+    LETTER, /* A-Za-z_ */
+    DIGIT,  /* 0-9 */
+    SPACE,  /* */
+    TAB,    /* \t */
+    NEWLINE,/* \n */
+    PLUS,   /* + */
+    MINUS,    /* - */
+    TIMES,    /* * */
+    SLASH,    /* / */
+    EQU,    /* = */
+    LES,    /* &lt; */
+    GTR,    /* &gt; */
+    LPAREN,    /* ( */
+    RPAREN,    /* ) */
+    COMMA,    /* , */
+    SEMICOLON,/* ; */
+    PERIOD,    /* . */
+    COLON,    /* : */
+    EXCLAMA,/* ! */
+    AND,    /* &amp; */
+    OR,        /* | */
+    ILLEGAL    /* other */
+} CharType;
+</code></pre>
+</li>
+<li><p>状态定义</p>
+<pre><code class="c">typedef enum _tState{
+    START,
+    SLASH_SEL,
+    LES_SEL,
+    GTR_SEL,
+    IN_NUM,
+    IN_ID,
+    IN_LINECOMMENTS,
+    IN_BLOCKCOMMENTS,
+    TO_END_BLOCKCOMMENTS,
+    COLON_SEL,
+    EXCLAMA_SEL,
+    AND_SEL,
+    OR_SEL, //以上是中间状态（非接受）
+    PLUS_AC,
+    MINUS_AC,
+    TIMES_AC,
+    SLASH_AC,
+    EQU_AC,
+    NEQ_AC,
+    LES_AC,
+    LEQ_AC,
+    GTR_AC,
+    GEQ_AC,
+    LPAREN_AC,
+    RPAREN_AC,
+    COMMA_AC,
+    SEMICOLON_AC,
+    PERIOD_AC,
+    BECOMES_AC,
+    NOT_AC,
+    AND_AC,
+    OR_AC,
+    NUM_AC,
+    ID_AC, //以上是接受状态
+    ERROR1,// &quot;:&quot; expect &quot;=&quot;
+    ERROR2,//expect &quot;&amp;&amp;&quot; but find &quot;&amp;&quot;
+    ERROR3    //expect &quot;||&quot; but find &quot;|&quot;
+} State;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>语法部分</strong></p>
+<ul>
+<li>使用递归下降的方式</li>
+<li>实现拓展语法<ul>
+<li>增加逻辑运算符<code>&amp;&amp;</code> <code>||</code> <code>!</code><ul>
+<li>将PL/0语言中的“条件”概念一般化 (表达式值非零即为“真”)</li>
+<li>短路计算</li>
+</ul>
+</li>
+<li>加入<code>return</code>语句</li>
+<li>增加<code>else</code> <code>elif</code></li>
+<li>增加<code>do</code> <code>while</code></li>
+<li>增加参数传递</li>
+<li>在语法分析中引入负数</li>
+</ul>
+</li>
+<li>语法图如下<ul>
+<li><img src="//l-x.me/2019/01/17/cp/lab_final/1547603448952.png" alt="1547603448952"></li>
+<li><img src="//l-x.me/2019/01/17/cp/lab_final/1547603474286.png" alt="1547603474286"></li>
+<li><img src="//l-x.me/2019/01/17/cp/lab_final/1547603515703.png" alt="1547603515703"></li>
+<li><img src="//l-x.me/2019/01/17/cp/lab_final/1547603534249.png" alt="1547603534249"></li>
+</ul>
+</li>
+<li>根据语法图实现上述非终结符对应的函数<ul>
+<li><code>program</code></li>
+<li><code>program_block</code></li>
+<li><code>var_declaration</code></li>
+<li><code>const_declaration</code></li>
+<li><code>statement</code></li>
+<li><code>or_expression</code></li>
+<li><code>and_expression</code></li>
+<li><code>relation_expression</code></li>
+<li><code>arithmetic_expression</code></li>
+<li><code>term</code></li>
+<li><code>factor</code></li>
+</ul>
+</li>
+<li>其他函数<ul>
+<li><code>gettoken</code>：调用词法分析器，获取一个Token</li>
+<li><code>match</code>：比较当前Token与预期的(通过参数传入)是否一致</li>
+<li><code>table_append</code>：将一个标识符加入全局表中</li>
+<li><code>table_append2</code>：将一个标识符(参数)加入另一个全局表中</li>
+<li><code>intable</code>：查找一个标识符在上面两个表中的下标，包括变量/常量/过程名/参数名</li>
+</ul>
+</li>
+<li>错误检测恢复的实现<ul>
+<li>发现当前Token不是预期的时候，即跳过后面的若干个Token，直到下一个可以正确地跟随当前正在分析的句子结构的符号为止。</li>
+<li>对于上面的每个函数（对应语法图的每一个分析过程），调用时提供一个显式参数（一个集合），它指明当前活动结点的可能的后继符号集合，这个集合由上层的函数计算。</li>
+<li>后继符号集合计算<ul>
+<li>在最上层先用一些明显的关键符号给它赋初值</li>
+<li>随着分析的层次深入，逐步补充别的合法符号</li>
+</ul>
+</li>
+<li>在<code>statement</code>和<code>factor</code>的开始和结束时进行检测（调用check函数）<ul>
+<li>因为这两个函数出现大量分支，需要对开始符号进行检测。</li>
+<li>其他层次的函数最终都会通过层层次调用在这两个函数里发现错误。</li>
+</ul>
+</li>
+<li><code>check</code> 函数实现<ul>
+<li>有三个参数：<ul>
+<li>允许的下一个符号集合S1</li>
+<li>另加的停止符号集合S2，有些符号的出现，虽然无疑是错的，但绝不应被忽略而跳过</li>
+<li>应该报的错误信息</li>
+</ul>
+</li>
+<li>如果当前Token不在集合S1中，即报错，此时合并S1和S2为S，继续读取Token，直到找到一个Token在S中</li>
+<li>这个函数可使分析程序不会<strong>盲目地</strong>跳过后面的符号</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>生成代码部分</strong></p>
+<ul>
+<li><p>全局数组<code>codes</code>，存储全部代码</p>
+<ul>
+<li><p>每条代码有两个参数，第一个参数是指令名称，第二个参数用于<code>PUT</code>的常数或者<code>JMP</code>的目标地址，其他指令的第二个参数为NONE（预先定义的一个值）</p>
+</li>
+<li><pre><code class="c">typedef struct _code{
+    char ins[4];
+    int para;
+}code;
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><code>gen</code>函数，用于每次生成一条代码</p>
+</li>
+<li><p>PL0虚拟机包括3部分，codeheap/stack/memory</p>
+<ul>
+<li><p>这里，stack只作为运算使用，当前运算总是对stack顶端的一个或两个值进行操作(虚拟机指令决定了这个特性)</p>
+</li>
+<li><p>memory被划分为两部分，从低地址端memory[1]开始增长作为模拟的运行栈(runstack)，从高地址端memory[1023]开始递减作为寄存器</p>
+<p><code>`</code><br>————–men[0]<br>|null<br>|runstack<br>|..<br>|..            &lt;– runstack’s top(REG_SP)<br>|<br>|reg4 //REG_SP<br>|reg3 //REG_BP<br>|reg2 //REG_BX<br>|reg1 //REG_AX<br>————–men[1023]</p>
+<p>a record in runstack (running)<br>————–low address<br>|return value<br>|return address(in codeheap)<br>|parameters<br>|old base                    &lt;—base (REG_BP)<br>|local id(var/const/procedure)<br>————–high address  &lt;—top (REG_SP)</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>  ```
+</code></pre><ul>
+<li><p>用虚拟机的指令以及memory模拟一个运行栈和寄存器组，实现以下函数</p>
+<ul>
+<li><code>gen_savereg(REG regid)</code>函数，将stack栈顶值保存到上面的某个寄存器</li>
+<li><code>gen_loadreg(REG regid)</code>函数，将上面的某个寄存器的值读取到stack栈顶</li>
+<li><code>gen_runstack_push</code>，包括3个函数，向运行栈中压入一个值，这个值可以是立即数/来自寄存器/来自stack栈顶</li>
+<li><code>gen_runstack_pop</code>，包括2个函数，从运行栈取出栈顶值，这个值可以被扔掉/保存到寄存器</li>
+<li><code>gen_exchangestacktop</code>，交换stack栈顶的两个值<ul>
+<li>先存到”寄存器“</li>
+<li>再反序压入</li>
+</ul>
+</li>
+<li><code>gen_int2bool</code>，将stack栈顶值转为bool值<ul>
+<li>非0值即为1</li>
+<li>实现：先<code>PUT 0</code>，再<code>EQ</code>，最后<code>NOT</code></li>
+</ul>
+</li>
+<li><code>gen_id_addr(int index)</code>，根据标识符表/参数表的下标，动态生成某个变量/常量/参数在运行栈中相对基址的偏移量，然后加上基址，得到在memory中的地址，将这个地址放到stack栈顶<ul>
+<li>基址是随程序运行栈的变化而变化的</li>
+<li>偏移量在生成代码时就算好了，根据语法分析时加入变量表和参数表的下标<ul>
+<li>运行栈中当前基址之下是参数（偏移量为负）</li>
+<li>运行栈中当前基址之上是局部变量（偏移量为正）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>主要功能与拓展功能的实现</p>
+<ul>
+<li>增加逻辑运算符 <code>&amp;&amp;</code>  <code>||</code> <code>!</code> <ul>
+<li>上面语法部分把<code>expression</code>和<code>condition</code>拓展为4个层次<code>or_expression</code>，<code>and_expression</code>，<code>relation_expression</code>，<code>arithmetic_expression</code></li>
+<li>将PL/0语言中的“条件”概念一般化 (表达式值非零即为“真”)<ul>
+<li><code>arithmetic_expression</code>计算算术表达式得到的值向上面3层传递时</li>
+<li>如果上面3层只有都一个运算数，这个值被保留，即作为最终or_expression的值</li>
+<li>如果某层有多个参数，则转换为bool值(0/1)再继续运算，调用<code>gen_int2bool</code>实现</li>
+</ul>
+</li>
+<li>短路计算<ul>
+<li><code>or_expression</code>第一个数为1时，生成<code>JMP</code>指令（参数先空着），跳过之后多个值的计算，这里使用回填技术，在生成后面的计算代码后，再将代码所在的行填到这里JMP的参数</li>
+<li><code>and_expression</code>第一个数为0时，同理</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>加入<code>return</code>语句，增加参数传递<ul>
+<li><code>factor</code>和<code>statement</code>中分析<code>call</code>时，利用<code>gen_runstack_push</code>函数完成<ul>
+<li>生成<em>“将返回地址(当前代码下标+1)压入运行栈”</em>的代码</li>
+<li>再生成<em>“将参数依次压入运行栈”</em>，记下参数个数</li>
+<li>然后生成<em>“跳转到子过程开始处”</em>的代码</li>
+<li>最后按个数生成<em>“将参数依次弹出运行栈”</em>的代码。此时返回值正好在stack顶部</li>
+</ul>
+</li>
+<li><code>procedure</code>部分，扫描到参数全部添加进另一个参数表(专门存放参数)，同时将过程名称和当前代码地址加入标识符表</li>
+<li><code>statement</code>中的<code>return</code>语句，将返回值压栈，交换栈顶两个值，则栈顶值是返回地址，生成跳转代码即可</li>
+</ul>
+</li>
+<li>增加<code>else</code> <code>elif</code><ul>
+<li>利用<code>JPC</code>和<code>JMP</code>指令，依然使用回填技术，很简单</li>
+</ul>
+</li>
+<li>增加<code>do</code> <code>while</code><ul>
+<li>同上</li>
+</ul>
+</li>
+<li>负数<ul>
+<li>不在词法分析中实现</li>
+<li><code>const_declaration</code>取得常量数字Token时，如果前面一个Token是减号，则数取反后再存入加入标识符表</li>
+<li><code>factor</code>中，根据语法图，识别到负号时，再次调用<code>factor</code>，结果在栈顶，此时再生成两条代码<code>PUT 0; SUB;</code>实现将栈顶值取反</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-遇到的困难及解决"><a href="#3-遇到的困难及解决" class="headerlink" title="3. 遇到的困难及解决"></a>3. 遇到的困难及解决</h4><ul>
+<li>行号的计算问题<ul>
+<li>通过识别<code>\n</code>，遇到就增加</li>
+<li>但出现现象：对于某些行，行号增加了两次</li>
+<li>这种情况出现在标识符是该行的最后一个Token且标识符之后就是换行符，这样，在标识符结束时会有一个回退一个字符的动作，导致<code>\n</code>被扫描两次，则行号也被增加了两次。</li>
+<li>为了避免回退导致<code>\n</code>出现两次，应该限制<code>\n</code>扫描后是在<code>START</code>状态下，也是不回退的情况下，判断此行结束，所以判断条件改为<code>if(ch==&#39;\n&#39; &amp;&amp; state==START)</code></li>
+<li>考虑到还有块注释的情况，应该改为<code>if(ch==&#39;\n&#39; &amp;&amp; (state==START || state==IN_BLOCKCOMMENTS))</code></li>
+</ul>
+</li>
+<li>打印错误所在行的文本<ul>
+<li>最后一次实验需要打印错误所在行的文本，而之前词法分析时是每次用<code>fgetc</code>读取一个字符，并没有保存当前行</li>
+<li>修改读取方式，一开始用<code>fgets</code>读取一行，缓存至<code>linebuf</code>中，每次用<code>pos</code>偏移获取一个字符放在全局变量<code>ch</code>中，如果<code>ch==0</code>，即读取到<code>linebuf</code>结束时，再使用<code>fgets</code>读取一行。</li>
+<li><code>linebuf</code>定义在在<code>lex</code>结构体中，语法分析时调用错误函数时可以使用。</li>
+</ul>
+</li>
+<li>错误恢复分析问题<ul>
+<li>一开始不知道如何下手</li>
+<li>认真阅读课本中关于错误处理的部分，然后查阅了很多资料之后才大概明白如何处理</li>
+</ul>
+</li>
+<li>一些细节问题<ul>
+<li>有时候遇到某个错误时，反复报同一个错：处理完一个Token忘了<code>gettoken</code></li>
+<li>注意虚拟机的一些特性<ul>
+<li>比如<code>DIV</code>和<code>SUB</code>取操作数的顺序和语法分析时的顺序时相反的，需要自行交换栈顶两个数</li>
+<li>调用虚拟机打印栈顶值后并不会弹出栈顶值</li>
+<li><code>NOT</code>，<code>AND</code>，<code>OR</code>只能实现对0和1的运算，数值到布尔值的运算需要自行实现</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-亮点"><a href="#4-亮点" class="headerlink" title="4. 亮点"></a>4. 亮点</h4><ul>
+<li>状态表的压缩（详见上面总体设计）<ul>
+<li>合并输入符号的类型</li>
+</ul>
+</li>
+<li>集合的表示<ul>
+<li>没有使用任何数据结构</li>
+<li>因为集合元素是有限的Token类型，故集合大小有上限</li>
+<li>直接用长整型数表示集合，每个位表示一种Token类型(类似独热编码)<ul>
+<li>将Token_Type（枚举类型）用2的幂映射到一个长整数</li>
+</ul>
+</li>
+<li>用位运算实现集合操作<ul>
+<li>创建集合：直接定义一个长整型数为0</li>
+<li>合并集合：位或运算</li>
+<li>元素是否在集合中：位与运算</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>错误处理<ul>
+<li>动态生成可能的后续符号集合</li>
+<li>有选择地跳过非预期的符号</li>
+<li>较好地实现错误跳过并继续分析</li>
+</ul>
+</li>
+<li>模型运行栈和寄存器<ul>
+<li>虚拟机提供的栈只能实现简单运算，无法深入到栈中获取数据</li>
+<li>在内存中模拟运行栈，用生成的代码去<strong>”操作“</strong>运行栈</li>
+<li>动态地在向栈中加入活动记录，实现过程的递归调用</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-总结与心得体会"><a href="#5-总结与心得体会" class="headerlink" title="5. 总结与心得体会"></a>5. 总结与心得体会</h4><ul>
+<li>通过实验，我能更深入理解上课所学的理论知识<ul>
+<li>词法：有限状态机</li>
+<li>语法：递归下降预测分析</li>
+<li>生成代码：语法制导的翻译，回填技术</li>
+<li>错误处理：First集，Follow集</li>
+</ul>
+</li>
+<li>熟悉了git的使用</li>
+<li>体会到了编译器编写的困难<ul>
+<li>检测到错误之后要能继续分析，lab2和lab3大部分时间都在想这个问题</li>
+<li>这只是一个小小的实验，实现前端的一些简陋功能，但它已经花费了很长时间</li>
+<li>如果面对更复杂的语法，就需要借助生成器，如书上所讲的Yacc</li>
+<li>如果再考虑语言的各种特性（面向对象、多态、重载），那就更困难了</li>
+<li>编译器生成代码要针对”体系结构“，这里就是助教提供的虚拟机</li>
+</ul>
+</li>
+<li>体会到大型工程管理不易<ul>
+<li>需要编织好划分好每个文件的功能</li>
+<li>处理好全局变量、外部变量，避免重复定义，功能冗余</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
+        <p><span>发布时间:</span>2019-01-17, 00:00:00</p>
+        <p><span>最后更新:</span>2019-03-14, 20:10:02</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/17/cp/lab_final/" title="编译原理课程实验汇报">https://l-x.me/2019/01/17/cp/lab_final/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2019/01/17/cp/lab_final/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2019/02/21/article/dp_1-5/">
+                    动态规划入门（1）
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/12/10/article/tea_and_health/">
+                    茶与健康
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第一部分：小组合作篇"><span class="toc-text">第一部分：小组合作篇</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-实验内容"><span class="toc-text">1. 实验内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-总体设计和实现功能"><span class="toc-text">2. 总体设计和实现功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-小组成员之间的合作形式"><span class="toc-text">3. 小组成员之间的合作形式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-对小组合作效果进行评价"><span class="toc-text">4. 对小组合作效果进行评价</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#第二部分：个人任务篇"><span class="toc-text">第二部分：个人任务篇</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-我的主要任务"><span class="toc-text">1. 我的主要任务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-每一个任务的完成"><span class="toc-text">2. 每一个任务的完成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-遇到的困难及解决"><span class="toc-text">3. 遇到的困难及解决</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-亮点"><span class="toc-text">4. 亮点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-总结与心得体会"><span class="toc-text">5. 总结与心得体会</span></a></li></ol></li>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"编译原理课程实验汇报　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2019/02/21/article/dp_1-5/" title="上一篇: 动态规划入门（1）">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/12/10/article/tea_and_health/" title="下一篇: 茶与健康">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/9999/01/01/article/my_blog/">博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/pc/lab3/">并行计算上机实验三 CUDA实现向量加法和矩阵乘法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/16/pc/lab2/">并行计算上机实验二 MPI实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/leetcode/single-number-iv/">LeetCode题目改编——只出现一次的数字IV</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/pc/lab1/">并行计算上机实验一 OpenMP实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/29/article/bit_operation_tips/">C/C++ 位运算总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/article/Makefile/">Makefile 使用总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/21/article/dp_1-5/">动态规划入门（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/article/tea_and_health/">茶与健康</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/05/mcps/lab_res/">汇编上机资源</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/mcps/lab4/">汇编上机题4</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/26/mcps/lab3/">汇编上机题3</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/25/alg/lab3/">算法基础上机实验三 最长公共子序列问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/19/mcps/lab2/">汇编上机题2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/18/alg/lab2/">算法基础上机实验二 红黑树维护算法及其区间树应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/mcps/lab1/">汇编上机题1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/12/article/USTC_Hackergame2018_8/">USTCHackergame2018之"我是谁"</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/13/article/verilog_signed_and_unsigned/">Verilog中的有符号数与无符号数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/10/cod/lab6_Multi-CycleCPU/">计算机组成原理上机实验6 多周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/04/cod/lab5_SingleCycleCPU/">计算机组成原理上机实验5 单周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/">操作系统阅读报告：进程通信与同步、进程调度</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/18/os/System_Call/System Call/">操作系统阅读报告：系统调用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/11/os/OS_Summary/OS Summary/">操作系统阅读报告：操作系统概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/09/ds/lab4_ShortestPaths/">数据结构上机题4 最短路径</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/ds/lab1_Polynome/">数据结构上机题1 一元稀疏多项式计算</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/article/expression_evaluation/">C语言表达式计算器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B："完美阴阳矩阵"</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/11/clp/lab9a/">程序设计II上机实验9A：算24</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2020 Lyncien
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+		
+		
+			<!-- Highlight.js -->
+			<!-- "//cdn.bootcdn.net/ajax/libs/highlight.js/9.2.0/styles/github.min.css" -->
+			<!-- "http://apps.bdimg.com/libs/highlight.js/9.1.0/styles/default.min.css" -->
+			<link rel="stylesheet" href="/old_resources/js/highlight/styles/vs2015.css">
+			<script src="/old_resources/js/highlight/highlight.pack.js"></script>
+			<script>
+					hljs.initHighlightingOnLoad();
+			</script>
+		
+		
+		
+			<a href="https://clustrmaps.com/site/1b46r" title="Visit tracker"><img width="0" heght="0" src="//www.clustrmaps.com/map_v2.png?d=i8Jh6LoQOmC5xU8sSnCrTkWgsRpkxH4HkQy9AZ7_Q0E&cl=ffffff"></a>
+		
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/old_resources/js/main.js" src="//cdn.bootcdn.net/ajax/libs/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcdn.net/ajax/libs/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

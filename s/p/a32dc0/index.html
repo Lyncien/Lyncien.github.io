@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">C/C++ 位运算总结</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2019-04-29</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 143848 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 479 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h2 id="C-C-位运算总结"><a href="#C-C-位运算总结" class="headerlink" title="C/C++ 位运算总结"></a>C/C++ 位运算总结</h2><p>n位数据的位运算可以视为长度为n的0/1向量运算</p>
+<p>与为乘法，异或为模2加法</p>
+<h4 id="一、基本的位操作运算符"><a href="#一、基本的位操作运算符" class="headerlink" title="一、基本的位操作运算符"></a>一、基本的位操作运算符</h4><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+<th>运算规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&amp;</code></td>
+<td>与</td>
+<td>两个位都为1时，结果才为1</td>
+</tr>
+<tr>
+<td>`</td>
+<td>`</td>
+<td>或</td>
+</tr>
+<tr>
+<td><code>^</code></td>
+<td>异或</td>
+<td>两个位相同为0，相异为1，本质为模2加法（无进位加法）</td>
+</tr>
+<tr>
+<td><code>~</code></td>
+<td>取反</td>
+<td>0变1，1变0</td>
+</tr>
+<tr>
+<td><code>&lt;&lt;</code></td>
+<td>左移</td>
+<td>各二进位全部左移若干位，高位丢弃，低位补0</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;</code></td>
+<td>右移</td>
+<td>各二进位全部右移若干位，对无符号数，高位补0，有符号数，各编译器处理方法不一样，有的补符号位（算术右移），有的补0（逻辑右移）</td>
+</tr>
+</tbody></table>
+<p>注意：</p>
+<ul>
+<li>使用位操作算符时尽量添加括号，因为优先级低于一般的算术运算符</li>
+<li>只能对整型数据运算</li>
+</ul>
+<p>基本等式（无符号数）</p>
+<pre><code class="C">~~n == n
+</code></pre>
+<p>基本等式（有符号数）</p>
+<pre><code class="C">-n == ~n + 1 == ~(n - 1)
+-~n == n + 1 //推论
+~-n == n - 1 //推论
+</code></pre>
+<p>分配律</p>
+<pre><code class="c++">a &amp; (b | c) == (a &amp; b) | (a &amp; c) 
+a | (b &amp; c) == (a | b) &amp; (a | c) 
+</code></pre>
+<p>其他</p>
+<pre><code class="c">((1 &lt;&lt; n) - c) == ((1 &lt;&lt; n) ^ c)
+ //
+</code></pre>
+<h6 id="异或的性质"><a href="#异或的性质" class="headerlink" title="异或的性质"></a>异或的性质</h6><p>记 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.808ex" height="2.176ex" style="vertical-align: -0.505ex;" viewBox="0 -719.6 778.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">\oplus</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-2295" x="0" y="0"></use>
+</g>
+</svg></div> 为异或运算，异或运算满足以下性质：
+
+<ol>
+<li><div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="9.761ex" height="2.343ex" style="vertical-align: -0.505ex;" viewBox="0 -791.3 4202.5 1008.6" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">x \oplus x = 0</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-78" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+<use xlink:href="#E1-MJMATHI-78" x="0" y="0"></use>
+<use xlink:href="#E1-MJMAIN-2295" x="794" y="0"></use>
+<use xlink:href="#E1-MJMATHI-78" x="1795" y="0"></use>
+<use xlink:href="#E1-MJMAIN-3D" x="2645" y="0"></use>
+<use xlink:href="#E1-MJMAIN-30" x="3702" y="0"></use>
+</g>
+</svg></div>；</li>
+<li><div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="13.75ex" height="2.343ex" style="vertical-align: -0.671ex;" viewBox="0 -719.6 5919.9 1008.6" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">x \oplus y = y \oplus x</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-78" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-79" d="M21 287Q21 301 36 335T84 406T158 442Q199 442 224 419T250 355Q248 336 247 334Q247 331 231 288T198 191T182 105Q182 62 196 45T238 27Q261 27 281 38T312 61T339 94Q339 95 344 114T358 173T377 247Q415 397 419 404Q432 431 462 431Q475 431 483 424T494 412T496 403Q496 390 447 193T391 -23Q363 -106 294 -155T156 -205Q111 -205 77 -183T43 -117Q43 -95 50 -80T69 -58T89 -48T106 -45Q150 -45 150 -87Q150 -107 138 -122T115 -142T102 -147L99 -148Q101 -153 118 -160T152 -167H160Q177 -167 186 -165Q219 -156 247 -127T290 -65T313 -9T321 21L315 17Q309 13 296 6T270 -6Q250 -11 231 -11Q185 -11 150 11T104 82Q103 89 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+<use xlink:href="#E1-MJMATHI-78" x="0" y="0"></use>
+<use xlink:href="#E1-MJMAIN-2295" x="794" y="0"></use>
+<use xlink:href="#E1-MJMATHI-79" x="1795" y="0"></use>
+<use xlink:href="#E1-MJMAIN-3D" x="2570" y="0"></use>
+<use xlink:href="#E1-MJMATHI-79" x="3627" y="0"></use>
+<use xlink:href="#E1-MJMAIN-2295" x="4346" y="0"></use>
+<use xlink:href="#E1-MJMATHI-78" x="5347" y="0"></use>
+</g>
+</svg></div>（交换律）；</li>
+<li><div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="25.225ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 10860.8 1223.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">(x \oplus y) \oplus z = x \oplus (y \oplus z)</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-78" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-79" d="M21 287Q21 301 36 335T84 406T158 442Q199 442 224 419T250 355Q248 336 247 334Q247 331 231 288T198 191T182 105Q182 62 196 45T238 27Q261 27 281 38T312 61T339 94Q339 95 344 114T358 173T377 247Q415 397 419 404Q432 431 462 431Q475 431 483 424T494 412T496 403Q496 390 447 193T391 -23Q363 -106 294 -155T156 -205Q111 -205 77 -183T43 -117Q43 -95 50 -80T69 -58T89 -48T106 -45Q150 -45 150 -87Q150 -107 138 -122T115 -142T102 -147L99 -148Q101 -153 118 -160T152 -167H160Q177 -167 186 -165Q219 -156 247 -127T290 -65T313 -9T321 21L315 17Q309 13 296 6T270 -6Q250 -11 231 -11Q185 -11 150 11T104 82Q103 89 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-7A" d="M347 338Q337 338 294 349T231 360Q211 360 197 356T174 346T162 335T155 324L153 320Q150 317 138 317Q117 317 117 325Q117 330 120 339Q133 378 163 406T229 440Q241 442 246 442Q271 442 291 425T329 392T367 375Q389 375 411 408T434 441Q435 442 449 442H462Q468 436 468 434Q468 430 463 420T449 399T432 377T418 358L411 349Q368 298 275 214T160 106L148 94L163 93Q185 93 227 82T290 71Q328 71 360 90T402 140Q406 149 409 151T424 153Q443 153 443 143Q443 138 442 134Q425 72 376 31T278 -11Q252 -11 232 6T193 40T155 57Q111 57 76 -3Q70 -11 59 -11H54H41Q35 -5 35 -2Q35 13 93 84Q132 129 225 214T340 322Q352 338 347 338Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+<use xlink:href="#E1-MJMAIN-28" x="0" y="0"></use>
+<use xlink:href="#E1-MJMATHI-78" x="389" y="0"></use>
+<use xlink:href="#E1-MJMAIN-2295" x="1184" y="0"></use>
+<use xlink:href="#E1-MJMATHI-79" x="2184" y="0"></use>
+<use xlink:href="#E1-MJMAIN-29" x="2682" y="0"></use>
+<use xlink:href="#E1-MJMAIN-2295" x="3294" y="0"></use>
+<use xlink:href="#E1-MJMATHI-7A" x="4294" y="0"></use>
+<use xlink:href="#E1-MJMAIN-3D" x="5041" y="0"></use>
+<use xlink:href="#E1-MJMATHI-78" x="6097" y="0"></use>
+<use xlink:href="#E1-MJMAIN-2295" x="6892" y="0"></use>
+<use xlink:href="#E1-MJMAIN-28" x="7892" y="0"></use>
+<use xlink:href="#E1-MJMATHI-79" x="8282" y="0"></use>
+<use xlink:href="#E1-MJMAIN-2295" x="9002" y="0"></use>
+<use xlink:href="#E1-MJMATHI-7A" x="10002" y="0"></use>
+<use xlink:href="#E1-MJMAIN-29" x="10471" y="0"></use>
+</g>
+</svg></div>（结合律）；</li>
+<li><div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="13.75ex" height="2.343ex" style="vertical-align: -0.671ex;" viewBox="0 -719.6 5919.9 1008.6" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">x \oplus y \oplus y = x</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-78" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-79" d="M21 287Q21 301 36 335T84 406T158 442Q199 442 224 419T250 355Q248 336 247 334Q247 331 231 288T198 191T182 105Q182 62 196 45T238 27Q261 27 281 38T312 61T339 94Q339 95 344 114T358 173T377 247Q415 397 419 404Q432 431 462 431Q475 431 483 424T494 412T496 403Q496 390 447 193T391 -23Q363 -106 294 -155T156 -205Q111 -205 77 -183T43 -117Q43 -95 50 -80T69 -58T89 -48T106 -45Q150 -45 150 -87Q150 -107 138 -122T115 -142T102 -147L99 -148Q101 -153 118 -160T152 -167H160Q177 -167 186 -165Q219 -156 247 -127T290 -65T313 -9T321 21L315 17Q309 13 296 6T270 -6Q250 -11 231 -11Q185 -11 150 11T104 82Q103 89 103 113Q103 170 138 262T173 379Q173 380 173 381Q173 390 173 393T169 400T158 404H154Q131 404 112 385T82 344T65 302T57 280Q55 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+<use xlink:href="#E1-MJMATHI-78" x="0" y="0"></use>
+<use xlink:href="#E1-MJMAIN-2295" x="794" y="0"></use>
+<use xlink:href="#E1-MJMATHI-79" x="1795" y="0"></use>
+<use xlink:href="#E1-MJMAIN-2295" x="2515" y="0"></use>
+<use xlink:href="#E1-MJMATHI-79" x="3515" y="0"></use>
+<use xlink:href="#E1-MJMAIN-3D" x="4291" y="0"></use>
+<use xlink:href="#E1-MJMATHI-78" x="5347" y="0"></use>
+</g>
+</svg></div>（自反性）；</li>
+<li><p>所有<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.395ex" height="1.676ex" style="vertical-align: -0.338ex;" viewBox="0 -576.1 600.5 721.6" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">n</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+<use xlink:href="#E1-MJMATHI-6E" x="0" y="0"></use>
+</g>
+</svg></div>位二进制数的异或为`0`（因为每一位`1`在所有数中出现的次数为一半，为偶数次）</li>
+</ol>
+<div class="mathjax"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24.337ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 10478.6 1223.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">0 \oplus 1 \oplus ... \oplus (2^n-1) = 0</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-30" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2295" x="722" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="1723" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2295" x="2223" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="3002" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="3447" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="3892" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2295" x="4337" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-28" x="5116" y="0"></use>
+<g transform="translate(5505,0)">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2212" x="6753" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="7754" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-29" x="8254" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="8921" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="9978" y="0"></use>
+</g>
+</svg></div>
+
+<p>更一般地，对于任意<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="12.162ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 5236.3 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">k \ge 0, n \ge 0</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-6B" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2265" d="M83 616Q83 624 89 630T99 636Q107 636 253 568T543 431T687 361Q694 356 694 346T687 331Q685 329 395 192L107 56H101Q83 58 83 76Q83 77 83 79Q82 86 98 95Q117 105 248 167Q326 204 378 228L626 346L360 472Q291 505 200 548Q112 589 98 597T83 616ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-6B" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2265" x="799" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="1855" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2C" x="2356" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6E" x="2801" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2265" x="3679" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="4735" y="0"></use>
+</g>
+</svg></div>
+
+<div class="mathjax"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="55.517ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 23903 1223.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">(k·2^n+0)\oplus (k·2^n+1) \oplus \ ... \  \oplus (k·2^n+2^n-1) = 0</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6B" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-22C5" d="M78 250Q78 274 95 292T138 310Q162 310 180 294T199 251Q199 226 182 208T139 190T96 207T78 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-28" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6B" x="389" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-22C5" x="1133" y="0"></use>
+<g transform="translate(1633,0)">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2B" x="2881" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="3882" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-29" x="4382" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2295" x="4994" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-28" x="5994" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6B" x="6384" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-22C5" x="7128" y="0"></use>
+<g transform="translate(7628,0)">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2B" x="8876" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="9876" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-29" x="10377" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2295" x="10989" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="12239" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="12685" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="13130" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2295" x="14047" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-28" x="15048" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6B" x="15437" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-22C5" x="16181" y="0"></use>
+<g transform="translate(16682,0)">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2B" x="17929" y="0"></use>
+<g transform="translate(18930,0)">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2212" x="20177" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="21178" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-29" x="21678" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="22346" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="23402" y="0"></use>
+</g>
+</svg></div>
+
+<span id="more"></span>
+
+
+
+<h4 id="二、位运算技巧（无关位长）"><a href="#二、位运算技巧（无关位长）" class="headerlink" title="二、位运算技巧（无关位长）"></a>二、位运算技巧（无关位长）</h4><h5 id="乘-除2的幂次（无符号数）"><a href="#乘-除2的幂次（无符号数）" class="headerlink" title="乘/除2的幂次（无符号数）"></a>乘/除2的幂次（无符号数）</h5><pre><code class="cpp">unsigned int x;
+x &gt;&gt; n; //等价于x / 2^n;
+x &lt;&lt; n; //等价于x * 2^n;
+</code></pre>
+<h5 id="判断奇偶"><a href="#判断奇偶" class="headerlink" title="判断奇偶"></a>判断奇偶</h5><pre><code class="cpp">bool is_odd(int a)&#123;
+    return a &amp; 1; // 等价于a % 2 == 0;
+&#125;
+</code></pre>
+<h5 id="判断是否为"><a href="#判断是否为" class="headerlink" title="判断是否为"></a>判断是否为<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.381ex" height="2.343ex" style="vertical-align: -0.338ex;" viewBox="0 -863.1 1025.1 1008.6" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></h5><title id="MathJax-SVG-1-Title">2^n</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+</g>
+</svg></div>
+
+<pre><code class="cpp">bool is_power_of_2(int a)&#123;
+    return !(a &amp; (a - 1));
+&#125;
+</code></pre>
+<h5 id="交换两数"><a href="#交换两数" class="headerlink" title="交换两数"></a>交换两数</h5><pre><code class="cpp">void swap(int &amp;a, int &amp;b)&#123; //不使用第3个变量，a和b不能引用同一个变量
+    a ^= b; //a = old_a ^ old_b
+    b ^= a; //b = old_b ^ (old_a ^ old_b) = old_a
+    a ^= b; //a = (old_a ^ old_b) ^ old_a = old_b
+&#125;
+</code></pre>
+<h5 id="是否同号"><a href="#是否同号" class="headerlink" title="是否同号"></a>是否同号</h5><pre><code class="cpp">bool is_same_sign(int a, int b)&#123; //a!=0 且 b!=0
+    return (a ^ b) &gt;= 0; 
+&#125;
+</code></pre>
+<h5 id="置二进制第-n-位为-1"><a href="#置二进制第-n-位为-1" class="headerlink" title="置二进制第 n 位为 1"></a>置二进制第 n 位为 1</h5><pre><code class="cpp">int set_nth_bit_to_1(int a)&#123;
+    a = a | (1 &lt;&lt; n);
+&#125;
+</code></pre>
+<h5 id="置二进制第-n-位为-0"><a href="#置二进制第-n-位为-0" class="headerlink" title="置二进制第 n 位为 0"></a>置二进制第 n 位为 0</h5><pre><code class="cpp">int set_nth_bit_to_0(int a)&#123;
+    a = a &amp; ~(1 &lt;&lt; n);
+&#125;
+</code></pre>
+<h5 id="将二进制第-n-位取反"><a href="#将二进制第-n-位取反" class="headerlink" title="将二进制第 n 位取反"></a>将二进制第 n 位取反</h5><pre><code class="cpp">int reverse_nth_bit(int a)&#123;
+    a = a ^ (1 &lt;&lt; n);
+&#125;
+</code></pre>
+<h5 id="取二进制最低一位1"><a href="#取二进制最低一位1" class="headerlink" title="取二进制最低一位1"></a>取二进制最低一位1</h5><pre><code class="cpp">int get_low_1(int a)&#123;
+    return a &amp; (-a); //-a = ~a + 1 = ~(a - 1), eg: a = 01010100 =&gt; 00000100
+&#125;
+</code></pre>
+<h5 id="取二进制最低一位0"><a href="#取二进制最低一位0" class="headerlink" title="取二进制最低一位0"></a>取二进制最低一位0</h5><pre><code class="cpp">int get_low_0(int a)&#123;
+    return ~a &amp; (a+1); //eg: a = 01010101 =&gt; 00000010
+&#125;
+</code></pre>
+<h5 id="置二进制最低一位1为0"><a href="#置二进制最低一位1为0" class="headerlink" title="置二进制最低一位1为0"></a>置二进制最低一位1为0</h5><pre><code class="cpp">int set_low_1_to_0(int a)&#123;
+    a = a &amp; (a - 1); //eg: a = 01010100 =&gt; 01010000
+&#125;
+</code></pre>
+<h5 id="置二进制最低一位0为1"><a href="#置二进制最低一位0为1" class="headerlink" title="置二进制最低一位0为1"></a>置二进制最低一位0为1</h5><pre><code class="cpp">int set_low_0_to_1(int a)&#123;
+    a = a | (a + 1); //eg: a = 01010101 =&gt; 01010111
+&#125;
+</code></pre>
+<h5 id="置二进制低位连续的0为1"><a href="#置二进制低位连续的0为1" class="headerlink" title="置二进制低位连续的0为1"></a>置二进制低位连续的0为1</h5><pre><code class="cpp">int set_low_1_to_0(int a)&#123;
+    a = a | (a - 1); //eg: a = 01010100 =&gt; 01010111
+&#125;
+</code></pre>
+<h5 id="向上对齐为"><a href="#向上对齐为" class="headerlink" title="向上对齐为"></a>向上对齐为<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.381ex" height="2.343ex" style="vertical-align: -0.338ex;" viewBox="0 -863.1 1025.1 1008.6" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></h5><title id="MathJax-SVG-1-Title">2^n</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+</g>
+</svg></div>的倍数
+
+<pre><code class="c++">unsigned int round_up_to_power_of_2(unsigned int x, unsigned int n) &#123; //align_to_
+    return (x + (1 &lt;&lt; n) - 1) &amp; ~((1 &lt;&lt; n) - 1)
+&#125;
+</code></pre>
+<h4 id="二、位运算技巧（依赖位长）"><a href="#二、位运算技巧（依赖位长）" class="headerlink" title="二、位运算技巧（依赖位长）"></a>二、位运算技巧（依赖位长）</h4><h5 id="获取int的位长"><a href="#获取int的位长" class="headerlink" title="获取int的位长"></a>获取int的位长</h5><pre><code class="c++">sizeof(int) * CHAR_BIT; //CHAR_BIT = 8 in &lt;climits&gt;
+</code></pre>
+<p>下面默认int为32位的情况</p>
+<h5 id="获得int的最大值"><a href="#获得int的最大值" class="headerlink" title="获得int的最大值"></a>获得int的最大值</h5><pre><code class="cpp">int get_int_max()&#123;
+    return ((unsigned)1 &lt;&lt; 31) - 1; //2147483647
+&#125;
+</code></pre>
+<h5 id="获得int的最小值"><a href="#获得int的最小值" class="headerlink" title="获得int的最小值"></a>获得int的最小值</h5><pre><code class="cpp">int get_int_min()&#123;
+    return ((unsigned)1 &lt;&lt; 31); //-2147483648
+&#125;
+</code></pre>
+<h5 id="取符号"><a href="#取符号" class="headerlink" title="取符号"></a>取符号</h5><p>当<code>a&gt;0</code>时候返回<code>1</code>，<code>a&lt;0</code>时返回<code>-1</code>，<code>a=0</code>时返回<code>0</code></p>
+<p>方法1</p>
+<pre><code class="cpp">int sign(int a)&#123;  
+    return !!a - (((unsigned)a &gt;&gt; 31) &lt;&lt; 1); 
+&#125; 
+</code></pre>
+<p>方法2</p>
+<pre><code class="objectivec">int sign(int a)&#123;  
+    return -(int)((unsigned int)((int)a) &gt;&gt; 31);
+&#125;
+</code></pre>
+<h5 id="取绝对值"><a href="#取绝对值" class="headerlink" title="取绝对值"></a>取绝对值</h5><pre><code class="cpp">int abs1(int a)&#123;  
+    return (a &gt;&gt; 31) == 0 ? a : (~a + 1);  
+&#125;
+/* n&gt;&gt;31 取得n的符号，若n为正数，n&gt;&gt;31等于0，若n为负数，n&gt;&gt;31等于-1
+若n为正数 n^0=0,数不变，若n为负数有n^-1 需要计算n和-1的补码，然后进行异或运算，
+结果n变号并且为n的绝对值减1，再减去-1就是绝对值 */
+</code></pre>
+<p>若右移是算术右移，也可写为</p>
+<pre><code class="cpp">int abs2(int a)&#123;  
+    int s = a &gt;&gt; 31; //0 或 -1
+    return (a ^ s) - s; //s = 0, a ^ 0 - 0 = a, s = 1, a
+&#125; 
+</code></pre>
+<h5 id="取最大值"><a href="#取最大值" class="headerlink" title="取最大值"></a>取最大值</h5><p>方法1</p>
+<pre><code class="cpp">int max(int a, int b)&#123;
+    return b &amp; ((a - b) &gt;&gt; 31) | a &amp; (~(a-b) &gt;&gt; 31);
+    /*如果a&gt;=b,(a-b)&gt;&gt;31为0，否则为-1*/
+&#125;
+</code></pre>
+<p>方法2</p>
+<pre><code class="cpp">int max(int x, int y)&#123;
+    return x ^ ((x ^ y) &amp; -(x &lt; y));
+    /*如果x&lt;y,x&lt;y返回1，否则返回0，与0做与运算结果为0，与-1做与运算结果不变*/
+&#125;
+</code></pre>
+<h5 id="取最小值"><a href="#取最小值" class="headerlink" title="取最小值"></a>取最小值</h5><p>方法1</p>
+<pre><code class="cpp">int min(int a, int b)&#123;
+    return a &amp; ((a - b) &gt;&gt; 31) | b &amp; (~(a - b) &gt;&gt; 31);
+    /*如果a&gt;=b,(a-b)&gt;&gt;31为0，否则为-1*/
+&#125;
+</code></pre>
+<p>方法2</p>
+<pre><code class="cpp">int min(int x, int y)&#123;
+    return y ^ ((x ^ y) &amp; -(x &lt; y));
+    /*如果x&lt;y,x&lt;y返回1，否则返回0，与0做与运算结果为0，与-1做与运算结果不变*/
+&#125;
+</code></pre>
+<h5 id="高16位与低16位交换"><a href="#高16位与低16位交换" class="headerlink" title="高16位与低16位交换"></a>高16位与低16位交换</h5><pre><code class="cpp">unsigned int exchange_high_low_16(unsigned int a)&#123;
+    a = (a &gt;&gt; 16) | (a &lt;&lt; 16);
+&#125;
+</code></pre>
+<h5 id="取二进制最高一位1"><a href="#取二进制最高一位1" class="headerlink" title="取二进制最高一位1"></a>取二进制最高一位1</h5><pre><code class="cpp">int get_high_1(unsigned int a)&#123;//注意是无符号数
+    a = a | (a &gt;&gt; 1);
+    a = a | (a &gt;&gt; 2);
+    a = a | (a &gt;&gt; 4);
+    a = a | (a &gt;&gt; 8);
+    a = a | (a &gt;&gt; 16);
+    return (a + 1) &gt;&gt; 1; //eg: a = 01010101 =&gt; 01000000
+&#125;
+</code></pre>
+<h5 id="取二进制中1的个数"><a href="#取二进制中1的个数" class="headerlink" title="取二进制中1的个数"></a>取二进制中1的个数</h5><p>内置函数<code>__builtin_popcount</code>实现相同功能</p>
+<p>swar算法？</p>
+<pre><code class="cpp">int count_1(unsigned int a)&#123;
+    a = (a &amp; 0x55555555) + ((a &gt;&gt; 1) &amp; 0x55555555); 
+    a = (a &amp; 0x33333333) + ((a &gt;&gt; 2) &amp; 0x33333333); 
+    a = (a &amp; 0x0F0F0F0F) + ((a &gt;&gt; 4) &amp; 0x0F0F0F0F); 
+    a = (a &amp; 0x00FF00FF) + ((a &gt;&gt; 8) &amp; 0x00FF00FF); 
+    a = (a &amp; 0x0000FFFF) + ((a &gt;&gt; 16) &amp; 0x0000FFFF);
+    return a
+&#125;
+</code></pre>
+<h5 id="取二进制中前导0的个数"><a href="#取二进制中前导0的个数" class="headerlink" title="取二进制中前导0的个数"></a>取二进制中前导0的个数</h5><p>内置函数<code>__builtin_clz</code>实现相同功能</p>
+<pre><code class="cpp">int count_leader_0(unsigned int a)&#123;
+    if (a == 0) return 32;
+    int n = 1;
+    if((a &gt;&gt; 16) == 0) &#123;n += 16; a = a &lt;&lt; 16;&#125;
+    if((a &gt;&gt; 24) == 0) &#123;n += 8; a = a &lt;&lt; 8;&#125;
+    if((a &gt;&gt; 28) == 0) &#123;n += 4; a = a &lt;&lt; 4;&#125;
+    if((a &gt;&gt; 30) == 0) &#123;n += 2; a = a &lt;&lt; 2;&#125;
+    if((a &gt;&gt; 31) == 0) &#123;n += 1;&#125; // 或者 n -= (a &gt;&gt; 31);
+    return n;
+&#125;
+</code></pre>
+<h5 id="取二进制中末尾0的个数"><a href="#取二进制中末尾0的个数" class="headerlink" title="取二进制中末尾0的个数"></a>取二进制中末尾0的个数</h5><p>内置函数<code>__builtin_ctz</code>实现相同功能</p>
+<pre><code class="cpp">int count_tail_0(unsigned int a)&#123;
+    if (a == 0) return 32;
+    int n = 1;
+    if((a &lt;&lt; 16) == 0) &#123;n += 16; a = a &gt;&gt; 16;&#125;
+    if((a &lt;&lt; 24) == 0) &#123;n += 8; a = a &gt;&gt; 8;&#125;
+    if((a &lt;&lt; 28) == 0) &#123;n += 4; a = a &gt;&gt; 4;&#125;
+    if((a &lt;&lt; 30) == 0) &#123;n += 2; a = a &gt;&gt; 2;&#125;
+    if((a &lt;&lt; 31) == 0) &#123;n += 1;&#125; // 或者 n -= (a &lt;&lt; 31);
+    return n;
+&#125;
+</code></pre>
+<h5 id="取二进制最低一位1的位数"><a href="#取二进制最低一位1的位数" class="headerlink" title="取二进制最低一位1的位数"></a>取二进制最低一位1的位数</h5><pre><code class="cpp">int Lsb32(unsigned int a)&#123; //LSB = Least Significant Bit
+    int n = 31;
+    if (a &amp; 0x0000ffff) &#123;n -= 16; a &amp;= 0x0000ffff;&#125;
+    if (a &amp; 0x00ff00ff) &#123;n -= 8; a &amp;= 0x00ff00ff;&#125;
+    if (a &amp; 0x0f0f0f0f) &#123;n -= 4; a &amp;= 0x0f0f0f0f;&#125;
+    if (a &amp; 0x33333333) &#123;n -= 2; a &amp;= 0x33333333;&#125;
+    if (a &amp; 0x55555555) n -=1;
+    return n;
+&#125;
+</code></pre>
+<h5 id="取二进制最高一位1的位数"><a href="#取二进制最高一位1的位数" class="headerlink" title="取二进制最高一位1的位数"></a>取二进制最高一位1的位数</h5><pre><code class="cpp">int Msb32(unsigned int a)&#123; //MSB = Most Significant Bit
+    int n = 0;
+    if (a &amp; 0xffff0000) &#123;n += 16; a &amp;= 0xffff0000;&#125;
+    if (a &amp; 0xff00ff00) &#123;n += 8; a &amp;= 0xff00ff00;&#125;
+    if (a &amp; 0xf0f0f0f0) &#123;n += 4; a &amp;= 0xf0f0f0f0;&#125;
+    if (a &amp; 0xcccccccc) &#123;n += 2; a &amp;= 0xcccccccc;&#125;
+    if (a &amp; 0xaaaaaaaa) n += 1;
+    return n;
+&#125;
+</code></pre>
+<h5 id="裁剪为0-小于0则返回0"><a href="#裁剪为0-小于0则返回0" class="headerlink" title="裁剪为0(小于0则返回0)"></a>裁剪为0(小于0则返回0)</h5><pre><code class="C">int clamp_to_0(int x)&#123;
+    return ((-x) &gt;&gt; 31) &amp; x; //利用带符号的右移
+&#125;
+</code></pre>
+<h5 id="裁剪为"><a href="#裁剪为" class="headerlink" title="裁剪为"></a>裁剪为<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="6.384ex" height="2.509ex" style="vertical-align: -0.505ex;" viewBox="0 -863.1 2748.6 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></h5><title id="MathJax-SVG-1-Title">2^n-1</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+ <use xlink:href="#E1-MJMAIN-2212" x="1247" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="2248" y="0"></use>
+</g>
+</svg></div>(大于<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="6.384ex" height="2.509ex" style="vertical-align: -0.505ex;" viewBox="0 -863.1 2748.6 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">2^n-1</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+ <use xlink:href="#E1-MJMAIN-2212" x="1247" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="2248" y="0"></use>
+</g>
+</svg></div>则返回<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="6.384ex" height="2.509ex" style="vertical-align: -0.505ex;" viewBox="0 -863.1 2748.6 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">2^n-1</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+ <use xlink:href="#E1-MJMAIN-2212" x="1247" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="2248" y="0"></use>
+</g>
+</svg></div>)
+
+<pre><code class="C">int clamp_to_power_of_2(int x, unsigned int n)&#123;
+    return ((((1 &lt;&lt; n) - 1 - x) &gt;&gt; 31) | x) &amp; ((1 &lt;&lt; n) - 1);
+&#125;
+</code></pre>
+<h5 id="下一个大于x的"><a href="#下一个大于x的" class="headerlink" title="下一个大于x的"></a>下一个大于x的<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.381ex" height="2.343ex" style="vertical-align: -0.338ex;" viewBox="0 -863.1 1025.1 1008.6" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></h5><title id="MathJax-SVG-1-Title">2^n</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="707" y="583"></use>
+</g>
+</svg></div>
+
+<pre><code class="C">unsigned int next_power_of_2(unsigned int x)&#123;
+    --x;
+    x |= x &gt;&gt; 1;
+    x |= x &gt;&gt; 2;
+    x |= x &gt;&gt; 4;
+    x |= x &gt;&gt; 8;
+    x |= x &gt;&gt; 16;
+    return ++x;
+&#125;
+</code></pre>
+<h5 id=""><a href="#" class="headerlink" title=""></a></h5><h4 id="三、位运算实现基本数值运算"><a href="#三、位运算实现基本数值运算" class="headerlink" title="三、位运算实现基本数值运算"></a>三、位运算实现基本数值运算</h4><h5 id="实现加法"><a href="#实现加法" class="headerlink" title="实现加法"></a>实现加法</h5><p>本质上实现了加法器，可以使用串行加法或并行加法</p>
+<h6 id="一位全加器"><a href="#一位全加器" class="headerlink" title="一位全加器"></a>一位全加器</h6><p>和：<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="20.672ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 8900.6 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">S_i = A_i \oplus B_i \oplus C_{i-1}</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-53" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-41" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-42" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-43" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q484 659 454 652T382 628T299 572T226 479Q194 422 175 346T156 222Q156 108 232 58Q280 24 350 24Q441 24 512 92T606 240Q610 253 612 255T628 257Q648 257 648 248Q648 243 647 239Q618 132 523 55T319 -22Q206 -22 128 53T50 252Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-53" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="867" y="-213"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="1235" y="0"></use>
+<g transform="translate(2291,0)">
+ <use xlink:href="#E1-MJMATHI-41" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1061" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2295" x="3608" y="0"></use>
+<g transform="translate(4609,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1074" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2295" x="5935" y="0"></use>
+<g transform="translate(6936,0)">
+ <use xlink:href="#E1-MJMATHI-43" x="0" y="0"></use>
+<g transform="translate(715,-150)">
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-2212" x="345" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-31" x="1124" y="0"></use>
+</g>
+</g>
+</g>
+</svg></div>
+
+<p>进位：<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="25.724ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 11075.8 1223.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">C_i = A_iB_i + (A_i \oplus B_i)C_i</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-43" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q484 659 454 652T382 628T299 572T226 479Q194 422 175 346T156 222Q156 108 232 58Q280 24 350 24Q441 24 512 92T606 240Q610 253 612 255T628 257Q648 257 648 248Q648 243 647 239Q618 132 523 55T319 -22Q206 -22 128 53T50 252Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-41" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-42" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-43" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1011" y="-213"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="1337" y="0"></use>
+<g transform="translate(2393,0)">
+ <use xlink:href="#E1-MJMATHI-41" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1061" y="-213"></use>
+</g>
+<g transform="translate(3488,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1074" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2B" x="4814" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-28" x="5815" y="0"></use>
+<g transform="translate(6204,0)">
+ <use xlink:href="#E1-MJMATHI-41" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1061" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2295" x="7521" y="0"></use>
+<g transform="translate(8522,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1074" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-29" x="9626" y="0"></use>
+<g transform="translate(10015,0)">
+ <use xlink:href="#E1-MJMATHI-43" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1011" y="-213"></use>
+</g>
+</g>
+</svg></div>
+
+<p>这里的乘法就是按位与，加法就是按位或，<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.808ex" height="2.176ex" style="vertical-align: -0.505ex;" viewBox="0 -719.6 778.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">\oplus</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-2295" x="0" y="0"></use>
+</g>
+</svg></div>就是按位异或
+
+<h6 id="串行加法"><a href="#串行加法" class="headerlink" title="串行加法"></a>串行加法</h6><p>可以按上面的全加器一位一位计算结果</p>
+<h6 id="并行加法"><a href="#并行加法" class="headerlink" title="并行加法"></a>并行加法</h6><p>一种实现是超前进位，所有进位可直接由<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.716ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 1169.4 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">C_0</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-43" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q484 659 454 652T382 628T299 572T226 479Q194 422 175 346T156 222Q156 108 232 58Q280 24 350 24Q441 24 512 92T606 240Q610 253 612 255T628 257Q648 257 648 248Q648 243 647 239Q618 132 523 55T319 -22Q206 -22 128 53T50 252Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-43" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-30" x="1011" y="-213"></use>
+</g>
+</svg></div>计算得到
+
+<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="10.831ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 4663.5 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">G_i = A_i B_i</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-47" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q492 659 471 656T418 643T357 615T294 567T236 496T189 394T158 260Q156 242 156 221Q156 173 170 136T206 79T256 45T308 28T353 24Q407 24 452 47T514 106Q517 114 529 161T541 214Q541 222 528 224T468 227H431Q425 233 425 235T427 254Q431 267 437 273H454Q494 271 594 271Q634 271 659 271T695 272T707 272Q721 272 721 263Q721 261 719 249Q714 230 709 228Q706 227 694 227Q674 227 653 224Q646 221 643 215T629 164Q620 131 614 108Q589 6 586 3Q584 1 581 1Q571 1 553 21T530 52Q530 53 528 52T522 47Q448 -22 322 -22Q201 -22 126 55T50 252Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-41" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-42" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-47" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1112" y="-213"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="1408" y="0"></use>
+<g transform="translate(2464,0)">
+ <use xlink:href="#E1-MJMATHI-41" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1061" y="-213"></use>
+</g>
+<g transform="translate(3559,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1074" y="-213"></use>
+</g>
+</g>
+</svg></div>
+
+<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="13.337ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 5742.4 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">P_i = A_i \oplus B_i</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-50" d="M287 628Q287 635 230 637Q206 637 199 638T192 648Q192 649 194 659Q200 679 203 681T397 683Q587 682 600 680Q664 669 707 631T751 530Q751 453 685 389Q616 321 507 303Q500 302 402 301H307L277 182Q247 66 247 59Q247 55 248 54T255 50T272 48T305 46H336Q342 37 342 35Q342 19 335 5Q330 0 319 0Q316 0 282 1T182 2Q120 2 87 2T51 1Q33 1 33 11Q33 13 36 25Q40 41 44 43T67 46Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628ZM645 554Q645 567 643 575T634 597T609 619T560 635Q553 636 480 637Q463 637 445 637T416 636T404 636Q391 635 386 627Q384 621 367 550T332 412T314 344Q314 342 395 342H407H430Q542 342 590 392Q617 419 631 471T645 554Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-41" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-42" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-50" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="908" y="-213"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="1264" y="0"></use>
+<g transform="translate(2320,0)">
+ <use xlink:href="#E1-MJMATHI-41" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1061" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2295" x="3637" y="0"></use>
+<g transform="translate(4638,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1074" y="-213"></use>
+</g>
+</g>
+</svg></div>
+
+<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="23.049ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 9923.7 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">C_i = G_i + P_i C_{i-1} = ...</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-43" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q484 659 454 652T382 628T299 572T226 479Q194 422 175 346T156 222Q156 108 232 58Q280 24 350 24Q441 24 512 92T606 240Q610 253 612 255T628 257Q648 257 648 248Q648 243 647 239Q618 132 523 55T319 -22Q206 -22 128 53T50 252Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-47" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q492 659 471 656T418 643T357 615T294 567T236 496T189 394T158 260Q156 242 156 221Q156 173 170 136T206 79T256 45T308 28T353 24Q407 24 452 47T514 106Q517 114 529 161T541 214Q541 222 528 224T468 227H431Q425 233 425 235T427 254Q431 267 437 273H454Q494 271 594 271Q634 271 659 271T695 272T707 272Q721 272 721 263Q721 261 719 249Q714 230 709 228Q706 227 694 227Q674 227 653 224Q646 221 643 215T629 164Q620 131 614 108Q589 6 586 3Q584 1 581 1Q571 1 553 21T530 52Q530 53 528 52T522 47Q448 -22 322 -22Q201 -22 126 55T50 252Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-50" d="M287 628Q287 635 230 637Q206 637 199 638T192 648Q192 649 194 659Q200 679 203 681T397 683Q587 682 600 680Q664 669 707 631T751 530Q751 453 685 389Q616 321 507 303Q500 302 402 301H307L277 182Q247 66 247 59Q247 55 248 54T255 50T272 48T305 46H336Q342 37 342 35Q342 19 335 5Q330 0 319 0Q316 0 282 1T182 2Q120 2 87 2T51 1Q33 1 33 11Q33 13 36 25Q40 41 44 43T67 46Q94 46 127 49Q141 52 146 61Q149 65 218 339T287 628ZM645 554Q645 567 643 575T634 597T609 619T560 635Q553 636 480 637Q463 637 445 637T416 636T404 636Q391 635 386 627Q384 621 367 550T332 412T314 344Q314 342 395 342H407H430Q542 342 590 392Q617 419 631 471T645 554Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-43" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1011" y="-213"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="1337" y="0"></use>
+<g transform="translate(2393,0)">
+ <use xlink:href="#E1-MJMATHI-47" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1112" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2B" x="3746" y="0"></use>
+<g transform="translate(4747,0)">
+ <use xlink:href="#E1-MJMATHI-50" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="908" y="-213"></use>
+</g>
+<g transform="translate(5734,0)">
+ <use xlink:href="#E1-MJMATHI-43" x="0" y="0"></use>
+<g transform="translate(715,-150)">
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-2212" x="345" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-31" x="1124" y="0"></use>
+</g>
+</g>
+ <use xlink:href="#E1-MJMAIN-3D" x="7976" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="8754" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="9200" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="9645" y="0"></use>
+</g>
+</svg></div>
+
+<p>但在程序中不像电路可以直接相连，也只能依次计算<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.461ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 1059.8 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">C_i</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-43" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q484 659 454 652T382 628T299 572T226 479Q194 422 175 346T156 222Q156 108 232 58Q280 24 350 24Q441 24 512 92T606 240Q610 253 612 255T628 257Q648 257 648 248Q648 243 647 239Q618 132 523 55T319 -22Q206 -22 128 53T50 252Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-43" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1011" y="-213"></use>
+</g>
+</svg></div>
+
+<pre><code class="cpp">int add(int a, int b) &#123;
+    int g = a &amp; b;
+    int p = a ^ b;
+    int carry = 0; //超前进位，计算出所有位上的进位（已考虑更低位进位结果）
+    for(int i = 0; i &lt; 32; i++) &#123;
+        carry |= (g | (p &amp; (carry &lt;&lt; 1))) &amp; (1 &lt;&lt; i);
+    &#125;
+    return a ^ b ^ (carry &lt;&lt; 1); //最后可以直接进行无进位加法
+&#125;
+</code></pre>
+<h6 id="其他方法"><a href="#其他方法" class="headerlink" title="其他方法"></a>其他方法</h6><p>下面采用了一次计算所有位的<code>和</code>与<code>进位</code>，然后循环解决子问题（<code>和</code>加上<code>进位</code>）</p>
+<pre><code class="cpp">int add(int a, int b) &#123;
+    int carry, add;
+    do &#123;
+        add = a ^ b; //无进位加法
+        carry = (a &amp; b) &lt;&lt; 1; //计算出所有位上的进位（未考虑更低位进位的结果）
+        //下次计算：无进位加法的结果 + 所有进位，每次循环，需要进位的最低位都会提高，直到没有需要进位的位，carry=0
+        a = add; 
+        b = carry;
+    &#125; while (carry);
+    return add;
+&#125;
+</code></pre>
+<h5 id="实现减法"><a href="#实现减法" class="headerlink" title="实现减法"></a>实现减法</h5><p>负数在计算机中以补码表示，加减法都可以由加法器计算，减去一个数等价于加上相反数</p>
+<pre><code class="cpp">int subtract(int a, int b) &#123;
+    return add(a, add(~b, 1)); //如果允许使用负号，直接取add(a, -b)
+&#125;
+</code></pre>
+<h5 id="实现乘法"><a href="#实现乘法" class="headerlink" title="实现乘法"></a>实现乘法</h5><p>乘法可以通过系列移位和加法完成。最后一个1可通过<code>b&amp;~(b-1)</code>取得，可通过<code>b&amp;(b-1)</code>去掉</p>
+<p>C语言写法，</p>
+<pre><code class="cpp">int multiply(int a, int b) &#123;
+    int neg = (b &lt; 0);
+    if(neg) b = -b;
+    int sum = 0;
+    while(b &gt; 0)&#123;
+        int last_bit = Lsb32(b); //调用之前的Lsb32函数，最低一位1的位数
+        sum += (a &lt;&lt; last_bit);
+        b &amp;= b - 1;//置最低一位1为0
+    &#125;
+    return neg ? -sum : sum;
+&#125;
+</code></pre>
+<p>C++写法：可提前计算一个map</p>
+<pre><code class="cpp">int multiply(int a, int b) &#123;
+    bool neg = (b &lt; 0);
+    if(neg) b = -b;
+    int sum = 0;
+    map&lt;int, int=&quot;&quot;&gt; bit_map;
+    for(int i = 0; i &lt; 32; i++)
+        bit_map.insert(pair&lt;int, int=&quot;&quot;&gt;(1 &lt;&lt; i, i));
+    while(b &gt; 0)&#123;
+        int last_bit = bit_map[b &amp; ~(b - 1)];//最低一位1的位数
+        sum += (a &lt;&lt; last_bit);
+        b &amp;= b - 1;//置最低一位1为0
+    &#125;
+    return neg ? -sum : sum;
+&#125;
+</code></pre>
+<h5 id="实现除法"><a href="#实现除法" class="headerlink" title="实现除法"></a>实现除法</h5><pre><code class="cpp">int divide(int a, int b) &#123;
+    //b==0, a==INT_MIN, b==INT_MIN的情况没有考虑
+    bool neg = (a ^ b) &lt; 0;//(a &gt; 0) ^ (b &gt; 0);
+    if(a &lt; 0) a = -a;
+    if(b &lt; 0) b = -b;
+    if(a &lt; b) return 0;
+    //每次将b移位至与a位数相同，需要计算b最多需要移动几位
+    //有几种方法，右移被除数或左移除数，但是根据比较大小来判断位数是否相同容易出问题，特别是被除数是31位的时候
+    //下面采用同时右移，计算位数差，不会发生溢出后比较的问题
+    int m = 1, n = 1;
+    while((dividend &gt;&gt; m) &gt; 0) m++;
+    while((divisor &gt;&gt; n) &gt; 0) n++;
+    int q = 0;
+    for(int i = m - n; i &gt;= 0; i--)&#123;
+        if((b &lt;&lt; i) &gt; a)
+            continue;
+        q |= (1 &lt;&lt; i);
+        a -= (b &lt;&lt; i);
+    &#125;
+    return neg ? -q : q;
+&#125;
+</code></pre>
+<h5 id="格雷码"><a href="#格雷码" class="headerlink" title="格雷码"></a>格雷码</h5><p><code>n</code>位格雷码：<code>n</code>位二进制码的一个排列，满足任意两个相邻的代码（包括首尾）只有一位二进制位不同</p>
+<h6 id="递归生成方法"><a href="#递归生成方法" class="headerlink" title="递归生成方法"></a>递归生成方法</h6><p><code>n</code>位格雷码的集合 = 前缀<code>0</code>加 <code>n-1</code>位格雷码集合（顺序） +  前缀<code>1</code>加<code> n-1</code>位格雷码集合（逆序）</p>
+<h6 id="异或生成方法"><a href="#异或生成方法" class="headerlink" title="异或生成方法"></a>异或生成方法</h6><p><code>n</code>位，二进制码=&gt;格雷码 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="15.793ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 6799.8 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">G_i = B_i \oplus B_{i+1}</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-47" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q492 659 471 656T418 643T357 615T294 567T236 496T189 394T158 260Q156 242 156 221Q156 173 170 136T206 79T256 45T308 28T353 24Q407 24 452 47T514 106Q517 114 529 161T541 214Q541 222 528 224T468 227H431Q425 233 425 235T427 254Q431 267 437 273H454Q494 271 594 271Q634 271 659 271T695 272T707 272Q721 272 721 263Q721 261 719 249Q714 230 709 228Q706 227 694 227Q674 227 653 224Q646 221 643 215T629 164Q620 131 614 108Q589 6 586 3Q584 1 581 1Q571 1 553 21T530 52Q530 53 528 52T522 47Q448 -22 322 -22Q201 -22 126 55T50 252Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-42" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-47" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1112" y="-213"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="1408" y="0"></use>
+<g transform="translate(2464,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1074" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2295" x="3790" y="0"></use>
+<g transform="translate(4791,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+<g transform="translate(759,-150)">
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-2B" x="345" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-31" x="1124" y="0"></use>
+</g>
+</g>
+</g>
+</svg></div>，格雷码=>二进制码<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="15.793ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 6799.8 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">B_i = G_i \oplus B_{i+1}</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-42" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-47" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q492 659 471 656T418 643T357 615T294 567T236 496T189 394T158 260Q156 242 156 221Q156 173 170 136T206 79T256 45T308 28T353 24Q407 24 452 47T514 106Q517 114 529 161T541 214Q541 222 528 224T468 227H431Q425 233 425 235T427 254Q431 267 437 273H454Q494 271 594 271Q634 271 659 271T695 272T707 272Q721 272 721 263Q721 261 719 249Q714 230 709 228Q706 227 694 227Q674 227 653 224Q646 221 643 215T629 164Q620 131 614 108Q589 6 586 3Q584 1 581 1Q571 1 553 21T530 52Q530 53 528 52T522 47Q448 -22 322 -22Q201 -22 126 55T50 252Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1074" y="-213"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="1381" y="0"></use>
+<g transform="translate(2437,0)">
+ <use xlink:href="#E1-MJMATHI-47" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1112" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2295" x="3790" y="0"></use>
+<g transform="translate(4791,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+<g transform="translate(759,-150)">
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-2B" x="345" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-31" x="1124" y="0"></use>
+</g>
+</g>
+</g>
+</svg></div>，<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="12.789ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 5506.2 1223.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">i=[0, n-1]</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-5B" d="M118 -250V750H255V710H158V-210H255V-250H118Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-5D" d="M22 710V750H159V-250H22V-210H119V710H22Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-69" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="623" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-5B" x="1679" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="1958" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2C" x="2458" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6E" x="2903" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2212" x="3726" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="4727" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-5D" x="5227" y="0"></use>
+</g>
+</svg></div>，<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="7.243ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 3118.7 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">B_n = 0</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-42" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-6E" x="1074" y="-213"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="1561" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="2618" y="0"></use>
+</g>
+</svg></div>
+
+<p>这种方法使用<strong>每位与其后（高）一位进行异或（比较差异）</strong>（代码实现就是二进制码自身与自身右移一位异或）</p>
+<p>为什么这种方法映射后符合任意两个相邻的代码只有一位二进制位不同？</p>
+<p>我们首先观察相邻两个二进制码的位变化情况，可以容易地发现<code>+1</code>相当于 从末尾开始直到第1个<code>0</code>（设为第<code>k</code>位）的所有位取反</p>
+<p><code>x..xx011..11</code> =&gt; <code>x..xx100..00</code>；特别地，最低位就是<code>0</code>时，则<code>x..xx0</code>=&gt;<code>x..xx1</code>；仅最高位是<code>0</code>时，则<code>011..11</code> =&gt; <code>100..00</code></p>
+<p>这样相邻二进制码的变化都发生在末尾的连续一部分</p>
+<p>因此<strong>前后位异或的结果</strong>的变化的位只出现在二进制码<strong>变与不变的交界处</strong>，只有一位（第<code>k</code>位）发生了变化</p>
+<p>（特别地，对于最高位，与<code>0</code>异或后不变（格雷码最高位与二进制码最高位相同），则最高位异或结果发生变化仅在原二进制码最高位变化时<code>011..11</code> =&gt; <code>100..00</code>，此时也只有一位（最高位，第<code>k=n-1</code>位）发生了变化）</p>
+<p>为什么是一一映射</p>
+<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="18.246ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 7856.1 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">G_i = B_i \oplus B_{i+1} =</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-47" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q492 659 471 656T418 643T357 615T294 567T236 496T189 394T158 260Q156 242 156 221Q156 173 170 136T206 79T256 45T308 28T353 24Q407 24 452 47T514 106Q517 114 529 161T541 214Q541 222 528 224T468 227H431Q425 233 425 235T427 254Q431 267 437 273H454Q494 271 594 271Q634 271 659 271T695 272T707 272Q721 272 721 263Q721 261 719 249Q714 230 709 228Q706 227 694 227Q674 227 653 224Q646 221 643 215T629 164Q620 131 614 108Q589 6 586 3Q584 1 581 1Q571 1 553 21T530 52Q530 53 528 52T522 47Q448 -22 322 -22Q201 -22 126 55T50 252Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-42" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2295" d="M56 250Q56 394 156 488T384 583Q530 583 626 485T722 250Q722 110 625 14T390 -83Q249 -83 153 14T56 250ZM364 542Q308 539 251 509T148 418T96 278V270H369V542H364ZM681 278Q675 338 650 386T592 462T522 509T458 535T412 542H409V270H681V278ZM96 222Q104 150 139 95T219 12T302 -29T366 -42H369V230H96V222ZM681 222V230H409V-42H412Q429 -42 456 -36T521 -10T590 37T649 113T681 222Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-47" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1112" y="-213"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="1408" y="0"></use>
+<g transform="translate(2464,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="1074" y="-213"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2295" x="3790" y="0"></use>
+<g transform="translate(4791,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+<g transform="translate(759,-150)">
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-2B" x="345" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-31" x="1124" y="0"></use>
+</g>
+</g>
+ <use xlink:href="#E1-MJMAIN-3D" x="7077" y="0"></use>
+</g>
+</svg></div>
+
+<pre><code class="cpp">vector&lt;int&gt; grayCode(int n) &#123;
+    int nn = 1 &lt;&lt; n;
+    vector&lt;int&gt; res(nn);
+    for(int i = 0; i &lt; nn; i++) &#123;
+        res[i] = i ^ (i &gt;&gt; 1);
+    &#125;
+    return res;
+&#125;
+</code></pre>
+<h4 id="三、二进制位表示作为集合压缩数据"><a href="#三、二进制位表示作为集合压缩数据" class="headerlink" title="三、二进制位表示作为集合压缩数据"></a>三、二进制位表示作为集合压缩数据</h4><p>可以用 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.064ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 888.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">N</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-4E" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-4E" x="0" y="0"></use>
+</g>
+</svg></div>位二进制整数<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="14.169ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 6100.6 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">v = b_{N-1}...b_0</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-76" d="M173 380Q173 405 154 405Q130 405 104 376T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Q21 294 29 316T53 368T97 419T160 441Q202 441 225 417T249 361Q249 344 246 335Q246 329 231 291T200 202T182 113Q182 86 187 69Q200 26 250 26Q287 26 319 60T369 139T398 222T409 277Q409 300 401 317T383 343T365 361T357 383Q357 405 376 424T417 443Q436 443 451 425T467 367Q467 340 455 284T418 159T347 40T241 -11Q177 -11 139 22Q102 54 102 117Q102 148 110 181T151 298Q173 362 173 380Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-62" d="M73 647Q73 657 77 670T89 683Q90 683 161 688T234 694Q246 694 246 685T212 542Q204 508 195 472T180 418L176 399Q176 396 182 402Q231 442 283 442Q345 442 383 396T422 280Q422 169 343 79T173 -11Q123 -11 82 27T40 150V159Q40 180 48 217T97 414Q147 611 147 623T109 637Q104 637 101 637H96Q86 637 83 637T76 640T73 647ZM336 325V331Q336 405 275 405Q258 405 240 397T207 376T181 352T163 330L157 322L136 236Q114 150 114 114Q114 66 138 42Q154 26 178 26Q211 26 245 58Q270 81 285 114T318 219Q336 291 336 325Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-4E" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-76" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="763" y="0"></use>
+<g transform="translate(1819,0)">
+ <use xlink:href="#E1-MJMATHI-62" x="0" y="0"></use>
+<g transform="translate(429,-150)">
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-4E" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-2212" x="888" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-31" x="1667" y="0"></use>
+</g>
+</g>
+ <use xlink:href="#E1-MJMAIN-2E" x="3881" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="4326" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="4772" y="0"></use>
+<g transform="translate(5217,0)">
+ <use xlink:href="#E1-MJMATHI-62" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-30" x="607" y="-213"></use>
+</g>
+</g>
+</svg></div> **编码** 编号为<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="12.658ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 5450.1 1223.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">[0,..,N-1]</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-5B" d="M118 -250V750H255V710H158V-210H255V-250H118Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2E" d="M78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-4E" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-5D" d="M22 710V750H159V-250H22V-210H119V710H22Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-5B" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="278" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2C" x="779" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="1224" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2E" x="1669" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2C" x="2114" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-4E" x="2559" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2212" x="3670" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="4671" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-5D" x="5171" y="0"></use>
+</g>
+</svg></div>的<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.064ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 888.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">N</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-4E" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-4E" x="0" y="0"></use>
+</g>
+</svg></div>个对象 的 **任何子集**<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.743ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 750.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">A</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-41" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-41" x="0" y="0"></use>
+</g>
+</svg></div>，其中<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="6.058ex" height="2.509ex" style="vertical-align: -0.671ex;" viewBox="0 -791.3 2608.4 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">b_i=1</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-62" d="M73 647Q73 657 77 670T89 683Q90 683 161 688T234 694Q246 694 246 685T212 542Q204 508 195 472T180 418L176 399Q176 396 182 402Q231 442 283 442Q345 442 383 396T422 280Q422 169 343 79T173 -11Q123 -11 82 27T40 150V159Q40 180 48 217T97 414Q147 611 147 623T109 637Q104 637 101 637H96Q86 637 83 637T76 640T73 647ZM336 325V331Q336 405 275 405Q258 405 240 397T207 376T181 352T163 330L157 322L136 236Q114 150 114 114Q114 66 138 42Q154 26 178 26Q211 26 245 58Q270 81 285 114T318 219Q336 291 336 325Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-62" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-69" x="607" y="-213"></use>
+ <use xlink:href="#E1-MJMAIN-3D" x="1051" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="2107" y="0"></use>
+</g>
+</svg></div>当且仅当<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="5.386ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 2319.1 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">i\in A</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-69" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2208" d="M84 250Q84 372 166 450T360 539Q361 539 377 539T419 540T469 540H568Q583 532 583 520Q583 511 570 501L466 500Q355 499 329 494Q280 482 242 458T183 409T147 354T129 306T124 272V270H568Q583 262 583 250T568 230H124V228Q124 207 134 177T167 112T231 48T328 7Q355 1 466 0H570Q583 -10 583 -20Q583 -32 568 -40H471Q464 -40 446 -40T417 -41Q262 -41 172 45Q84 127 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-41" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-69" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2208" x="623" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-41" x="1568" y="0"></use>
+</g>
+</svg></div>
+
+<p>（换句话说，二进制整数的每位表示一个对象是否在集合中）</p>
+<p>则在<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="14.315ex" height="3.176ex" style="vertical-align: -0.838ex;" viewBox="0 -1006.6 6163.4 1367.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">v\in[0, 2^N-1]</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-76" d="M173 380Q173 405 154 405Q130 405 104 376T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Q21 294 29 316T53 368T97 419T160 441Q202 441 225 417T249 361Q249 344 246 335Q246 329 231 291T200 202T182 113Q182 86 187 69Q200 26 250 26Q287 26 319 60T369 139T398 222T409 277Q409 300 401 317T383 343T365 361T357 383Q357 405 376 424T417 443Q436 443 451 425T467 367Q467 340 455 284T418 159T347 40T241 -11Q177 -11 139 22Q102 54 102 117Q102 148 110 181T151 298Q173 362 173 380Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2208" d="M84 250Q84 372 166 450T360 539Q361 539 377 539T419 540T469 540H568Q583 532 583 520Q583 511 570 501L466 500Q355 499 329 494Q280 482 242 458T183 409T147 354T129 306T124 272V270H568Q583 262 583 250T568 230H124V228Q124 207 134 177T167 112T231 48T328 7Q355 1 466 0H570Q583 -10 583 -20Q583 -32 568 -40H471Q464 -40 446 -40T417 -41Q262 -41 172 45Q84 127 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-5B" d="M118 -250V750H255V710H158V-210H255V-250H118Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-4E" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-5D" d="M22 710V750H159V-250H22V-210H119V710H22Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-76" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2208" x="763" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-5B" x="1708" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="1987" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2C" x="2487" y="0"></use>
+<g transform="translate(2932,0)">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-4E" x="707" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2212" x="4383" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="5384" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-5D" x="5884" y="0"></use>
+</g>
+</svg></div>，每个整数<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.128ex" height="1.676ex" style="vertical-align: -0.338ex;" viewBox="0 -576.1 485.5 721.6" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">v</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-76" d="M173 380Q173 405 154 405Q130 405 104 376T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Q21 294 29 316T53 368T97 419T160 441Q202 441 225 417T249 361Q249 344 246 335Q246 329 231 291T200 202T182 113Q182 86 187 69Q200 26 250 26Q287 26 319 60T369 139T398 222T409 277Q409 300 401 317T383 343T365 361T357 383Q357 405 376 424T417 443Q436 443 451 425T467 367Q467 340 455 284T418 159T347 40T241 -11Q177 -11 139 22Q102 54 102 117Q102 148 110 181T151 298Q173 362 173 380Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-76" x="0" y="0"></use>
+</g>
+</svg></div>表示一个子集
+
+<p>（换句话说，二进制整数的位1的分布对应对象在集合中的情况）</p>
+<h6 id="遍历子集"><a href="#遍历子集" class="headerlink" title="遍历子集"></a>遍历子集</h6><p>由二进制整数表示的集合，可以方便地遍历所有子集，依次获取<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="14.315ex" height="3.176ex" style="vertical-align: -0.838ex;" viewBox="0 -1006.6 6163.4 1367.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">v\in[0, 2^N-1]</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-76" d="M173 380Q173 405 154 405Q130 405 104 376T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Q21 294 29 316T53 368T97 419T160 441Q202 441 225 417T249 361Q249 344 246 335Q246 329 231 291T200 202T182 113Q182 86 187 69Q200 26 250 26Q287 26 319 60T369 139T398 222T409 277Q409 300 401 317T383 343T365 361T357 383Q357 405 376 424T417 443Q436 443 451 425T467 367Q467 340 455 284T418 159T347 40T241 -11Q177 -11 139 22Q102 54 102 117Q102 148 110 181T151 298Q173 362 173 380Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2208" d="M84 250Q84 372 166 450T360 539Q361 539 377 539T419 540T469 540H568Q583 532 583 520Q583 511 570 501L466 500Q355 499 329 494Q280 482 242 458T183 409T147 354T129 306T124 272V270H568Q583 262 583 250T568 230H124V228Q124 207 134 177T167 112T231 48T328 7Q355 1 466 0H570Q583 -10 583 -20Q583 -32 568 -40H471Q464 -40 446 -40T417 -41Q262 -41 172 45Q84 127 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-5B" d="M118 -250V750H255V710H158V-210H255V-250H118Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2C" d="M78 35T78 60T94 103T137 121Q165 121 187 96T210 8Q210 -27 201 -60T180 -117T154 -158T130 -185T117 -194Q113 -194 104 -185T95 -172Q95 -168 106 -156T131 -126T157 -76T173 -3V9L172 8Q170 7 167 6T161 3T152 1T140 0Q113 0 96 17Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-4E" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-5D" d="M22 710V750H159V-250H22V-210H119V710H22Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-76" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2208" x="763" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-5B" x="1708" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="1987" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2C" x="2487" y="0"></use>
+<g transform="translate(2932,0)">
+ <use xlink:href="#E1-MJMAIN-32" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMATHI-4E" x="707" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2212" x="4383" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-31" x="5384" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-5D" x="5884" y="0"></use>
+</g>
+</svg></div>的位分布情况即可
+
+<h6 id="遍历大小为k的子集"><a href="#遍历大小为k的子集" class="headerlink" title="遍历大小为k的子集"></a>遍历大小为k的子集</h6><p>相当于枚举所有包含<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.211ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 521.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">k</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-6B" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-6B" x="0" y="0"></use>
+</g>
+</svg></div>个<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.162ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 500.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">1</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMAIN-31" x="0" y="0"></use>
+</g>
+</svg></div>的<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.064ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 888.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">N</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-4E" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-4E" x="0" y="0"></use>
+</g>
+</svg></div>位二进制数，关键是如何从一个大小为<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.211ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 521.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">k</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-6B" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-6B" x="0" y="0"></use>
+</g>
+</svg></div>子集计算得到下一个（对应二进制数更大）
+
+<pre><code class="c++">int state = (1 &lt;&lt; k) - 1; //初始时k个1都在末尾：state = 00001111
+while (state &lt; 1 &lt;&lt; n) &#123; //有效位数小于等于n位：state = 01100110 &lt; 100000000
+    int low_bit = state &amp; -state; //最低位1：low_bit = 000000 1 0
+    int added = state + low_bit; //移除最低位连续多个1，之前的0变1：0110 011 0 -&gt; 0110 100 0
+    int low_multi_bits = state &amp; ~added; //仅保留上一次操作使得state发生位翻转的部分即state最低连续多个1的区间：z = 0000 011 0
+    low_multi_bits = (low_multi_bits / low_bit) &gt;&gt; 1; //除法使得该区间连续多个1移至末尾，右移一位相当于删除一个1：z = 0000000 1
+    state = added | low_multi_bits; //合并
+&#125; //相当于每次把最低连续多个1的第一个1前移一位，剩余1全部移至末尾
+</code></pre>
+<h6 id="集合操作"><a href="#集合操作" class="headerlink" title="集合操作"></a>集合操作</h6><p>由二进制整数表示的集合，可以方便地进行集合运算</p>
+<p>C/C++一般实现</p>
+<pre><code class="C">typedef unsigned long long set;
+//添加
+set add(set s, int i)&#123;
+    s |= (1 &lt;&lt; i);
+    return s;
+&#125;
+//删除
+set remove(set s, int i)&#123;
+    s &amp;= ~(1 &lt;&lt; i);
+    return s;
+&#125;
+//在集合内
+int in(set s, int i)&#123;
+    return s &amp; (1 &lt;&lt; i); //或者 (s &gt;&gt; i) &amp; 1
+&#125;
+//并集
+set union_(set s1, set s2)&#123;
+    return s1 | s2;
+&#125;
+//交集
+set intersect(set s1, set s2)&#123;
+    return s1 &amp; s2;
+&#125;
+//差集, s1 - s2
+set except(set s1, set s2)&#123;
+    return s1 &amp; ~s2;
+&#125;
+</code></pre>
+<p>对于C++，也可以使用STL提供的bitset类</p>
+<pre><code class="c++">//初始化
+std::bitset&lt;4&gt; foo; //foo: 0000
+std::bitset&lt;4&gt; a (9); //用整数初始化，a: 0000000000001001
+std::bitset&lt;4&gt; b (std::string(&quot;0011&quot;)); //用字符串初始化，不够位数前面补0，b: 0000000000000011
+//位的获取和赋值，相当于加入或删除元素，或者判断元素是否在集合中
+foo[1] = 1; // foo: 0010
+foo[2] = foo[1]; // foo: 0110
+foo.set(); // foo: 1111
+foo.set(2,0); // foo: 1011
+foo.set(2); // foo: 1111
+foo.reset(1); // foo: 1101
+foo.reset(); // foo: 0000
+foo.flip(2); // foo: 0100
+foo.flip(); // foo: 1011
+//位运算对应集合操作
+a &amp; b; // 0010,交集
+a | b; // 0111,并集
+a ^ b; // 0101,差集
+a == b; // false (0110==0011)
+a != b; // true (0110!=0011)
+//其他位运算，不对应集合操作
+~b; // 1100 (NOT)
+b &lt;&lt; 1; // 0110 (SHL)
+b &gt;&gt; 1; // 0001 (SHR)
+//另外，一些统计和判断函数
+foo.count(); //Count bits set
+foo.size(); //Return size
+foo.test(); //Return bit value
+foo.any(); //Test if any bit is set
+foo.none(); //Test if no bit is set
+foo.all(); //Test if all bits are set
+</code></pre>
+<h4 id="四、参考"><a href="#四、参考" class="headerlink" title="四、参考"></a>四、参考</h4><p><a target="_blank" rel="noopener" href="http://www.cplusplus.com/reference/bitset/bitset/">http://www.cplusplus.com/reference/bitset/bitset/</a></p>
+<p><a target="_blank" rel="noopener" href="http://graphics.stanford.edu/~seander/bithacks.html#OperationCounting">http://graphics.stanford.edu/~seander/bithacks.html#OperationCounting</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.whezh.com/bit-hacks/">https://blog.whezh.com/bit-hacks/</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.matrix67.com/blog/archives/263">http://www.matrix67.com/blog/archives/263</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.clarkok.com/blog/2015/06/13/%E5%8F%96%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%9C%80%E9%AB%98%E4%BD%8D%E7%9A%84%E4%B8%80/">https://www.clarkok.com/blog/2015/06/13/%E5%8F%96%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%9C%80%E9%AB%98%E4%BD%8D%E7%9A%84%E4%B8%80/</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zmazon/article/details/8262185">https://blog.csdn.net/zmazon/article/details/8262185</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/38206659">https://www.zhihu.com/question/38206659</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/MoreWindows/article/details/7354571">https://blog.csdn.net/MoreWindows/article/details/7354571</a></p>
+<p><a target="_blank" rel="noopener" href="http://lijinma.com/blog/2014/05/29/amazing-xor/">http://lijinma.com/blog/2014/05/29/amazing-xor/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/JihuiPeng/p/13666678.html">https://www.cnblogs.com/JihuiPeng/p/13666678.html</a></p>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/a37xc0/" class="prev">并行计算上机实验一 OpenMP实现π值的计算和PSRS排序</a>
+		 
+
+		 
+			<a href="/s/p/a0qrhr/" class="next">关于博客</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/a32dc0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

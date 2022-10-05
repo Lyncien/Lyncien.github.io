@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">LeetCode刷题笔记——链表</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2022-01-17</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 35359 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 118 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>链表相关的题目整体上难度不大</p>
+<p>主要是对指针的指向修改容易出错</p>
+<ul>
+<li>赋值顺序错误导致丢失了某个节点之后的所有结点</li>
+<li>访问了空指针</li>
+<li>计数次数与预期相差1</li>
+</ul>
+<p>链表的特性</p>
+<ul>
+<li>无法随机访问，只能从头开始单向前进</li>
+<li>初始时链表的长度未知</li>
+<li>（单链表）从某个节点无法获取其前一个节点</li>
+</ul>
+<h6 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h6><p>使用多个指针同时前进，实现到达链表中的某个偏移位置</p>
+<ul>
+<li><p>快慢指针：以不同的速度前进，快指针每次前进两个结点，慢指针每次前进一个结点，快指针到末尾时慢指针到达链表中点</p>
+</li>
+<li><p>以一定的间隔同时前进，A指针先前进k步，之后AB指针同时前进，A指针到末尾时，B指针在倒数第k个节点</p>
+</li>
+</ul>
+<h6 id="prev指针"><a href="#prev指针" class="headerlink" title="prev指针"></a>prev指针</h6><p>对与需要删除或移动某个节点的情况，需要修改该节点前一个结点的next指针</p>
+<p>如果循环时迭代的变量视为当前节点，则需要额外维护一个prev变量</p>
+<p>当然，也可以直接将循环时迭代的变量视为前一个节点，使用该节点-&gt;next-&gt;val，这样可以省去prev变量</p>
+<h6 id="dummy结点"><a href="#dummy结点" class="headerlink" title="dummy结点"></a>dummy结点</h6><p>通常以一个不存储实际数值的哑结点作为头结点，以统一操作，避免在循环中进行额外的判断（是否为head）</p>
+<p>如果使用上面的prev变量，初始时prev就指向dummy</p>
+<h6 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h6><p>对循环边界条件的判断</p>
+<ul>
+<li>链表是否结束，注意判断是用<code>p!=nullptr</code>还是<code>p-&gt;next!=nullptr</code></li>
+<li>前进指定的次数</li>
+</ul>
+<p>对于需要计数的情况</p>
+<ul>
+<li><p>尽可能不要在循环的判断条件中对计数变量使用<code>++</code>和<code>--</code>后缀运算符，特别是与结点指针<code>p != nullptr</code>的判断进行逻辑与<code>&amp;&amp;</code>运算时</p>
+</li>
+<li><p>因为后缀运算的副作用是否执行与执行位置不明显，带来思维上的负担，容易出现边界情况计算错误</p>
+</li>
+<li><p>好的做法应该是在循环体中修改计数变量（同时修改结点指针）</p>
+</li>
+</ul>
+<p>对于指针指向的修改</p>
+<ul>
+<li>需要额外的变量暂存某个指针</li>
+<li>以一定的顺序赋值，避免错误覆盖而丢失指针</li>
+<li>每次循环结束后某个指针变量的指向是明确的（“语义”不变的）</li>
+</ul>
+<p>关于递归实现</p>
+<ul>
+<li>递归虽然更简洁，但边界条件也容易出错，并且栈开销较大，尽量不使用</li>
+</ul>
+<h3 id="具体题目"><a href="#具体题目" class="headerlink" title="具体题目"></a>具体题目</h3><h4 id="简单题"><a href="#简单题" class="headerlink" title="简单题"></a>简单题</h4><h6 id="2-两数相加"><a href="#2-两数相加" class="headerlink" title="2. 两数相加"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/add-two-numbers">2. 两数相加</a></h6><p>以链表存储的两个数，低位在前</p>
+<p>直接相加即可，注意最后的进位</p>
+<h6 id="445-两数相加-II"><a href="#445-两数相加-II" class="headerlink" title="445. 两数相加 II"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/add-two-numbers-ii">445. 两数相加 II</a></h6><p>以链表存储的两个数，高位在前</p>
+<p>先入栈或先翻转链表</p>
+<h6 id="19-删除链表的倒数第-N-个结点"><a href="#19-删除链表的倒数第-N-个结点" class="headerlink" title="19. 删除链表的倒数第 N 个结点"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list">19. 删除链表的倒数第 N 个结点</a></h6><p>经典双指针，注意删除的有可能是首结点，需要dummy</p>
+<p>A从head先前进N，然后B从dummy出发与A一起前进，A==null时，B为倒数第N的前一个结点</p>
+<h6 id="21-合并两个有序链表"><a href="#21-合并两个有序链表" class="headerlink" title="21. 合并两个有序链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/merge-two-sorted-lists">21. 合并两个有序链表</a></h6><p>简单归并，注意最后接上未遍历完的那个链表</p>
+<h6 id="83-删除排序链表中的重复元素"><a href="#83-删除排序链表中的重复元素" class="headerlink" title="83. 删除排序链表中的重复元素"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list">83. 删除排序链表中的重复元素</a></h6><p>题意：删除已排序链表中所有重复数字的节点，使每个元素只出现一次 </p>
+<p>对每个结点，不断删除相同值的下一个结点</p>
+<h6 id="82-删除排序链表中的重复元素-II"><a href="#82-删除排序链表中的重复元素-II" class="headerlink" title="82. 删除排序链表中的重复元素 II"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii">82. 删除排序链表中的重复元素 II</a></h6><p>题意：删除已排序链表中所有重复数字的节点，只留下原先只出现一次的数字</p>
+<p>这题有可能删除头结点，需要dummy</p>
+<p>设置prev和curr，对每个结点curr，不断删除相同值的下一个结点，最后删除curr</p>
+<h6 id="141-环形链表"><a href="#141-环形链表" class="headerlink" title="141. 环形链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/linked-list-cycle">141. 环形链表</a></h6><p>快慢指针判断环，注意循环的边界条件</p>
+<p>如果<code>fast</code>遇到<code>nullptr</code>，说明没有环</p>
+<h6 id="203-移除链表元素"><a href="#203-移除链表元素" class="headerlink" title="203. 移除链表元素"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/remove-linked-list-elements">203. 移除链表元素</a></h6><p>判断下一个元素的值即可，若相等，删除下一个元素</p>
+<h6 id="206-反转链表"><a href="#206-反转链表" class="headerlink" title="206. 反转链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/reverse-linked-list">206. 反转链表</a></h6><p>经典方法，前中后三个指针遍历</p>
+<pre><code class="c++">ListNode* prev = nullptr;
+ListNode* curr = head;
+ListNode* next = nullptr;
+while (curr) &#123;
+    next = curr-&gt;next;
+    curr-&gt;next = prev;
+    prev = curr;
+    curr = next;
+&#125;
+return prev;
+</code></pre>
+<p>还有一种奇技淫巧，</p>
+<pre><code class="c++">ListNode *p;
+for (p = nullptr; head; )
+    tie(p, head, head-&gt;next) = tuple&lt;ListNode*, ListNode*, ListNode*&gt;(head, head-&gt;next, p);
+return p;
+</code></pre>
+<h6 id="237-删除链表中的节点"><a href="#237-删除链表中的节点" class="headerlink" title="237. 删除链表中的节点"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/delete-node-in-a-linked-list">237. 删除链表中的节点</a></h6><p>比较有意思的题目，由于不知道当前节点的前一个结点，无法直接删除，我们可以把下一个结点（必须存在）的值放到当前节点存储，然后删除下一个结点</p>
+<h6 id="725-分隔链表"><a href="#725-分隔链表" class="headerlink" title="725. 分隔链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/split-linked-list-in-parts">725. 分隔链表</a></h6><p>题意：把链表按顺序平均切成k份，任意两部分的长度差距不能超过 1，排在前面的部分的长度应该大于或等于排在后面的长度。</p>
+<p>先计算长度n，求每份基本长度n/k，n%k余数r，前r段每段长度n/k+1，剩下的每段长度为n/k，对两种长度分别循环切分</p>
+<h6 id="876-链表的中间结点"><a href="#876-链表的中间结点" class="headerlink" title="876. 链表的中间结点"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/middle-of-the-linked-list">876. 链表的中间结点</a></h6><p>经典的快慢指针</p>
+<h6 id="1290-二进制链表转整数"><a href="#1290-二进制链表转整数" class="headerlink" title="1290. 二进制链表转整数"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/convert-binary-number-in-a-linked-list-to-integer">1290. 二进制链表转整数</a></h6><p>遍历，移位，累加</p>
+<h6 id="1669-合并两个链表"><a href="#1669-合并两个链表" class="headerlink" title="1669. 合并两个链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/merge-in-between-linked-lists">1669. 合并两个链表</a></h6><p>题意：给你两个链表，它们包含的元素分别为&nbsp;<code>n</code> 个和&nbsp;<code>m</code> 个。请你将&nbsp;<code>list1</code>&nbsp;中下标从 <code>a</code> 到 <code>b</code> 的全部节点都删除，并将<code>list2</code>&nbsp;接在被删除节点的位置。</p>
+<p>注意前进次数，前进a-1次获得删除区间的前一个结点，再前进b+1次，获得删除区间的后一个结点</p>
+<h6 id="1721-交换链表中的节点"><a href="#1721-交换链表中的节点" class="headerlink" title="1721. 交换链表中的节点"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/swapping-nodes-in-a-linked-list">1721. 交换链表中的节点</a></h6><p>题意：<strong>交换</strong> 链表正数第 <code>k</code> 个节点和倒数第 <code>k</code> 个节点的值</p>
+<p>双指针，A先前进k-1次，记录A的位置获得第k</p>
+<p>A+1（注意这里），之后AB一起，A==null时，B就是倒数k</p>
+<h6 id="2058-找出临界点之间的最小和最大距离"><a href="#2058-找出临界点之间的最小和最大距离" class="headerlink" title="2058. 找出临界点之间的最小和最大距离"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/find-the-minimum-and-maximum-number-of-nodes-between-critical-points">2058. 找出临界点之间的最小和最大距离</a></h6><p>题意：找出链表的两个严格极(大或小)值之间的最大和最小距离</p>
+<p>前中后三个指针，依次找到所有极值的位置，更新最小间距</p>
+<h6 id="2095-删除链表的中间节点"><a href="#2095-删除链表的中间节点" class="headerlink" title="2095. 删除链表的中间节点"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/delete-the-middle-node-of-a-linked-list">2095. 删除链表的中间节点</a></h6><p>快慢指针找中点的前一个结点，注意输入和循环的边界条件</p>
+<p>或者多用一个pre存放上一次的慢指针，比较清晰不会混乱</p>
+<h4 id="中等题"><a href="#中等题" class="headerlink" title="中等题"></a>中等题</h4><h6 id="24-两两交换链表中的节点"><a href="#24-两两交换链表中的节点" class="headerlink" title="24. 两两交换链表中的节点"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/swap-nodes-in-pairs">24. 两两交换链表中的节点</a></h6><p>递归方法：简单</p>
+<p>迭代方法：</p>
+<p>交换之前的节点关系是 <code>temp -&gt; node1 -&gt; node2</code>，交换之后的节点关系要变成 <code>temp -&gt; node2 -&gt; node1</code>，因此需要进行如下操作。</p>
+<pre><code>temp.next = node2
+node1.next = node2.next
+node2.next = node1
+</code></pre>
+<p>完成上述操作之后，节点关系即变成 <code>temp -&gt; node2 -&gt; node1</code>。再令 <code>temp = node1</code>，对链表中的其余节点进行两两交换，直到全部节点都被两两交换。</p>
+<h6 id="61-旋转链表"><a href="#61-旋转链表" class="headerlink" title="61. 旋转链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/rotate-list">61. 旋转链表</a></h6><p>题意：将链表每个节点向右移动&nbsp;<code>k</code>_&nbsp;_个位置</p>
+<p>先求长度n，k=k%n，k==0时无需处理</p>
+<p>思路：将链表连接成环，然后在指定位置断开</p>
+<p>具体：尾部下一个节点连到头成环，然后找到新链表的最后一个节点（即原链表的第n - 1 - k个节点），将当前闭合为环的链表断开</p>
+<h6 id="86-分隔链表"><a href="#86-分隔链表" class="headerlink" title="86. 分隔链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/partition-list">86. 分隔链表</a></h6><p>题意：给一个特定值x，调整链表使得所有 <strong>小于</strong> <code>x</code> 的节点都出现在 <strong>大于或等于</strong> <code>x</code> 的节点之前，应当 <strong>保留</strong> 两个分区中每个节点的初始相对位置。</p>
+<p>效果相当于快排里的划分函数。</p>
+<p>但链表不能从后往前迭代。因此，开一个dummy存放遍历时遇到的所有&gt;=x的结点，原head的链表保留&lt;x的结点，最后链接两个链表</p>
+<h6 id="92-反转链表-II"><a href="#92-反转链表-II" class="headerlink" title="92. 反转链表 II"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/reverse-linked-list-ii">92. 反转链表 II</a></h6><p>题意：反转链表中的一个区间[left,right]，下标从1开始</p>
+<p>注意设置dummy，因为left可能是1，这样我们总是可以从dummy先前进left-1次获得left的前一个结点p，然后常规翻转right-left+1次</p>
+<p>最后设置原p-&gt;next的next为翻转后剩下结点的首节点，p-&gt;next设为翻转后的首节点</p>
+<h6 id="142-环形链表-II"><a href="#142-环形链表-II" class="headerlink" title="142. 环形链表 II"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/linked-list-cycle-ii">142. 环形链表 II</a></h6><p>题意：找出环形链表的入口点</p>
+<p>快慢指针，直到快为null（说明无环，返回）或快==慢</p>
+<p>此时slow走n步，fast走2n步，fast比slow多走一圈，则圈长为n</p>
+<p>设不在圈中的部分长度为k，则slow在圈中已走n-k步，说明再走k步就会回到入口点（进圈的第一个结点）</p>
+<p>让fast回head，与slow同速度前进，直到相等，则此时slow走n+k步，比fast多1圈，则fast走了k步，两者都在入口点</p>
+<h6 id="143-重排链表"><a href="#143-重排链表" class="headerlink" title="143. 重排链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/reorder-list">143. 重排链表</a></h6><h6 id="147-对链表进行插入排序"><a href="#147-对链表进行插入排序" class="headerlink" title="147. 对链表进行插入排序"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/insertion-sort-list">147. 对链表进行插入排序</a></h6><p>设置一个指针p指向已排序的末尾节点，遍历链表，若当前节点大于末尾，则p++，否则取出当前节点从头开始寻找插入点</p>
+<h6 id="160-相交链表"><a href="#160-相交链表" class="headerlink" title="160. 相交链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/intersection-of-two-linked-lists">160. 相交链表</a></h6><p>题意：两个链表可能在某个结点相交（之后的结点是一样的）。返回相交的其实结点，不存在返回Null</p>
+<p>简单的方法：先算长度，然后重新遍历，让长的链表先走长度差，之后同时遍历两个链表，判断节点是否一样</p>
+<p>巧妙的方法：同时遍历两个链表，各自到末尾时开始遍历另一个链表，直到二者相等（包括都为null的情况，说明不相交）</p>
+<h6 id="234-回文链表"><a href="#234-回文链表" class="headerlink" title="234. 回文链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/palindrome-linked-list">234. 回文链表</a></h6><p>题意：判断链表的数字是否回文</p>
+<p>方法一：快慢指针 + 反转链表，不额外使用存储的方法。先快慢指针找到中点，将链表的后半部分反转（修改链表结构），然后将前半部分和后半部分进行比较。比较完成后将链表恢复原样。</p>
+<p>方法二：快慢指针找中点，中点后的结点存入一个栈中</p>
+<p>方法三：巧妙的递归方法，需要使用全局变量</p>
+<pre><code class="c++">ListNode* frontPointer;
+bool recursivelyCheck(ListNode* currentNode) &#123;
+    if (currentNode != nullptr) &#123;
+        if (!recursivelyCheck(currentNode-&gt;next)) &#123;
+            return false;
+        &#125;
+        if (currentNode-&gt;val != frontPointer-&gt;val) &#123;
+            return false;
+        &#125;
+        frontPointer = frontPointer-&gt;next;
+    &#125;
+    return true;
+&#125;
+bool isPalindrome(ListNode* head) &#123;
+    frontPointer = head;
+    return recursivelyCheck(head);
+&#125;
+</code></pre>
+<h6 id="328-奇偶链表"><a href="#328-奇偶链表" class="headerlink" title="328. 奇偶链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/odd-even-linked-list">328. 奇偶链表</a></h6><p>题意：奇数下标的结点连在一起，偶数下标的结点连在一起作为后半部分</p>
+<p>开另一个dummy结点存储取出的偶结点，最后接到原链表后</p>
+<h6 id="817-链表组件"><a href="#817-链表组件" class="headerlink" title="817. 链表组件"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/linked-list-components">817. 链表组件</a></h6><p>题意：计算链表中 元素连续出现在某个数组中 的区间数量</p>
+<p>先把数组元素存入集合，方便查找，然后遍历链表即可</p>
+<h6 id="2130-链表最大孪生和"><a href="#2130-链表最大孪生和" class="headerlink" title="2130. 链表最大孪生和"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/maximum-twin-sum-of-a-linked-list">2130. 链表最大孪生和</a></h6><p>题意：在一个大小为&nbsp;<code>n</code>&nbsp;且 <code>n</code>&nbsp;为&nbsp;<strong>偶数</strong> 的链表中，第&nbsp;<code>i</code>&nbsp;个节点（下标从 <strong>0</strong>&nbsp;开始）的孪生节点为第&nbsp;<code>(n-1-i)</code>&nbsp;个节点 ，求最大的孪生结点元素和</p>
+<p>类似回文链表</p>
+<h6 id="138-复制带随机指针的链表"><a href="#138-复制带随机指针的链表" class="headerlink" title="138. 复制带随机指针的链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/copy-list-with-random-pointer">138. 复制带随机指针的链表</a></h6><p>题意：给你一个长度为 <code>n</code> 的链表，每个节点包含一个额外增加的随机指针 <code>random</code> ，该指针可以指向链表中的任何节点或空节点。返回这个链表的&nbsp;__<a href="https://baike.baidu.com/item/深拷贝/22785317?fr=aladdin" target="_blank">深拷贝</a>__。复制链表中的指针都不应指向原链表中的节点 。</p>
+<p>简单方法：使用哈希表记录新旧结点关系，按序构建新链表，然后再次遍历，根据hash表重建random指针</p>
+<p>巧妙方法：</p>
+<p>首先将该链表中每一个节点拆分为两个相连的节点，例如对于链表 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="12.502ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 5382.6 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">A \rightarrow B \rightarrow C</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-41" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-42" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-43" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q484 659 454 652T382 628T299 572T226 479Q194 422 175 346T156 222Q156 108 232 58Q280 24 350 24Q441 24 512 92T606 240Q610 253 612 255T628 257Q648 257 648 248Q648 243 647 239Q618 132 523 55T319 -22Q206 -22 128 53T50 252Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-41" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2192" x="1028" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-42" x="2306" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2192" x="3343" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-43" x="4622" y="0"></use>
+</g>
+</svg></div>，我们可以将其拆分为 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="30.703ex" height="2.509ex" style="vertical-align: -0.338ex;" viewBox="0 -934.9 13219.3 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">A \rightarrow A' \rightarrow B \rightarrow B' \rightarrow C \rightarrow C'</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-41" d="M208 74Q208 50 254 46Q272 46 272 35Q272 34 270 22Q267 8 264 4T251 0Q249 0 239 0T205 1T141 2Q70 2 50 0H42Q35 7 35 11Q37 38 48 46H62Q132 49 164 96Q170 102 345 401T523 704Q530 716 547 716H555H572Q578 707 578 706L606 383Q634 60 636 57Q641 46 701 46Q726 46 726 36Q726 34 723 22Q720 7 718 4T704 0Q701 0 690 0T651 1T578 2Q484 2 455 0H443Q437 6 437 9T439 27Q443 40 445 43L449 46H469Q523 49 533 63L521 213H283L249 155Q208 86 208 74ZM516 260Q516 271 504 416T490 562L463 519Q447 492 400 412L310 260L413 259Q516 259 516 260Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2192" d="M56 237T56 250T70 270H835Q719 357 692 493Q692 494 692 496T691 499Q691 511 708 511H711Q720 511 723 510T729 506T732 497T735 481T743 456Q765 389 816 336T935 261Q944 258 944 250Q944 244 939 241T915 231T877 212Q836 186 806 152T761 85T740 35T732 4Q730 -6 727 -8T711 -11Q691 -11 691 0Q691 7 696 25Q728 151 835 230H70Q56 237 56 250Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2032" d="M79 43Q73 43 52 49T30 61Q30 68 85 293T146 528Q161 560 198 560Q218 560 240 545T262 501Q262 496 260 486Q259 479 173 263T84 45T79 43Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-42" d="M231 637Q204 637 199 638T194 649Q194 676 205 682Q206 683 335 683Q594 683 608 681Q671 671 713 636T756 544Q756 480 698 429T565 360L555 357Q619 348 660 311T702 219Q702 146 630 78T453 1Q446 0 242 0Q42 0 39 2Q35 5 35 10Q35 17 37 24Q42 43 47 45Q51 46 62 46H68Q95 46 128 49Q142 52 147 61Q150 65 219 339T288 628Q288 635 231 637ZM649 544Q649 574 634 600T585 634Q578 636 493 637Q473 637 451 637T416 636H403Q388 635 384 626Q382 622 352 506Q352 503 351 500L320 374H401Q482 374 494 376Q554 386 601 434T649 544ZM595 229Q595 273 572 302T512 336Q506 337 429 337Q311 337 310 336Q310 334 293 263T258 122L240 52Q240 48 252 48T333 46Q422 46 429 47Q491 54 543 105T595 229Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-43" d="M50 252Q50 367 117 473T286 641T490 704Q580 704 633 653Q642 643 648 636T656 626L657 623Q660 623 684 649Q691 655 699 663T715 679T725 690L740 705H746Q760 705 760 698Q760 694 728 561Q692 422 692 421Q690 416 687 415T669 413H653Q647 419 647 422Q647 423 648 429T650 449T651 481Q651 552 619 605T510 659Q484 659 454 652T382 628T299 572T226 479Q194 422 175 346T156 222Q156 108 232 58Q280 24 350 24Q441 24 512 92T606 240Q610 253 612 255T628 257Q648 257 648 248Q648 243 647 239Q618 132 523 55T319 -22Q206 -22 128 53T50 252Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-41" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2192" x="1028" y="0"></use>
+<g transform="translate(2306,0)">
+ <use xlink:href="#E1-MJMATHI-41" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-2032" x="1061" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2192" x="3629" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-42" x="4907" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2192" x="5945" y="0"></use>
+<g transform="translate(7223,0)">
+ <use xlink:href="#E1-MJMATHI-42" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-2032" x="1074" y="583"></use>
+</g>
+ <use xlink:href="#E1-MJMAIN-2192" x="8555" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-43" x="9833" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-2192" x="10872" y="0"></use>
+<g transform="translate(12150,0)">
+ <use xlink:href="#E1-MJMATHI-43" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-2032" x="1094" y="583"></use>
+</g>
+</g>
+</svg></div>。对于任意一个原节点 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.499ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 645.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">S</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-53" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-53" x="0" y="0"></use>
+</g>
+</svg></div>，其拷贝节点 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.206ex" height="2.509ex" style="vertical-align: -0.338ex;" viewBox="0 -934.9 950 1080.4" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">S'</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-53" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-2032" d="M79 43Q73 43 52 49T30 61Q30 68 85 293T146 528Q161 560 198 560Q218 560 240 545T262 501Q262 496 260 486Q259 479 173 263T84 45T79 43Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-53" x="0" y="0"></use>
+ <use transform="scale(0.707)" xlink:href="#E1-MJMAIN-2032" x="926" y="583"></use>
+</g>
+</svg></div> 即为其后继节点。
+
+<p>然后，重建random指针，对于一个原链表节点执行<code>p-&gt;next-&gt;random = p-&gt;random-&gt;next</code></p>
+<p>最后，将两个链表拆分开。</p>
+<h4 id="困难题"><a href="#困难题" class="headerlink" title="困难题"></a>困难题</h4><h6 id="23-合并K个升序链表"><a href="#23-合并K个升序链表" class="headerlink" title="23. 合并K个升序链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/merge-k-sorted-lists">23. 合并K个升序链表</a></h6><p>朴素方法：k-1次循环，每次取一个链表合并到第一个链表，O(nk^2)</p>
+<p>进阶方法：分治合并，logk次，O(nklogk)</p>
+<p>更好的方法：维护当前每个链表没有被合并的元素的最前面一个，<div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.211ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 521.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title"></p>
+<title id="MathJax-SVG-1-Title">k</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-6B" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-6B" x="0" y="0"></use>
+</g>
+</svg></div> 个链表就最多有 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.211ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 521.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">k</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-6B" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-6B" x="0" y="0"></use>
+</g>
+</svg></div> 个满足这样条件的元素，每次在这些元素里面选取 `val` 属性最小的元素合并到答案中。在选取最小元素的时候，用优先队列来优化这个过程。优先队列中的元素不超过 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.211ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 521.5 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">k</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-6B" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-6B" x="0" y="0"></use>
+</g>
+</svg></div> 个，最多有 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="2.606ex" height="2.176ex" style="vertical-align: -0.338ex;" viewBox="0 -791.3 1122 936.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">kn</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-6B" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-6B" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6E" x="521" y="0"></use>
+</g>
+</svg></div> 个点，插入删除各一次，故总的时间代价即渐进时间复杂度为 <div class="mathjax-inline"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="13.599ex" height="2.843ex" style="vertical-align: -0.838ex;" viewBox="0 -863.1 5855.1 1223.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">O(kn \times \log k)</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMATHI-4F" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6B" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path>
+<path stroke-width="1" id="E1-MJMATHI-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-D7" d="M630 29Q630 9 609 9Q604 9 587 25T493 118L389 222L284 117Q178 13 175 11Q171 9 168 9Q160 9 154 15T147 29Q147 36 161 51T255 146L359 250L255 354Q174 435 161 449T147 471Q147 480 153 485T168 490Q173 490 175 489Q178 487 284 383L389 278L493 382Q570 459 587 475T609 491Q630 491 630 471Q630 464 620 453T522 355L418 250L522 145Q606 61 618 48T630 29Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-6C" d="M42 46H56Q95 46 103 60V68Q103 77 103 91T103 124T104 167T104 217T104 272T104 329Q104 366 104 407T104 482T104 542T103 586T103 603Q100 622 89 628T44 637H26V660Q26 683 28 683L38 684Q48 685 67 686T104 688Q121 689 141 690T171 693T182 694H185V379Q185 62 186 60Q190 52 198 49Q219 46 247 46H263V0H255L232 1Q209 2 183 2T145 3T107 3T57 1L34 0H26V46H42Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-6F" d="M28 214Q28 309 93 378T250 448Q340 448 405 380T471 215Q471 120 407 55T250 -10Q153 -10 91 57T28 214ZM250 30Q372 30 372 193V225V250Q372 272 371 288T364 326T348 362T317 390T268 410Q263 411 252 411Q222 411 195 399Q152 377 139 338T126 246V226Q126 130 145 91Q177 30 250 30Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-67" d="M329 409Q373 453 429 453Q459 453 472 434T485 396Q485 382 476 371T449 360Q416 360 412 390Q410 404 415 411Q415 412 416 414V415Q388 412 363 393Q355 388 355 386Q355 385 359 381T368 369T379 351T388 325T392 292Q392 230 343 187T222 143Q172 143 123 171Q112 153 112 133Q112 98 138 81Q147 75 155 75T227 73Q311 72 335 67Q396 58 431 26Q470 -13 470 -72Q470 -139 392 -175Q332 -206 250 -206Q167 -206 107 -175Q29 -140 29 -75Q29 -39 50 -15T92 18L103 24Q67 55 67 108Q67 155 96 193Q52 237 52 292Q52 355 102 398T223 442Q274 442 318 416L329 409ZM299 343Q294 371 273 387T221 404Q192 404 171 388T145 343Q142 326 142 292Q142 248 149 227T179 192Q196 182 222 182Q244 182 260 189T283 207T294 227T299 242Q302 258 302 292T299 343ZM403 -75Q403 -50 389 -34T348 -11T299 -2T245 0H218Q151 0 138 -6Q118 -15 107 -34T95 -74Q95 -84 101 -97T122 -127T170 -155T250 -167Q319 -167 361 -139T403 -75Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+ <use xlink:href="#E1-MJMATHI-4F" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-28" x="763" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6B" x="1153" y="0"></use>
+ <use xlink:href="#E1-MJMATHI-6E" x="1674" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-D7" x="2497" y="0"></use>
+<g transform="translate(3497,0)">
+ <use xlink:href="#E1-MJMAIN-6C"></use>
+ <use xlink:href="#E1-MJMAIN-6F" x="278" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-67" x="779" y="0"></use>
+</g>
+ <use xlink:href="#E1-MJMATHI-6B" x="4944" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-29" x="5465" y="0"></use>
+</g>
+</svg></div>。
+
+<h6 id="25-K-个一组翻转链表"><a href="#25-K-个一组翻转链表" class="headerlink" title="25. K 个一组翻转链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/reverse-nodes-in-k-group/solution/k-ge-yi-zu-fan-zhuan-lian-biao-by-leetcode-solutio">25. K 个一组翻转链表</a></h6><p>细节题</p>
+<p>实现一个函数，输入一个子链表的头和尾节点，翻转，并且返回新的头与尾</p>
+<h6 id="148-排序链表"><a href="#148-排序链表" class="headerlink" title="148. 排序链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/sort-list">148. 排序链表</a></h6><p>题意：归并排序链表</p>
+<h6 id="430-扁平化多级双向链表"><a href="#430-扁平化多级双向链表" class="headerlink" title="430. 扁平化多级双向链表"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/flatten-a-multilevel-doubly-linked-list">430. 扁平化多级双向链表</a></h6><p>类似二叉树的先序遍历</p>
+<p>相似题目 <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/">114. 二叉树展开为链表</a></p>
+<h6 id="1171-从链表中删去总和值为零的连续节点"><a href="#1171-从链表中删去总和值为零的连续节点" class="headerlink" title="1171. 从链表中删去总和值为零的连续节点"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list">1171. 从链表中删去总和值为零的连续节点</a></h6><p>朴素方法：每个位置都执行向后遍历，删除和为0的区间，直到不能再删，换下一个位置，O（n^2）</p>
+<p>两次遍历法：第一次求前缀和，维护前缀和到节点（保留最后一个）的哈希表；第二次遍历，若当前节点处前缀和在哈希表出现了<br>，则表明两结点之间所有节点和为0，直接删除区间所有节点</p>
+<h6 id="2074-反转偶数长度组的节点"><a href="#2074-反转偶数长度组的节点" class="headerlink" title="2074. 反转偶数长度组的节点"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/reverse-nodes-in-even-length-groups">2074. 反转偶数长度组的节点</a></h6><p>细节题</p>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/bijpya/" class="prev">LeetCode刷题笔记——迭代、递归、回溯、搜索、动态规划和贪心</a>
+		 
+
+		 
+			<a href="/s/p/bi4kgl/" class="next">LeetCode刷题笔记——理解二叉树的非递归遍历</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/bi8to3/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

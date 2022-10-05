@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">算法基础上机实验五 图搜索BFS算法及存储优化</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2018-12-09</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 11808 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 39 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>图搜索BFS算法及存储优化</p>
+<blockquote>
+<h5 id="实验要求："><a href="#实验要求：" class="headerlink" title="实验要求："></a>实验要求：</h5><p>1.模拟数据集</p>
+<p>自己随机生成有向图，边数的规模为10，100，1000，10000，100000；</p>
+<p>进行BFS搜索，记录程序完成时间和所需内存空间大小。</p>
+<p>2.真实数据集</p>
+<p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1pvfphiywjSXohO-bSnL1HA">https://pan.baidu.com/s/1pvfphiywjSXohO-bSnL1HA</a></p>
+<p>数据集说明：均为twitter真实数据集，数据集规模如下：</p>
+<p>twitter_small: Nodes 81306, Edges 1768149, 有向图；</p>
+<p>twitter_large: Nodes 11316811, Edges 85331846, 有向图。</p>
+<p>进行BFS搜索，设计存储优化方案和加速方案，记录程序时间和内存空间大小。</p>
+<h5 id="实验说明"><a href="#实验说明" class="headerlink" title="实验说明"></a>实验说明</h5><p>1）编程语言和实验平台不限，可考虑并行（i.e., GPU/OpenMP/MapReduce）；</p>
+<p>2）至少需完成模拟数据集和twitter_small数据集的实验，twitter_large数据集为加分题。 </p>
+</blockquote>
+<h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><h4 id="BFS算法"><a href="#BFS算法" class="headerlink" title="BFS算法"></a>BFS算法</h4><p>BFS（Breadth First Search），即广度优先搜索，从某个结点s开始，自始至终一直通过已找到和未找到顶点之间的边界向外扩展，就是说，算法首先搜索和s距离为k的所有顶点，然后再去搜索和S距离为k+l的其他顶点。该算法需要一个先进先出队列，只要队列不为空，就从队首取出一个结点n，访问它的所有邻居，如果某个邻居未被标记为已访问（visit=0），则将该邻居加入到队列尾，最后将该结点n标记为已访问（visit=1）。</p>
+<p>BFS的时间复杂度为O(V+E)，V为结点数，E为边数。因为每个结点都进入队列一次，访问邻居时每条边至多被扫描一遍。</p>
+<span id="more"></span>
+
+<h4 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a>存储结构</h4><p>由于结点数很多且边稀疏，故采用邻接表进行存储，定义两种结构体：</p>
+<ul>
+<li><p>nbnode，表示一个结点的某个邻居</p>
+<ul>
+<li>p，int类型，该邻居在结点数组中的下标</li>
+<li>next，nbnode*类型，指向下一个邻居</li>
+</ul>
+</li>
+<li><p>node，表示一个结点</p>
+<ul>
+<li> id，int类型，表示从文件中读取到的结点ID</li>
+<li> visit，char类型（节省存储），-1表示不存在该结点，0表示结点存在但未访问，1表示存在且已访问。</li>
+<li> nblisthead，nbnode*类型，指向第一个邻居</li>
+</ul>
+</li>
+</ul>
+<p>全局开设一个node结点数组arr</p>
+<ul>
+<li><p>对于twitter_small.txt文件，81306个结点，其id最大达到九位数，且不连续，直接作为数组下标将造成数组过大，空间浪费多，因此使用c++的map容器，将id映射到数组下标p，每次读入一个id时，用map查询是否存在，若不存在，将该id和当前未分配的最小数组下标(即nodecount)加入map，然后nodecount++。另外，该文件中有重复边，每次为一个结点添加邻居之前先遍历链表判断是否已存在。在BFS时，访问数组直接使用下标，不再使用id。</p>
+</li>
+<li><p>对于twitter_large.txt，其id最大值等于结点数11316811，id连续，可以直接作为数组下标，且文件中无重复边，可以直接添加邻居无需判断重复。为了实现对node的计数，起使时visit设为-1，读取文件时，如果该结点visit=-1,则nodecount++，并且让visit=0，表示该结点存在（但未访问）。</p>
+</li>
+</ul>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><h5 id="使用bfs-random-cpp测试10-txt-100-txt-1000-txt-10000-txt-100000-txt"><a href="#使用bfs-random-cpp测试10-txt-100-txt-1000-txt-10000-txt-100000-txt" class="headerlink" title="使用bfs_random.cpp测试10.txt 100.txt 1000.txt 10000.txt 100000.txt"></a>使用bfs_random.cpp测试10.txt 100.txt 1000.txt 10000.txt 100000.txt</h5><p>以上5个文件由GenGraph.py生成。</p>
+<p>100000.txt结果如下</p>
+<p>读取时间0.019秒，bfs时间几乎为0，内存为5.8MB(不准确，这是包括运行窗口等其他资源使用的内存)</p>
+<p><img src="/s/p/9vt9c0/clip_image002.jpg" alt="img"></p>
+<p><img src="/s/p/9vt9c0/clip_image004.jpg" alt="img"></p>
+<h5 id="使用bfs-cpp测试twitter-small-txt"><a href="#使用bfs-cpp测试twitter-small-txt" class="headerlink" title="使用bfs.cpp测试twitter_small.txt"></a>使用bfs.cpp测试twitter_small.txt</h5><p>​     文件有重复边，序号连续，81306个结点（序号最大有9位数），1768149条边（但文件有2000000多行）</p>
+<p>​    结果如下</p>
+<p>4.5秒完成（其中读取4.4秒，bfs小于0.1秒）</p>
+<p>内存约36MB</p>
+<p><img src="/s/p/9vt9c0/clip_image006.jpg" alt="img"></p>
+<p><img src="/s/p/9vt9c0/clip_image008.png" alt="img"></p>
+<h5 id="使用bfs-large-2-cpp测试twitter-large-txt"><a href="#使用bfs-large-2-cpp测试twitter-large-txt" class="headerlink" title="使用bfs_large_2.cpp测试twitter_large.txt"></a>使用bfs_large_2.cpp测试twitter_large.txt</h5><p>文件无重复边，序号连续，11316811个结点（最大序号就是11316811），85331845条边</p>
+<p>结果如下</p>
+<p>42秒完成（其中读取29秒，bfs13秒）</p>
+<p>内存约1466MB</p>
+<p><img src="/s/p/9vt9c0/clip_image010.png" alt="img"></p>
+<p><img src="/s/p/9vt9c0/clip_image012.png" alt="img"></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><h5 id="small"><a href="#small" class="headerlink" title="small"></a>small</h5><pre><code class="c++">#include &lt;cstdio&gt;
+#include &lt;ctime&gt;
+#include &lt;cstdlib&gt;
+#include &lt;map&gt;
+#include &lt;queue&gt;
+using namespace std;
+typedef struct _nbnode&#123;
+    int p;//该邻居在表中的下标
+    struct _nbnode *next;
+    _nbnode(int _p):p(_p)&#123;&#125;
+&#125;nbnode,*nblist;
+typedef struct _node&#123;
+    int id;
+    char visit;
+    nblist nblisthead;
+    _node()&#123;
+        visit = 0;
+        nblisthead = NULL;
+    &#125;
+&#125;node;
+
+node *arr = new node[90000];//结点表
+map&lt;int,int&gt; nodemap; //id 映射到 p
+int edgecount = 0,nodecount = 0;
+
+void bfs(int p)&#123;
+    queue&lt;int&gt; q;
+    q.push(p);
+    arr[p].visit = 1;
+    while(!q.empty())&#123;
+        nbnode *nb = arr[q.front()].nblisthead;
+        while(nb != NULL)&#123;
+            if(!arr[nb-&gt;p].visit)&#123;
+                q.push(nb-&gt;p);
+                arr[nb-&gt;p].visit = 1;
+            &#125;
+            nb = nb-&gt;next;
+        &#125;
+        q.pop();
+    &#125;
+&#125;
+void BFS()&#123;
+    int componentcount = 0;
+    for(int i = 0;i &lt; nodecount;i++)&#123;
+        if (arr[i].visit == 0)&#123;
+            bfs(i);
+            componentcount++;
+        &#125;
+    &#125;
+    printf(&quot;component: %d\n&quot;,componentcount);
+&#125;
+void Load()&#123;
+    FILE *fp = fopen(&quot;twitter_small.txt&quot;,&quot;r+&quot;);
+    nbnode *nb;
+    int ida,idb,pa,pb;
+    map&lt;int,int&gt;::iterator itera,iterb;
+    while(fscanf(fp,&quot;%d&quot;,&amp;ida) != EOF)&#123;
+        fscanf(fp,&quot;%d&quot;,&amp;idb);
+        if((itera = nodemap.find(ida)) != nodemap.end())&#123;
+            pa = itera-&gt;second;
+        &#125;
+        else&#123;
+            nodemap[ida] = nodecount;//向map中插入(ida,nodecount)
+            pa = nodecount++;
+            arr[pa].id = ida;
+        &#125;
+        if((iterb = nodemap.find(idb)) != nodemap.end())&#123;
+            pb = iterb-&gt;second;
+        &#125;
+        else&#123;
+            nodemap[idb] = nodecount;
+            pb = nodecount++;
+            arr[pb].id = idb;
+        &#125;
+        nb = arr[pa].nblisthead;
+        while(nb != NULL)&#123;
+            if(nb-&gt;p == pb)//该边已存在
+                goto LABEL;
+            nb = nb-&gt;next;
+        &#125;
+        nb = arr[pa].nblisthead;
+        arr[pa].nblisthead = new nbnode(pb);
+        arr[pa].nblisthead-&gt;next = nb;
+        edgecount++;
+        LABEL:;
+    &#125;
+    printf(&quot;node: %d\n&quot;,nodecount);
+    printf(&quot;edge: %d\n&quot;,edgecount);
+&#125;
+int main()&#123;
+    clock_t t1,t2,t3,t4;
+    t1 = clock();
+    Load();
+    t2 = clock();
+    printf(&quot;Load time: %lf s\n&quot;,(double)(t2-t1)/CLK_TCK);
+    printf(&quot;------------------------\n&quot;);
+    t3 = clock();
+    BFS();
+    t4 = clock();
+    printf(&quot;BFS time: %lf s\n&quot;,(double)(t4-t3)/CLK_TCK);
+    return 0;
+&#125;
+</code></pre>
+<h5 id="large"><a href="#large" class="headerlink" title="large"></a>large</h5><pre><code class="c++">#include &lt;cstdio&gt;
+#include &lt;ctime&gt;
+#include &lt;cstdlib&gt;
+#include &lt;queue&gt;
+using namespace std;
+typedef struct _nbnode&#123;
+    int p;//该邻居在表中的下标
+    struct _nbnode *next;
+    _nbnode(int _p):p(_p)&#123;&#125;
+&#125;nbnode,*nblist;
+typedef struct _node&#123;
+    int id;
+    char visit;
+    nblist nblisthead;
+    _node()&#123;
+        visit = -1;//-1不存在该结点，0存在但未访问，1，已访问
+        nblisthead = NULL;
+    &#125;
+&#125;node;
+
+node *arr = new node[11500000];//结点表
+int edgecount = 0,nodecount = 0;
+
+void bfs(int p)&#123;
+    queue&lt;int&gt; q;
+    q.push(p);
+    arr[p].visit = 1;
+    while(!q.empty())&#123;
+        nbnode *nb = arr[q.front()].nblisthead;
+        while(nb != NULL)&#123;
+            if(!arr[nb-&gt;p].visit)&#123;
+                q.push(nb-&gt;p);
+                arr[nb-&gt;p].visit = 1;
+            &#125;
+            nb = nb-&gt;next;
+        &#125;
+
+        q.pop();
+    &#125;
+&#125;
+void BFS()&#123;
+
+    int componentcount = 0;
+    for(int i = 0;i &lt; nodecount;i++)&#123;
+        if (arr[i].visit == 0)&#123;
+            bfs(i);
+            componentcount++;
+        &#125;
+    &#125;
+    printf(&quot;component: %d\n&quot;,componentcount);
+&#125;
+void Load()&#123;
+    FILE *fp = fopen(&quot;twitter_large.txt&quot;,&quot;r+&quot;);
+    nbnode *nb;
+    int ida,idb,pa,pb;
+    while(fscanf(fp,&quot;%d,%d&quot;,&amp;ida,&amp;idb) != EOF)&#123;
+        pa = ida;
+        pb = idb;
+        if(arr[pa].visit == -1)&#123;
+            nodecount++;
+            arr[pa].visit = 0;
+        &#125;
+        if(arr[pb].visit == -1)&#123;
+            nodecount++;
+            arr[pb].visit = 0;
+        &#125;
+        nb = arr[pa].nblisthead;
+        arr[pa].nblisthead = new nbnode(pb);
+        arr[pa].nblisthead-&gt;next = nb;
+        edgecount++;
+    &#125;
+    printf(&quot;node: %d\n&quot;,nodecount);
+    printf(&quot;edge: %d\n&quot;,edgecount);
+&#125;
+int main()&#123;
+    clock_t t1,t2,t3,t4;
+    t1 = clock();
+    Load();
+    t2 = clock();
+    printf(&quot;Load time: %lf s\n&quot;,(double)(t2-t1)/CLK_TCK);
+    printf(&quot;------------------------\n&quot;);
+    t3 = clock();
+    BFS();
+    t4 = clock();
+    printf(&quot;BFS time: %lf s\n&quot;,(double)(t4-t3)/CLK_TCK);
+    return 0;
+&#125;
+</code></pre>
+<h5 id="random"><a href="#random" class="headerlink" title="random"></a>random</h5><pre><code class="c++">#include &lt;cstdio&gt;
+#include &lt;ctime&gt;
+#include &lt;cstdlib&gt;
+#include &lt;queue&gt;
+using namespace std;
+typedef struct _nbnode&#123;
+    int p;//该邻居在表中的下标
+    struct _nbnode *next;
+    _nbnode(int _p):p(_p)&#123;&#125;
+&#125;nbnode,*nblist;
+typedef struct _node&#123;
+    int id;
+    char visit;
+    nblist nblisthead;
+    _node()&#123;
+        visit = -1;//-1不存在该结点，0存在但未访问，1，已访问
+        nblisthead = NULL;
+    &#125;
+&#125;node;
+
+node *arr = new node[100010];//结点表
+int edgecount = 0,nodecount = 0;
+
+void bfs(int p)&#123;
+    queue&lt;int&gt; q;
+    q.push(p);
+    arr[p].visit = 1;
+    while(!q.empty())&#123;
+        nbnode *nb = arr[q.front()].nblisthead;
+        while(nb != NULL)&#123;
+            if(!arr[nb-&gt;p].visit)&#123;
+                q.push(nb-&gt;p);
+                arr[nb-&gt;p].visit = 1;
+            &#125;
+            nb = nb-&gt;next;
+        &#125;
+
+        q.pop();
+    &#125;
+&#125;
+void BFS()&#123;
+
+    int componentcount = 0;
+    for(int i = 0;i &lt; nodecount;i++)&#123;
+        if (arr[i].visit == 0)&#123;
+            bfs(i);
+            componentcount++;
+        &#125;
+    &#125;
+    printf(&quot;component: %d\n&quot;,componentcount);
+&#125;
+void Load()&#123;
+    FILE *fp = fopen(&quot;100000.txt&quot;,&quot;r+&quot;);
+    nbnode *nb;
+    int ida,idb,pa,pb;
+    while(fscanf(fp,&quot;%d %d&quot;,&amp;ida,&amp;idb) != EOF)&#123;
+        pa = ida;
+        pb = idb;
+        if(arr[pa].visit == -1)&#123;
+            nodecount++;
+            arr[pa].visit = 0;
+        &#125;
+        if(arr[pb].visit == -1)&#123;
+            nodecount++;
+            arr[pb].visit = 0;
+        &#125;
+        nb = arr[pa].nblisthead;
+        arr[pa].nblisthead = new nbnode(pb);
+        arr[pa].nblisthead-&gt;next = nb;
+        edgecount++;
+        if(edgecount % 1000000 == 0) printf(&quot;%d\n&quot;,edgecount);
+        LABEL:;
+    &#125;
+    printf(&quot;node: %d\n&quot;,nodecount);
+    printf(&quot;edge: %d\n&quot;,edgecount);
+&#125;
+int main()&#123;
+    clock_t t1,t2,t3,t4;
+    t1 = clock();
+    Load();
+    t2 = clock();
+    printf(&quot;Load time: %lf s\n&quot;,(double)(t2-t1)/CLK_TCK);
+    printf(&quot;------------------------\n&quot;);
+    t3 = clock();
+    BFS();
+    t4 = clock();
+    printf(&quot;BFS time: %lf s\n&quot;,(double)(t4-t3)/CLK_TCK);
+    return 0;
+&#125;
+
+
+GenGraph.py
+
+import random
+for n in [10,100,1000,10000,100000]:
+    s = set()
+    while len(s) &lt; n:
+        a = random.randint(1,int(n/3))
+        b = random.randint(1,int(n/3))
+        while a == b :
+            b = random.randint(1,10)
+        s.add((a,b))
+    f = open(str(n)+&quot;.txt&quot;,&quot;w&quot;)
+    for e in s:
+        f.write(str(e[0])+&quot; &quot;+str(e[1])+&quot;\n&quot;)
+    f.close()
+</code></pre>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9vv400/" class="prev">茶与健康</a>
+		 
+
+		 
+			<a href="/s/p/9vluo0/" class="next">汇编上机资源</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9vt9c0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

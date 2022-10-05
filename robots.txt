@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+Allow: /home/
+Allow: /archives/
+Allow: /tags/
+Allow: /categories/
+Allow: /page/
+Allow: /2017/
+Allow: /2018/
+Allow: /2019/
+Allow: /p/
+Allow: /s/
+Allow: /s/p/
+
+Disallow: /js/
+Disallow: /css/
+Disallow: /img/
+Disallow: /s/js/
+Disallow: /s/css/
+
+Sitemap: /sitemap.xml
+Sitemap: /baidusitemap.xml
+Sitemap: /sitemap_old.xml
+Sitemap: /baidusitemap_old.xml

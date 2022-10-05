@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">算法基础上机实验三 最长公共子序列问题</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2018-11-25</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 4036 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 13 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>最长公共子序列问题和调研报告</p>
+<h3 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h3><p><strong>1.</strong> <strong>最长公共子序列问题</strong>（Longest common subsequence problem）的定义</p>
+<p>​       <strong>子序列</strong>：给定序列X=(x1,x2,…,xm)，序列Z=( z1,z2,…,zk)是X的一个子序列，必须满足：若X的索引中存在一个严格增的序列i1,i2,…,ik，使得对所有的j=1~k，均有xij=zj</p>
+<p>​       <strong>公共子序列（CS）</strong>：Z是X和Y的子序列，则Z是两者的公共子序列CS。</p>
+<p>​       <strong>最长公共子序列（LCS）：</strong>在X和Y的CS中，长度最大者为一个最长公共子序列</p>
+<p><strong>2.</strong> <strong>用动态规划求解LCS</strong></p>
+<p>（1）刻画LCS最优解的结构特征</p>
+<p>如果用暴力搜索的方法求解LCS，就要穷举X的所有子序列，对每个子序列检查他是否也是Y的子序列，记录找到的最长子序列。X的每个子序列对应X的下标集合是{1,2,…,m}的一个子集，所以X有2m个子序列，时间复杂度为指数阶，真实情况下无法接受。</p>
+<p>通过下面的定理，我们可以知道最长公共子序列问题具有最优子结构性质，可以用动态规划方法解决。</p>
+<p><strong>定义</strong> X的ith前缀：Xi=(x1,x2,…,xm)，i=1~m，X0=φ (空集)。</p>
+<p><strong>定理</strong> 设序列X=(x1,x2,…,xm)和Y=(y1,y2,…,yn)，Z=(z1,z2,…,zk)是X和Y的任意一个LCS，则有</p>
+<p>①若xm=yn, ==&gt; zk=xm =yn且Zk-1是Xm-1和Yn-1的一个LCS;</p>
+<p>②若xm!=yn且zk!=xm, ==&gt; Z是Xm-1和Y的一个LCS;</p>
+<p>③若xm!=yn且zk!=yn, ==&gt; Z是X和Yn-1的一个LCS;</p>
+<p>（证明略去）</p>
+<p>由此可见，2个序列的最长公共子序列可由(1)(2)(3)算出，(2)(3)的解是对应子问题的最优解。因此，最长公共子序列问题具有最优子结构性质。</p>
+<span id="more"></span>
+
+<p>（2）子问题的递归解</p>
+<p>上面的定理意味着我们求解X和Y的一个LCS时需要求解一个或两个子问题：</p>
+<p>①如果 xm=yn 则</p>
+<p>找Xm-1和Yn-1的LCS；</p>
+<p>②如果 xm!=yn 则 </p>
+<p>找Xm-1和Y的LCS 和 找X和Yn-1的LCS；</p>
+<p>取两者中的最大的；</p>
+<p>​       定义c[i,j]=Xi和Yj的LCS长度，i=0<del>m, j=0</del>n，则有如下公式</p>
+<p><img src="/s/p/9v3c00/clip_image002.jpg" alt="img"></p>
+<p>（3）计算最优解和构造LCS</p>
+<p>根据上面的公式，我们可以使用自底向上的动态规划方法。若X和Y的长度分别为m和n，则时间复杂度为O（mn）。</p>
+<p>使用如下变量</p>
+<p>c[0..m, 0..n] //二维数组，存放最优解值，计算时行优先</p>
+<p>b[1..m, 1..n] //二维数组，解矩阵，存放构造最优解信息</p>
+<p><img src="/s/p/9v3c00/clip_image004.png" alt="img"></p>
+<p>当构造解时，从b[m,n]出发，上溯至i=0或j=0止</p>
+<p>上溯过程中，当b[i,j]包含“↖”时打印出xi(yj)</p>
+<p>（4）进一步改进</p>
+<p>对于表c，事实上，每个c[i,j]只依赖与其他三项：c[i-1,j]、c[i,j-1]和c[i-1,j-1]，因此，表c可以进一步压缩，无需O（mn）空间。</p>
+<p>两种思路：</p>
+<p>① c[i-1,j]、c[i,j-1]和c[i-1,j-1]只涉及当前行和上一行，因此表c只需保留两行，反复利用这两行，原先第i行的数据可以覆盖在第i-2行上。同时选取min（m,n）为行的长度。</p>
+<p>②表c只保留一行，选取min（m,n）为行的长度，假设为n，则表c[1…n]。原来计算c[i,j]，现在计算c[j]。另外增设一个变量tmp，每次计算c[j]后，把原先c[j]值保存在tmp中。 </p>
+<p><img src="/s/p/9v3c00/clip_image006.png" alt="img"></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code class="c++">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#define MAXLEN 100
+int c[MAXLEN][MAXLEN]=&#123;&#125;;
+int b[MAXLEN][MAXLEN]=&#123;&#125;;
+int m,n;
+char s1[MAXLEN],s2[MAXLEN];
+void printlcs(int i,int j)&#123;
+    if(i == 0 || j == 0)
+        return ;
+    if(b[i][j] == 1)&#123; //指向左上,i-1,j-1
+        printlcs(i-1,j-1);
+        printf(&quot;%c&quot;,s1[i-1]);
+    &#125;
+    else if(b[i][j] == 2)//指向上,i-1,j
+        printlcs(i-1,j);
+    else                //指向左,i,j-1
+        printlcs(i,j-1);
+&#125;
+void lcs()&#123;
+    m = strlen(s1);
+    n = strlen(s2);
+    int i,j;
+    for(i=1;i&lt;=m;i++)&#123;
+        for(j=1;j&lt;=n;j++)&#123;
+            if(s1[i-1] == s2[j-1])&#123; //s1[1..i]和s2[1..j]的LCS是s1[1..i-1]和s2[1..j-1]的LCS的长度加1
+                c[i][j] = c[i-1][j-1] + 1;
+                b[i][j] = 1;
+            &#125;
+            else if(c[i-1][j] &gt;= c[i][j-1])&#123;//s1[1..i]和s2[1..j]的LCS就是s1[1..i-1]和s2[1..j]的LCS
+                c[i][j] = c[i-1][j];
+                b[i][j] = 2;
+            &#125;
+            else&#123;//s1[1..i]和s2[1..j]的LCS就是s1[1..i]和s2[1..j-1]的LCS
+                c[i][j] = c[i][j-1];
+                b[i][j] = 3;
+            &#125;
+        &#125;
+    &#125;
+    printlcs(m,n);
+    printf(&quot;\n%d\n&quot;,c[m][n]);
+&#125;
+int main()&#123;
+    printf(&quot;input the first string:&quot;);
+    scanf(&quot;%s&quot;,s1);
+    printf(&quot;input the second string:&quot;);
+    scanf(&quot;%s&quot;,s2);
+    lcs();
+    return 0;
+&#125;
+</code></pre>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这次实验让我比较深入地了解了动态规划的使用条件及其应用。动态规划要求解问题必须满足最优子结构，即该问题的最优解包含其子问题的最优解。动态规划与分治法相似，都是通过组合子问题的解来求解原问题，但分治法将原问题划分为互不相交的子问题，递归地求解子问题，而动态规划适用于子问题重叠的情况，并且对于每个子问题只求解一次，将其解保存在一个表格中，避免了不必要的计算。</p>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9v56o0/" class="prev">汇编上机题3</a>
+		 
+
+		 
+			<a href="/s/p/9us800/" class="next">汇编上机题2</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9v3c00/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

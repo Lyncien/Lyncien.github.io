@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">程序设计II上机实验10A：杀蚂蚁</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2017-07-13</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 15043 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 50 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h2 id="杀蚂蚁"><a href="#杀蚂蚁" class="headerlink" title="杀蚂蚁"></a>杀蚂蚁</h2><h4 id="Time-limit-3000-ms"><a href="#Time-limit-3000-ms" class="headerlink" title="Time limit: 3000 ms"></a>Time limit: 3000 ms</h4><h4 id="Memory-limit-256-MB"><a href="#Memory-limit-256-MB" class="headerlink" title="Memory limit: 256 MB"></a>Memory limit: 256 MB</h4><h4 id="Standard-I-O"><a href="#Standard-I-O" class="headerlink" title="Standard I/O"></a>Standard I/O</h4><h2 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h2><p>最近，佳佳迷上了一款好玩的小游戏：antbuster。</p>
+<p>游戏规则非常简单：在一张地图上，左上角是蚂蚁窝，右下角是蛋糕，蚂蚁会源源不断地从窝里爬出来，试图把蛋糕搬回蚂蚁窝。而你的任务，就是用原始资金以及杀蚂蚁获得的奖金造防御塔，杀掉这些试图跟你抢蛋糕的蚂蚁~</p>
+<p>下附一张游戏截图：</p>
+<p><img src="/s/p/95deo0/contest_17_B.jpg"></p>
+<ul>
+<li><p>为了拿到尽可能高的分数，佳佳设计了很多种造塔的方案，但在尝试了其中的一小部分后，佳佳发现，这个游戏实在是太费时间了。为了节省时间，佳佳决定写个程序，对于每一种方案，模拟游戏进程，根据效果来判断方案的优劣。</p>
+</li>
+<li><p>根据自己在游戏中积累的一些经验，以及上网搜到的一些参数，佳佳猜了蚂蚁爬行的算法，并且假设游戏中的蚂蚁也是按这个规则选择路线：</p>
+<ol>
+<li>每一秒钟开始的时候，蚂蚁都在平面中的某个整点上。如果蚂蚁没有扛着蛋糕，它会在该点留下2单位的信息素，否则它会留下5单位的信息素。然后蚂蚁会在正北、正南、正东、正西四个方向中选择一个爬过去。</li>
+<li>选择方向的规则是：首先，爬完一个单位长度后到达的那个点上，不能有其他蚂蚁或是防御塔，并且那个点不能是蚂蚁上一秒所在的点（除非上一个时刻蚂蚁就被卡住，且这个时刻它仍无法动），当然，蚂蚁也不会爬出地图的边界（我们定义这些点为不可达点）。如果此时有多个选择，蚂蚁会选择信息素最多的那个点爬过去。</li>
+<li>如果此时仍有多种选择，蚂蚁先面向正东，如果正东不是可选择的某个方向，它会顺时针转90°，再次判断，如果还不是，再转90°…直到找到可以去的方向。</li>
+<li>如果将每只蚂蚁在洞口出现的时间作为它的活动时间的第1秒，那么每当这只蚂蚁的活动时间秒数为5的倍数的时候，它先按规则1~3确定一个方向，面对该方向后逆时针转90°，若它沿当前方向会走到一个不可达点，它会不停地每次逆时针转90°，直到它面对着一个可达的点，这样定下的方向才是蚂蚁最终要爬去的方向。</li>
+<li>如果蚂蚁的四周都是不可达点，那么蚂蚁在这一秒内会选择停留在当前点。下一秒判断移动方向时，它上一秒所在点为其当前停留的点。</li>
+<li>你可以认为蚂蚁在选定方向后，瞬间移动到它的目标点，这一秒钟剩下的时间里，它就停留在目标点。</li>
+<li>蚂蚁按出生的顺序移动，出生得比较早的蚂蚁先移动。</li>
+</ol>
+</li>
+<li><p>然后，是一些有关地图的信息：</p>
+<ol>
+<li>每一秒，地图所有点上的信息素会损失1单位，如果那个点上有信息素的话。</li>
+<li>地图上某些地方是炮台。炮台的坐标在输入中给出。</li>
+<li>地图的长、宽在输入中给出，对于n * m的地图，它的左上角坐标为（0，0），右下角坐标为（n，m）。蚂蚁洞的位置为（0，0），蛋糕的位置为（n，m）。</li>
+<li>你可以把蚂蚁看做一个直径为1单位的圆，圆心位于蚂蚁所在的整点。</li>
+<li>游戏开始时，地图上没有蚂蚁，每个点上的信息素含量均为0。</li>
+</ol>
+</li>
+<li><p>一些有关炮塔的信息：</p>
+<ol>
+<li>炮塔被放置在地图上的整点处。</li>
+<li>为了简单一些，我们认为这些炮塔都是激光塔。激光塔的射速是1秒/次，它的攻击伤害为d/次，攻击范围为r。你可以认为每秒蚂蚁移动完毕后，塔才开始攻击。并且，只有当代表蚂蚁的圆的圆心与塔的直线距离不超过r时，塔才算打得到那只蚂蚁。</li>
+<li>如果一只蚂蚁扛着蛋糕，那么它会成为target，也就是说，任何打得到它的塔的炮口都会对准它。如果蛋糕好好地呆在原位，那么每个塔都会挑离它最近的蚂蚁进行攻击，如果有多只蚂蚁，它会选出生较早的一只。</li>
+<li>激光塔有个比较奇怪的特性：它在选定了打击目标后，只要目标在其射程内，塔到目标蚂蚁圆心的连线上的所有蚂蚁（这里“被打到”的判定变成了表示激光的线段与表示蚂蚁的圆有公共点）都会被打到并损d格血，但激光不会穿透它的打击目标打到后面的蚂蚁。</li>
+<li>尽管在真实游戏中，塔是可以升级的，但在这里我们认为塔的布局和等级就此定了下来，不再变动。</li>
+</ol>
+</li>
+</ul>
+<span id="more"></span>
+
+
+<ul>
+<li><p>再介绍一下蚂蚁窝：</p>
+<ol>
+<li>如果地图上的蚂蚁不足6只，并且洞口没有蚂蚁，那么窝中每秒会爬出一只蚂蚁，直到地图上的蚂蚁数为6只。</li>
+<li>刚出生的蚂蚁站在洞口。</li>
+<li>每只蚂蚁有一个级别，级别决定了蚂蚁的血量，级别为k的蚂蚁的血量为int(4*1.1^k)（int(x)表示对x取下整）。每被塔打一次，蚂蚁的血减少d。注意，血量为0的蚂蚁仍能精力充沛地四处乱爬，只有一只蚂蚁的血被打成负数时，它才算挂了。</li>
+<li>蚂蚁的级别是这样算的：前6只出生的蚂蚁是1级，第7~12只是2级，依此类推。</li>
+</ol>
+</li>
+<li><p>最后给出关于蛋糕的介绍：</p>
+<ol>
+<li>简单起见，你可以认为此时只剩最后一块蛋糕了。如果有蚂蚁走到蛋糕的位置，并且此时蛋糕没有被扛走，那么这只蚂蚁就扛上了蛋糕。蚂蚁被打死后蛋糕归位。</li>
+<li>如果一只扛着蛋糕的蚂蚁走到蚂蚁窝的位置，我们就认为蚂蚁成功抢到了蛋糕，游戏结束。</li>
+<li>蚂蚁扛上蛋糕时，血量会增加int（该蚂蚁出生时血量 / 2），但不会超过上限。</li>
+</ol>
+</li>
+<li><p>整理一下1秒钟内发生的事件：</p>
+<ul>
+<li>1秒的最初，如果地图上蚂蚁数不足6，一只蚂蚁就会在洞口出生。</li>
+<li>接着，蚂蚁们在自己所在点留下一些信息素后，考虑移动。先出生的蚂蚁先移动。</li>
+<li>移动完毕后，如果有蚂蚁在蛋糕的位置上并且蛋糕没被拿走，它把蛋糕扛上，血量增加，并在这时被所有塔设成target。</li>
+<li>然后所有塔同时开始攻击。如果攻击结束后那只扛着蛋糕的蚂蚁挂了，蛋糕瞬间归位。</li>
+<li>攻击结束后，如果发现扛蛋糕的蚂蚁没死并在窝的位置，就认为蚂蚁抢到了蛋糕。游戏也在此时结束。</li>
+<li>最后，地图上所有点的信息素损失1单位。所有蚂蚁的年龄加1。</li>
+<li>漫长的1秒到此结束。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Input-Description"><a href="#Input-Description" class="headerlink" title="Input Description"></a>Input Description</h2><p>输入的第一行是2个用空格隔开的整数，n、m，分别表示了地图的长和宽。</p>
+<p>第二行是3个用空格隔开的整数，s、d、r，依次表示炮塔的个数、单次攻击伤害以及攻击范围。</p>
+<p>接下来s行，每行是2个用空格隔开的整数x、y，描述了一个炮塔的位置。当然，蚂蚁窝的洞口以及蛋糕所在的位置上一定没有炮塔。</p>
+<p>最后一行是一个正整数t，表示我们模拟游戏的前t秒钟。</p>
+<h2 id="Output-Description"><a href="#Output-Description" class="headerlink" title="Output Description"></a>Output Description</h2><p>如果在第t秒或之前蚂蚁抢到了蛋糕，输出一行“Game over after x seconds”，其中x为游戏结束的时间，否则输出“The game is going on”。</p>
+<p>如果游戏在t秒或之前结束，输出游戏结束时所有蚂蚁的信息，否则输出t秒后所有蚂蚁的信息。格式如下：</p>
+<p>第一行是1个整数s，表示此时活着的蚂蚁的总数。</p>
+<p>接下来s行，每行5个整数，依次表示一只蚂蚁的年龄（单位为秒）、等级、当前血量，以及在地图上的位置（a，b）。输出按蚂蚁的年龄递减排序。</p>
+<h2 id="Sample"><a href="#Sample" class="headerlink" title="Sample"></a>Sample</h2><h3 id="INPUT"><a href="#INPUT" class="headerlink" title="INPUT"></a>INPUT</h3><pre><code>3 5
+1 1 2
+2 2
+5
+</code></pre>
+<h3 id="OUTPUT"><a href="#OUTPUT" class="headerlink" title="OUTPUT"></a>OUTPUT</h3><pre><code>The game is going on
+5
+5 1 3 1 4
+4 1 3 0 4
+3 1 3 0 3
+2 1 3 0 2
+1 1 4 0 1
+</code></pre>
+<h2 id="Hint"><a href="#Hint" class="headerlink" title="Hint"></a>Hint</h2><h3 id="样例说明："><a href="#样例说明：" class="headerlink" title="样例说明："></a>样例说明：</h3><blockquote>
+<p>3*5的地图，有1个单次伤害为1、攻击范围为2的激光炮塔，它的位置为（2，2），模拟游戏的前5秒。5秒内有5只蚂蚁出生，都是向东爬行，其中第1<del>4只在路过（0，2）点时被激光塔伤了1格血。在第5秒的时候，最早出生的蚂蚁按移动规则1</del>3本来该向东移动，但由于规则4的作用，它在发现向北和向西移动都会到达不可达点后，最终选择了向南移动。</p>
+</blockquote>
+<h3 id="数据说明："><a href="#数据说明：" class="headerlink" title="数据说明："></a>数据说明：</h3><blockquote>
+<p>100%的数据满足1 ≤ n,m ≤ 8，s ≤ 20，t ≤ 200,000</p>
+</blockquote>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code class="c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+#define CANNON 1
+#define ANT 2
+//#define DEBUG 0
+struct antdata&#123;
+    int age;
+    int id;//蚂蚁的id，从1开始不重复，往上递增，为0表示不存在 
+    int rank;//等级 
+    int health;//血量 
+    int x,y;
+    int lastx,lasty;
+    int cake;//0或1，是否有蛋糕 
+&#125;ant[6]=&#123;&#125;; 
+struct cannondata&#123;
+    int x,y;
+&#125;;
+int time=0;
+int cake=-1;//记录蛋糕在哪只蚂蚁身上0-5 
+int antid=0;//记录蚂蚁出生的顺序 
+int antnum=0;//记录当前场上的蚂蚁数量 
+int **map,**info;//记录地图上的蚂蚁/炮台，信息素 
+int n,m;
+int cnum,churt,cdistance;//炮台cannon数,炮台伤害，炮台攻击范围
+struct cannondata *cannon;
+int direction[4][2]=&#123;&#123;0,1&#125;,&#123;1,0&#125;,&#123;0,-1&#125;,&#123;-1,0&#125;&#125;;//右下左上(东南西北，顺时针) 
+int directionavailable[4]=&#123;&#125;;//记录可前进的方向 
+void initialize()&#123;
+    int i,j;
+    for(i=0;i&lt;=n;i++) for(j=0;j&lt;=m;j++) &#123;info[i][j]=0; map[i][j]=0;&#125;
+&#125;
+void MakeAnt()&#123;//不满6只则生成蚂蚁 
+    int i;
+    if(antnum&lt;6 &amp;&amp; map[0][0]==0)&#123;
+        //for(i=0;i&lt;6;i++) 
+            i=antnum;
+            //if(ant[i].id==0)&#123;
+                antid++;
+                ant[i].id=antid;
+                ant[i].x=0;
+                ant[i].y=0;
+                ant[i].lastx=0;
+                ant[i].lasty=0;
+                ant[i].age=0;
+                ant[i].rank=(antid-1)/6+1;
+                ant[i].health=floor(4*pow(1.1,ant[i].rank));
+                ant[i].cake=0;
+            //&#125;
+            antnum++;
+            map[0][0]=ANT+ant[i].id;
+    &#125;
+&#125;
+void DeleteAnt(int i)&#123;//i为0-5
+    int j;
+    for(j=i+1;j&lt;antnum;j++)&#123;//后面的前移 
+        ant[j-1]=ant[j];
+    &#125;
+    antnum--; 
+    for(j=antnum;j&lt;6;j++)&#123;//置零表示不存在 
+        ant[j].id=0;
+        
+    &#125;    
+&#125;
+void GiveInfo()&#123;//增加信息素 
+    int i;
+    for(i=0;i&lt;6;i++) 
+        if(ant[i].id!=0)
+            if(ant[i].cake)
+                info[ant[i].x][ant[i].y]+=5;
+            else 
+                info[ant[i].x][ant[i].y]+=2;
+&#125;
+void LostInfo()&#123;//失去信息素 
+    int i,j;
+    for(i=0;i&lt;=n;i++) for(j=0;j&lt;=m;j++) if(info[i][j]) info[i][j]--;
+&#125;
+void PutAnt(int i,int x,int y)&#123;//放置蚂蚁并在地图上标记 
+    ant[i].lastx=ant[i].x;
+    ant[i].lasty=ant[i].y;
+    map[ant[i].x][ant[i].y]=0;
+#ifdef DEBUG 
+    printf(&quot;AntID:%d from (%d,%d) to (%d,%d), it&#39;s time/Rank/Health is %d/%d/%d\n&quot;,ant[i].id,ant[i].x,ant[i].y,x,y,ant[i].age+1,ant[i].rank,ant[i].health);
+#endif
+    ant[i].x=x;
+    ant[i].y=y;
+    map[x][y]=ANT+ant[i].id;    
+&#125;
+int SelectDirection(int i)&#123;//返回一个方向的序号，不能移动返回-1 
+    int j,tx,ty,anum=0,a,amaxnum=0;
+    memset(directionavailable,0,sizeof(directionavailable));
+    for(j=0;j&lt;4;j++)&#123;
+        tx=ant[i].x+direction[j][0];
+        ty=ant[i].y+direction[j][1];
+        if(tx==ant[i].lastx &amp;&amp; ty==ant[i].lasty) continue;
+        if(tx&lt;0 || ty&lt;0 || tx&gt;n || ty&gt;m) continue;
+        if(map[tx][ty]) continue;
+        directionavailable[j]=1;//置为可达 
+        a=j;
+        anum++;//可达的数量加1 
+    &#125;
+    if(anum==0) return -1; 
+    if(anum==1) return a; 
+    //此时有多个可达点 
+    int max=-1;
+    for(j=0;j&lt;4;j++)&#123;
+        if(directionavailable[j])&#123;
+            tx=ant[i].x+direction[j][0];
+            ty=ant[i].y+direction[j][1];
+            directionavailable[j]=info[tx][ty]+1;//将可达标志改为该方向前进一格的信息素+1,+1为了将信息素为0的与不可达点区分 
+            if(directionavailable[j]&gt;max) max=directionavailable[j];//更新最大值 
+        &#125;
+    &#125;
+    for(j=0;j&lt;4;j++)&#123;//该循环将信息素不是最大值的置零 （后来发现题意不是如此，不是最大值的仍是可达点,不该置零，这里做特殊标记-1） 
+        if(directionavailable[j])&#123;//是可达点
+            if(directionavailable[j]&lt;max)&#123;//但不是信息素最大的 
+                directionavailable[j]=-1;
+                //anum--;
+            &#125;
+            else&#123;//是最大值 
+                a=j;// 记下最大值的下标,如果有多个，a将是最后一个最大值 
+                amaxnum++;//最大值方向的数量 
+            &#125;
+        &#125;
+    &#125;
+    if(amaxnum!=1)&#123;//有多个最大值     
+        a=0;//东
+        while(directionavailable[a]&lt;=0)&#123;//该方向不是最大值的方向(-1)，或不可达(0) 
+             a++;//顺时针转90度 
+        &#125;
+    &#125;
+    //在多个可达点时才考虑年龄为5的倍数的情况，因为只有1个方向可达时，逆时针多次后最终仍是该方向 
+    if((ant[i].age+1)%5==0)&#123;
+        do&#123;
+             a--;//逆时针转90度 
+             if(a&lt;0) a+=4;
+        &#125;while(directionavailable[a]==0);//该方向不可达 
+    &#125;
+    return a;
+&#125; 
+void Move()&#123;
+    int i,tx,ty,d;
+    for(i=0;i&lt;antnum;i++)&#123;
+        //if(ant[i].id==0) break;//后面都是空的 
+        d=SelectDirection(i); 
+        if(d==-1) PutAnt(i,ant[i].x,ant[i].y);
+        else &#123;
+            tx=ant[i].x+direction[d][0];
+            ty=ant[i].y+direction[d][1];
+            PutAnt(i,tx,ty);
+        &#125;
+        if(ant[i].x==n &amp;&amp; ant[i].y==m &amp;&amp; cake==-1)&#123;//到达蛋糕位置 
+            ant[i].cake=1; 
+            cake=i;
+            ant[i].health+=floor(floor(4*pow(1.1,ant[i].rank))/2);
+            if(ant[i].health&gt;(int)floor(4*pow(1.1,ant[i].rank)))
+                ant[i].health=(int)floor(4*pow(1.1,ant[i].rank));
+        &#125;
+    &#125; 
+&#125;
+int GetDistance2(int x1,int y1,int x2,int y2)&#123;//为了避免浮点数运算，这里计算距离的平方 
+    return (x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
+&#125;
+int VectorProduct2(int x1,int y1,int x2,int y2)&#123;//两向量矢积的平方 
+    return (x1*y2-x2*y1)*(x1*y2-x2*y1);
+&#125;
+int Mult(int x1,int y1,int x2,int y2)&#123;//两向量数量积 
+    return x1*x2+y1*y2;
+&#125;
+int IsInAttackArea(int x1,int y1,int x2,int y2,int x3,int y3)&#123;
+    //判断以3点为圆心，半径为0.5的圆和1,2点连成的线段有无公共点（后来才注意蚂蚁的直径是1，不是半径...） 
+    int tmp,tmp2;
+    tmp2=(x2-x1)*(x2-x1)+(y2-y1)*(y2-y1);
+    tmp=Mult(x3-x1,y3-y1,x2-x1,y2-y1);
+    if(tmp&lt;0 || tmp&gt;tmp2)&#123;//printf(&quot;----------s1---------\n&quot;); 
+        return 0;
+    &#125;
+    tmp=VectorProduct2(x3-x1,y3-y1,x2-x1,y2-y1);
+    if(4*tmp&gt;tmp2) &#123;//printf(&quot;----------s2---------\n&quot;); 
+        return 0;
+    &#125;
+    return 1;
+&#125;
+void Attack()&#123;//所有炮塔是一起攻击的，攻击结束后才判断蚂蚁生死 
+    int i,j;
+    for(j=0;j&lt;cnum;j++)&#123;
+        int imin=-1,target=-1;
+        int d2min=9999999,d2;
+        if(cake!=-1 &amp;&amp; GetDistance2(ant[cake].x,ant[cake].y,cannon[j].x,cannon[j].y)&lt;=cdistance*cdistance)&#123;
+            target=cake;
+        &#125;
+        else&#123;
+            for(i=0;i&lt;antnum;i++)&#123;
+                //if(ant[i].id==0) break;//后面都是空的 
+                d2=GetDistance2(ant[i].x,ant[i].y,cannon[j].x,cannon[j].y);
+                if(d2&lt;d2min) &#123;d2min=d2;imin=i;&#125;
+            &#125;
+            target=imin;
+            if(GetDistance2(ant[target].x,ant[target].y,cannon[j].x,cannon[j].y)&gt;cdistance*cdistance) continue;//最近的都打不到 
+            
+        &#125;
+        ant[target].health-=churt;
+#ifdef DEBUG
+        printf(&quot;Targer:%d,TargetAntId:%d\n&quot;,target,ant[target].id);
+#endif
+        for(i=0;i&lt;antnum;i++)&#123;
+            if(i==target) continue;
+            if(IsInAttackArea(ant[target].x,ant[target].y,cannon[j].x,cannon[j].y,ant[i].x,ant[i].y))&#123;
+                ant[i].health-=churt;
+#ifdef DEBUG
+                printf(&quot;!!!!!!!!!!!!!!!!!ExtraTargetAntId:%d!!!!!!!!!!!!!!!!!!!\n&quot;,ant[i].id);
+                //system(&quot;pause&quot;);
+#endif
+            &#125; 
+        &#125; 
+    &#125;
+&#125;
+void Judge1()&#123;
+    int i;
+    for(i=0;i&lt;antnum;i++)&#123;
+        if(ant[i].health&lt;0)&#123;
+#ifdef DEBUG
+            printf(&quot;AntID:%d died.\n&quot;,ant[i].id);
+#endif
+            map[ant[i].x][ant[i].y]=0;
+            if(ant[i].cake) cake=-1;//蛋糕归位
+            else if(cake!=-1) if(cake&gt;i) cake--; 
+            DeleteAnt(i);
+            i--;
+        &#125;
+    &#125;
+&#125;
+int Judge2()&#123;
+    if(cake!=-1) if(ant[cake].x==0 &amp;&amp; ant[cake].y==0) return 1;
+    return 0;
+&#125;
+void AgeAdd()&#123;
+    int i;
+    for(i=0;i&lt;antnum;i++) ant[i].age++;
+&#125;
+//-------------调试-----------
+
+int GetHealthById(int id)&#123;
+    int i;
+    for(i=0;i&lt;antnum;i++) if(ant[i].id==id) return ant[i].health;
+    return -1;
+&#125; 
+void PFSTATE()&#123;
+    int i,j;
+
+    for(i=0;i&lt;=n;i++)&#123;
+        for(j=0;j&lt;=m;j++)&#123;
+            printf(&quot;[%3d]&quot;,info[i][j]);
+            if(map[i][j]==CANNON) printf(&quot; CANNON &quot;);
+            else if(map[i][j]&gt;ANT) printf(&quot;%4d(%2d)&quot;,map[i][j]-ANT,GetHealthById(map[i][j]-ANT));
+            else printf(&quot;|------|&quot;);
+        &#125;
+        printf(&quot;\n&quot;);
+    &#125;
+    printf(&quot;Cake:%d,CakeAntId:%d,ant[cake].cake:%d\n&quot;,cake,ant[cake].id,ant[cake].cake);
+    printf(&quot;=====================time: %d=====================\n&quot;,time);
+&#125; 
+
+//---------------------------
+int Clock()&#123;//返回1表示结束 
+    time++; 
+    MakeAnt(); 
+    GiveInfo(); 
+    Move(); 
+    Attack();
+    Judge1(); 
+    if(Judge2()) return 1;
+    AgeAdd();
+    LostInfo();
+#ifdef DEBUG
+    PFSTATE();
+#endif
+    return 0;
+&#125;
+int main()&#123;
+    int i,tx,ty,runtime,isend=0;
+    scanf(&quot;%d%d&quot;,&amp;n,&amp;m);
+    map=(int **)malloc(sizeof(int *)*(n+1));
+    info=(int **)malloc(sizeof(int *)*(n+1));
+    for(i=0;i&lt;=n;i++)&#123;
+        map[i]=(int *)malloc(sizeof(int)*(m+1));
+        info[i]=(int *)malloc(sizeof(int *)*(m+1));
+    &#125;
+    initialize();
+    scanf(&quot;%d%d%d&quot;,&amp;cnum,&amp;churt,&amp;cdistance);
+    cannon=(struct cannondata *)malloc(cnum*sizeof(struct cannondata));
+    for(i=0;i&lt;cnum;i++)&#123;
+        scanf(&quot;%d%d&quot;,&amp;tx,&amp;ty);
+        map[tx][ty]=CANNON;
+        cannon[i].x=tx;
+        cannon[i].y=ty;
+    &#125;
+    scanf(&quot;%d&quot;,&amp;runtime);
+    for(i=0;i&lt;runtime;i++)&#123;
+        if(Clock())&#123;
+            printf(&quot;Game over after %d seconds\n&quot;,time);
+            isend=1;
+            break;
+        &#125;
+    &#125;
+    if(!isend) printf(&quot;The game is going on\n&quot;);
+    printf(&quot;%d\n&quot;,antnum);
+    for(i=0;i&lt;antnum;i++)&#123;
+        printf(&quot;%d %d %d %d %d\n&quot;,ant[i].age,ant[i].rank,ant[i].health,ant[i].x,ant[i].y);
+    &#125;
+    return 0;     
+&#125;
+</code></pre>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/95f9c0/" class="prev">程序设计II上机实验10B："完美阴阳矩阵"</a>
+		 
+
+		 
+			<a href="/s/p/95bk00/" class="next">程序设计II上机实验9B：八数码问题</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/95deo0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

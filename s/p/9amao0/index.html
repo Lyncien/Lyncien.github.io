@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	
+<script>
+	config = {
+		root: '/s/', 
+		default_jump_path: '/p/a0qrhr/',
+		mathjax: {"offline":true},
+		mermaid: {"offline":true},
+		comment_plugin: {"enable":true,"type":"changyan"}
+	};
+</script>
+	<script> location.href = config.root + '?' + location.pathname.slice(location.pathname.indexOf('/')); </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+<div class="article-head">
+	<div class="title">数据结构上机题1 一元稀疏多项式计算</div>
+	<div class="meta"><i class="fa fa-calendar"></i> 2017-10-23</div>
+	<div class="meta-group">
+		<div class="meta"><i class="fa fa-bar-chart"></i> 20898 字</div>
+		<div class="meta"><i class="fa fa-clock-o"></i> 70 分钟</div>
+	</div>
+	<div class="meta"><i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"></span> 次</div>
+</div>
+<div class="article-content">
+	<h1 id="一元稀疏多项式计算"><a href="#一元稀疏多项式计算" class="headerlink" title="一元稀疏多项式计算"></a>一元稀疏多项式计算</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>参考习题集81页1.5题一元稀疏多项式计算</p>
+<ul>
+<li>要求:<ul>
+<li>禁止使用STL库。自己练习链表操作并实现。必须用链表。打钩区分成绩。最多三个√，以半个√为一档表明该项完成程度。检查结束后需要提交源代码。源代码发送到<a href="/s/p/9amao0/mailto:&#x71;&#105;&#x77;&#x65;&#x69;&#x7a;&#x68;&#x65;&#110;&#x31;&#x39;&#57;&#55;&#x40;&#x31;&#x36;&#x33;&#46;&#x63;&#x6f;&#109;">&#x71;&#105;&#x77;&#x65;&#x69;&#x7a;&#x68;&#x65;&#110;&#x31;&#x39;&#57;&#55;&#x40;&#x31;&#x36;&#x33;&#46;&#x63;&#x6f;&#109;</a>。标注清楚姓名和学号。需不需要写实验报告看今年教务处要求。先别写。</li>
+</ul>
+</li>
+<li>基础要求：<ul>
+<li>最简单的输入输出:(一个√)<ol>
+<li>输入并创建多项式(升序or降序，系数浮点型，指数整型)</li>
+<li>输出多项式，项数+每项系数指数(升序or降序)</li>
+<li>多项式相加(结果要输出)</li>
+<li>多项式相减(结果要输出)</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>拓展：<ol>
+<li>多项式乘法(一个√)</li>
+<li>计算多项式在x处的值</li>
+<li>多项式整理，支持乱序输入(2，3项共一个√)</li>
+</ol>
+</li>
+<li>其他可选:<ol start="4">
+<li>除法</li>
+<li>友好的gui仿真界面</li>
+<li>句法分析</li>
+</ol>
+</li>
+<li>其余扩展自选<ul>
+<li>由助教根据复杂度和完成度判断是否一个√</li>
+</ul>
+</li>
+<li>注意事项：<ol>
+<li>系数不允许出现0</li>
+<li>基本要求可以用最简单的输入方法</li>
+<li>检查过程中或者核对源代码时发现相似度非常高的代码，2人雷同分数除以2，3人除3</li>
+</ol>
+</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="测试截图"><a href="#测试截图" class="headerlink" title="测试截图"></a>测试截图</h2><p><img src="/s/p/9amao0/1.png"><br><img src="/s/p/9amao0/2.png"><br><img src="/s/p/9amao0/3.png"></p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code class="C">    /*
+        Last Update time: 2017-10-08 
+        Version：1.2 
+        Author：LinXiang (PB16020923) 
+        Description：
+            Polynome.
+    */
+    #include &lt;stdio.h&gt; 
+    #include &lt;stdlib.h&gt;
+    #include &lt;math.h&gt;
+    #include &lt;string.h&gt; 
+    #define OK 1
+    #define ERROR 0 
+    typedef int Status;
+    typedef struct TermOfPolynome&#123;
+        double c;//Coefficient
+        int e;//Exponent
+        struct TermOfPolynome *next;
+    &#125;term;
+    typedef term *poly;
+    typedef struct PolynomeNode&#123;
+        poly thepoly;
+        struct PolynomeNode* next;
+    &#125;polynode; 
+    int Menu_Selected=0,NumOfPoly=0;
+    polynode *list;//存放多个多项式的链表 
+    char opt[5]=&#123;&#39;\0&#39;,&#39;+&#39;,&#39;-&#39;,&#39;*&#39;,&#39;/&#39;&#125;;
+    //==================system===================
+    void ShowMenu()&#123;
+        system(&quot;cls&quot;);
+        //printf(&quot;0-退出\n1-添加多项式\n2-管理多项式\n3-计算\n4-求值\n&quot;);
+        system(&quot;color 0B&quot;);
+        printf(&quot;┏━━━━━━━━━━━━━━━━━━━━━━━┓\n&quot;);
+        printf(&quot;┃                 多项式运算器V1.1             ┃\n&quot;);
+        printf(&quot;┣━━━━━━━┳━━━━━━━┳━━━━━━━┫\n&quot;);
+        printf(&quot;┃   0----退出  ┃ 1-添加多项式 ┃ 2-管理多项式 ┃\n&quot;);
+        printf(&quot;┣━━━━━━━╋━━━━━━━╋━━━━━━━┫\n&quot;);
+        printf(&quot;┃   3----计算  ┃   4----求值  ┃   5----求导  ┃\n&quot;);
+        printf(&quot;┣━━━━━━━┻━━━━━━━┻━━━━━━━┫\n&quot;);
+        printf(&quot;┃                    6-关于                    ┃\n&quot;);     
+        printf(&quot;┗━━━━━━━━━━━━━━━━━━━━━━━┛\n&quot;);
+    &#125;
+    void SendMessage(char *p)&#123;
+        system(&quot;cls&quot;);
+        int l=strlen(p),i;
+        if(l/2*2!=l) l++;//使l能被2整除 
+        printf(&quot;┏━&quot;);
+        for(i=0;i&lt;l/2;i++)&#123;if(i==l/4-1) printf(&quot;信&quot;); else if(i==l/4) printf(&quot;息&quot;); else printf(&quot;━&quot;);&#125; 
+        printf(&quot;━┓\n┃  &quot;);
+        printf(p); 
+        if(strlen(p)!=l) printf(&quot; &quot;);//不是2的倍数长度则补空格 
+        printf(&quot;  ┃\n┗━&quot;);
+        for(i=0;i&lt;l/2;i++) printf(&quot;━&quot;);
+        printf(&quot;━┛\n&quot;);
+        system(&quot;pause&quot;);
+    &#125;
+    void PrintTitle(char *s)&#123;
+        printf(&quot;┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n&quot;);
+        printf(&quot;┃                                   %s                                   ┃\n&quot;,s);
+        printf(&quot;┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n&quot;);
+    &#125;
+    void BackSpace(int n)&#123;//删除n个字符 
+        int i;
+        for(i=0;i&lt;n;i++) printf(&quot;\b&quot;);
+        for(i=0;i&lt;n;i++) printf(&quot; &quot;);
+        for(i=0;i&lt;n;i++) printf(&quot;\b&quot;);
+    &#125;
+    int GetZeroNum(char *p)&#123;//计算浮点数末尾有几个0 
+        char *q=p;
+        int count=0;
+        while(*q++!=&#39;.&#39;);
+        while(*q)&#123;
+            if(*q++==&#39;0&#39;) count++;
+            else count=0;
+        &#125;
+        return count; 
+    &#125;
+    void ShowPoly(poly pl)&#123;
+        if(pl-&gt;next==NULL) printf(&quot;0\n&quot;);
+        else&#123;
+            term *q=pl-&gt;next; 
+            while(q!=NULL)&#123;
+                char s[100];
+                sprintf(s,&quot;%6lf&quot;,q-&gt;c);//临时打印出系数 
+                int zn=GetZeroNum(s);
+                char text[10]=&quot;%s%.6lf&quot;;//格式文本 
+                text[4]=6-zn+&#39;0&#39;;//修改该显示的小数位数，删尾0 
+                printf(text,q-&gt;c&lt;0?&quot;\b&quot;:&quot;&quot;,q-&gt;c);//系数小于0,删&#39;+&#39; 
+                if(q-&gt;e)&#123;//指数不为0
+                    printf(&quot;%sX^%s%d%s&quot;,fabs(fabs(q-&gt;c)-1)&lt;1e-6?&quot;\b \b&quot;:&quot;&quot;\
+                    ,q-&gt;e&lt;0?&quot;(&quot;:&quot;&quot;,q-&gt;e,q-&gt;e&lt;0?&quot;)&quot;:&quot;&quot;);
+                &#125;
+                if(q-&gt;e==1) BackSpace(2);//删除&quot;^1&quot; 
+                printf(&quot;+&quot;);
+                q=q-&gt;next; 
+            &#125;
+            printf(&quot;\b \n&quot;);
+        &#125;
+    &#125;
+    void ShowAllPoly(polynode *list)&#123;
+        int i;
+        polynode *p=list-&gt;next;
+        printf(&quot;==================================多项式列表==================================\n&quot;); 
+        for(i=0;i&lt;NumOfPoly;i++,p=p-&gt;next)&#123;
+            printf(&quot;(%d) &quot;,i+1);
+            ShowPoly(p-&gt;thepoly);
+        &#125;
+        printf(&quot;====================================共%2d个====================================\n&quot;,NumOfPoly); 
+    &#125;
+    //======================term=====================
+    term *MakeTerm(double c,int e)&#123;//创建一个项 
+        term *p=(term *)malloc(sizeof(term));
+        p-&gt;c=c;
+        p-&gt;e=e;
+        p-&gt;next=NULL;
+        return p;
+    &#125;
+    Status DeleteTermFromPolyByExponent(poly pl,int e)&#123;
+        term *q=pl;
+        while(q-&gt;next!=NULL &amp;&amp; q-&gt;next-&gt;e!=e)&#123;
+            q=q-&gt;next;
+        &#125;
+        if(q-&gt;next==NULL) return ERROR;
+        else&#123;
+            term *r=q-&gt;next;
+            q-&gt;next=q-&gt;next-&gt;next;
+            free(r);
+        &#125;
+        return OK;    
+    &#125;
+    Status InsertTermToPolyInOrder(poly pl,term *t)&#123;//插入后该项将成为多项式的一部分或被销毁 
+        term *q=pl;
+        while(q-&gt;next!=NULL &amp;&amp; q-&gt;next-&gt;e&gt;t-&gt;e)&#123;
+            q=q-&gt;next;
+        &#125;
+        if(q-&gt;next==NULL)&#123;
+            q-&gt;next=t;
+            t-&gt;next=NULL;
+        &#125;
+        else if(q-&gt;next-&gt;e==t-&gt;e)&#123;
+            q-&gt;next-&gt;c+=t-&gt;c;
+            free(t);
+            if(fabs(q-&gt;next-&gt;c)&lt;1e-6) DeleteTermFromPolyByExponent(pl,q-&gt;next-&gt;e);
+        &#125;
+        else&#123;
+             t-&gt;next=q-&gt;next;
+             q-&gt;next=t;
+        &#125;
+        return OK;
+    &#125;
+    //======================poly=====================
+    Status InitPoly(poly *pl)&#123;//这里传进指针的指针，是为了修改pl的值 
+        *pl=MakeTerm(0,0);
+        return OK;
+    &#125;
+    Status DestoryPoly(poly *pl)&#123;
+        term *q=*pl,*s;
+        while(q!=NULL)&#123;
+            s=q-&gt;next;
+            free(q);
+            q=s;
+        &#125;
+        *pl=NULL;
+        return OK;
+    &#125;
+    Status AddPolyToList(polynode *list,poly pl)&#123;//把一个多项式加入到全局的列表里 
+        polynode *p=list;
+        while(p-&gt;next!=NULL) p=p-&gt;next;
+        p-&gt;next=(polynode *)malloc(sizeof(polynode));
+        p=p-&gt;next;
+        p-&gt;thepoly=pl;
+        p-&gt;next=NULL;
+        NumOfPoly++;
+    &#125;
+    Status DeletePolyFromListById(polynode *list,int id)&#123;
+        polynode *p=list;
+        int i=1;
+        while(p-&gt;next!=NULL &amp;&amp; i++&lt;id) p=p-&gt;next;//找到要删除的前一个 
+        if(p-&gt;next==NULL) return ERROR;
+        polynode *q=p-&gt;next;
+        p-&gt;next=p-&gt;next-&gt;next;
+        DestoryPoly(&amp;(q-&gt;thepoly));
+        free(q);
+        NumOfPoly--;
+        return OK;
+    &#125;
+    poly LocatePolyById(polynode *list,int id)&#123;
+        polynode *p=list-&gt;next;
+        int i=1;
+        while(p!=NULL &amp;&amp; i++&lt;id) p=p-&gt;next;
+        return p-&gt;thepoly;
+    &#125;
+    //======================calculate=====================
+    poly Add(poly pl1,poly pl2)&#123;
+        poly pl;
+        InitPoly(&amp;pl);    
+        term *q1=pl1-&gt;next,*q2=pl2-&gt;next,*q=pl;
+        while(q1!=NULL &amp;&amp; q2!=NULL)&#123;
+            if(q1-&gt;e&gt;q2-&gt;e)&#123;
+                q-&gt;next=MakeTerm(q1-&gt;c,q1-&gt;e);
+                q1=q1-&gt;next;
+            &#125; 
+            else if(q1-&gt;e&lt;q2-&gt;e)&#123;
+                q-&gt;next=MakeTerm(q2-&gt;c,q2-&gt;e);
+                q2=q2-&gt;next;
+            &#125;
+            else&#123;
+                if(fabs(q1-&gt;c+q2-&gt;c)&gt;1e-6) q-&gt;next=MakeTerm(q1-&gt;c+q2-&gt;c,q1-&gt;e);//不被抵消才加入 
+                q1=q1-&gt;next;
+                q2=q2-&gt;next; 
+            &#125;
+            if(q-&gt;next!=NULL) q=q-&gt;next; //如果已经创建了下一项才后移 
+        &#125;
+        while(q1!=NULL)&#123;
+            q-&gt;next=MakeTerm(q1-&gt;c,q1-&gt;e);
+            q1=q1-&gt;next;
+            q=q-&gt;next; 
+        &#125; 
+        while(q2!=NULL)&#123;
+            q-&gt;next=MakeTerm(q2-&gt;c,q2-&gt;e);
+            q2=q2-&gt;next;
+            q=q-&gt;next; 
+        &#125; 
+        return pl;    
+    &#125; 
+    poly Subtract(poly pl1,poly pl2)&#123;
+        poly pl;
+        InitPoly(&amp;pl);    
+        term *q1=pl1-&gt;next,*q2=pl2-&gt;next,*q=pl;
+        while(q1!=NULL)&#123;
+            term *tq1=MakeTerm(q1-&gt;c,q1-&gt;e);
+            InsertTermToPolyInOrder(pl,tq1);
+            q1=q1-&gt;next;
+        &#125;
+        while(q2!=NULL)&#123;
+            term *tq2=MakeTerm(-q2-&gt;c,q2-&gt;e);
+            InsertTermToPolyInOrder(pl,tq2);
+            q2=q2-&gt;next;
+        &#125;
+        return pl;
+    &#125;
+    poly Multiply(poly pl1,poly pl2)&#123;
+        poly pl;
+        InitPoly(&amp;pl);    
+        term *q1=pl1-&gt;next,*q2=pl2-&gt;next,*q=pl;
+        while(q1!=NULL)&#123;
+            while(q2!=NULL)&#123;
+                term *tq=MakeTerm(q1-&gt;c*q2-&gt;c,q1-&gt;e+q2-&gt;e);
+                InsertTermToPolyInOrder(pl,tq);
+                q2=q2-&gt;next;
+            &#125;
+            q1=q1-&gt;next;
+            q2=pl2-&gt;next;
+        &#125;
+        return pl;    
+    &#125; 
+    Status GetHighestE(poly pl,double *c,int *e)&#123;//取最高次的次数和系数 
+        term *q=pl;
+        if(q-&gt;next==NULL)&#123;
+            *c=0;
+            *e=0;
+            return OK;
+        &#125;
+        q=q-&gt;next;    
+        *c=q-&gt;c;
+        *e=q-&gt;e;
+        return OK;
+    &#125;
+    Status CopyPoly(poly *pl1,poly *pl2)&#123;//2to1
+        InitPoly(pl1);
+        term *q2=(*pl2)-&gt;next,*q1=*pl1;
+        while(q2!=NULL)&#123;
+            q1-&gt;next=MakeTerm(q2-&gt;c,q2-&gt;e);
+            q2=q2-&gt;next;
+            q1=q1-&gt;next;
+        &#125; 
+        return OK;
+    &#125;
+    Status Divide(poly pl1,poly pl2,poly *res,poly *left)&#123;//res,left传递指向poly类型的指针 
+        CopyPoly(left,&amp;pl1);
+        poly xnpl;
+        InitPoly(&amp;xnpl);
+        InitPoly(res);
+        int de,e1,e2;
+        double c1,c2;
+        GetHighestE(pl2,&amp;c2,&amp;e2);
+        GetHighestE(*left,&amp;c1,&amp;e1);    
+        de=e1-e2;
+        while(de&gt;=0 &amp;&amp; (*left)-&gt;next!=NULL)&#123;//余数与除数最高次之差大于0 且余式不为0 
+            term *xn=MakeTerm(c1/c2,de);
+            xnpl-&gt;next=xn;
+            poly tmp=Multiply(pl2,xnpl);
+            poly tmpleft=Subtract(*left,tmp);
+            DestoryPoly(left);
+            CopyPoly(left,&amp;tmpleft);
+            DestoryPoly(&amp;tmpleft);
+            InsertTermToPolyInOrder(*res,xn);
+            GetHighestE(*left,&amp;c1,&amp;e1);    
+            de=e1-e2;
+        &#125;
+        return OK; 
+    &#125; 
+    poly Calculate(poly pl1,poly pl2,int op)&#123;
+        switch(op)&#123;
+            case 1: return Add(pl1,pl2);
+            case 2: return Subtract(pl1,pl2);
+            case 3: return Multiply(pl1,pl2);
+        &#125;
+    &#125;
+    double Value(poly pl,double x)&#123;//求值 
+        term *q=pl-&gt;next;
+        double sum=0;
+        while(q!=NULL)&#123;
+            sum+=q-&gt;c*pow(x,q-&gt;e);
+            q=q-&gt;next; 
+        &#125;
+        return sum;
+    &#125;
+    poly Dfx(poly pl1)&#123; //求导 
+        poly pl;
+        InitPoly(&amp;pl);    
+        term *q1=pl1-&gt;next,*q=pl;
+        while(q1!=NULL)&#123;
+            if(q1-&gt;e)&#123;//非常数项 
+                q-&gt;next=MakeTerm(q1-&gt;c*q1-&gt;e,q1-&gt;e-1);
+                q=q-&gt;next;
+            &#125;
+            q1=q1-&gt;next; 
+        &#125;
+        return pl;    
+    &#125; 
+    //======================menu=====================
+    int Menu_Add()&#123;
+        double c;int e;
+        system(&quot;cls&quot;);
+        PrintTitle(&quot;添加&quot;);
+        printf(&quot;依次输入每项的系数和指数，空格隔开，ctrl+z结束:\n&quot;);
+        poly pl;
+        InitPoly(&amp;pl);
+        while(scanf(&quot;%lf&quot;,&amp;c)!=EOF)&#123;
+            if(scanf(&quot;%d&quot;,&amp;e)==EOF)&#123;
+                DestoryPoly(&amp;pl);
+                return 1;
+            &#125; 
+            if(fabs(c)&lt;1e-6) continue;
+            term *t=MakeTerm(c,e);
+            InsertTermToPolyInOrder(pl,t);
+        &#125;
+        AddPolyToList(list,pl);
+        return 0;
+    &#125;
+    int Menu_Delete()&#123;
+        int s;
+        system(&quot;cls&quot;);
+        PrintTitle(&quot;管理&quot;);
+        if(NumOfPoly==0) return 1;
+        else ShowAllPoly(list);
+        printf(&quot;\n选择一个多项式删除。输入序号数字(输入0返回): &quot;);
+        scanf(&quot;%d&quot;,&amp;s);
+        if(s&gt;0)&#123;
+            if(DeletePolyFromListById(list,s)==ERROR) return 2;
+            else return 0;
+        &#125;
+        return -1;
+    &#125;
+    int Menu_Calculate()&#123;
+        int s1,s2,op;
+        system(&quot;cls&quot;);
+        PrintTitle(&quot;计算&quot;);
+        if(NumOfPoly==0) return 1;
+        else ShowAllPoly(list);
+        printf(&quot;\n选择两个多项式和一种运算符[ (1)+ (2)- (3)* (4)/ ]。\n依次输入多项式和运算符序号(空格隔开,回车结束,输入0返回): &quot;);
+        scanf(&quot;%d&quot;,&amp;s1);
+        if(s1==0) return 0; 
+        scanf(&quot;%d&quot;,&amp;s2);
+        if(s1&lt;0 || s2&lt;0 || s1&gt;NumOfPoly || s2&gt;NumOfPoly) return 2;
+        scanf(&quot;%d&quot;,&amp;op);
+        if(op&lt;=0 || op&gt;4) return 2;
+        printf(&quot;\n===================================运算结果===================================\n&quot;);
+        poly pl1=LocatePolyById(list,s1);
+        poly pl2=LocatePolyById(list,s2);
+        poly pl;
+        poly left;
+        if(op==4)&#123;
+            if(pl2-&gt;next==NULL) return 3;
+            Divide(pl1,pl2,&amp;pl,&amp;left);
+        &#125;
+        else&#123;
+            pl=Calculate(pl1,pl2,op);
+        &#125;
+        ShowPoly(pl1);
+        printf(&quot;%c\n&quot;,opt[op]);
+        ShowPoly(pl2);
+        printf(&quot;=\n&quot;);
+        ShowPoly(pl);
+        if(op==4)&#123;
+            printf(&quot;...\n&quot;);
+            ShowPoly(left);
+        &#125;
+        DestoryPoly(&amp;pl);
+        if(op==4) DestoryPoly(&amp;left);
+        printf(&quot;==============================================================================\n&quot;);
+        system(&quot;pause&quot;)    ;
+        return -1;    
+    &#125;
+    int Menu_Value()&#123;
+        int s;
+        double x; 
+        system(&quot;cls&quot;);
+        PrintTitle(&quot;求值&quot;);
+        if(NumOfPoly==0) return 1;
+        else ShowAllPoly(list);
+        printf(&quot;\n选择一个多项式求值。\n依次输入多项式序号和X值(空格隔开,回车结束,输入0返回): &quot;);
+        scanf(&quot;%d&quot;,&amp;s);
+        if(s==0) return 0; 
+        if(s&lt;0 || s&gt;NumOfPoly) return 2;
+        scanf(&quot;%lf&quot;,&amp;x); 
+        printf(&quot;\n===================================运算结果===================================\n&quot;);
+        poly pl=LocatePolyById(list,s);
+        ShowPoly(pl);
+        printf(&quot;在 X = %lf 处的值为:\n%lf\n&quot;,x,Value(pl,x));    
+        printf(&quot;==============================================================================\n&quot;);
+        system(&quot;pause&quot;)    ;
+        return -1;        
+    &#125;
+    int Menu_Dfx()&#123; 
+        int s,n;
+        system(&quot;cls&quot;);
+        PrintTitle(&quot;求导&quot;);
+        if(NumOfPoly==0) return 1;
+        else ShowAllPoly(list);
+        printf(&quot;\n选择一个多项式求导。\n输入多项式序号和求导次数n(空格隔开,回车结束,输入0返回): &quot;);
+        scanf(&quot;%d&quot;,&amp;s);
+        if(s==0) return 0; 
+        scanf(&quot;%d&quot;,&amp;n);
+        if(n&lt;1 ||s&lt;0 || s&gt;NumOfPoly) return 2; 
+        printf(&quot;\n===================================运算结果===================================\n&quot;);
+        poly pl=LocatePolyById(list,s);
+        printf(&quot;F(X)=&quot;);
+        ShowPoly(pl);
+        int i;
+        poly tmp1,tmp2;
+        CopyPoly(&amp;tmp2,&amp;pl);
+        for(i=1;i&lt;=n;i++)&#123;
+            printf(&quot;F(X)^(%d)=&quot;,i);
+            tmp1=Dfx(tmp2);
+            DestoryPoly(&amp;tmp2);
+            CopyPoly(&amp;tmp2,&amp;tmp1);
+            DestoryPoly(&amp;tmp1);
+            ShowPoly(tmp2);
+        &#125;
+        DestoryPoly(&amp;tmp2);
+        printf(&quot;==============================================================================\n&quot;);
+        system(&quot;pause&quot;)    ;
+        return -1;
+    &#125;
+    int About()&#123;
+        system(&quot;cls&quot;);
+        printf(&quot;┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n&quot;);
+        printf(&quot;┃                          About                           ┃\n&quot;);
+        printf(&quot;┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫\n&quot;);
+        printf(&quot;┃                PolynomeCalculator V1.1                   ┃\n&quot;);
+        printf(&quot;┃                 Made by LX  2017.10.06                   ┃\n&quot;);
+        printf(&quot;┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n&quot;);
+        system(&quot;pause&quot;);
+        return 0;
+    &#125;
+    int main()&#123;
+        list=(polynode *)malloc(sizeof(polynode));
+        list-&gt;next=NULL;
+        ShowMenu();
+        printf(&quot;请选择：&quot;);
+        //printf(&quot;abcdefg\b\b\b12&quot;);
+        scanf(&quot;%d&quot;,&amp;Menu_Selected);
+        while(Menu_Selected)&#123;
+            int status;
+            switch(Menu_Selected)&#123;
+                case 1: if(Menu_Add()==1) 
+                            SendMessage(&quot;输入有误!系数个数与指数个数不匹配！&quot;);
+                        else&#123;
+                            SendMessage(&quot;添加成功！&quot;);    
+                        &#125; 
+                        break;
+                case 2: status=Menu_Delete();
+                        if(status==1) 
+                            SendMessage(&quot;这里空空如也...&quot;);
+                        else if(status==2)&#123;
+                            SendMessage(&quot;输入的序号有误！&quot;);
+                        &#125;
+                        else if(status==0)&#123;
+                            SendMessage(&quot;删除成功&quot;);
+                        &#125;
+                        break;    
+                case 3:    status=Menu_Calculate();
+                        if(status==1)&#123;
+                            SendMessage(&quot;你需要先添加多项式~&quot;);
+                        &#125;         
+                        else if(status==2)&#123;
+                            SendMessage(&quot;输入的序号有误！&quot;);
+                        &#125;
+                        else if(status==3)&#123;
+                            SendMessage(&quot;0不能为除数！&quot;);
+                        &#125;
+                        break;
+                case 4: status=Menu_Value(); 
+                        if(status==1)&#123;
+                            SendMessage(&quot;你需要先添加多项式~&quot;);
+                        &#125;         
+                        else if(status==2)&#123;
+                            SendMessage(&quot;输入的序号和X值有误！&quot;);
+                        &#125;
+                        break;    
+                case 5: status=Menu_Dfx(); 
+                        if(status==1)&#123;
+                            SendMessage(&quot;你需要先添加多项式~&quot;);
+                        &#125;         
+                        else if(status==2)&#123;
+                            SendMessage(&quot;输入的序号和n值有误！&quot;);
+                        &#125;
+                        break;    
+                case 6: About();
+                        break;
+            &#125;            
+            ShowMenu();
+            printf(&quot;请选择：&quot;);
+            scanf(&quot;%d&quot;,&amp;Menu_Selected);
+        &#125;    
+        return 0;
+    &#125;
+</code></pre>
+
+</div>
+<div class="article-tail">
+	<div id="post-nav">
+		 
+			<a href="/s/p/9axeo0/" class="prev">数据结构上机题2 模拟银行业务办理</a>
+		 
+
+		 
+			<a href="/s/p/95f9c0/" class="next">程序设计II上机实验10B："完美阴阳矩阵"</a>
+		 
+	</div>
+	
+	<div id="comment">
+		
+		<div id="SOHUCS" sid="p/9amao0/">
+
+		</div>
+		
+	</div>
+	 
+</div>
+</body>
+</html>

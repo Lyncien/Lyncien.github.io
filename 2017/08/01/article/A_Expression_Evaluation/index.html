@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="author" content="Lyncien">
+
+
+
+<meta name="description" content="C语言表达式计算器实现功能 支持浮点数的+,-,*,/,%(求余)  支持常见的初等函数运算   abs,sgn,ln,lg,log,sin,cos,tan,cot,sec,csc,asin,acos,atan,acot,asec,acsc,exp,sinh,cosh,tanh,coth,sech,csch,asinh,acosh,atanh,acoth,asech,acsch,max,min,c">
+<meta name="keywords" content="C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言表达式计算器">
+<meta property="og:url" content="https://l-x.me/2017/08/01/article/A_Expression_Evaluation/index.html">
+<meta property="og:site_name" content="Lyncien&#39;s homepage">
+<meta property="og:description" content="C语言表达式计算器实现功能 支持浮点数的+,-,*,/,%(求余)  支持常见的初等函数运算   abs,sgn,ln,lg,log,sin,cos,tan,cot,sec,csc,asin,acos,atan,acot,asec,acsc,exp,sinh,cosh,tanh,coth,sech,csch,asinh,acosh,atanh,acoth,asech,acsch,max,min,c">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-28T02:40:40.373Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C语言表达式计算器">
+<meta name="twitter:description" content="C语言表达式计算器实现功能 支持浮点数的+,-,*,/,%(求余)  支持常见的初等函数运算   abs,sgn,ln,lg,log,sin,cos,tan,cot,sec,csc,asin,acos,atan,acot,asec,acsc,exp,sinh,cosh,tanh,coth,sech,csch,asinh,acosh,atanh,acoth,asech,acsch,max,min,c">
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Lyncien&#39;s homepage" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcdn.net/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/old_resources/css/style.css">
+
+
+
+<link href="//cdn.bootcdn.net/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>C语言表达式计算器 | Lyncien&#39;s homepage</title>
+
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcdn.net/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcdn.net/ajax/libs/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: false
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcdn.net/ajax/libs/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<script id="jump-to-new" src="/old_resources/js/redirect.js" async></script>
+</head>
+<script src="/old_resources/js/head-pic.js" ></script> <!-- head-pic-flash by Lyncien -->
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic" id="head-pic"> <!-- head-pic-flash by Lyncien -->
+            <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Lyncien</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/COD/">COD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Compiler/">Compiler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DS/">DS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hackergame2018/">Hackergame2018</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MCPS/">MCPS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Makefile/">Makefile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OS/">OS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PC/">PC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Verilog/">Verilog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parallel-computing/">parallel computing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/感想/">感想</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/置顶/">置顶</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">林深见鹿</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Lyncien</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic" id="head-pic-mobile"> <!-- head-pic-flash by Lyncien -->
+                <img src="/old_resources/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Lyncien</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:Lyncien@126.com" title="Email"></a>
+                            
+                                <a class="fa Leetcode" target="_blank" href="https://leetcode-cn.com/lyncien/" title="Leetcode"></a>
+                            
+                                <a class="fa Github" target="_blank" href="https://github.com/Lyncien" title="Github"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 微信" target="_blank" href="/Linunx" title="微信"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我">
+</nav>
+      <div class="body-wrap"><article id="post-article/A_Expression_Evaluation" class="article article-type-post" itemscope="" itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/01/article/A_Expression_Evaluation/" class="article-date">
+      <time datetime="2017-07-31T16:00:00.000Z" itemprop="datePublished">2017-08-01</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      C语言表达式计算器
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="C语言表达式计算器"><a href="#C语言表达式计算器" class="headerlink" title="C语言表达式计算器"></a>C语言表达式计算器</h1><h2 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h2><ul>
+<li><p>支持浮点数的+,-,*,/,%(求余)</p>
+</li>
+<li><p>支持常见的初等函数运算</p>
+<pre><code>  abs,sgn,ln,lg,log,sin,cos,tan,cot,sec,csc,asin,acos,atan,acot,asec,acsc,exp,sinh,cosh,tanh,coth,sech,csch,asinh,acosh,atanh,acoth,asech,acsch,max,min,ceil,floor,pow,fac,gcd,lcm
+</code></pre></li>
+<li><p>支持嵌套任意层数的括号</p>
+</li>
+</ul>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code>#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include &lt;string.h&gt;
+#define PI 3.1415926
+#define MAX 2
+#define FUNCNUM 38
+typedef struct Data{//使用该数据结构主要为了函数的多个参数
+    int n;//数据个数
+    double num[MAX];
+}Data;
+char *p;
+double (*FuncArray[FUNCNUM])(Data d);//函数指针数组,存放各个数学函数的指针
+char FuncNameArray[FUNCNUM][20]={&quot;abs&quot;,&quot;sgn&quot;,&quot;ln&quot;,&quot;lg&quot;,&quot;log&quot;,&quot;sin&quot;,&quot;cos&quot;,&quot;tan&quot;,&quot;cot&quot;,&quot;sec&quot;,&quot;csc&quot;,\
+&quot;asin&quot;,&quot;acos&quot;,&quot;atan&quot;,&quot;acot&quot;,&quot;asec&quot;,&quot;acsc&quot;,&quot;exp&quot;,&quot;sinh&quot;,&quot;cosh&quot;,&quot;tanh&quot;,&quot;coth&quot;,&quot;sech&quot;,&quot;csch&quot;,\
+&quot;asinh&quot;,&quot;acosh&quot;,&quot;atanh&quot;,&quot;acoth&quot;,&quot;asech&quot;,&quot;acsch&quot;,&quot;max&quot;,&quot;min&quot;,&quot;ceil&quot;,&quot;floor&quot;,&quot;pow&quot;,&quot;fac&quot;,\
+&quot;gcd&quot;,&quot;lcm&quot;};
+//----------------------------
+Data Expression(char **p);
+double term(char **p);
+double factor(char **p);
+double GetNumber(char **p,double *res);
+double Function(char **p);
+//----------------------------
+double D_sin(Data d){
+    return sin(d.num[0]);
+}
+double D_cos(Data d){
+    return cos(d.num[0]);
+}
+double D_tan(Data d){
+    return tan(d.num[0]);
+}
+double D_cot(Data d){
+    return 1/tan(d.num[0]);
+}
+double D_sec(Data d){
+    return 1/cos(d.num[0]);
+}
+double D_csc(Data d){
+    return 1/sin(d.num[0]);
+}
+double D_asin(Data d){
+    return asin(d.num[0]);
+}
+double D_acos(Data d){
+    return acos(d.num[0]);
+}
+double D_atan(Data d){
+    return atan(d.num[0]);
+}
+double D_acot(Data d){
+    return PI/2-atan(d.num[0]);
+}
+double D_asec(Data d){
+    return acos(1/d.num[0]);
+}
+double D_acsc(Data d){
+    return asin(1/d.num[0]);
+}
+double D_exp(Data d){
+    return exp(d.num[0]);
+}
+double D_sinh(Data d){
+    return sinh(d.num[0]);
+}
+double D_cosh(Data d){
+    return cosh(d.num[0]);
+}
+double D_tanh(Data d){
+    return tanh(d.num[0]);
+}
+double D_coth(Data d){
+    return 1/tanh(d.num[0]);
+}
+double D_sech(Data d){
+    return 1/cosh(d.num[0]);
+}
+double D_csch(Data d){
+    return 1/sinh(d.num[0]);
+}
+double D_asinh(Data d){
+    return asinh(d.num[0]);
+}
+double D_acosh(Data d){
+    return acosh(d.num[0]);
+}
+double D_atanh(Data d){
+    return atanh(d.num[0]);
+}
+double D_acoth(Data d){
+    return log((d.num[0]+1)/(d.num[0]-1))/2;
+}
+double D_asech(Data d){
+    return log(1/d.num[0]+sqrt(1/d.num[0]+1)*sqrt(1/d.num[0]-1));
+}
+double D_acsch(Data d){
+    return log(1/d.num[0]+sqrt(1/(d.num[0]*d.num[0])+1));
+}
+double D_ln(Data d){//e为底
+    return log(d.num[0]);
+}
+double D_lg(Data d){//10为底
+    return log10(d.num[0]);
+}
+double D_log(Data d){//任意底，第一个为真数，第二个为底数
+    return log(d.num[0])/log(d.num[1]);
+}
+double D_max(Data d){
+    return d.num[0]&gt;d.num[1]?d.num[0]:d.num[1];
+}
+double D_min(Data d){
+    return d.num[0]&gt;d.num[1]?d.num[1]:d.num[0];
+}
+double D_ceil(Data d){
+    return (double)ceil(d.num[0]);
+}
+double D_floor(Data d){
+    return (double)floor(d.num[0]);
+}
+double D_pow(Data d){
+    return pow(d.num[0],d.num[1]);
+}
+double D_fac(Data d){//阶乘
+    int res=1,i,n=(int)d.num[0];
+    if(n&lt;=0) return 1;
+    for(i=1;i&lt;=n;i++) res*=i;
+    return res;
+}
+double D_gcd(Data d){//最大公约数 (Greatest Common Divisor)
+    int a=d.num[0],b=d.num[1],r=0;
+    while(b){
+        r=a%b;
+        a=b;
+        b=r;
+    }
+    return (double)a;
+}
+double D_lcm(Data d){//最小公倍数 (Least Common Multiple)
+    int a=d.num[0],b=d.num[1],r=0;
+    while(b){
+        r=a%b;
+        a=b;
+        b=r;
+    }
+    return (double)((int)(d.num[0])*(int)(d.num[1])/a);
+}
+double D_abs(Data d){
+    return fabs(d.num[0]);
+}
+double D_sgn(Data d){
+    if(d.num[0]) return d.num[0]&gt;0?1:-1;
+    else return 0;
+}
+void initialize(){
+    int i=0;
+    FuncArray[i++]=D_abs;
+    FuncArray[i++]=D_sgn;
+    FuncArray[i++]=D_ln;
+    FuncArray[i++]=D_lg;
+    FuncArray[i++]=D_log;
+    FuncArray[i++]=D_sin;
+    FuncArray[i++]=D_cos;
+    FuncArray[i++]=D_tan;
+    FuncArray[i++]=D_cot;
+    FuncArray[i++]=D_sec;
+    FuncArray[i++]=D_csc;
+    FuncArray[i++]=D_asin;
+    FuncArray[i++]=D_acos;
+    FuncArray[i++]=D_atan;
+    FuncArray[i++]=D_acot;
+    FuncArray[i++]=D_asec;
+    FuncArray[i++]=D_acsc;
+    FuncArray[i++]=D_exp;
+    FuncArray[i++]=D_sinh;
+    FuncArray[i++]=D_cosh;
+    FuncArray[i++]=D_tanh;
+    FuncArray[i++]=D_coth;
+    FuncArray[i++]=D_sech;
+    FuncArray[i++]=D_csch;
+    FuncArray[i++]=D_asinh;
+    FuncArray[i++]=D_acosh;
+    FuncArray[i++]=D_atanh;
+    FuncArray[i++]=D_acoth;
+    FuncArray[i++]=D_asech;
+    FuncArray[i++]=D_acsch;
+    FuncArray[i++]=D_max;
+    FuncArray[i++]=D_min;
+    FuncArray[i++]=D_ceil;
+    FuncArray[i++]=D_floor;
+    FuncArray[i++]=D_pow;
+    FuncArray[i++]=D_fac;
+    FuncArray[i++]=D_gcd;
+    FuncArray[i++]=D_lcm;
+}
+
+Data Expression(char **p){//处理加减和逗号
+//指针的指针，这样函数中传递时可以改变指针的值
+    Data result;
+    result.n=0;
+    result.num[0]=term(p);
+    int more=1;
+    while(more){
+        char op=**p;
+        if(op==&#39;+&#39; || op==&#39;-&#39;){
+            (*p)++;
+            double value=term(p);
+            if(op==&#39;+&#39;) result.num[result.n]+=value;
+            else result.num[result.n]-=value;
+        }
+        else if(op==&#39;,&#39;){
+            (*p)++;
+            result.n++;
+            result.num[result.n]=term(p);
+        }
+        else more=0;
+    }
+    return result;
+}
+double term(char **p){//处理乘除求余
+    double result=factor(p);
+    int more=1;
+    while(more){
+        char op=**p;
+        if(op==&#39;*&#39; || op==&#39;/&#39; || op==&#39;%&#39;){
+            (*p)++;
+            double value=factor(p);
+            if(op==&#39;*&#39;) result*=value;
+            else if(op==&#39;/&#39;) result/=value;
+            else if(op==&#39;%&#39;) result=(int)result%(int)value;
+        }
+        else more=0;
+    }
+    return result;
+}
+double factor(char **p){//除了数字和函数和括号
+    double result=0;
+    char c=**p;
+    if(c==&#39;(&#39;){
+        (*p)++;
+        Data tmp=Expression(p);
+        result=tmp.num[0];
+        (*p)++;//跳过&#39;)&#39;
+        return result;
+    }
+    else{
+        if(GetNumber(p,&amp;result)) return result;
+        else return Function(p);
+    }
+
+}
+double GetNumber(char **p,double *res){
+    int sign=1;
+    if(!isdigit(**p)){
+        if(**p==&#39;-&#39;) sign=-1;
+        else return 0;
+    }
+    *res=0;
+    while(isdigit(**p)){
+        *res=*res*10+**p-&#39;0&#39;;
+        (*p)++;
+    }
+    if(**p==&#39;.&#39;){
+        (*p)++;
+        double k=0.1;
+        while(isdigit(**p)){
+            *res=*res+(**p-&#39;0&#39;)*k;
+            (*p)++;
+            k/=10;
+        }
+    }
+    *res*=sign;
+    return 1;
+}
+double Function(char **p){
+    char funcname[20];
+    int i=0;
+    double result=0;
+    while(**p!=&#39;(&#39;)
+        funcname[i++]=*((*p)++);
+    (*p)++;//跳过&#39;(&#39;
+    funcname[i]=0;//字符串结束
+    //printf(&quot;%s\n&quot;,funcname);
+    for(i=0;i&lt;FUNCNUM;i++){
+        if(strcmp(funcname,FuncNameArray[i])==0){//匹配函数
+            Data tmp=Expression(p);
+            result=FuncArray[i](tmp);
+            (*p)++;//跳过&#39;)&#39;
+            //printf(&quot;%lf,%lf,%s,%lf\n&quot;,tmp.num[0],tmp.num[1],FuncNameArray[i],result);
+            return result;
+        }
+    }
+    return 0;
+}
+int main(){
+    char s[100];
+    scanf(&quot;%s&quot;,s);
+    initialize();
+    p=s;
+    //printf(&quot;%s\n&quot;,p);
+    Data tmp=Expression(&amp;p);
+    printf(&quot;%.12lf&quot;,tmp.num[0]);
+}
+</code></pre>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/08/01/article/A_Expression_Evaluation/">C语言表达式计算器</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Lyncien</a></p>
+        <p><span>发布时间:</span>2017-08-01, 00:00:00</p>
+        <p><span>最后更新:</span>2019-04-28, 10:40:40</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/08/01/article/A_Expression_Evaluation/" title="C语言表达式计算器">https://l-x.me/2017/08/01/article/A_Expression_Evaluation/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://l-x.me/2017/08/01/article/A_Expression_Evaluation/　　作者: Lyncien" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target="_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/10/23/ds/lab1_Polynome/">
+                    数据结构上机题1 一元稀疏多项式计算
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/07/14/clp/lab10b/">
+                    程序设计II上机实验10B：&#34;完美阴阳矩阵&#34;
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#C语言表达式计算器"><span class="toc-text">C语言表达式计算器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现功能"><span class="toc-text">实现功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录" title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"C语言表达式计算器　| Lyncien's homepage　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/10/23/ds/lab1_Polynome/" title="上一篇: 数据结构上机题1 一元稀疏多项式计算">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/07/14/clp/lab10b/" title="下一篇: 程序设计II上机实验10B：&#34;完美阴阳矩阵&#34;">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/9999/01/01/article/my_blog/">博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/pc/lab3/">并行计算上机实验三 CUDA实现向量加法和矩阵乘法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/16/pc/lab2/">并行计算上机实验二 MPI实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/leetcode/single-number-iv/">LeetCode题目改编——只出现一次的数字IV</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/pc/lab1/">并行计算上机实验一 OpenMP实现π值的计算和PSRS排序</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/29/article/bit_operation_tips/">C/C++ 位运算总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/article/Makefile/">Makefile 使用总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/25/article/pc_first_problem/">并行计算初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/21/article/dp_1-5/">动态规划入门（1）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/cp/lab_final/">编译原理课程实验汇报</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/article/tea_and_health/">茶与健康</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/alg/lab5/">算法基础上机实验五 图搜索BFS算法及存储优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/05/mcps/lab_res/">汇编上机资源</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/mcps/lab4/">汇编上机题4</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/02/alg/lab4/">算法基础上机实验四 最佳调度问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/26/mcps/lab3/">汇编上机题3</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/25/alg/lab3/">算法基础上机实验三 最长公共子序列问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/19/mcps/lab2/">汇编上机题2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/18/alg/lab2/">算法基础上机实验二 红黑树维护算法及其区间树应用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/mcps/lab1/">汇编上机题1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/alg/lab1/">算法基础上机实验一 求平面上n个顶点的最近点对问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/27/article/learning_and_forgetting/">学习与遗忘</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/15/article/USTC_Hackergame2018_18/">USTC Hackergame2018 之 “加密解密算法”</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/12/article/USTC_Hackergame2018_8/">USTCHackergame2018之"我是谁"</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/14/cod/lab7_Pipeline-CPU/">计算机组成原理上机实验7 流水线CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/13/article/verilog_signed_and_unsigned/">Verilog中的有符号数与无符号数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/os/File_System/File System/">操作系统阅读报告：大容量存储器与文件系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/10/cod/lab6_Multi-CycleCPU/">计算机组成原理上机实验6 多周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/04/cod/lab5_SingleCycleCPU/">计算机组成原理上机实验5 单周期CPU</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/25/os/Process_Communication&Synchronization&Scheduling/Process Communication&Synchronization&Scheduling/">操作系统阅读报告：进程通信与同步、进程调度</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/19/cod/lab4_FiniteStateMachine/">计算机组成原理上机实验4 有限状态机</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/31/os/Process_Concepts&Operations,Thread/Process Concepts&Operations,Thread/">操作系统阅读报告：进程与线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/18/os/System_Call/System Call/">操作系统阅读报告：系统调用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/11/os/OS_Summary/OS Summary/">操作系统阅读报告：操作系统概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/09/ds/lab4_ShortestPaths/">数据结构上机题4 最短路径</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/ds/lab3_Haffman/">数据结构上机题3 哈夫曼压缩</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/ds/lab2_Bank/">数据结构上机题2 模拟银行业务办理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/23/ds/lab1_Polynome/">数据结构上机题1 一元稀疏多项式计算</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/article/A_Expression_Evaluation/">C语言表达式计算器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/14/clp/lab10b/">程序设计II上机实验10B："完美阴阳矩阵"</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/13/clp/lab10a/">程序设计II上机实验10A：杀蚂蚁</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/clp/lab9b/">程序设计II上机实验9B：八数码问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/11/clp/lab9a/">程序设计II上机实验9A：算24</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2020 Lyncien
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style="display:none">
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style="display:none">
+                        <span id="page-visit" title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+		
+		
+			<!-- Highlight.js -->
+			<!-- "//cdn.bootcdn.net/ajax/libs/highlight.js/9.2.0/styles/github.min.css" -->
+			<!-- "http://apps.bdimg.com/libs/highlight.js/9.1.0/styles/default.min.css" -->
+			<link rel="stylesheet" href="/old_resources/js/highlight/styles/vs2015.css">
+			<script src="/old_resources/js/highlight/highlight.pack.js"></script>
+			<script>
+					hljs.initHighlightingOnLoad();
+			</script>
+		
+		
+		
+			<a href="https://clustrmaps.com/site/1b46r" title="Visit tracker"><img width="0" heght="0" src="//www.clustrmaps.com/map_v2.png?d=i8Jh6LoQOmC5xU8sSnCrTkWgsRpkxH4HkQy9AZ7_Q0E&cl=ffffff"></a>
+		
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/old_resources/js/main.js" src="//cdn.bootcdn.net/ajax/libs/require.js/2.2.0/require.min.js"></script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcdn.net/ajax/libs/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
